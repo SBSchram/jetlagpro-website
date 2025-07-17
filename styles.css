@@ -310,21 +310,55 @@ body {
 }
 
 .download-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.testflight-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.testflight-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
     margin-bottom: 1rem;
+    color: #f9fafb;
 }
 
-.app-store-button img {
-    height: 60px;
-    transition: transform 0.3s ease;
+.testflight-info ul {
+    list-style: none;
+    padding: 0;
 }
 
-.app-store-button:hover img {
-    transform: scale(1.05);
+.testflight-info li {
+    padding: 0.5em 0;
+    color: #e5e7eb;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.testflight-info li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
 }
 
 .download-note {
     font-size: 0.9rem;
     opacity: 0.8;
+    margin-top: 1rem;
 }
 
 /* Footer */
@@ -407,6 +441,15 @@ body {
     .phone-mockup {
         width: 240px;
         height: 480px;
+    }
+    
+    .download-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .testflight-info {
+        margin: 2rem 1rem;
     }
 }
 
