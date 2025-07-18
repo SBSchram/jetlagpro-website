@@ -10,6 +10,8 @@ class JetLagProDemo {
         this.selectedAirport = null;
         this.currentPoint = null;
         this.currentTab = 'home';
+        this.expandedPointId = null;
+        this.completedPoints = new Set();
         
         this.init();
     }
@@ -23,6 +25,9 @@ class JetLagProDemo {
             
             // Show default sections expanded
             this.showDefaultSections();
+            
+            // Generate initial points list
+            this.generatePointsList();
             
             console.log('Demo initialized successfully');
         } catch (error) {
@@ -136,9 +141,9 @@ class JetLagProDemo {
         }
 
         this.selectedAirport = airport;
-        this.updateAirportDisplay();
+        this.updateDestinationDisplay();
         this.updateActivePoint();
-        this.updatePointSchedule();
+        this.generatePointsList();
         this.hideAirportResults();
         
         // Clear search input
@@ -151,18 +156,45 @@ class JetLagProDemo {
         this.switchToTab('journey');
     }
 
-    updateAirportDisplay() {
-        if (!this.selectedAirport) return;
+    updateDestinationDisplay() {
+        const destinationStatus = document.getElementById('destinationStatus');
+        const destinationName = document.getElementById('destinationName');
+        const endJourneyButton = document.getElementById('endJourneyButton');
 
-        const airportName = document.getElementById('airportName');
-        const airportLocation = document.getElementById('airportLocation');
-        const airportTimezone = document.getElementById('airportTimezone');
-        const selectedAirportDiv = document.getElementById('selectedAirport');
+        if (this.selectedAirport) {
+            if (destinationStatus) {
+                destinationStatus.innerHTML = `<span>Heading to ${this.selectedAirport.code} where it's <span id="destinationTime">${this.getDestinationTimeString()}</span></span>`;
+            }
+            if (destinationName) {
+                destinationName.textContent = this.selectedAirport.name;
+                destinationName.style.display = 'block';
+            }
+            if (endJourneyButton) {
+                endJourneyButton.style.display = 'flex';
+            }
+        } else {
+            if (destinationStatus) {
+                destinationStatus.innerHTML = '<span>No Destination Yet</span>';
+            }
+            if (destinationName) {
+                destinationName.style.display = 'none';
+            }
+            if (endJourneyButton) {
+                endJourneyButton.style.display = 'none';
+            }
+        }
+    }
 
-        if (airportName) airportName.textContent = this.selectedAirport.name;
-        if (airportLocation) airportLocation.textContent = `${this.selectedAirport.city}, ${this.selectedAirport.country}`;
-        if (airportTimezone) airportTimezone.textContent = `Timezone: ${this.selectedAirport.timezone}`;
-        if (selectedAirportDiv) selectedAirportDiv.style.display = 'block';
+    getDestinationTimeString() {
+        if (!this.selectedAirport) return '';
+        
+        const now = new Date();
+        const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
+        return destinationTime.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+        });
     }
 
     updateActivePoint() {
@@ -175,7 +207,6 @@ class JetLagProDemo {
 
         if (point) {
             this.currentPoint = point;
-            this.displayActivePoint(point, destinationTime);
         }
     }
 
@@ -188,105 +219,232 @@ class JetLagProDemo {
         return destinationTime;
     }
 
-    displayActivePoint(point, destinationTime) {
-        // Update point number
-        const pointNumber = document.getElementById('pointNumber');
-        if (pointNumber) pointNumber.textContent = point.id;
+    generatePointsList() {
+        const pointsList = document.getElementById('pointsList');
+        if (!pointsList) return;
 
-        // Update point names
-        const pointName = document.getElementById('pointName');
-        const pointChineseName = document.getElementById('pointChineseName');
-        if (pointName) pointName.textContent = point.name;
-        if (pointChineseName) pointChineseName.textContent = `${point.chineseName} (${point.chineseChars})`;
+        const orderedPoints = this.getOrderedPoints();
+        const currentPointId = this.currentPoint ? this.currentPoint.id : null;
 
-        // Update point details
-        const pointLocation = document.getElementById('pointLocation');
-        const pointStimulation = document.getElementById('pointStimulation');
-        const pointFunctions = document.getElementById('pointFunctions');
-        if (pointLocation) pointLocation.textContent = point.pointLocation;
-        if (pointStimulation) pointStimulation.textContent = point.stimulationMethod;
-        if (pointFunctions) pointFunctions.textContent = point.functions;
-
-        // Update point image
-        const pointImage = document.getElementById('pointImage');
-        if (pointImage) {
-            pointImage.src = `assets/point-images/${point.imageName}.jpg`;
-            pointImage.alt = `${point.name} location`;
-        }
-
-        // Update point video
-        const videoSource = document.getElementById('videoSource');
-        const pointVideo = document.getElementById('pointVideo');
-        if (videoSource && pointVideo) {
-            videoSource.src = `assets/videos/${point.videoName}`;
-            pointVideo.load(); // Reload video with new source
-        }
-
-        // Show the active point section and expand it
-        const activePointSection = document.getElementById('activePointSection');
-        if (activePointSection) {
-            activePointSection.style.display = 'block';
-            activePointSection.classList.add('fade-in');
+        const pointsHTML = orderedPoints.map((point, index) => {
+            const isCurrent = point.id === currentPointId;
+            const isExpanded = this.expandedPointId === point.id;
+            const isCompleted = this.completedPoints.has(point.id);
+            const journeyOrder = index + 1;
             
-            // Auto-expand the active point section
-            const activePointContent = document.getElementById('activePointContent');
-            const activePointChevron = document.getElementById('activePointChevron');
-            if (activePointContent) activePointContent.style.display = 'block';
-            if (activePointChevron) activePointChevron.textContent = '▲';
-        }
-    }
-
-    updatePointSchedule() {
-        if (!this.selectedAirport) return;
-
-        const scheduleGrid = document.getElementById('pointSchedule');
-        if (!scheduleGrid) return;
-
-        const destinationTime = this.getDestinationTime();
-        const currentHour = destinationTime.getHours();
-
-        const scheduleHTML = this.hourToPointId.map((pointId, hour) => {
-            const point = this.points.find(p => p.id === pointId);
-            const isActive = hour === currentHour;
-            const timeString = this.formatHour(hour);
+            const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId);
             
             return `
-                <div class="schedule-item ${isActive ? 'active' : ''}">
-                    <div class="schedule-time">${timeString}</div>
-                    <div class="schedule-point">${point ? point.name : 'Unknown'}</div>
+                <div class="point-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isExpanded ? 'expanded' : ''}" data-point-id="${point.id}">
+                    <div class="point-header" onclick="demo.togglePoint(${point.id})">
+                        <div class="point-stimulation-text">${stimulationText}</div>
+                        <div class="point-chevron">${isExpanded ? '▲' : '▼'}</div>
+                    </div>
+                    <div class="point-content">
+                        <div class="point-media">
+                            <div class="point-image">
+                                <img src="assets/point-images/${point.imageName}.jpg" alt="${point.name} location">
+                            </div>
+                            <div class="point-video">
+                                <video controls preload="metadata">
+                                    <source src="assets/videos/${point.videoName}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                        <div class="point-details">
+                            <div class="point-detail-item">
+                                <div class="point-detail-title">Location</div>
+                                <div class="point-detail-content">${point.pointLocation}</div>
+                            </div>
+                            <div class="point-detail-item">
+                                <div class="point-detail-title">Stimulate</div>
+                                <div class="point-detail-content">${point.stimulationMethod}</div>
+                            </div>
+                            <div class="point-detail-item">
+                                <div class="point-detail-title">Benefits</div>
+                                <div class="point-detail-content">${point.functions}</div>
+                            </div>
+                        </div>
+                        ${isCurrent && !isCompleted ? `
+                            <div class="mark-stimulated-button">
+                                <button class="mark-stimulated-btn" onclick="demo.markPointAsStimulated(${point.id})">
+                                    <span>☐</span>
+                                    <span>Mark as Stimulated</span>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
+                ${index < orderedPoints.length - 1 ? '<div class="point-divider"></div>' : ''}
             `;
         }).join('');
 
-        scheduleGrid.innerHTML = scheduleHTML;
+        pointsList.innerHTML = pointsHTML;
+    }
 
-        // Show the schedule section and expand it
-        const scheduleSection = document.getElementById('pointScheduleSection');
-        if (scheduleSection) {
-            scheduleSection.style.display = 'block';
-            scheduleSection.classList.add('fade-in');
+    getOrderedPoints() {
+        if (!this.selectedAirport) {
+            // No destination case: order all points starting from current time
+            const currentHour = new Date().getHours();
+            const currentPointId = this.hourToPointId[currentHour];
             
-            // Auto-expand the schedule section
-            const scheduleContent = document.getElementById('pointScheduleContent');
-            const scheduleChevron = document.getElementById('pointScheduleChevron');
-            if (scheduleContent) scheduleContent.style.display = 'block';
-            if (scheduleChevron) scheduleChevron.textContent = '▲';
+            // Find the current point and order all points starting from it
+            const orderedPoints = [];
+            const seenPointIds = new Set();
+            
+            for (let i = 0; i < 24; i++) {
+                const targetHour = (currentHour + i) % 24;
+                const pointId = this.hourToPointId[targetHour];
+                const point = this.points.find(p => p.id === pointId);
+                
+                if (point && !seenPointIds.has(point.id)) {
+                    orderedPoints.push(point);
+                    seenPointIds.add(point.id);
+                }
+            }
+            
+            return orderedPoints;
+        } else {
+            // Destination case: order points by notification schedule
+            // For demo, we'll use the hour-to-point mapping
+            const destinationTime = this.getDestinationTime();
+            const currentHour = destinationTime.getHours();
+            
+            const orderedPoints = [];
+            const seenPointIds = new Set();
+            
+            for (let i = 0; i < 24; i++) {
+                const targetHour = (currentHour + i) % 24;
+                const pointId = this.hourToPointId[targetHour];
+                const point = this.points.find(p => p.id === pointId);
+                
+                if (point && !seenPointIds.has(point.id)) {
+                    orderedPoints.push(point);
+                    seenPointIds.add(point.id);
+                }
+            }
+            
+            return orderedPoints;
         }
     }
 
-    formatHour(hour) {
+    formatStimulationText(point, journeyOrder, currentPointId) {
+        const pointName = `${point.name} (${point.chineseChars})`;
+        
+        if (!this.selectedAirport) {
+            // No destination case
+            if (point.id === currentPointId) {
+                return `${pointName} is active now`;
+            } else {
+                return `${pointName} will be active at ${this.getPointTimeString(point.id)}`;
+            }
+        } else {
+            // Destination case
+            if (point.id === currentPointId) {
+                return `${pointName} tells your body it is ${this.selectedAirport.code} time`;
+            } else {
+                const isPast = this.isPastPoint(point.id, currentPointId);
+                if (isPast) {
+                    return `${pointName} is no longer active`;
+                } else {
+                    const destTime = this.getPointDestinationTime(point.id);
+                    const localTime = this.getPointLocalTime(point.id);
+                    return `Stimulate ${pointName} (${destTime}) at your ${localTime}`;
+                }
+            }
+        }
+    }
+
+    getPointTimeString(pointId) {
+        // Find the hour when this point is active
+        const hour = this.hourToPointId.indexOf(pointId);
+        if (hour === -1) return '';
+        
         return hour === 0 ? '12 AM' : 
                hour < 12 ? `${hour} AM` : 
                hour === 12 ? '12 PM' : 
                `${hour - 12} PM`;
     }
 
+    getPointDestinationTime(pointId) {
+        if (!this.selectedAirport) return '';
+        
+        const hour = this.hourToPointId.indexOf(pointId);
+        if (hour === -1) return '';
+        
+        const now = new Date();
+        const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
+        destinationTime.setHours(hour, 0, 0, 0);
+        
+        return destinationTime.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            hour12: true 
+        });
+    }
+
+    getPointLocalTime(pointId) {
+        const hour = this.hourToPointId.indexOf(pointId);
+        if (hour === -1) return '';
+        
+        const now = new Date();
+        now.setHours(hour, 0, 0, 0);
+        
+        return now.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            hour12: true 
+        });
+    }
+
+    isPastPoint(pointId, currentPointId) {
+        if (!currentPointId) return false;
+        
+        const currentHour = this.hourToPointId.indexOf(currentPointId);
+        const pointHour = this.hourToPointId.indexOf(pointId);
+        
+        if (currentHour === -1 || pointHour === -1) return false;
+        
+        return pointHour < currentHour;
+    }
+
+    togglePoint(pointId) {
+        if (this.expandedPointId === pointId) {
+            this.expandedPointId = null;
+        } else {
+            this.expandedPointId = pointId;
+        }
+        this.generatePointsList();
+    }
+
+    markPointAsStimulated(pointId) {
+        this.completedPoints.add(pointId);
+        this.generatePointsList();
+        
+        // Show completion feedback
+        const button = document.querySelector(`[onclick="demo.markPointAsStimulated(${pointId})"]`);
+        if (button) {
+            button.innerHTML = '<span>☑</span><span>Completed</span>';
+            button.classList.add('completed');
+        }
+    }
+
+    endJourney() {
+        this.selectedAirport = null;
+        this.currentPoint = null;
+        this.expandedPointId = null;
+        this.completedPoints.clear();
+        
+        this.updateDestinationDisplay();
+        this.generatePointsList();
+    }
+
     startTimeUpdates() {
         // Update time every minute
         setInterval(() => {
             if (this.selectedAirport) {
+                this.updateDestinationDisplay();
                 this.updateActivePoint();
-                this.updatePointSchedule();
+                this.generatePointsList();
             }
         }, 60000);
     }

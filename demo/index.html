@@ -141,72 +141,26 @@
 
             <!-- Journey Tab Content -->
             <div id="journeyTab" class="tab-content">
-                <div class="content-container">
-                    <!-- Active Point Section -->
-                    <section id="activePointSection" class="point-section" style="display: none;">
-                        <div class="section-header expandable" onclick="toggleSection('activePoint')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">Currently Active Point</span>
+                <div class="journey-header">
+                    <div class="header-gradient">
+                        <div class="journey-header-content">
+                            <div class="destination-info">
+                                <div id="destinationStatus" class="destination-status">
+                                    <span>No Destination Yet</span>
+                                </div>
+                                <div id="destinationName" class="destination-name" style="display: none;"></div>
                             </div>
-                            <div class="chevron" id="activePointChevron">▼</div>
+                            <div id="endJourneyButton" class="end-journey-button" style="display: none;" onclick="demo.endJourney()">
+                                <span>✕</span>
+                            </div>
                         </div>
-                        <div class="section-content" id="activePointContent">
-                            <div class="point-display">
-                                <div class="point-header">
-                                    <div class="point-number" id="pointNumber"></div>
-                                    <div class="point-names">
-                                        <h4 id="pointName"></h4>
-                                        <p id="pointChineseName"></p>
-                                    </div>
-                                </div>
-                                
-                                <div class="point-content">
-                                    <div class="point-image">
-                                        <img id="pointImage" src="" alt="Point location">
-                                    </div>
-                                    
-                                    <div class="point-details">
-                                        <div class="detail-group">
-                                            <h5>Location</h5>
-                                            <p id="pointLocation"></p>
-                                        </div>
-                                        
-                                        <div class="detail-group">
-                                            <h5>How to Stimulate</h5>
-                                            <p id="pointStimulation"></p>
-                                        </div>
-                                        
-                                        <div class="detail-group">
-                                            <h5>Benefits</h5>
-                                            <p id="pointFunctions"></p>
-                                        </div>
-                                    </div>
-                                </div>
+                    </div>
+                </div>
 
-                                <div class="point-video">
-                                    <video id="pointVideo" controls preload="metadata">
-                                        <source id="videoSource" src="" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Point Schedule Section -->
-                    <section id="pointScheduleSection" class="schedule-section" style="display: none;">
-                        <div class="section-header expandable" onclick="toggleSection('pointSchedule')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">24-Hour Point Schedule</span>
-                            </div>
-                            <div class="chevron" id="pointScheduleChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="pointScheduleContent">
-                            <div id="pointSchedule" class="schedule-grid"></div>
-                        </div>
-                    </section>
+                <div class="journey-content">
+                    <div class="points-list" id="pointsList">
+                        <!-- Points will be dynamically generated here -->
+                    </div>
                 </div>
             </div>
 
