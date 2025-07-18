@@ -9,6 +9,7 @@ class JetLagProDemo {
         this.hourToPointId = [];
         this.selectedAirport = null;
         this.currentPoint = null;
+        this.currentTab = 'home';
         
         this.init();
     }
@@ -127,42 +128,55 @@ class JetLagProDemo {
     }
 
     selectAirport(airportCode) {
+        console.log('Selecting airport:', airportCode);
         const airport = this.airports.find(a => a.code === airportCode);
-        if (!airport) return;
+        if (!airport) {
+            console.error('Airport not found:', airportCode);
+            return;
+        }
 
         this.selectedAirport = airport;
-        this.displaySelectedAirport(airport);
-        this.hideAirportResults();
+        this.updateAirportDisplay();
         this.updateActivePoint();
         this.updatePointSchedule();
+        this.hideAirportResults();
+        
+        // Clear search input
+        const searchInput = document.getElementById('airportSearch');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        // Switch to Journey tab to show the active point
+        this.switchToTab('journey');
     }
 
-    displaySelectedAirport(airport) {
-        const selectedAirportDiv = document.getElementById('selectedAirport');
+    updateAirportDisplay() {
+        if (!this.selectedAirport) return;
+
         const airportName = document.getElementById('airportName');
         const airportLocation = document.getElementById('airportLocation');
         const airportTimezone = document.getElementById('airportTimezone');
+        const selectedAirportDiv = document.getElementById('selectedAirport');
 
-        airportName.textContent = `${airport.code} - ${airport.name}`;
-        airportLocation.textContent = `${airport.city}, ${airport.country}`;
-        airportTimezone.textContent = `Timezone: ${airport.timezone}`;
-
-        selectedAirportDiv.style.display = 'block';
-        selectedAirportDiv.classList.add('fade-in');
+        if (airportName) airportName.textContent = this.selectedAirport.name;
+        if (airportLocation) airportLocation.textContent = `${this.selectedAirport.city}, ${this.selectedAirport.country}`;
+        if (airportTimezone) airportTimezone.textContent = `Timezone: ${this.selectedAirport.timezone}`;
+        if (selectedAirportDiv) selectedAirportDiv.style.display = 'block';
     }
 
     updateActivePoint() {
         if (!this.selectedAirport) return;
 
         const destinationTime = this.getDestinationTime();
-        const hour = destinationTime.getHours();
-        const pointId = this.hourToPointId[hour];
+        const currentHour = destinationTime.getHours();
+        const pointId = this.hourToPointId[currentHour];
         const point = this.points.find(p => p.id === pointId);
 
-        if (!point) return;
-
-        this.currentPoint = point;
-        this.displayActivePoint(point, destinationTime);
+        if (point) {
+            this.currentPoint = point;
+            this.displayActivePoint(point, destinationTime);
+        }
     }
 
     getDestinationTime() {
@@ -176,44 +190,58 @@ class JetLagProDemo {
 
     displayActivePoint(point, destinationTime) {
         // Update point number
-        document.getElementById('pointNumber').textContent = point.id;
+        const pointNumber = document.getElementById('pointNumber');
+        if (pointNumber) pointNumber.textContent = point.id;
 
         // Update point names
-        document.getElementById('pointName').textContent = point.name;
-        document.getElementById('pointChineseName').textContent = `${point.chineseName} (${point.chineseChars})`;
+        const pointName = document.getElementById('pointName');
+        const pointChineseName = document.getElementById('pointChineseName');
+        if (pointName) pointName.textContent = point.name;
+        if (pointChineseName) pointChineseName.textContent = `${point.chineseName} (${point.chineseChars})`;
 
         // Update point details
-        document.getElementById('pointLocation').textContent = point.pointLocation;
-        document.getElementById('pointStimulation').textContent = point.stimulationMethod;
-        document.getElementById('pointFunctions').textContent = point.functions;
+        const pointLocation = document.getElementById('pointLocation');
+        const pointStimulation = document.getElementById('pointStimulation');
+        const pointFunctions = document.getElementById('pointFunctions');
+        if (pointLocation) pointLocation.textContent = point.pointLocation;
+        if (pointStimulation) pointStimulation.textContent = point.stimulationMethod;
+        if (pointFunctions) pointFunctions.textContent = point.functions;
 
         // Update point image
         const pointImage = document.getElementById('pointImage');
-        pointImage.src = `assets/point-images/${point.imageName}.jpg`;
-        pointImage.alt = `${point.name} location`;
+        if (pointImage) {
+            pointImage.src = `assets/point-images/${point.imageName}.jpg`;
+            pointImage.alt = `${point.name} location`;
+        }
 
         // Update point video
         const videoSource = document.getElementById('videoSource');
-        videoSource.src = `assets/videos/${point.videoName}`;
         const pointVideo = document.getElementById('pointVideo');
-        pointVideo.load(); // Reload video with new source
+        if (videoSource && pointVideo) {
+            videoSource.src = `assets/videos/${point.videoName}`;
+            pointVideo.load(); // Reload video with new source
+        }
 
         // Show the active point section and expand it
         const activePointSection = document.getElementById('activePointSection');
-        activePointSection.style.display = 'block';
-        activePointSection.classList.add('fade-in');
-        
-        // Auto-expand the active point section
-        const activePointContent = document.getElementById('activePointContent');
-        const activePointChevron = document.getElementById('activePointChevron');
-        activePointContent.style.display = 'block';
-        activePointChevron.textContent = '▲';
+        if (activePointSection) {
+            activePointSection.style.display = 'block';
+            activePointSection.classList.add('fade-in');
+            
+            // Auto-expand the active point section
+            const activePointContent = document.getElementById('activePointContent');
+            const activePointChevron = document.getElementById('activePointChevron');
+            if (activePointContent) activePointContent.style.display = 'block';
+            if (activePointChevron) activePointChevron.textContent = '▲';
+        }
     }
 
     updatePointSchedule() {
         if (!this.selectedAirport) return;
 
         const scheduleGrid = document.getElementById('pointSchedule');
+        if (!scheduleGrid) return;
+
         const destinationTime = this.getDestinationTime();
         const currentHour = destinationTime.getHours();
 
@@ -234,20 +262,23 @@ class JetLagProDemo {
 
         // Show the schedule section and expand it
         const scheduleSection = document.getElementById('pointScheduleSection');
-        scheduleSection.style.display = 'block';
-        scheduleSection.classList.add('fade-in');
-        
-        // Auto-expand the schedule section
-        const scheduleContent = document.getElementById('pointScheduleContent');
-        const scheduleChevron = document.getElementById('pointScheduleChevron');
-        scheduleContent.style.display = 'block';
-        scheduleChevron.textContent = '▲';
+        if (scheduleSection) {
+            scheduleSection.style.display = 'block';
+            scheduleSection.classList.add('fade-in');
+            
+            // Auto-expand the schedule section
+            const scheduleContent = document.getElementById('pointScheduleContent');
+            const scheduleChevron = document.getElementById('pointScheduleChevron');
+            if (scheduleContent) scheduleContent.style.display = 'block';
+            if (scheduleChevron) scheduleChevron.textContent = '▲';
+        }
     }
 
     formatHour(hour) {
-        const period = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-        return `${displayHour}:00 ${period}`;
+        return hour === 0 ? '12 AM' : 
+               hour < 12 ? `${hour} AM` : 
+               hour === 12 ? '12 PM' : 
+               `${hour - 12} PM`;
     }
 
     startTimeUpdates() {
@@ -257,20 +288,40 @@ class JetLagProDemo {
                 this.updateActivePoint();
                 this.updatePointSchedule();
             }
-        }, 60000); // 60 seconds
+        }, 60000);
     }
 
     showDefaultSections() {
-        // Show demo status and airport selection by default
+        // Show demo status and instructions by default on home tab
         const demoStatusContent = document.getElementById('demoStatusContent');
         const demoStatusChevron = document.getElementById('demoStatusChevron');
-        const airportSelectionContent = document.getElementById('airportSelectionContent');
-        const airportSelectionChevron = document.getElementById('airportSelectionChevron');
+        const instructionsContent = document.getElementById('instructionsContent');
+        const instructionsChevron = document.getElementById('instructionsChevron');
         
-        demoStatusContent.style.display = 'block';
-        demoStatusChevron.textContent = '▲';
-        airportSelectionContent.style.display = 'block';
-        airportSelectionChevron.textContent = '▲';
+        if (demoStatusContent) demoStatusContent.style.display = 'block';
+        if (demoStatusChevron) demoStatusChevron.textContent = '▲';
+        if (instructionsContent) instructionsContent.style.display = 'block';
+        if (instructionsChevron) instructionsChevron.textContent = '▲';
+    }
+
+    switchToTab(tabName) {
+        this.currentTab = tabName;
+        
+        // Hide all tab contents
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Remove active class from all tab items
+        const tabItems = document.querySelectorAll('.tab-item');
+        tabItems.forEach(item => item.classList.remove('active'));
+        
+        // Show selected tab content
+        const selectedTab = document.getElementById(tabName + 'Tab');
+        if (selectedTab) selectedTab.classList.add('active');
+        
+        // Add active class to selected tab item
+        const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+        if (selectedTabItem) selectedTabItem.classList.add('active');
     }
 
     showError(message) {
@@ -287,55 +338,37 @@ document.addEventListener('DOMContentLoaded', () => {
     demo = new JetLagProDemo();
 });
 
-// Add some utility functions for better user experience
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+// Global function for tab switching (called from HTML)
+function switchTab(tabName) {
+    if (demo) {
+        demo.switchToTab(tabName);
+    }
 }
 
-// Debounce the airport search for better performance
-// Note: This will be handled within the class method itself
-
-// Add smooth scrolling for better UX
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+// Global function for section toggling (called from HTML)
+function toggleSection(sectionId) {
+    const content = document.getElementById(sectionId + 'Content');
+    const chevron = document.getElementById(sectionId + 'Chevron');
+    
+    if (content && chevron) {
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            chevron.textContent = '▲';
+        } else {
+            content.style.display = 'none';
+            chevron.textContent = '▼';
         }
-    });
-});
-
-// Add loading states
-function showLoading(element) {
-    element.classList.add('loading');
-}
-
-function hideLoading(element) {
-    element.classList.remove('loading');
+    }
 }
 
 // Add keyboard navigation for airport search
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        demo.hideAirportResults();
+        if (demo) demo.hideAirportResults();
     }
 });
 
 // Add touch support for mobile devices
 if ('ontouchstart' in window) {
     document.addEventListener('touchstart', () => {}, {passive: true});
-}
-
-// Service worker registration removed for demo simplicity 
+} 

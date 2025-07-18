@@ -1,4 +1,4 @@
-/* iOS-style JetLagPro Demo */
+/* JetLagPro Demo - iOS App Style */
 
 /* Reset and Base Styles */
 * {
@@ -14,39 +14,50 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: hidden; /* Prevent body scroll */
 }
 
-/* iOS-style Header */
+/* App Container */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 414px; /* iPhone max width */
+    margin: 0 auto;
+    background: #ffffff;
+    position: relative;
+}
+
+/* Header */
 .app-header {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: #007aff;
-    background: linear-gradient(135deg, #007aff 0%, #0056b3 100%);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    background: #ffffff;
 }
 
 .header-gradient {
+    background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
     height: 80px;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    justify-content: center;
+    position: relative;
 }
 
 .header-content {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+    padding: 0 16px;
+    height: 100%;
 }
 
 .back-button {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -58,58 +69,65 @@ body {
 }
 
 .app-title {
-    color: white;
+    color: #ffffff;
     font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    flex: 1;
-    margin: 0 16px;
+    font-weight: 600;
+    margin: 0;
 }
 
 .header-spacer {
-    width: 60px;
+    width: 60px; /* Match back button width */
 }
 
-/* Main Content */
+/* Main Content Area */
 .app-main {
-    margin-top: 80px;
-    padding: 20px 16px;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+    flex: 1;
+    overflow-y: auto;
+    background: #f2f2f7;
+    padding-bottom: 83px; /* Space for tab bar */
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    height: 100%;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 .content-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    padding: 16px;
 }
 
 /* Section Styles */
 .status-section,
+.instructions-section,
 .airport-section,
 .point-section,
 .schedule-section,
-.instructions-section {
-    background: white;
+.info-section {
+    background: #ffffff;
     border-radius: 12px;
+    margin-bottom: 16px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .section-header {
+    padding: 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e5e5e7;
-    cursor: pointer;
-    user-select: none;
+    transition: background-color 0.2s ease;
 }
 
 .section-header:hover {
-    background: #f2f2f7;
+    background: #e9ecef;
 }
 
 .section-title {
@@ -117,33 +135,25 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    font-size: 17px;
-}
-
-.bullet {
-    color: #007aff;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.title-text {
     color: #1d1d1f;
 }
 
-.chevron {
-    color: #007aff;
-    font-size: 14px;
+.bullet {
+    color: #007AFF;
     font-weight: bold;
+    font-size: 16px;
+}
+
+.chevron {
+    color: #007AFF;
+    font-size: 12px;
     transition: transform 0.2s ease;
 }
 
 .section-content {
-    padding: 16px;
     display: none;
-}
-
-.section-content.active {
-    display: block;
+    padding: 16px;
+    background: #ffffff;
 }
 
 /* Status Items */
@@ -152,12 +162,7 @@ body {
     align-items: flex-start;
     gap: 8px;
     margin-bottom: 8px;
-    padding-left: 35px;
-}
-
-.status-text {
-    font-size: 15px;
-    line-height: 1.4;
+    padding-left: 20px;
 }
 
 .status-text.success {
@@ -168,37 +173,50 @@ body {
     color: #8e8e93;
 }
 
+/* Instruction Items */
+.instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-left: 20px;
+}
+
+.instruction-text {
+    color: #1d1d1f;
+    font-size: 15px;
+}
+
 /* Airport Search */
 .airport-search {
     position: relative;
+    margin-bottom: 16px;
 }
 
 .search-input-wrapper {
     position: relative;
-    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
 }
 
 .search-input {
     width: 100%;
     padding: 12px 40px 12px 16px;
-    border: 1px solid #e5e5e7;
+    border: 1px solid #d1d1d6;
     border-radius: 8px;
-    font-size: 17px;
-    background: white;
+    font-size: 16px;
+    background: #ffffff;
     outline: none;
     transition: border-color 0.2s ease;
 }
 
 .search-input:focus {
-    border-color: #007aff;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    border-color: #007AFF;
 }
 
 .search-icon {
     position: absolute;
     right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
     color: #8e8e93;
     font-size: 16px;
 }
@@ -208,14 +226,14 @@ body {
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid #e5e5e7;
+    background: #ffffff;
+    border: 1px solid #d1d1d6;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    max-height: 300px;
-    overflow-y: auto;
+    z-index: 10;
     display: none;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .airport-result {
@@ -235,7 +253,7 @@ body {
 
 .airport-code {
     font-weight: 600;
-    color: #1d1d1f;
+    color: #007AFF;
     font-size: 16px;
 }
 
@@ -246,16 +264,14 @@ body {
 }
 
 .selected-airport {
-    background: #f2f2f7;
+    background: #f8f9fa;
     border-radius: 8px;
     padding: 16px;
-    margin-top: 12px;
+    margin-top: 16px;
 }
 
 .airport-info h4 {
     color: #1d1d1f;
-    font-size: 18px;
-    font-weight: 600;
     margin-bottom: 4px;
 }
 
@@ -267,9 +283,9 @@ body {
 
 /* Point Display */
 .point-display {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .point-header {
@@ -277,27 +293,25 @@ body {
     align-items: center;
     gap: 12px;
     padding: 16px;
-    background: #f2f2f7;
-    border-radius: 8px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .point-number {
-    background: #007aff;
-    color: white;
+    background: #007AFF;
+    color: #ffffff;
     width: 40px;
     height: 40px;
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 18px;
 }
 
 .point-names h4 {
     color: #1d1d1f;
-    font-size: 18px;
-    font-weight: 600;
     margin-bottom: 2px;
 }
 
@@ -307,14 +321,17 @@ body {
 }
 
 .point-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    align-items: start;
+    padding: 16px;
+}
+
+.point-image {
+    text-align: center;
+    margin-bottom: 16px;
 }
 
 .point-image img {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -322,19 +339,18 @@ body {
 .point-details {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .detail-group h5 {
     color: #1d1d1f;
-    font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
 }
 
 .detail-group p {
-    color: #8e8e93;
-    font-size: 14px;
+    color: #3a3a3c;
+    font-size: 15px;
     line-height: 1.4;
 }
 
@@ -356,103 +372,134 @@ body {
 }
 
 .schedule-item {
-    background: #f2f2f7;
+    background: #f8f9fa;
     border-radius: 8px;
     padding: 12px 8px;
     text-align: center;
+    border: 2px solid transparent;
     transition: all 0.2s ease;
 }
 
 .schedule-item.active {
-    background: #007aff;
-    color: white;
+    background: #e3f2fd;
+    border-color: #007AFF;
 }
 
 .schedule-time {
-    font-size: 12px;
     font-weight: 600;
+    color: #1d1d1f;
+    font-size: 14px;
     margin-bottom: 4px;
 }
 
 .schedule-point {
-    font-size: 11px;
-    opacity: 0.8;
-}
-
-/* Instructions */
-.instruction-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 8px;
-    padding-left: 35px;
-}
-
-.instruction-text {
-    font-size: 15px;
-    color: #1d1d1f;
-    line-height: 1.4;
+    color: #8e8e93;
+    font-size: 12px;
+    line-height: 1.2;
 }
 
 /* Download CTA */
 .download-cta {
-    background: white;
+    background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
     border-radius: 12px;
-    padding: 24px 16px;
+    padding: 24px;
     text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    margin-top: 24px;
 }
 
 .cta-content h3 {
-    color: #1d1d1f;
-    font-size: 20px;
-    font-weight: 600;
     margin-bottom: 8px;
+    font-size: 20px;
 }
 
 .cta-content p {
-    color: #8e8e93;
+    margin-bottom: 16px;
+    opacity: 0.9;
     font-size: 15px;
-    margin-bottom: 20px;
-    line-height: 1.4;
 }
 
 .btn-download {
-    background: #007aff;
-    color: white;
-    text-decoration: none;
+    display: inline-block;
+    background: #ffffff;
+    color: #007AFF;
     padding: 12px 24px;
     border-radius: 8px;
+    text-decoration: none;
     font-weight: 600;
     font-size: 16px;
-    display: inline-block;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .btn-download:hover {
-    background: #0056b3;
+    background: #f2f2f7;
+    transform: translateY(-1px);
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-    .app-main {
-        padding: 16px 12px;
-    }
-    
-    .content-container {
-        gap: 16px;
-    }
-    
-    .point-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .schedule-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+/* Info Section */
+.info-section p {
+    color: #3a3a3c;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+/* Bottom Tab Bar */
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 414px;
+    background: #ffffff;
+    border-top: 1px solid #d1d1d6;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0 20px 0; /* Extra padding for safe area */
+    z-index: 1000;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    min-width: 60px;
+}
+
+.tab-item:hover {
+    background: #f2f2f7;
+}
+
+.tab-item.active {
+    color: #007AFF;
+}
+
+.tab-item.active .tab-icon {
+    transform: scale(1.1);
+}
+
+.tab-icon {
+    font-size: 24px;
+    transition: transform 0.2s ease;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
 }
 
 /* Animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -464,31 +511,47 @@ body {
     }
 }
 
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* Focus states for accessibility */
-.search-input:focus,
-.airport-result:focus,
-.section-header:focus {
-    outline: 2px solid #007aff;
-    outline-offset: 2px;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #000;
-        color: #f5f5f7;
+/* Responsive Design */
+@media (max-width: 480px) {
+    .app-container {
+        max-width: 100%;
     }
     
-    .status-section,
-    .airport-section,
-    .point-section,
-    .schedule-section,
-    .instructions-section,
-    .download-cta {
+    .content-container {
+        padding: 12px;
+    }
+    
+    .schedule-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 360px) {
+    .schedule-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .tab-bar {
+        padding: 6px 0 16px 0;
+    }
+    
+    .tab-icon {
+        font-size: 20px;
+    }
+    
+    .tab-label {
+        font-size: 9px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000000;
+        color: #ffffff;
+    }
+    
+    .app-container {
         background: #1c1c1e;
     }
     
@@ -498,17 +561,27 @@ body {
     }
     
     .section-header:hover {
-        background: #3a3a3c;
+        background: #38383a;
     }
     
-    .title-text {
-        color: #f5f5f7;
+    .status-section,
+    .instructions-section,
+    .airport-section,
+    .point-section,
+    .schedule-section,
+    .info-section {
+        background: #2c2c2e;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    
+    .section-content {
+        background: #2c2c2e;
     }
     
     .search-input {
         background: #2c2c2e;
         border-color: #38383a;
-        color: #f5f5f7;
+        color: #ffffff;
     }
     
     .airport-results {
@@ -516,27 +589,37 @@ body {
         border-color: #38383a;
     }
     
-    .airport-result {
-        border-bottom-color: #38383a;
-    }
-    
     .airport-result:hover {
-        background: #3a3a3c;
+        background: #38383a;
     }
     
     .selected-airport {
+        background: #38383a;
+    }
+    
+    .point-display {
         background: #2c2c2e;
     }
     
     .point-header {
-        background: #2c2c2e;
+        background: #38383a;
+        border-bottom-color: #48484a;
     }
     
     .schedule-item {
-        background: #2c2c2e;
+        background: #38383a;
     }
     
-    .instruction-text {
-        color: #f5f5f7;
+    .schedule-item.active {
+        background: #1e3a5f;
+    }
+    
+    .tab-bar {
+        background: #2c2c2e;
+        border-top-color: #38383a;
+    }
+    
+    .tab-item:hover {
+        background: #38383a;
     }
 } 

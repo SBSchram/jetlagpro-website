@@ -24,181 +24,249 @@
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
-    <!-- iOS-style Header -->
-    <header class="app-header">
-        <div class="header-gradient">
-            <div class="header-content">
-                <a href="../" class="back-button">
-                    <span>←</span> Back
-                </a>
-                <h1 class="app-title">JetLagPro</h1>
-                <div class="header-spacer"></div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="app-main">
-        <div class="content-container">
-            <!-- Demo Status Section -->
-            <section class="status-section">
-                <div class="section-header expandable" onclick="toggleSection('demoStatus')">
-                    <div class="section-title">
-                        <span class="bullet">•</span>
-                        <span class="title-text">Demo Status</span>
-                    </div>
-                    <div class="chevron" id="demoStatusChevron">▼</div>
-                </div>
-                <div class="section-content" id="demoStatusContent">
-                    <div class="status-item">
-                        <span class="bullet">•</span>
-                        <span class="status-text success">Interactive demo is ready</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="bullet">•</span>
-                        <span class="status-text secondary">Select a destination to see active points</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Airport Selection Section -->
-            <section class="airport-section">
-                <div class="section-header expandable" onclick="toggleSection('airportSelection')">
-                    <div class="section-title">
-                        <span class="bullet">•</span>
-                        <span class="title-text">Select Destination</span>
-                    </div>
-                    <div class="chevron" id="airportSelectionChevron">▼</div>
-                </div>
-                <div class="section-content" id="airportSelectionContent">
-                    <div class="airport-search">
-                        <div class="search-input-wrapper">
-                            <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
-                            <div class="search-icon">🔍</div>
-                        </div>
-                        <div id="airportResults" class="airport-results"></div>
-                    </div>
-
-                    <div id="selectedAirport" class="selected-airport" style="display: none;">
-                        <div class="airport-info">
-                            <h4 id="airportName"></h4>
-                            <p id="airportLocation"></p>
-                            <p id="airportTimezone"></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Active Point Section -->
-            <section id="activePointSection" class="point-section" style="display: none;">
-                <div class="section-header expandable" onclick="toggleSection('activePoint')">
-                    <div class="section-title">
-                        <span class="bullet">•</span>
-                        <span class="title-text">Currently Active Point</span>
-                    </div>
-                    <div class="chevron" id="activePointChevron">▼</div>
-                </div>
-                <div class="section-content" id="activePointContent">
-                    <div class="point-display">
-                        <div class="point-header">
-                            <div class="point-number" id="pointNumber"></div>
-                            <div class="point-names">
-                                <h4 id="pointName"></h4>
-                                <p id="pointChineseName"></p>
-                            </div>
-                        </div>
-                        
-                        <div class="point-content">
-                            <div class="point-image">
-                                <img id="pointImage" src="" alt="Point location">
-                            </div>
-                            
-                            <div class="point-details">
-                                <div class="detail-group">
-                                    <h5>Location</h5>
-                                    <p id="pointLocation"></p>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <h5>How to Stimulate</h5>
-                                    <p id="pointStimulation"></p>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <h5>Benefits</h5>
-                                    <p id="pointFunctions"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="point-video">
-                            <video id="pointVideo" controls preload="metadata">
-                                <source id="videoSource" src="" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Point Schedule Section -->
-            <section id="pointScheduleSection" class="schedule-section" style="display: none;">
-                <div class="section-header expandable" onclick="toggleSection('pointSchedule')">
-                    <div class="section-title">
-                        <span class="bullet">•</span>
-                        <span class="title-text">24-Hour Point Schedule</span>
-                    </div>
-                    <div class="chevron" id="pointScheduleChevron">▼</div>
-                </div>
-                <div class="section-content" id="pointScheduleContent">
-                    <div id="pointSchedule" class="schedule-grid"></div>
-                </div>
-            </section>
-
-            <!-- Instructions Section -->
-            <section class="instructions-section">
-                <div class="section-header expandable" onclick="toggleSection('instructions')">
-                    <div class="section-title">
-                        <span class="bullet">•</span>
-                        <span class="title-text">How to Use JetLagPro</span>
-                    </div>
-                    <div class="chevron" id="instructionsChevron">▼</div>
-                </div>
-                <div class="section-content" id="instructionsContent">
-                    <div class="instruction-item">
-                        <span class="bullet">•</span>
-                        <span class="instruction-text">Set your destination airport</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="bullet">•</span>
-                        <span class="instruction-text">Get timed reminders for point stimulation</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="bullet">•</span>
-                        <span class="instruction-text">Follow guided instructions for each point</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="bullet">•</span>
-                        <span class="instruction-text">Arrive refreshed and adjusted to new timezone</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Download CTA -->
-            <section class="download-cta">
-                <div class="cta-content">
-                    <h3>Ready to Beat Jet Lag?</h3>
-                    <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
-                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
-                        Download JetLagPro
+    <!-- iOS App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-gradient">
+                <div class="header-content">
+                    <a href="../" class="back-button">
+                        <span>←</span> Back
                     </a>
+                    <h1 class="app-title">JetLagPro</h1>
+                    <div class="header-spacer"></div>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Home Tab Content -->
+            <div id="homeTab" class="tab-content active">
+                <div class="content-container">
+                    <!-- Demo Status Section -->
+                    <section class="status-section">
+                        <div class="section-header expandable" onclick="toggleSection('demoStatus')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">Demo Status</span>
+                            </div>
+                            <div class="chevron" id="demoStatusChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="demoStatusContent">
+                            <div class="status-item">
+                                <span class="bullet">•</span>
+                                <span class="status-text success">Interactive demo is ready</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="bullet">•</span>
+                                <span class="status-text secondary">Select a destination to see active points</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Instructions Section -->
+                    <section class="instructions-section">
+                        <div class="section-header expandable" onclick="toggleSection('instructions')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">How to Use JetLagPro</span>
+                            </div>
+                            <div class="chevron" id="instructionsChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="instructionsContent">
+                            <div class="instruction-item">
+                                <span class="bullet">•</span>
+                                <span class="instruction-text">Set your destination airport</span>
+                            </div>
+                            <div class="instruction-item">
+                                <span class="bullet">•</span>
+                                <span class="instruction-text">Get timed reminders for point stimulation</span>
+                            </div>
+                            <div class="instruction-item">
+                                <span class="bullet">•</span>
+                                <span class="instruction-text">Follow guided instructions for each point</span>
+                            </div>
+                            <div class="instruction-item">
+                                <span class="bullet">•</span>
+                                <span class="instruction-text">Arrive refreshed and adjusted to new timezone</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Download CTA -->
+                    <section class="download-cta">
+                        <div class="cta-content">
+                            <h3>Ready to Beat Jet Lag?</h3>
+                            <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
+                            <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
+                                Download JetLagPro
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Destination Tab Content -->
+            <div id="destinationTab" class="tab-content">
+                <div class="content-container">
+                    <section class="airport-section">
+                        <div class="section-header expandable" onclick="toggleSection('airportSelection')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">Select Destination</span>
+                            </div>
+                            <div class="chevron" id="airportSelectionChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="airportSelectionContent">
+                            <div class="airport-search">
+                                <div class="search-input-wrapper">
+                                    <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
+                                    <div class="search-icon">🔍</div>
+                                </div>
+                                <div id="airportResults" class="airport-results"></div>
+                            </div>
+
+                            <div id="selectedAirport" class="selected-airport" style="display: none;">
+                                <div class="airport-info">
+                                    <h4 id="airportName"></h4>
+                                    <p id="airportLocation"></p>
+                                    <p id="airportTimezone"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Journey Tab Content -->
+            <div id="journeyTab" class="tab-content">
+                <div class="content-container">
+                    <!-- Active Point Section -->
+                    <section id="activePointSection" class="point-section" style="display: none;">
+                        <div class="section-header expandable" onclick="toggleSection('activePoint')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">Currently Active Point</span>
+                            </div>
+                            <div class="chevron" id="activePointChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="activePointContent">
+                            <div class="point-display">
+                                <div class="point-header">
+                                    <div class="point-number" id="pointNumber"></div>
+                                    <div class="point-names">
+                                        <h4 id="pointName"></h4>
+                                        <p id="pointChineseName"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="point-content">
+                                    <div class="point-image">
+                                        <img id="pointImage" src="" alt="Point location">
+                                    </div>
+                                    
+                                    <div class="point-details">
+                                        <div class="detail-group">
+                                            <h5>Location</h5>
+                                            <p id="pointLocation"></p>
+                                        </div>
+                                        
+                                        <div class="detail-group">
+                                            <h5>How to Stimulate</h5>
+                                            <p id="pointStimulation"></p>
+                                        </div>
+                                        
+                                        <div class="detail-group">
+                                            <h5>Benefits</h5>
+                                            <p id="pointFunctions"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="point-video">
+                                    <video id="pointVideo" controls preload="metadata">
+                                        <source id="videoSource" src="" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Point Schedule Section -->
+                    <section id="pointScheduleSection" class="schedule-section" style="display: none;">
+                        <div class="section-header expandable" onclick="toggleSection('pointSchedule')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">24-Hour Point Schedule</span>
+                            </div>
+                            <div class="chevron" id="pointScheduleChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="pointScheduleContent">
+                            <div id="pointSchedule" class="schedule-grid"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Info Tab Content -->
+            <div id="infoTab" class="tab-content">
+                <div class="content-container">
+                    <section class="info-section">
+                        <div class="section-header expandable" onclick="toggleSection('about')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">About JetLagPro</span>
+                            </div>
+                            <div class="chevron" id="aboutChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="aboutContent">
+                            <p>JetLagPro uses traditional Chinese medicine's 12 horary points to help you overcome jet lag naturally. Each point is active for 2 hours based on your destination's timezone.</p>
+                            <p>Developed by Dr. Steven Schram, licensed acupuncturist.</p>
+                        </div>
+                    </section>
+
+                    <section class="info-section">
+                        <div class="section-header expandable" onclick="toggleSection('science')">
+                            <div class="section-title">
+                                <span class="bullet">•</span>
+                                <span class="title-text">The Science</span>
+                            </div>
+                            <div class="chevron" id="scienceChevron">▼</div>
+                        </div>
+                        <div class="section-content" id="scienceContent">
+                            <p>According to acupuncture sages, each of the twelve meridians has a daily two-hour period when it is most active (Horary Time).</p>
+                            <p>When you stimulate the horary point associated with your destination time, you help your body begin syncing with the new time zone in advance.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Tab Bar -->
+        <nav class="tab-bar">
+            <div class="tab-item active" onclick="switchTab('home')">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-label">Home</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('destination')">
+                <div class="tab-icon">✈️</div>
+                <div class="tab-label">Destination</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('journey')">
+                <div class="tab-icon">🛫</div>
+                <div class="tab-label">Journey</div>
+            </div>
+            <div class="tab-item" onclick="switchTab('info')">
+                <div class="tab-icon">❓</div>
+                <div class="tab-label">Info</div>
+            </div>
+        </nav>
+    </div>
 
     <!-- Scripts -->
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');
@@ -211,6 +279,24 @@
                 content.style.display = 'none';
                 chevron.textContent = '▼';
             }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tab items
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(item => item.classList.remove('active'));
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabName + 'Tab');
+            selectedTab.classList.add('active');
+            
+            // Add active class to selected tab item
+            const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+            selectedTabItem.classList.add('active');
         }
     </script>
 </body>
