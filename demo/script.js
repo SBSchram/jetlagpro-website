@@ -19,6 +19,10 @@ class JetLagProDemo {
             await this.loadData();
             this.setupEventListeners();
             this.startTimeUpdates();
+            
+            // Show default sections expanded
+            this.showDefaultSections();
+            
             console.log('Demo initialized successfully');
         } catch (error) {
             console.error('Failed to initialize demo:', error);
@@ -194,19 +198,16 @@ class JetLagProDemo {
         const pointVideo = document.getElementById('pointVideo');
         pointVideo.load(); // Reload video with new source
 
-        // Update time info
-        const timeInfo = document.getElementById('pointTimeInfo');
-        const timeString = destinationTime.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            timeZoneName: 'short'
-        });
-        timeInfo.textContent = `Current time in ${this.selectedAirport.city}: ${timeString} - Point active from ${point.timeDescription}`;
-
-        // Show the active point section
+        // Show the active point section and expand it
         const activePointSection = document.getElementById('activePointSection');
         activePointSection.style.display = 'block';
         activePointSection.classList.add('fade-in');
+        
+        // Auto-expand the active point section
+        const activePointContent = document.getElementById('activePointContent');
+        const activePointChevron = document.getElementById('activePointChevron');
+        activePointContent.style.display = 'block';
+        activePointChevron.textContent = '▲';
     }
 
     updatePointSchedule() {
@@ -231,10 +232,16 @@ class JetLagProDemo {
 
         scheduleGrid.innerHTML = scheduleHTML;
 
-        // Show the schedule section
+        // Show the schedule section and expand it
         const scheduleSection = document.getElementById('pointScheduleSection');
         scheduleSection.style.display = 'block';
         scheduleSection.classList.add('fade-in');
+        
+        // Auto-expand the schedule section
+        const scheduleContent = document.getElementById('pointScheduleContent');
+        const scheduleChevron = document.getElementById('pointScheduleChevron');
+        scheduleContent.style.display = 'block';
+        scheduleChevron.textContent = '▲';
     }
 
     formatHour(hour) {
@@ -251,6 +258,19 @@ class JetLagProDemo {
                 this.updatePointSchedule();
             }
         }, 60000); // 60 seconds
+    }
+
+    showDefaultSections() {
+        // Show demo status and airport selection by default
+        const demoStatusContent = document.getElementById('demoStatusContent');
+        const demoStatusChevron = document.getElementById('demoStatusChevron');
+        const airportSelectionContent = document.getElementById('airportSelectionContent');
+        const airportSelectionChevron = document.getElementById('airportSelectionChevron');
+        
+        demoStatusContent.style.display = 'block';
+        demoStatusChevron.textContent = '▲';
+        airportSelectionContent.style.display = 'block';
+        airportSelectionChevron.textContent = '▲';
     }
 
     showError(message) {

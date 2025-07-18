@@ -24,85 +24,82 @@
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
-    <!-- Header -->
-    <header class="demo-header">
-        <div class="container">
-            <nav class="nav">
-                <a href="../" class="nav-back">
-                    <span>←</span> Back to JetLagPro
+    <!-- iOS-style Header -->
+    <header class="app-header">
+        <div class="header-gradient">
+            <div class="header-content">
+                <a href="../" class="back-button">
+                    <span>←</span> Back
                 </a>
-                <div class="nav-title">
-                    <h1>JetLagPro Demo</h1>
-                    <p>Interactive Horary Points System</p>
-                </div>
-                <div class="nav-actions">
-                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
-                        Download App
-                    </a>
-                </div>
-            </nav>
+                <h1 class="app-title">JetLagPro</h1>
+                <div class="header-spacer"></div>
+            </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="demo-main">
-        <div class="container">
-            <!-- Demo Instructions -->
-            <section class="demo-intro">
-                <div class="intro-content">
-                    <h2>Experience JetLagPro's Horary Points System</h2>
-                    <p>This interactive demo shows how JetLagPro uses traditional Chinese medicine's 12 horary points to help you overcome jet lag. Each point is active for 2 hours based on your destination's timezone.</p>
-                    
-                    <div class="demo-steps">
-                        <div class="step">
-                            <span class="step-number">1</span>
-                            <span class="step-text">Select your destination airport</span>
+    <main class="app-main">
+        <div class="content-container">
+            <!-- Demo Status Section -->
+            <section class="status-section">
+                <div class="section-header expandable" onclick="toggleSection('demoStatus')">
+                    <div class="section-title">
+                        <span class="bullet">•</span>
+                        <span class="title-text">Demo Status</span>
+                    </div>
+                    <div class="chevron" id="demoStatusChevron">▼</div>
+                </div>
+                <div class="section-content" id="demoStatusContent">
+                    <div class="status-item">
+                        <span class="bullet">•</span>
+                        <span class="status-text success">Interactive demo is ready</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="bullet">•</span>
+                        <span class="status-text secondary">Select a destination to see active points</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Airport Selection Section -->
+            <section class="airport-section">
+                <div class="section-header expandable" onclick="toggleSection('airportSelection')">
+                    <div class="section-title">
+                        <span class="bullet">•</span>
+                        <span class="title-text">Select Destination</span>
+                    </div>
+                    <div class="chevron" id="airportSelectionChevron">▼</div>
+                </div>
+                <div class="section-content" id="airportSelectionContent">
+                    <div class="airport-search">
+                        <div class="search-input-wrapper">
+                            <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
+                            <div class="search-icon">🔍</div>
                         </div>
-                        <div class="step">
-                            <span class="step-number">2</span>
-                            <span class="step-text">See which point is currently active</span>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">3</span>
-                            <span class="step-text">Learn how to stimulate the point</span>
+                        <div id="airportResults" class="airport-results"></div>
+                    </div>
+
+                    <div id="selectedAirport" class="selected-airport" style="display: none;">
+                        <div class="airport-info">
+                            <h4 id="airportName"></h4>
+                            <p id="airportLocation"></p>
+                            <p id="airportTimezone"></p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Airport Selection -->
-            <section class="airport-selection">
-                <div class="section-header">
-                    <h3>Select Your Destination</h3>
-                    <p>Choose your destination airport to see the active horary point</p>
-                </div>
-                
-                <div class="airport-search">
-                    <div class="search-input-wrapper">
-                        <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
-                        <div class="search-icon">🔍</div>
+            <!-- Active Point Section -->
+            <section id="activePointSection" class="point-section" style="display: none;">
+                <div class="section-header expandable" onclick="toggleSection('activePoint')">
+                    <div class="section-title">
+                        <span class="bullet">•</span>
+                        <span class="title-text">Currently Active Point</span>
                     </div>
-                    <div id="airportResults" class="airport-results"></div>
+                    <div class="chevron" id="activePointChevron">▼</div>
                 </div>
-
-                <div id="selectedAirport" class="selected-airport" style="display: none;">
-                    <div class="airport-info">
-                        <h4 id="airportName"></h4>
-                        <p id="airportLocation"></p>
-                        <p id="airportTimezone"></p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Active Point Display -->
-            <section id="activePointSection" class="active-point" style="display: none;">
-                <div class="section-header">
-                    <h3>Currently Active Point</h3>
-                    <p id="pointTimeInfo"></p>
-                </div>
-
-                <div class="point-display">
-                    <div class="point-card">
+                <div class="section-content" id="activePointContent">
+                    <div class="point-display">
                         <div class="point-header">
                             <div class="point-number" id="pointNumber"></div>
                             <div class="point-names">
@@ -144,14 +141,47 @@
                 </div>
             </section>
 
-            <!-- Point Schedule -->
-            <section id="pointScheduleSection" class="point-schedule" style="display: none;">
-                <div class="section-header">
-                    <h3>24-Hour Point Schedule</h3>
-                    <p>See when each point is active throughout the day</p>
+            <!-- Point Schedule Section -->
+            <section id="pointScheduleSection" class="schedule-section" style="display: none;">
+                <div class="section-header expandable" onclick="toggleSection('pointSchedule')">
+                    <div class="section-title">
+                        <span class="bullet">•</span>
+                        <span class="title-text">24-Hour Point Schedule</span>
+                    </div>
+                    <div class="chevron" id="pointScheduleChevron">▼</div>
                 </div>
-                
-                <div id="pointSchedule" class="schedule-grid"></div>
+                <div class="section-content" id="pointScheduleContent">
+                    <div id="pointSchedule" class="schedule-grid"></div>
+                </div>
+            </section>
+
+            <!-- Instructions Section -->
+            <section class="instructions-section">
+                <div class="section-header expandable" onclick="toggleSection('instructions')">
+                    <div class="section-title">
+                        <span class="bullet">•</span>
+                        <span class="title-text">How to Use JetLagPro</span>
+                    </div>
+                    <div class="chevron" id="instructionsChevron">▼</div>
+                </div>
+                <div class="section-content" id="instructionsContent">
+                    <div class="instruction-item">
+                        <span class="bullet">•</span>
+                        <span class="instruction-text">Set your destination airport</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="bullet">•</span>
+                        <span class="instruction-text">Get timed reminders for point stimulation</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="bullet">•</span>
+                        <span class="instruction-text">Follow guided instructions for each point</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="bullet">•</span>
+                        <span class="instruction-text">Arrive refreshed and adjusted to new timezone</span>
+                    </div>
+                </div>
             </section>
 
             <!-- Download CTA -->
@@ -159,7 +189,7 @@
                 <div class="cta-content">
                     <h3>Ready to Beat Jet Lag?</h3>
                     <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
-                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download-large" target="_blank">
+                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
                         Download JetLagPro
                     </a>
                 </div>
@@ -167,15 +197,21 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="demo-footer">
-        <div class="container">
-            <p>&copy; 2025 JetLagPro. All rights reserved.</p>
-            <p><a href="../privacy.html">Privacy Policy</a></p>
-        </div>
-    </footer>
-
     <!-- Scripts -->
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const chevron = document.getElementById(sectionId + 'Chevron');
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                chevron.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                chevron.textContent = '▼';
+            }
+        }
+    </script>
 </body>
 </html> 
