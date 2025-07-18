@@ -24,235 +24,243 @@
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
-    <!-- iOS App Container -->
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-gradient">
-                <div class="header-content">
-                    <a href="../" class="back-button">
-                        <span>←</span> Back
-                    </a>
-                    <h1 class="app-title">How to be a Jet Lag Pro</h1>
-                    <div class="header-spacer"></div>
-                </div>
-            </div>
-        </header>
+    <div class="container">
+        <!-- Back Button (outside phone frame) -->
+        <div class="back-button-container">
+            <a href="../" class="back-button">
+                <span>←</span> Back to Website
+            </a>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="app-main">
-            <!-- Home Tab Content -->
-            <div id="homeTab" class="tab-content active">
-                <div class="content-container">
-                    <!-- Get Notified Section -->
-                    <section class="notifications-section">
-                        <div class="section-header expandable" onclick="toggleSection('notifications')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">Get Notified:</span>
-                            </div>
-                            <div class="chevron" id="notificationsChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="notificationsContent">
-                            <div class="notification-item">
-                                <span class="bullet">•</span>
-                                <span class="notification-text">Notifications are enabled and working properly</span>
-                            </div>
-                            <div class="notification-item">
-                                <span class="bullet">•</span>
-                                <span class="notification-text">You'll receive alerts when it's time to stimulate points</span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Main Instructions -->
-                    <section class="main-instructions">
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Start the app at the airport.</span>
-                        </div>
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Choose your destination (airplane tab).</span>
-                        </div>
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Stimulate the point that is shown.</span>
-                        </div>
-                    </section>
-
-                    <!-- Stimulation Guidelines Section -->
-                    <section class="stimulation-section">
-                        <div class="section-header expandable" onclick="toggleSection('stimulation')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">How to Stimulate</span>
-                            </div>
-                            <div class="chevron" id="stimulationChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="stimulationContent">
-                            <p>Use your fingers or a blunt tool (pen top) to apply pressure like in the video.</p>
-                            
-                            <h4>Important Tips</h4>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Use a firm pressure - You can do this through light clothes</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Pay attention and focus on what you are doing</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Rub and press each point for a minute</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Breathe slowly and take your time</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Points exist on both sides of the body so do both sides</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">For best results, do all 12 points over 24 hours</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="bullet">•</span>
-                                <span class="tip-text">Stop pressing on a point if you feel any pain or odd discomfort</span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Final Instructions -->
-                    <section class="final-instructions">
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Leave the app open as you do other things. Notices will remind you to do the next point at the right time.</span>
-                        </div>
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Continue with each point, even after the flight ends for a full 24 hour cycle.</span>
-                        </div>
-                        <div class="instruction-item">
-                            <span class="bullet">•</span>
-                            <span class="instruction-text">Follow these guidelines and you too can become a Jet Lag Pro.</span>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- Destination Tab Content -->
-            <div id="destinationTab" class="tab-content">
-                <div class="content-container">
-                    <section class="airport-section">
-                        <div class="section-header expandable" onclick="toggleSection('airportSelection')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">Select Destination</span>
-                            </div>
-                            <div class="chevron" id="airportSelectionChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="airportSelectionContent">
-                            <div class="airport-search">
-                                <div class="search-input-wrapper">
-                                    <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
-                                    <div class="search-icon">🔍</div>
-                                </div>
-                                <div id="airportResults" class="airport-results"></div>
-                            </div>
-
-                            <div id="selectedAirport" class="selected-airport" style="display: none;">
-                                <div class="airport-info">
-                                    <h4 id="airportName"></h4>
-                                    <p id="airportLocation"></p>
-                                    <p id="airportTimezone"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- Journey Tab Content -->
-            <div id="journeyTab" class="tab-content">
-                <div class="journey-header">
+        <!-- Phone Frame -->
+        <div class="phone-frame">
+            <!-- iOS App Container -->
+            <div class="app-container">
+                <!-- Header -->
+                <header class="app-header">
                     <div class="header-gradient">
-                        <div class="journey-header-content">
-                            <div class="destination-info">
-                                <div id="destinationStatus" class="destination-status">
-                                    <span>No Destination Yet</span>
+                        <div class="header-content">
+                            <h1 class="app-title">How to be a Jet Lag Pro</h1>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Main Content Area -->
+                <main class="app-main">
+                    <!-- Home Tab Content -->
+                    <div id="homeTab" class="tab-content active">
+                        <div class="content-container">
+                            <!-- Get Notified Section -->
+                            <section class="notifications-section">
+                                <div class="section-header expandable" onclick="toggleSection('notifications')">
+                                    <div class="section-title">
+                                        <span class="bullet">•</span>
+                                        <span class="title-text">Get Notified:</span>
+                                    </div>
+                                    <div class="chevron" id="notificationsChevron">▼</div>
                                 </div>
-                                <div id="destinationName" class="destination-name" style="display: none;"></div>
+                                <div class="section-content" id="notificationsContent">
+                                    <div class="notification-item">
+                                        <span class="bullet">•</span>
+                                        <span class="notification-text">Notifications are enabled and working properly</span>
+                                    </div>
+                                    <div class="notification-item">
+                                        <span class="bullet">•</span>
+                                        <span class="notification-text">You'll receive alerts when it's time to stimulate points</span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Main Instructions -->
+                            <section class="main-instructions">
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Start the app at the airport.</span>
+                                </div>
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Choose your destination (airplane tab).</span>
+                                </div>
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Stimulate the point that is shown.</span>
+                                </div>
+                            </section>
+
+                            <!-- Stimulation Guidelines Section -->
+                            <section class="stimulation-section">
+                                <div class="section-header expandable" onclick="toggleSection('stimulation')">
+                                    <div class="section-title">
+                                        <span class="bullet">•</span>
+                                        <span class="title-text">How to Stimulate</span>
+                                    </div>
+                                    <div class="chevron" id="stimulationChevron">▼</div>
+                                </div>
+                                <div class="section-content" id="stimulationContent">
+                                    <p>Use your fingers or a blunt tool (pen top) to apply pressure like in the video.</p>
+                                    
+                                    <h4>Important Tips</h4>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Use a firm pressure - You can do this through light clothes</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Pay attention and focus on what you are doing</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Rub and press each point for a minute</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Breathe slowly and take your time</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Points exist on both sides of the body so do both sides</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">For best results, do all 12 points over 24 hours</span>
+                                    </div>
+                                    <div class="tip-item">
+                                        <span class="bullet">•</span>
+                                        <span class="tip-text">Stop pressing on a point if you feel any pain or odd discomfort</span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Final Instructions -->
+                            <section class="final-instructions">
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Leave the app open as you do other things. Notices will remind you to do the next point at the right time.</span>
+                                </div>
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Continue with each point, even after the flight ends for a full 24 hour cycle.</span>
+                                </div>
+                                <div class="instruction-item">
+                                    <span class="bullet">•</span>
+                                    <span class="instruction-text">Follow these guidelines and you too can become a Jet Lag Pro.</span>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!-- Destination Tab Content -->
+                    <div id="destinationTab" class="tab-content">
+                        <div class="content-container">
+                            <section class="airport-section">
+                                <div class="section-header expandable" onclick="toggleSection('airportSelection')">
+                                    <div class="section-title">
+                                        <span class="bullet">•</span>
+                                        <span class="title-text">Select Destination</span>
+                                    </div>
+                                    <div class="chevron" id="airportSelectionChevron">▼</div>
+                                </div>
+                                <div class="section-content" id="airportSelectionContent">
+                                    <div class="airport-search">
+                                        <div class="search-input-wrapper">
+                                            <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
+                                            <div class="search-icon">🔍</div>
+                                        </div>
+                                        <div id="airportResults" class="airport-results"></div>
+                                    </div>
+
+                                    <div id="selectedAirport" class="selected-airport" style="display: none;">
+                                        <div class="airport-info">
+                                            <h4 id="airportName"></h4>
+                                            <p id="airportLocation"></p>
+                                            <p id="airportTimezone"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!-- Journey Tab Content -->
+                    <div id="journeyTab" class="tab-content">
+                        <div class="journey-header">
+                            <div class="header-gradient">
+                                <div class="journey-header-content">
+                                    <div class="destination-info">
+                                        <div id="destinationStatus" class="destination-status">
+                                            <span>No Destination Yet</span>
+                                        </div>
+                                        <div id="destinationName" class="destination-name" style="display: none;"></div>
+                                    </div>
+                                    <div id="endJourneyButton" class="end-journey-button" style="display: none;" onclick="demo.endJourney()">
+                                        <span>✕</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="endJourneyButton" class="end-journey-button" style="display: none;" onclick="demo.endJourney()">
-                                <span>✕</span>
+                        </div>
+
+                        <div class="journey-content">
+                            <div class="points-list" id="pointsList">
+                                <!-- Points will be dynamically generated here -->
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="journey-content">
-                    <div class="points-list" id="pointsList">
-                        <!-- Points will be dynamically generated here -->
+                    <!-- Info Tab Content -->
+                    <div id="infoTab" class="tab-content">
+                        <div class="content-container">
+                            <section class="info-section">
+                                <div class="section-header expandable" onclick="toggleSection('about')">
+                                    <div class="section-title">
+                                        <span class="bullet">•</span>
+                                        <span class="title-text">About JetLagPro</span>
+                                    </div>
+                                    <div class="chevron" id="aboutChevron">▼</div>
+                                </div>
+                                <div class="section-content" id="aboutContent">
+                                    <p>JetLagPro uses traditional Chinese medicine's 12 horary points to help you overcome jet lag naturally. Each point is active for 2 hours based on your destination's timezone.</p>
+                                    <p>Developed by Dr. Steven Schram, licensed acupuncturist.</p>
+                                </div>
+                            </section>
+
+                            <section class="info-section">
+                                <div class="section-header expandable" onclick="toggleSection('science')">
+                                    <div class="section-title">
+                                        <span class="bullet">•</span>
+                                        <span class="title-text">The Science</span>
+                                    </div>
+                                    <div class="chevron" id="scienceChevron">▼</div>
+                                </div>
+                                <div class="section-content" id="scienceContent">
+                                    <p>According to acupuncture sages, each of the twelve meridians has a daily two-hour period when it is most active (Horary Time).</p>
+                                    <p>When you stimulate the horary point associated with your destination time, you help your body begin syncing with the new time zone in advance.</p>
+                                </div>
+                            </section>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </main>
 
-            <!-- Info Tab Content -->
-            <div id="infoTab" class="tab-content">
-                <div class="content-container">
-                    <section class="info-section">
-                        <div class="section-header expandable" onclick="toggleSection('about')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">About JetLagPro</span>
-                            </div>
-                            <div class="chevron" id="aboutChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="aboutContent">
-                            <p>JetLagPro uses traditional Chinese medicine's 12 horary points to help you overcome jet lag naturally. Each point is active for 2 hours based on your destination's timezone.</p>
-                            <p>Developed by Dr. Steven Schram, licensed acupuncturist.</p>
-                        </div>
-                    </section>
-
-                    <section class="info-section">
-                        <div class="section-header expandable" onclick="toggleSection('science')">
-                            <div class="section-title">
-                                <span class="bullet">•</span>
-                                <span class="title-text">The Science</span>
-                            </div>
-                            <div class="chevron" id="scienceChevron">▼</div>
-                        </div>
-                        <div class="section-content" id="scienceContent">
-                            <p>According to acupuncture sages, each of the twelve meridians has a daily two-hour period when it is most active (Horary Time).</p>
-                            <p>When you stimulate the horary point associated with your destination time, you help your body begin syncing with the new time zone in advance.</p>
-                        </div>
-                    </section>
-                </div>
+                <!-- Bottom Tab Bar -->
+                <nav class="tab-bar">
+                    <div class="tab-item active" onclick="switchTab('home')">
+                        <div class="tab-icon">🏠</div>
+                        <div class="tab-label">Home</div>
+                    </div>
+                    <div class="tab-item" onclick="switchTab('destination')">
+                        <div class="tab-icon">✈️</div>
+                        <div class="tab-label">Destination</div>
+                    </div>
+                    <div class="tab-item" onclick="switchTab('journey')">
+                        <div class="tab-icon">🛫</div>
+                        <div class="tab-label">Journey</div>
+                    </div>
+                    <div class="tab-item" onclick="switchTab('info')">
+                        <div class="tab-icon">❓</div>
+                        <div class="tab-label">Info</div>
+                    </div>
+                </nav>
             </div>
-        </main>
-
-        <!-- Bottom Tab Bar -->
-        <nav class="tab-bar">
-            <div class="tab-item active" onclick="switchTab('home')">
-                <div class="tab-icon">🏠</div>
-                <div class="tab-label">Home</div>
-            </div>
-            <div class="tab-item" onclick="switchTab('destination')">
-                <div class="tab-icon">✈️</div>
-                <div class="tab-label">Destination</div>
-            </div>
-            <div class="tab-item" onclick="switchTab('journey')">
-                <div class="tab-icon">🛫</div>
-                <div class="tab-label">Journey</div>
-            </div>
-            <div class="tab-item" onclick="switchTab('info')">
-                <div class="tab-icon">❓</div>
-                <div class="tab-label">Info</div>
-            </div>
-        </nav>
+        </div>
     </div>
 
     <!-- Download CTA -->
