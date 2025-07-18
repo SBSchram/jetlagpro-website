@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Demo - Interactive Horary Points</title>
+    <meta name="description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jetlagpro.com/demo/">
+    <meta property="og:title" content="JetLagPro Demo - Interactive Horary Points">
+    <meta property="og:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
+    <meta property="og:image" content="https://jetlagpro.com/assets/images/app-icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://jetlagpro.com/demo/">
+    <meta property="twitter:title" content="JetLagPro Demo - Interactive Horary Points">
+    <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
+    <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="demo-header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../" class="nav-back">
+                    <span>←</span> Back to JetLagPro
+                </a>
+                <div class="nav-title">
+                    <h1>JetLagPro Demo</h1>
+                    <p>Interactive Horary Points System</p>
+                </div>
+                <div class="nav-actions">
+                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
+                        Download App
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="demo-main">
+        <div class="container">
+            <!-- Demo Instructions -->
+            <section class="demo-intro">
+                <div class="intro-content">
+                    <h2>Experience JetLagPro's Horary Points System</h2>
+                    <p>This interactive demo shows how JetLagPro uses traditional Chinese medicine's 12 horary points to help you overcome jet lag. Each point is active for 2 hours based on your destination's timezone.</p>
+                    
+                    <div class="demo-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Select your destination airport</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">See which point is currently active</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Learn how to stimulate the point</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Airport Selection -->
+            <section class="airport-selection">
+                <div class="section-header">
+                    <h3>Select Your Destination</h3>
+                    <p>Choose your destination airport to see the active horary point</p>
+                </div>
+                
+                <div class="airport-search">
+                    <div class="search-input-wrapper">
+                        <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
+                        <div class="search-icon">🔍</div>
+                    </div>
+                    <div id="airportResults" class="airport-results"></div>
+                </div>
+
+                <div id="selectedAirport" class="selected-airport" style="display: none;">
+                    <div class="airport-info">
+                        <h4 id="airportName"></h4>
+                        <p id="airportLocation"></p>
+                        <p id="airportTimezone"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Point Display -->
+            <section id="activePointSection" class="active-point" style="display: none;">
+                <div class="section-header">
+                    <h3>Currently Active Point</h3>
+                    <p id="pointTimeInfo"></p>
+                </div>
+
+                <div class="point-display">
+                    <div class="point-card">
+                        <div class="point-header">
+                            <div class="point-number" id="pointNumber"></div>
+                            <div class="point-names">
+                                <h4 id="pointName"></h4>
+                                <p id="pointChineseName"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="point-content">
+                            <div class="point-image">
+                                <img id="pointImage" src="" alt="Point location">
+                            </div>
+                            
+                            <div class="point-details">
+                                <div class="detail-group">
+                                    <h5>Location</h5>
+                                    <p id="pointLocation"></p>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <h5>How to Stimulate</h5>
+                                    <p id="pointStimulation"></p>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <h5>Benefits</h5>
+                                    <p id="pointFunctions"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="point-video">
+                            <video id="pointVideo" controls preload="metadata">
+                                <source id="videoSource" src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Point Schedule -->
+            <section id="pointScheduleSection" class="point-schedule" style="display: none;">
+                <div class="section-header">
+                    <h3>24-Hour Point Schedule</h3>
+                    <p>See when each point is active throughout the day</p>
+                </div>
+                
+                <div id="pointSchedule" class="schedule-grid"></div>
+            </section>
+
+            <!-- Download CTA -->
+            <section class="download-cta">
+                <div class="cta-content">
+                    <h3>Ready to Beat Jet Lag?</h3>
+                    <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
+                    <a href="https://apps.apple.com/app/jetlagpro" class="btn-download-large" target="_blank">
+                        Download JetLagPro
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="demo-footer">
+        <div class="container">
+            <p>&copy; 2025 JetLagPro. All rights reserved.</p>
+            <p><a href="../privacy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js?v=2"></script>
+</body>
+</html> 
