@@ -401,11 +401,10 @@ body {
 /* Download CTA */
 .download-cta {
     background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
-    border-radius: 12px;
-    padding: 24px;
+    padding: 24px 16px;
     text-align: center;
     color: #ffffff;
-    margin-top: 24px;
+    margin-top: 20px;
 }
 
 .cta-content h3 {
@@ -897,4 +896,111 @@ body {
     .point-video video {
         height: 120px;
     }
+} 
+
+/* Main Instructions */
+.main-instructions {
+    margin-bottom: 20px;
+}
+
+.main-instructions .instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-left: 16px;
+}
+
+.main-instructions .instruction-text {
+    color: #1d1d1f;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Stimulation Section */
+.stimulation-section {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stimulation-section .section-content {
+    padding: 16px 20px;
+}
+
+.stimulation-section p {
+    color: #3a3a3c;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.stimulation-section h4 {
+    color: #1d1d1f;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 4px;
+}
+
+.tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding-left: 35px;
+}
+
+.tip-text {
+    color: #3a3a3c;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+/* Final Instructions */
+.final-instructions {
+    margin-bottom: 20px;
+}
+
+.final-instructions .instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-left: 16px;
+}
+
+.final-instructions .instruction-text {
+    color: #1d1d1f;
+    font-size: 15px;
+    font-weight: 600;
+} 
+
+/* Notifications Section */
+.notifications-section {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-left: 20px;
+}
+
+.notification-text {
+    color: #3a3a3c;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.notification-text.success {
+    color: #34c759;
 } 

@@ -450,16 +450,16 @@ class JetLagProDemo {
     }
 
     showDefaultSections() {
-        // Show demo status and instructions by default on home tab
-        const demoStatusContent = document.getElementById('demoStatusContent');
-        const demoStatusChevron = document.getElementById('demoStatusChevron');
-        const instructionsContent = document.getElementById('instructionsContent');
-        const instructionsChevron = document.getElementById('instructionsChevron');
+        // Start with all sections collapsed on home tab
+        const notificationsContent = document.getElementById('notificationsContent');
+        const notificationsChevron = document.getElementById('notificationsChevron');
+        const stimulationContent = document.getElementById('stimulationContent');
+        const stimulationChevron = document.getElementById('stimulationChevron');
         
-        if (demoStatusContent) demoStatusContent.style.display = 'block';
-        if (demoStatusChevron) demoStatusChevron.textContent = '▲';
-        if (instructionsContent) instructionsContent.style.display = 'block';
-        if (instructionsChevron) instructionsChevron.textContent = '▲';
+        if (notificationsContent) notificationsContent.style.display = 'none';
+        if (notificationsChevron) notificationsChevron.textContent = '▼';
+        if (stimulationContent) stimulationContent.style.display = 'none';
+        if (stimulationChevron) stimulationChevron.textContent = '▼';
     }
 
     switchToTab(tabName) {

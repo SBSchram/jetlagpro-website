@@ -33,7 +33,7 @@
                     <a href="../" class="back-button">
                         <span>←</span> Back
                     </a>
-                    <h1 class="app-title">JetLagPro</h1>
+                    <h1 class="app-title">How to be a Jet Lag Pro</h1>
                     <div class="header-spacer"></div>
                 </div>
             </div>
@@ -44,64 +44,100 @@
             <!-- Home Tab Content -->
             <div id="homeTab" class="tab-content active">
                 <div class="content-container">
-                    <!-- Demo Status Section -->
-                    <section class="status-section">
-                        <div class="section-header expandable" onclick="toggleSection('demoStatus')">
+                    <!-- Get Notified Section -->
+                    <section class="notifications-section">
+                        <div class="section-header expandable" onclick="toggleSection('notifications')">
                             <div class="section-title">
                                 <span class="bullet">•</span>
-                                <span class="title-text">Demo Status</span>
+                                <span class="title-text">Get Notified:</span>
                             </div>
-                            <div class="chevron" id="demoStatusChevron">▼</div>
+                            <div class="chevron" id="notificationsChevron">▼</div>
                         </div>
-                        <div class="section-content" id="demoStatusContent">
-                            <div class="status-item">
+                        <div class="section-content" id="notificationsContent">
+                            <div class="notification-item">
                                 <span class="bullet">•</span>
-                                <span class="status-text success">Interactive demo is ready</span>
+                                <span class="notification-text">Notifications are enabled and working properly</span>
                             </div>
-                            <div class="status-item">
+                            <div class="notification-item">
                                 <span class="bullet">•</span>
-                                <span class="status-text secondary">Select a destination to see active points</span>
+                                <span class="notification-text">You'll receive alerts when it's time to stimulate points</span>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Instructions Section -->
-                    <section class="instructions-section">
-                        <div class="section-header expandable" onclick="toggleSection('instructions')">
+                    <!-- Main Instructions -->
+                    <section class="main-instructions">
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Start the app at the airport.</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Choose your destination (airplane tab).</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Stimulate the point that is shown.</span>
+                        </div>
+                    </section>
+
+                    <!-- Stimulation Guidelines Section -->
+                    <section class="stimulation-section">
+                        <div class="section-header expandable" onclick="toggleSection('stimulation')">
                             <div class="section-title">
                                 <span class="bullet">•</span>
-                                <span class="title-text">How to Use JetLagPro</span>
+                                <span class="title-text">How to Stimulate</span>
                             </div>
-                            <div class="chevron" id="instructionsChevron">▼</div>
+                            <div class="chevron" id="stimulationChevron">▼</div>
                         </div>
-                        <div class="section-content" id="instructionsContent">
-                            <div class="instruction-item">
+                        <div class="section-content" id="stimulationContent">
+                            <p>Use your fingers or a blunt tool (pen top) to apply pressure like in the video.</p>
+                            
+                            <h4>Important Tips</h4>
+                            <div class="tip-item">
                                 <span class="bullet">•</span>
-                                <span class="instruction-text">Set your destination airport</span>
+                                <span class="tip-text">Use a firm pressure - You can do this through light clothes</span>
                             </div>
-                            <div class="instruction-item">
+                            <div class="tip-item">
                                 <span class="bullet">•</span>
-                                <span class="instruction-text">Get timed reminders for point stimulation</span>
+                                <span class="tip-text">Pay attention and focus on what you are doing</span>
                             </div>
-                            <div class="instruction-item">
+                            <div class="tip-item">
                                 <span class="bullet">•</span>
-                                <span class="instruction-text">Follow guided instructions for each point</span>
+                                <span class="tip-text">Rub and press each point for a minute</span>
                             </div>
-                            <div class="instruction-item">
+                            <div class="tip-item">
                                 <span class="bullet">•</span>
-                                <span class="instruction-text">Arrive refreshed and adjusted to new timezone</span>
+                                <span class="tip-text">Breathe slowly and take your time</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="bullet">•</span>
+                                <span class="tip-text">Points exist on both sides of the body so do both sides</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="bullet">•</span>
+                                <span class="tip-text">For best results, do all 12 points over 24 hours</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="bullet">•</span>
+                                <span class="tip-text">Stop pressing on a point if you feel any pain or odd discomfort</span>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Download CTA -->
-                    <section class="download-cta">
-                        <div class="cta-content">
-                            <h3>Ready to Beat Jet Lag?</h3>
-                            <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
-                            <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
-                                Download JetLagPro
-                            </a>
+                    <!-- Final Instructions -->
+                    <section class="final-instructions">
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Leave the app open as you do other things. Notices will remind you to do the next point at the right time.</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Continue with each point, even after the flight ends for a full 24 hour cycle.</span>
+                        </div>
+                        <div class="instruction-item">
+                            <span class="bullet">•</span>
+                            <span class="instruction-text">Follow these guidelines and you too can become a Jet Lag Pro.</span>
                         </div>
                     </section>
                 </div>
@@ -218,6 +254,17 @@
             </div>
         </nav>
     </div>
+
+    <!-- Download CTA -->
+    <section class="download-cta">
+        <div class="cta-content">
+            <h3>Ready to Beat Jet Lag?</h3>
+            <p>Download JetLagPro to get notifications when it's time to stimulate points and track your progress.</p>
+            <a href="https://apps.apple.com/app/jetlagpro" class="btn-download" target="_blank">
+                Download JetLagPro
+            </a>
+        </div>
+    </section>
 
     <!-- Scripts -->
     <script src="script.js?v=4"></script>
