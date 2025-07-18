@@ -12,6 +12,8 @@ class JetLagProDemo {
         this.currentTab = 'home';
         this.expandedPointId = null;
         this.completedPoints = new Set();
+        this.recentDestinations = [];
+        this.maxRecentDestinations = 5;
         
         this.init();
     }
@@ -20,6 +22,7 @@ class JetLagProDemo {
         try {
             console.log('Initializing JetLagPro Demo...');
             await this.loadData();
+            this.loadRecentDestinations();
             this.setupEventListeners();
             this.startTimeUpdates();
             
@@ -28,6 +31,9 @@ class JetLagProDemo {
             
             // Generate initial points list
             this.generatePointsList();
+            
+            // Show empty state for destination tab
+            this.showEmptyState();
             
             console.log('Demo initialized successfully');
         } catch (error) {
@@ -63,10 +69,10 @@ class JetLagProDemo {
         
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.handleAirportSearch(e.target.value));
-            searchInput.addEventListener('focus', () => this.showAirportResults());
+            searchInput.addEventListener('focus', () => this.showSearchResults());
             searchInput.addEventListener('blur', () => {
                 // Delay hiding results to allow clicking
-                setTimeout(() => this.hideAirportResults(), 200);
+                setTimeout(() => this.hideSearchResults(), 200);
             });
         } else {
             console.error('Search input element not found!');
@@ -74,22 +80,30 @@ class JetLagProDemo {
 
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.airport-search')) {
-                this.hideAirportResults();
+            if (!e.target.closest('.search-bar')) {
+                this.hideSearchResults();
             }
         });
     }
 
     handleAirportSearch(query) {
         console.log('Searching for:', query);
+        
+        // Show/hide clear button
+        const clearButton = document.getElementById('clearSearchButton');
+        if (clearButton) {
+            clearButton.style.display = query.trim() ? 'block' : 'none';
+        }
+        
         if (!query.trim()) {
-            this.hideAirportResults();
+            this.hideSearchResults();
+            this.showEmptyState();
             return;
         }
 
         const results = this.searchAirports(query);
         console.log('Search results:', results);
-        this.displayAirportResults(results);
+        this.displaySearchResults(results);
     }
 
     searchAirports(query) {
@@ -102,34 +116,60 @@ class JetLagProDemo {
         ).slice(0, 10); // Limit to 10 results
     }
 
-    displayAirportResults(results) {
-        const resultsContainer = document.getElementById('airportResults');
+    displaySearchResults(results) {
+        const resultsContainer = document.getElementById('searchResults');
         console.log('Displaying results in container:', resultsContainer);
         
         if (results.length === 0) {
-            resultsContainer.innerHTML = '<div class="airport-result">No airports found</div>';
+            resultsContainer.innerHTML = '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>';
         } else {
             resultsContainer.innerHTML = results.map(airport => `
                 <div class="airport-result" onclick="demo.selectAirport('${airport.code}')">
+                    <div class="airport-info">
+                        <div class="airport-name">${airport.name}</div>
+                        <div class="airport-location">${airport.city}, ${airport.country}</div>
+                    </div>
                     <div class="airport-code">${airport.code}</div>
-                    <div class="airport-details">${airport.name}, ${airport.city}, ${airport.country}</div>
                 </div>
             `).join('');
         }
         
-        this.showAirportResults();
+        this.showSearchResults();
     }
 
-    showAirportResults() {
-        const resultsContainer = document.getElementById('airportResults');
-        console.log('Showing airport results');
-        resultsContainer.style.display = 'block';
+    showSearchResults() {
+        const resultsContainer = document.getElementById('searchResults');
+        const emptyState = document.getElementById('emptyState');
+        const recentDestinations = document.getElementById('recentDestinations');
+        
+        console.log('Showing search results');
+        if (resultsContainer) resultsContainer.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'none';
+        if (recentDestinations) recentDestinations.style.display = 'none';
     }
 
-    hideAirportResults() {
-        const resultsContainer = document.getElementById('airportResults');
-        console.log('Hiding airport results');
-        resultsContainer.style.display = 'none';
+    hideSearchResults() {
+        const resultsContainer = document.getElementById('searchResults');
+        console.log('Hiding search results');
+        if (resultsContainer) resultsContainer.style.display = 'none';
+    }
+
+    showEmptyState() {
+        const emptyState = document.getElementById('emptyState');
+        const recentDestinations = document.getElementById('recentDestinations');
+        
+        if (emptyState) emptyState.style.display = 'flex';
+        if (recentDestinations) {
+            recentDestinations.style.display = this.recentDestinations.length > 0 ? 'block' : 'none';
+        }
+    }
+
+    clearSearch() {
+        const searchInput = document.getElementById('airportSearch');
+        if (searchInput) {
+            searchInput.value = '';
+            this.handleAirportSearch('');
+        }
     }
 
     selectAirport(airportCode) {
@@ -141,10 +181,11 @@ class JetLagProDemo {
         }
 
         this.selectedAirport = airport;
+        this.addRecentDestination(airport);
         this.updateDestinationDisplay();
         this.updateActivePoint();
         this.generatePointsList();
-        this.hideAirportResults();
+        this.hideSearchResults();
         
         // Clear search input
         const searchInput = document.getElementById('airportSearch');
@@ -480,12 +521,113 @@ class JetLagProDemo {
         // Add active class to selected tab item
         const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
         if (selectedTabItem) selectedTabItem.classList.add('active');
+        
+        // Update header title based on tab
+        this.updateHeaderTitle(tabName);
+        
+        // Show/hide main app header based on tab
+        this.toggleMainHeader(tabName);
+    }
+
+    updateHeaderTitle(tabName) {
+        const headerTitle = document.getElementById('headerTitle');
+        if (!headerTitle) return;
+        
+        const titles = {
+            'home': 'How to be a Jet Lag Pro',
+            'destination': 'Destination',
+            'journey': 'Journey',
+            'info': 'Info'
+        };
+        
+        headerTitle.textContent = titles[tabName] || 'How to be a Jet Lag Pro';
+    }
+
+    toggleMainHeader(tabName) {
+        const mainHeader = document.querySelector('.app-header');
+        if (!mainHeader) return;
+        
+        // Only show main header on home tab since other tabs have their own headers
+        if (tabName === 'home') {
+            mainHeader.style.display = 'block';
+        } else {
+            mainHeader.style.display = 'none';
+        }
     }
 
     showError(message) {
         // Simple error display - could be enhanced with a proper error component
         console.error(message);
         alert(message);
+    }
+
+    addRecentDestination(airport) {
+        // Remove if already exists
+        this.recentDestinations = this.recentDestinations.filter(dest => dest.code !== airport.code);
+        
+        // Add to beginning
+        this.recentDestinations.unshift(airport);
+        
+        // Keep only max number
+        if (this.recentDestinations.length > this.maxRecentDestinations) {
+            this.recentDestinations = this.recentDestinations.slice(0, this.maxRecentDestinations);
+        }
+        
+        // Save to localStorage
+        this.saveRecentDestinations();
+        
+        // Update display
+        this.updateRecentDestinationsDisplay();
+    }
+
+    loadRecentDestinations() {
+        try {
+            const saved = localStorage.getItem('recentDestinations');
+            if (saved) {
+                this.recentDestinations = JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('Error loading recent destinations:', error);
+            this.recentDestinations = [];
+        }
+    }
+
+    saveRecentDestinations() {
+        try {
+            localStorage.setItem('recentDestinations', JSON.stringify(this.recentDestinations));
+        } catch (error) {
+            console.error('Error saving recent destinations:', error);
+        }
+    }
+
+    clearRecentDestinations() {
+        this.recentDestinations = [];
+        this.saveRecentDestinations();
+        this.updateRecentDestinationsDisplay();
+    }
+
+    updateRecentDestinationsDisplay() {
+        const recentList = document.getElementById('recentList');
+        const recentDestinations = document.getElementById('recentDestinations');
+        
+        if (!recentList || !recentDestinations) return;
+        
+        if (this.recentDestinations.length === 0) {
+            recentDestinations.style.display = 'none';
+            return;
+        }
+        
+        recentList.innerHTML = this.recentDestinations.map(airport => `
+            <div class="airport-result" onclick="demo.selectAirport('${airport.code}')">
+                <div class="airport-info">
+                    <div class="airport-name">${airport.name}</div>
+                    <div class="airport-location">${airport.city}, ${airport.country}</div>
+                </div>
+                <div class="airport-code">${airport.code}</div>
+            </div>
+        `).join('');
+        
+        recentDestinations.style.display = 'block';
     }
 }
 
@@ -522,7 +664,7 @@ function toggleSection(sectionId) {
 // Add keyboard navigation for airport search
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (demo) demo.hideAirportResults();
+        if (demo) demo.hideSearchResults();
     }
 });
 

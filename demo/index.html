@@ -40,7 +40,7 @@
                 <header class="app-header">
                     <div class="header-gradient">
                         <div class="header-content">
-                            <h1 class="app-title">How to be a Jet Lag Pro</h1>
+                            <h1 class="app-title" id="headerTitle">How to be a Jet Lag Pro</h1>
                         </div>
                     </div>
                 </header>
@@ -151,33 +151,47 @@
 
                     <!-- Destination Tab Content -->
                     <div id="destinationTab" class="tab-content">
-                        <div class="content-container">
-                            <section class="airport-section">
-                                <div class="section-header expandable" onclick="toggleSection('airportSelection')">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">Select Destination</span>
-                                    </div>
-                                    <div class="chevron" id="airportSelectionChevron">▼</div>
-                                </div>
-                                <div class="section-content" id="airportSelectionContent">
-                                    <div class="airport-search">
+                        <div class="destination-header">
+                            <div class="header-gradient">
+                                <div class="destination-header-content">
+                                    <h2 class="destination-title">Where are you going?</h2>
+                                    <div class="search-bar">
                                         <div class="search-input-wrapper">
-                                            <input type="text" id="airportSearch" placeholder="Search airports (e.g., JFK, LAX, LHR)" class="search-input">
                                             <div class="search-icon">🔍</div>
-                                        </div>
-                                        <div id="airportResults" class="airport-results"></div>
-                                    </div>
-
-                                    <div id="selectedAirport" class="selected-airport" style="display: none;">
-                                        <div class="airport-info">
-                                            <h4 id="airportName"></h4>
-                                            <p id="airportLocation"></p>
-                                            <p id="airportTimezone"></p>
+                                            <input type="text" id="airportSearch" placeholder="Choose your destination" class="search-input">
+                                            <div id="clearSearchButton" class="clear-button" style="display: none;" onclick="demo.clearSearch()">
+                                                <span>✕</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </section>
+                            </div>
+                        </div>
+
+                        <div class="destination-content">
+                            <!-- Empty State -->
+                            <div id="emptyState" class="empty-state">
+                                <div class="empty-icon">✈️</div>
+                                <div class="empty-text">Search for an airport</div>
+                            </div>
+
+                            <!-- Search Results -->
+                            <div id="searchResults" class="search-results" style="display: none;">
+                                <!-- Results will be populated here -->
+                            </div>
+
+                            <!-- Recent Destinations -->
+                            <div id="recentDestinations" class="recent-destinations" style="display: none;">
+                                <div class="recent-header">
+                                    <h3>Recent Destinations</h3>
+                                </div>
+                                <div id="recentList" class="recent-list">
+                                    <!-- Recent destinations will be populated here -->
+                                </div>
+                                <div class="clear-recent-button">
+                                    <button onclick="demo.clearRecentDestinations()">Clear Recent Destinations</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -208,6 +222,14 @@
 
                     <!-- Info Tab Content -->
                     <div id="infoTab" class="tab-content">
+                        <div class="info-header">
+                            <div class="header-gradient">
+                                <div class="info-header-content">
+                                    <h2 class="info-title">Information</h2>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="content-container">
                             <section class="info-section">
                                 <div class="section-header expandable" onclick="toggleSection('about')">
