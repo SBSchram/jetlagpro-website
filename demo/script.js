@@ -86,14 +86,16 @@ class JetLagProDemo {
             const isInSearchBar = target.closest('.search-bar');
             const isInSearchResults = target.closest('.search-results');
             const isAirportResult = target.closest('.airport-result');
+            const isInDestinationContent = target.closest('.destination-content');
             
             console.log('🔍 [DOCUMENT_CLICK] Target:', target);
             console.log('🔍 [DOCUMENT_CLICK] Is in search bar:', !!isInSearchBar);
             console.log('🔍 [DOCUMENT_CLICK] Is in search results:', !!isInSearchResults);
             console.log('🔍 [DOCUMENT_CLICK] Is airport result:', !!isAirportResult);
+            console.log('🔍 [DOCUMENT_CLICK] Is in destination content:', !!isInDestinationContent);
             
-            // Don't hide if clicking on search results, search bar, or airport results
-            if (!isInSearchBar && !isInSearchResults && !isAirportResult) {
+            // Don't hide if clicking on search results, search bar, airport results, or destination content
+            if (!isInSearchBar && !isInSearchResults && !isAirportResult && !isInDestinationContent) {
                 console.log('🔍 [DOCUMENT_CLICK] Clicking outside search area, hiding results');
                 this.hideSearchResults();
             } else {
