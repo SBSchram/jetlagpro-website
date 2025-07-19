@@ -48,6 +48,7 @@
                     </div>
                     <div class="hero-buttons">
                         <a href="#download" class="btn btn-primary">Join TestFlight Beta</a>
+                        <a href="demo/" class="btn btn-secondary">Try Interactive Demo</a>
                         <a href="#how-it-works" class="btn btn-outline">See How It Works</a>
                     </div>
                 </div>
@@ -56,37 +57,11 @@
                         <div class="phone-mockup">
                             <div class="screen">
                                 <div class="app-screen">
-                                    <div class="app-header">
-                                        <h1>Be a Jet Lag Pro</h1>
-                                    </div>
+                                    <div class="app-header">JetLagPro</div>
                                     <div class="app-content">
-                                        <div class="app-section how-it-works-section">
-                                            <div class="section-header">
-                                                <span class="how-it-works-text">Just two steps!</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="app-section">
-                                            <div class="section-header">
-                                                <span class="bullet">•</span>
-                                                <span>Choose destination</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="app-section">
-                                            <div class="section-header">
-                                                <span class="bullet">•</span>
-                                                <span>Stimulate the acupressure points as indicated</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="demo-button-container">
-                                            <a href="demo/" class="demo-button">
-                                                <span class="demo-icon">🎯</span>
-                                                <span class="demo-text">Demo</span>
-                                                <span class="demo-arrow">→</span>
-                                            </a>
-                                        </div>
+                                        <div class="point-indicator">●</div>
+                                        <div class="time-display">Local Time</div>
+                                        <div class="status">Ready to Travel</div>
                                     </div>
                                 </div>
                             </div>
