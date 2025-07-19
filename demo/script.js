@@ -82,8 +82,12 @@ class JetLagProDemo {
 
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-bar')) {
+            // Don't hide if clicking on search results or search bar
+            if (!e.target.closest('.search-bar') && !e.target.closest('.search-results')) {
+                console.log('🔍 [DOCUMENT_CLICK] Clicking outside search area, hiding results');
                 this.hideSearchResults();
+            } else {
+                console.log('🔍 [DOCUMENT_CLICK] Clicking inside search area, keeping results');
             }
         });
     }
@@ -120,13 +124,18 @@ class JetLagProDemo {
 
     displaySearchResults(results) {
         const resultsContainer = document.getElementById('searchResults');
-        console.log('Displaying results in container:', resultsContainer);
+        console.log('🔍 [displaySearchResults] Displaying results in container:', resultsContainer);
+        
+        // OS Detection
+        const isWindows = navigator.platform.indexOf('Win') !== -1;
+        const isMac = navigator.platform.indexOf('Mac') !== -1;
+        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
         
         if (results.length === 0) {
             resultsContainer.innerHTML = '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>';
         } else {
             resultsContainer.innerHTML = results.map(airport => `
-                <div class="airport-result" onclick="demo.selectAirport('${airport.code}')">
+                <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                     <div class="airport-info">
                         <div class="airport-name">${airport.name}</div>
                         <div class="airport-location">${airport.city}, ${airport.country}</div>
@@ -134,6 +143,24 @@ class JetLagProDemo {
                     <div class="airport-code">${airport.code}</div>
                 </div>
             `).join('');
+            
+            // Add click event debugging to each airport result
+            const airportResults = resultsContainer.querySelectorAll('.airport-result');
+            airportResults.forEach((element, index) => {
+                const airportCode = element.getAttribute('data-airport-code');
+                console.log(`🔍 [DOM] Airport result ${index}:`, airportCode, 'Element found:', !!element);
+                console.log(`🔍 [DOM] Airport result ${index} dimensions:`, element.getBoundingClientRect());
+                console.log(`🔍 [DOM] Airport result ${index} display:`, getComputedStyle(element).display);
+                console.log(`🔍 [DOM] Airport result ${index} onclick:`, element.onclick);
+                
+                // Add additional click event listener for debugging
+                element.addEventListener('click', (e) => {
+                    console.log(`🔍 [CLICK] Click event fired for ${airportCode}`);
+                    console.log(`🔍 [CLICK] Target:`, e.target);
+                    console.log(`🔍 [CLICK] Coordinates:`, e.clientX, e.clientY);
+                    console.log(`🔍 [CLICK] Event type:`, e.type);
+                });
+            });
         }
         
         this.showSearchResults();
@@ -175,24 +202,38 @@ class JetLagProDemo {
     }
 
     selectAirport(airportCode) {
-        console.log('Selecting airport:', airportCode);
+        console.log('🔍 [selectAirport] Selecting airport:', airportCode);
+        
+        // OS Detection
+        const isWindows = navigator.platform.indexOf('Win') !== -1;
+        const isMac = navigator.platform.indexOf('Mac') !== -1;
+        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
+        
         const airport = this.airports.find(a => a.code === airportCode);
         if (!airport) {
-            console.error('Airport not found:', airportCode);
+            console.error('🔍 [selectAirport] Airport not found:', airportCode);
             return;
         }
+        
+        console.log('🔍 [STEP] Airport found:', airport.name);
 
         this.selectedAirport = airport;
         this.addRecentDestination(airport); // Add to recent destinations
+        
+        console.log('🔍 [STEP] Recent destination added');
         
         // Calculate timezone offset and generate notification schedule
         this.calculateTimezoneOffset(airport);
         this.generateNotificationSchedule(airport);
         
+        console.log('🔍 [STEP] Timezone calculations completed');
+        
         this.updateDestinationDisplay();
         this.updateActivePoint();
         this.generatePointsList();
         this.hideSearchResults();
+        
+        console.log('🔍 [STEP] UI updates completed');
         
         // Clear search input
         const searchInput = document.getElementById('airportSearch');
@@ -200,9 +241,15 @@ class JetLagProDemo {
             searchInput.value = '';
         }
         
-        // Hide destination tab and switch to Journey tab
-        this.hideDestinationTab();
+        // Switch to Journey tab (don't hide destination tab yet)
+        console.log('🔍 [selectAirport] Switching to journey tab...');
         this.switchToTab('journey');
+        
+        // Hide destination tab after switching
+        setTimeout(() => {
+            console.log('🔍 [selectAirport] Hiding destination tab...');
+            this.hideDestinationTab();
+        }, 100);
     }
 
     updateDestinationDisplay() {
@@ -552,23 +599,52 @@ class JetLagProDemo {
     }
 
     switchToTab(tabName) {
+        console.log('🔍 [switchToTab] Switching to tab:', tabName);
+        
+        // OS Detection
+        const isWindows = navigator.platform.indexOf('Win') !== -1;
+        const isMac = navigator.platform.indexOf('Mac') !== -1;
+        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
+        
         this.currentTab = tabName;
         
         // Hide all tab contents
         const tabContents = document.querySelectorAll('.tab-content');
+        console.log('🔍 [DOM] Found tab contents:', tabContents.length);
         tabContents.forEach(content => content.classList.remove('active'));
         
         // Remove active class from all tab items
         const tabItems = document.querySelectorAll('.tab-item');
+        console.log('🔍 [DOM] Found tab items:', tabItems.length);
         tabItems.forEach(item => item.classList.remove('active'));
         
         // Show selected tab content
         const selectedTab = document.getElementById(tabName + 'Tab');
-        if (selectedTab) selectedTab.classList.add('active');
+        if (selectedTab) {
+            selectedTab.classList.add('active');
+            console.log('🔍 [switchToTab] Activated tab content:', tabName + 'Tab');
+            console.log('🔍 [DOM] Tab content display:', getComputedStyle(selectedTab).display);
+        } else {
+            console.error('🔍 [switchToTab] Tab content not found:', tabName + 'Tab');
+        }
         
         // Add active class to selected tab item
         const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
-        if (selectedTabItem) selectedTabItem.classList.add('active');
+        if (selectedTabItem) {
+            selectedTabItem.classList.add('active');
+            console.log('🔍 [switchToTab] Activated tab item for:', tabName);
+            console.log('🔍 [DOM] Tab item display:', getComputedStyle(selectedTabItem).display);
+        } else {
+            console.error('🔍 [switchToTab] Tab item not found for:', tabName);
+        }
+        
+        // CSS Grid debugging
+        const pointMedia = document.querySelector('.point-media');
+        if (pointMedia) {
+            console.log('🔍 [CSS] Grid support:', CSS.supports('display', 'grid'));
+            console.log('🔍 [CSS] Point media display:', getComputedStyle(pointMedia).display);
+            console.log('🔍 [CSS] Point media dimensions:', pointMedia.getBoundingClientRect());
+        }
     }
 
     showError(message) {
@@ -634,7 +710,7 @@ class JetLagProDemo {
         }
         
         recentList.innerHTML = this.recentDestinations.map(airport => `
-            <div class="airport-result" onclick="demo.selectAirport('${airport.code}')">
+            <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                 <div class="airport-info">
                     <div class="airport-name">${airport.name}</div>
                     <div class="airport-location">${airport.city}, ${airport.country}</div>
@@ -642,6 +718,23 @@ class JetLagProDemo {
                 <div class="airport-code">${airport.code}</div>
             </div>
         `).join('');
+        
+        // Add click event debugging to recent destinations
+        const recentAirportResults = recentList.querySelectorAll('.airport-result');
+        recentAirportResults.forEach((element, index) => {
+            const airportCode = element.getAttribute('data-airport-code');
+            console.log(`🔍 [DOM] Recent airport result ${index}:`, airportCode, 'Element found:', !!element);
+            console.log(`🔍 [DOM] Recent airport result ${index} dimensions:`, element.getBoundingClientRect());
+            console.log(`🔍 [DOM] Recent airport result ${index} display:`, getComputedStyle(element).display);
+            
+            // Add additional click event listener for debugging
+            element.addEventListener('click', (e) => {
+                console.log(`🔍 [CLICK] Recent click event fired for ${airportCode}`);
+                console.log(`🔍 [CLICK] Target:`, e.target);
+                console.log(`🔍 [CLICK] Coordinates:`, e.clientX, e.clientY);
+                console.log(`🔍 [CLICK] Event type:`, e.type);
+            });
+        });
         
         recentDestinations.style.display = 'block';
     }
@@ -756,12 +849,8 @@ class JetLagProDemo {
     }
 }
 
-// Initialize the demo when the page loads
-let demo;
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - creating demo instance');
-    demo = new JetLagProDemo();
-});
+// Initialize the demo immediately when script loads
+let demo = new JetLagProDemo();
 
 // Global function for tab switching (called from HTML)
 function switchTab(tabName) {
