@@ -203,13 +203,13 @@ class JetLagProDemo {
     async loadData() {
         try {
             // Load airports data
-            const airportsResponse = await fetch('./data/airports.json');
+            const airportsResponse = await fetch('./airports.json');
             const airportsData = await airportsResponse.json();
             this.airports = airportsData.airports;
             console.log('Loaded airports:', this.airports.length);
 
             // Load points data
-            const pointsResponse = await fetch('./data/points.json');
+            const pointsResponse = await fetch('./points.json');
             const pointsData = await pointsResponse.json();
             this.points = pointsData.points;
             this.hourToPointId = pointsData.hourToPointId;
