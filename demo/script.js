@@ -124,12 +124,71 @@ class JetLagProDemo {
 
     searchAirports(query) {
         const searchTerm = query.toLowerCase();
-        return this.airports.filter(airport => 
-            airport.code.toLowerCase().includes(searchTerm) ||
-            airport.name.toLowerCase().includes(searchTerm) ||
-            airport.city.toLowerCase().includes(searchTerm) ||
-            airport.country.toLowerCase().includes(searchTerm)
-        ).slice(0, 10); // Limit to 10 results
+        
+        // First filter airports using iOS-style priority matching
+        const filtered = this.airports.filter(airport => {
+            const code = airport.code.toLowerCase();
+            const city = airport.city.toLowerCase();
+            const country = airport.country.toLowerCase();
+            const name = airport.name.toLowerCase();
+            
+            // Priority 1: Exact airport code match
+            if (code === searchTerm) return true;
+            
+            // Priority 2: Airport code starts with
+            if (code.startsWith(searchTerm)) return true;
+            
+            // Priority 3: City name starts with
+            if (city.startsWith(searchTerm)) return true;
+            
+            // Priority 4: Country name starts with
+            if (country.startsWith(searchTerm)) return true;
+            
+            // Priority 5: Airport name starts with
+            if (name.startsWith(searchTerm)) return true;
+            
+            return false;
+        });
+        
+        // Then sort by priority (same logic as iOS app)
+        const sorted = filtered.sort((airport1, airport2) => {
+            const priority1 = this.getPriorityLevel(airport1, searchTerm);
+            const priority2 = this.getPriorityLevel(airport2, searchTerm);
+            
+            // If priorities are different, sort by priority
+            if (priority1 !== priority2) {
+                return priority1 - priority2;
+            }
+            
+            // If same priority, sort alphabetically by city
+            return airport1.city.localeCompare(airport2.city);
+        });
+        
+        return sorted.slice(0, 10); // Limit to 10 results
+    }
+    
+    getPriorityLevel(airport, searchText) {
+        const code = airport.code.toLowerCase();
+        const city = airport.city.toLowerCase();
+        const country = airport.country.toLowerCase();
+        const name = airport.name.toLowerCase();
+        
+        // Priority 1: Exact airport code match
+        if (code === searchText) return 1;
+        
+        // Priority 2: Airport code starts with
+        if (code.startsWith(searchText)) return 2;
+        
+        // Priority 3: City name starts with
+        if (city.startsWith(searchText)) return 3;
+        
+        // Priority 4: Country name starts with
+        if (country.startsWith(searchText)) return 4;
+        
+        // Priority 5: Airport name starts with
+        if (name.startsWith(searchText)) return 5;
+        
+        return 6; // Should never reach here due to filter
     }
 
     displaySearchResults(results) {
