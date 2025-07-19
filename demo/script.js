@@ -31,7 +31,7 @@ class JetLagProDemo {
             // Load saved airport if exists
             const savedAirport = this.loadSelectedAirport();
             if (savedAirport) {
-                console.log('🔍 [PERSISTENCE] Restoring saved airport:', savedAirport.code);
+                console.log('Restoring saved airport:', savedAirport.code);
                 this.selectedAirport = savedAirport;
                 this.calculateTimezoneOffset(savedAirport);
                 this.generateNotificationSchedule(savedAirport);
@@ -102,7 +102,6 @@ class JetLagProDemo {
             
             // Only hide if clicking on tab bar (switching tabs)
             if (isInTabBar) {
-                console.log('🔍 [DOCUMENT_CLICK] Clicking on tab bar, hiding results');
                 this.hideSearchResults();
             }
         });
@@ -199,18 +198,12 @@ class JetLagProDemo {
 
     displaySearchResults(results) {
         const resultsContainer = document.getElementById('searchResults');
-        console.log('🔍 [displaySearchResults] Displaying results in container:', resultsContainer);
-        
-        // OS Detection
-        const isWindows = navigator.platform.indexOf('Win') !== -1;
-        const isMac = navigator.platform.indexOf('Mac') !== -1;
-        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
         
         if (results.length === 0) {
             resultsContainer.innerHTML = '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>';
         } else {
             resultsContainer.innerHTML = results.map(airport => `
-                <div class="airport-result" onclick="console.log('🔍 [ONCLICK] Inline onclick fired for ${airport.code}'); demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
+                <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                     <div class="airport-info">
                         <div class="airport-name">${airport.name}</div>
                         <div class="airport-location">${airport.city}, ${airport.country}</div>
@@ -219,22 +212,13 @@ class JetLagProDemo {
                 </div>
             `).join('');
             
-            // Add click event debugging to each airport result
+            // Add event listeners for cross-platform compatibility
             const airportResults = resultsContainer.querySelectorAll('.airport-result');
-            airportResults.forEach((element, index) => {
+            airportResults.forEach((element) => {
                 const airportCode = element.getAttribute('data-airport-code');
-                console.log(`🔍 [DOM] Airport result ${index}:`, airportCode, 'Element found:', !!element);
-                console.log(`🔍 [DOM] Airport result ${index} dimensions:`, element.getBoundingClientRect());
-                console.log(`🔍 [DOM] Airport result ${index} display:`, getComputedStyle(element).display);
-                console.log(`🔍 [DOM] Airport result ${index} onclick:`, element.onclick);
-                console.log(`🔍 [DOM] Airport result ${index} pointer-events:`, getComputedStyle(element).pointerEvents);
-                console.log(`🔍 [DOM] Airport result ${index} cursor:`, getComputedStyle(element).cursor);
-                console.log(`🔍 [DOM] Airport result ${index} position:`, getComputedStyle(element).position);
-                console.log(`🔍 [DOM] Airport result ${index} z-index:`, getComputedStyle(element).zIndex);
                 
                 // Add pointerdown event listener for cross-platform compatibility
                 element.addEventListener('pointerdown', (e) => {
-                    console.log(`🔍 [POINTERDOWN] Pointerdown event fired for ${airportCode}`);
                     e.preventDefault();
                     e.stopPropagation();
                     this.selectAirport(airportCode);
@@ -242,19 +226,9 @@ class JetLagProDemo {
                 
                 // Also keep click as fallback
                 element.addEventListener('click', (e) => {
-                    console.log(`🔍 [CLICK] Direct click event fired for ${airportCode}`);
                     e.preventDefault();
                     e.stopPropagation();
                     this.selectAirport(airportCode);
-                });
-                
-                // Also add mousedown and mouseup for debugging
-                element.addEventListener('mousedown', (e) => {
-                    console.log(`🔍 [MOUSEDOWN] Mousedown event fired for ${airportCode}`);
-                });
-                
-                element.addEventListener('mouseup', (e) => {
-                    console.log(`🔍 [MOUSEUP] Mouseup event fired for ${airportCode}`);
                 });
             });
         }
@@ -298,39 +272,24 @@ class JetLagProDemo {
     }
 
     selectAirport(airportCode) {
-        console.log('🔍 [selectAirport] Selecting airport:', airportCode);
-        
-        // OS Detection
-        const isWindows = navigator.platform.indexOf('Win') !== -1;
-        const isMac = navigator.platform.indexOf('Mac') !== -1;
-        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
-        
         const airport = this.airports.find(a => a.code === airportCode);
         if (!airport) {
-            console.error('🔍 [selectAirport] Airport not found:', airportCode);
+            console.error('Airport not found:', airportCode);
             return;
         }
-        
-        console.log('🔍 [STEP] Airport found:', airport.name);
 
         this.selectedAirport = airport;
         this.saveSelectedAirport(airport); // Save to localStorage
         this.addRecentDestination(airport); // Add to recent destinations
         
-        console.log('🔍 [STEP] Recent destination added');
-        
         // Calculate timezone offset and generate notification schedule
         this.calculateTimezoneOffset(airport);
         this.generateNotificationSchedule(airport);
-        
-        console.log('🔍 [STEP] Timezone calculations completed');
         
         this.updateDestinationDisplay();
         this.updateActivePoint();
         this.generatePointsList();
         this.hideSearchResults();
-        
-        console.log('🔍 [STEP] UI updates completed');
         
         // Clear search input
         const searchInput = document.getElementById('airportSearch');
@@ -339,12 +298,10 @@ class JetLagProDemo {
         }
         
         // Switch to Journey tab (don't hide destination tab yet)
-        console.log('🔍 [selectAirport] Switching to journey tab...');
         this.switchToTab('journey');
         
         // Hide destination tab after switching
         setTimeout(() => {
-            console.log('🔍 [selectAirport] Hiding destination tab...');
             this.hideDestinationTab();
         }, 100);
     }
@@ -396,7 +353,6 @@ class JetLagProDemo {
             const currentHour = new Date().getHours();
             const pointId = this.hourToPointId[currentHour];
             this.currentPoint = this.points.find(p => p.id === pointId);
-            console.log('🔍 [updateActivePoint] No destination - Current hour:', currentHour, 'Point ID:', pointId, 'Current point:', this.currentPoint?.id);
         } else {
             // Destination case: find current point based on destination timezone
             const now = new Date();
@@ -404,10 +360,6 @@ class JetLagProDemo {
             const destinationHour = destinationTime.getHours();
             const pointId = this.hourToPointId[destinationHour];
             this.currentPoint = this.points.find(p => p.id === pointId);
-            
-            console.log('🔍 [updateActivePoint] With destination - Local time:', now.toLocaleString());
-            console.log('🔍 [updateActivePoint] Destination time:', destinationTime.toLocaleString());
-            console.log('🔍 [updateActivePoint] Destination hour:', destinationHour, 'Point ID:', pointId, 'Current point:', this.currentPoint?.id);
         }
     }
 
@@ -426,17 +378,12 @@ class JetLagProDemo {
 
         const orderedPoints = this.getOrderedPoints();
         const currentPointId = this.currentPoint ? this.currentPoint.id : null;
-        
-        console.log('🔍 [generatePointsList] Current point ID:', currentPointId);
-        console.log('🔍 [generatePointsList] Expanded point ID:', this.expandedPointId);
 
         const pointsHTML = orderedPoints.map((point, index) => {
             const isCurrent = point.id === currentPointId;
             const isExpanded = this.expandedPointId === point.id || isCurrent; // Auto-expand current point
             const isCompleted = this.completedPoints.has(point.id);
             const journeyOrder = index + 1;
-            
-            console.log(`🔍 [generatePointsList] Point ${point.id}: isCurrent=${isCurrent}, isExpanded=${isExpanded}`);
             
             const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId);
             
@@ -682,9 +629,8 @@ class JetLagProDemo {
     saveSelectedAirport(airport) {
         try {
             localStorage.setItem('jetlagpro_selected_airport', JSON.stringify(airport));
-            console.log('🔍 [PERSISTENCE] Saved airport to localStorage:', airport.code);
         } catch (error) {
-            console.error('🔍 [PERSISTENCE] Error saving airport:', error);
+            console.error('Error saving airport:', error);
         }
     }
     
@@ -693,11 +639,10 @@ class JetLagProDemo {
             const savedAirport = localStorage.getItem('jetlagpro_selected_airport');
             if (savedAirport) {
                 const airport = JSON.parse(savedAirport);
-                console.log('🔍 [PERSISTENCE] Loaded airport from localStorage:', airport.code);
                 return airport;
             }
         } catch (error) {
-            console.error('🔍 [PERSISTENCE] Error loading airport:', error);
+            console.error('Error loading airport:', error);
         }
         return null;
     }
@@ -705,9 +650,8 @@ class JetLagProDemo {
     clearSelectedAirport() {
         try {
             localStorage.removeItem('jetlagpro_selected_airport');
-            console.log('🔍 [PERSISTENCE] Cleared airport from localStorage');
         } catch (error) {
-            console.error('🔍 [PERSISTENCE] Error clearing airport:', error);
+            console.error('Error clearing airport:', error);
         }
     }
 
@@ -736,51 +680,30 @@ class JetLagProDemo {
     }
 
     switchToTab(tabName) {
-        console.log('🔍 [switchToTab] Switching to tab:', tabName);
-        
-        // OS Detection
-        const isWindows = navigator.platform.indexOf('Win') !== -1;
-        const isMac = navigator.platform.indexOf('Mac') !== -1;
-        console.log(`🔍 [OS] Platform: ${navigator.platform}, Windows: ${isWindows}, Mac: ${isMac}`);
-        
         this.currentTab = tabName;
         
         // Hide all tab contents
         const tabContents = document.querySelectorAll('.tab-content');
-        console.log('🔍 [DOM] Found tab contents:', tabContents.length);
         tabContents.forEach(content => content.classList.remove('active'));
         
         // Remove active class from all tab items
         const tabItems = document.querySelectorAll('.tab-item');
-        console.log('🔍 [DOM] Found tab items:', tabItems.length);
         tabItems.forEach(item => item.classList.remove('active'));
         
         // Show selected tab content
         const selectedTab = document.getElementById(tabName + 'Tab');
         if (selectedTab) {
             selectedTab.classList.add('active');
-            console.log('🔍 [switchToTab] Activated tab content:', tabName + 'Tab');
-            console.log('🔍 [DOM] Tab content display:', getComputedStyle(selectedTab).display);
         } else {
-            console.error('🔍 [switchToTab] Tab content not found:', tabName + 'Tab');
+            console.error('Tab content not found:', tabName + 'Tab');
         }
         
         // Add active class to selected tab item
         const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
         if (selectedTabItem) {
             selectedTabItem.classList.add('active');
-            console.log('🔍 [switchToTab] Activated tab item for:', tabName);
-            console.log('🔍 [DOM] Tab item display:', getComputedStyle(selectedTabItem).display);
         } else {
-            console.error('🔍 [switchToTab] Tab item not found for:', tabName);
-        }
-        
-        // CSS Grid debugging
-        const pointMedia = document.querySelector('.point-media');
-        if (pointMedia) {
-            console.log('🔍 [CSS] Grid support:', CSS.supports('display', 'grid'));
-            console.log('🔍 [CSS] Point media display:', getComputedStyle(pointMedia).display);
-            console.log('🔍 [CSS] Point media dimensions:', pointMedia.getBoundingClientRect());
+            console.error('Tab item not found for:', tabName);
         }
     }
 
@@ -812,16 +735,13 @@ class JetLagProDemo {
     loadRecentDestinations() {
         try {
             const saved = localStorage.getItem('recentDestinations');
-            console.log('🔍 [PERSISTENCE] Loading recent destinations from localStorage:', saved);
             if (saved) {
                 this.recentDestinations = JSON.parse(saved);
-                console.log('🔍 [PERSISTENCE] Loaded recent destinations:', this.recentDestinations.length, this.recentDestinations.map(d => d.code));
             } else {
-                console.log('🔍 [PERSISTENCE] No recent destinations found in localStorage');
                 this.recentDestinations = [];
             }
         } catch (error) {
-            console.error('🔍 [PERSISTENCE] Error loading recent destinations:', error);
+            console.error('Error loading recent destinations:', error);
             this.recentDestinations = [];
         }
     }
@@ -830,9 +750,8 @@ class JetLagProDemo {
         try {
             const dataToSave = JSON.stringify(this.recentDestinations);
             localStorage.setItem('recentDestinations', dataToSave);
-            console.log('🔍 [PERSISTENCE] Saved recent destinations to localStorage:', this.recentDestinations.length, this.recentDestinations.map(d => d.code));
         } catch (error) {
-            console.error('🔍 [PERSISTENCE] Error saving recent destinations:', error);
+            console.error('Error saving recent destinations:', error);
         }
     }
 
@@ -862,23 +781,6 @@ class JetLagProDemo {
                 <div class="airport-code">${airport.code}</div>
             </div>
         `).join('');
-        
-        // Add click event debugging to recent destinations
-        const recentAirportResults = recentList.querySelectorAll('.airport-result');
-        recentAirportResults.forEach((element, index) => {
-            const airportCode = element.getAttribute('data-airport-code');
-            console.log(`🔍 [DOM] Recent airport result ${index}:`, airportCode, 'Element found:', !!element);
-            console.log(`🔍 [DOM] Recent airport result ${index} dimensions:`, element.getBoundingClientRect());
-            console.log(`🔍 [DOM] Recent airport result ${index} display:`, getComputedStyle(element).display);
-            
-            // Add additional click event listener for debugging
-            element.addEventListener('click', (e) => {
-                console.log(`🔍 [CLICK] Recent click event fired for ${airportCode}`);
-                console.log(`🔍 [CLICK] Target:`, e.target);
-                console.log(`🔍 [CLICK] Coordinates:`, e.clientX, e.clientY);
-                console.log(`🔍 [CLICK] Event type:`, e.type);
-            });
-        });
         
         recentDestinations.style.display = 'block';
     }
