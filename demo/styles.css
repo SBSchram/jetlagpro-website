@@ -689,7 +689,8 @@ body {
 .journey-header {
     background: linear-gradient(135deg, #007AFF, #007AFF 80%);
     height: 80px;
-    margin: -12px -12px 0 -12px;
+    margin: 0 -12px 0 -12px;
+    padding-top: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
