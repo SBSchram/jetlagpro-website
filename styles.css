@@ -507,38 +507,6 @@ body {
     line-height: 1.5;
 }
 
-.localization-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin: 3rem 0;
-}
-
-.localization-feature {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.localization-feature .feature-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.localization-feature h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 1rem;
-}
-
-.localization-feature p {
-    color: #64748b;
-    line-height: 1.6;
-}
-
 .localization-note {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
@@ -752,10 +720,6 @@ body {
     .languages-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 1rem;
-    }
-    
-    .localization-features {
-        grid-template-columns: 1fr;
     }
     
     .download-buttons {
