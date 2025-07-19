@@ -323,10 +323,6 @@ class JetLagProDemo {
                                 <div class="point-detail-title">Stimulate</div>
                                 <div class="point-detail-content">${point.stimulationMethod}</div>
                             </div>
-                            <div class="point-detail-item">
-                                <div class="point-detail-title">Benefits</div>
-                                <div class="point-detail-content">${point.functions}</div>
-                            </div>
                         </div>
                         ${isCurrent && !isCompleted ? `
                             <div class="mark-stimulated-button">
@@ -475,12 +471,25 @@ class JetLagProDemo {
     isPastPoint(pointId, currentPointId) {
         if (!currentPointId) return false;
         
-        const currentHour = this.hourToPointId.indexOf(currentPointId);
-        const pointHour = this.hourToPointId.indexOf(pointId);
-        
-        if (currentHour === -1 || pointHour === -1) return false;
-        
-        return pointHour < currentHour;
+        if (!this.selectedAirport) {
+            // No destination case: compare based on hour order
+            const currentHour = this.hourToPointId.indexOf(currentPointId);
+            const pointHour = this.hourToPointId.indexOf(pointId);
+            
+            if (currentHour === -1 || pointHour === -1) return false;
+            
+            return pointHour < currentHour;
+        } else {
+            // Destination case: compare based on journey order (like Swift app)
+            const orderedPoints = this.getOrderedPoints();
+            const currentPointIndex = orderedPoints.findIndex(p => p.id === currentPointId);
+            const pointIndex = orderedPoints.findIndex(p => p.id === pointId);
+            
+            if (currentPointIndex === -1 || pointIndex === -1) return false;
+            
+            // A point is past if it comes before the current point in the ordered list
+            return pointIndex < currentPointIndex;
+        }
     }
 
     togglePoint(pointId) {

@@ -791,7 +791,7 @@ body {
 }
 
 .point-header {
-    padding: 12px 16px;
+    padding: 8px 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -806,11 +806,13 @@ body {
 
 .point-stimulation-text {
     flex: 1;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 500;
     color: #1d1d1f;
     text-align: center;
-    line-height: 1.4;
+    line-height: 1.0;
+    padding: 0 1px;
+    min-width: 0;
 }
 
 .point-chevron {
