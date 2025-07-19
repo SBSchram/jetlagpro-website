@@ -1,6 +1,45 @@
 // JetLagPro Demo - Interactive Horary Points System
 console.log('JetLagPro Demo script loading...');
 
+// Simple utilities to reduce code duplication (no architectural complexity)
+const CONSTANTS = {
+    UPDATE_INTERVAL: 60000,
+    MAX_RECENT_DESTINATIONS: 5,
+    SEARCH_RESULTS_LIMIT: 10,
+    STORAGE_KEYS: {
+        SELECTED_AIRPORT: 'jetlagpro_selected_airport',
+        RECENT_DESTINATIONS: 'recentDestinations'
+    }
+};
+
+const Storage = {
+    save(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+        } catch (error) {
+            console.error(`Error saving ${key}:`, error);
+        }
+    },
+    
+    load(key) {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error(`Error loading ${key}:`, error);
+            return null;
+        }
+    },
+    
+    remove(key) {
+        try {
+            localStorage.removeItem(key);
+        } catch (error) {
+            console.error(`Error removing ${key}:`, error);
+        }
+    }
+};
+
 class JetLagProDemo {
     constructor() {
         console.log('JetLagPro Demo constructor called');
@@ -13,7 +52,7 @@ class JetLagProDemo {
         this.expandedPointId = null;
         this.completedPoints = new Set();
         this.recentDestinations = []; // Added for recent destinations
-        this.maxRecentDestinations = 5; // Added for recent destinations
+        this.maxRecentDestinations = CONSTANTS.MAX_RECENT_DESTINATIONS; // Use constant
         this.notificationSchedule = []; // Added for notification schedule
         this.timezoneOffset = 0; // Added for timezone offset
         
@@ -169,7 +208,7 @@ class JetLagProDemo {
             return airport1.city.localeCompare(airport2.city);
         });
         
-        return sorted.slice(0, 10); // Limit to 10 results
+        return sorted.slice(0, CONSTANTS.SEARCH_RESULTS_LIMIT); // Limit to 10 results
     }
     
     getPriorityLevel(airport, searchText) {
@@ -627,32 +666,15 @@ class JetLagProDemo {
     }
     
     saveSelectedAirport(airport) {
-        try {
-            localStorage.setItem('jetlagpro_selected_airport', JSON.stringify(airport));
-        } catch (error) {
-            console.error('Error saving airport:', error);
-        }
+        Storage.save(CONSTANTS.STORAGE_KEYS.SELECTED_AIRPORT, airport);
     }
     
     loadSelectedAirport() {
-        try {
-            const savedAirport = localStorage.getItem('jetlagpro_selected_airport');
-            if (savedAirport) {
-                const airport = JSON.parse(savedAirport);
-                return airport;
-            }
-        } catch (error) {
-            console.error('Error loading airport:', error);
-        }
-        return null;
+        return Storage.load(CONSTANTS.STORAGE_KEYS.SELECTED_AIRPORT);
     }
     
     clearSelectedAirport() {
-        try {
-            localStorage.removeItem('jetlagpro_selected_airport');
-        } catch (error) {
-            console.error('Error clearing airport:', error);
-        }
+        Storage.remove(CONSTANTS.STORAGE_KEYS.SELECTED_AIRPORT);
     }
 
     startTimeUpdates() {
@@ -663,7 +685,7 @@ class JetLagProDemo {
                 this.updateActivePoint();
                 this.generatePointsList();
             }
-        }, 60000);
+        }, CONSTANTS.UPDATE_INTERVAL);
     }
 
     showDefaultSections() {
@@ -733,26 +755,12 @@ class JetLagProDemo {
     }
 
     loadRecentDestinations() {
-        try {
-            const saved = localStorage.getItem('recentDestinations');
-            if (saved) {
-                this.recentDestinations = JSON.parse(saved);
-            } else {
-                this.recentDestinations = [];
-            }
-        } catch (error) {
-            console.error('Error loading recent destinations:', error);
-            this.recentDestinations = [];
-        }
+        const saved = Storage.load(CONSTANTS.STORAGE_KEYS.RECENT_DESTINATIONS);
+        this.recentDestinations = saved || [];
     }
 
     saveRecentDestinations() {
-        try {
-            const dataToSave = JSON.stringify(this.recentDestinations);
-            localStorage.setItem('recentDestinations', dataToSave);
-        } catch (error) {
-            console.error('Error saving recent destinations:', error);
-        }
+        Storage.save(CONSTANTS.STORAGE_KEYS.RECENT_DESTINATIONS, this.recentDestinations);
     }
 
     clearRecentDestinations() {

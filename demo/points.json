@@ -1,0 +1,122 @@
+[
+  {
+    "id": "LU-8",
+    "name": "Lung-8",
+    "fullName": "Lung-8 (Jingqu)",
+    "description": "A powerful point for respiratory health and energy circulation",
+    "timeWindow": "3-5 AM",
+    "instructions": "Apply gentle pressure or massage in a circular motion for 2-3 minutes",
+    "image": "LU-8.jpg",
+    "video": "LU-8.mp4"
+  },
+  {
+    "id": "ST-36",
+    "name": "Stomach-36",
+    "fullName": "Stomach-36 (Zusanli)",
+    "description": "The master point for digestive health and overall vitality",
+    "timeWindow": "7-9 AM",
+    "instructions": "Apply firm pressure for 1-2 minutes, then massage gently",
+    "image": "ST-36.jpg",
+    "video": "ST-36.mp4"
+  },
+  {
+    "id": "LI-1",
+    "name": "Large Intestine-1",
+    "fullName": "Large Intestine-1 (Shangyang)",
+    "description": "Supports immune function and respiratory health",
+    "timeWindow": "5-7 AM",
+    "instructions": "Apply light pressure with thumb for 1-2 minutes",
+    "image": "LI-1.jpg",
+    "video": "LI-1.mp4"
+  },
+  {
+    "id": "SP-3",
+    "name": "Spleen-3",
+    "fullName": "Spleen-3 (Taibai)",
+    "description": "Supports digestive health and energy metabolism",
+    "timeWindow": "9-11 AM",
+    "instructions": "Massage gently in circular motions for 2-3 minutes",
+    "image": "SP-3.jpg",
+    "video": "SP-3.mp4"
+  },
+  {
+    "id": "HT-8",
+    "name": "Heart-8",
+    "fullName": "Heart-8 (Shaofu)",
+    "description": "Supports cardiovascular health and emotional balance",
+    "timeWindow": "11 AM-1 PM",
+    "instructions": "Apply gentle pressure for 1-2 minutes",
+    "image": "HT-8.jpg",
+    "video": "HT-8.mp4"
+  },
+  {
+    "id": "SI-5",
+    "name": "Small Intestine-5",
+    "fullName": "Small Intestine-5 (Yanggu)",
+    "description": "Supports digestive function and nutrient absorption",
+    "timeWindow": "1-3 PM",
+    "instructions": "Massage in small circles for 2-3 minutes",
+    "image": "SI-5.jpg",
+    "video": "SI-5.mp4"
+  },
+  {
+    "id": "BL-66",
+    "name": "Bladder-66",
+    "fullName": "Bladder-66 (Tonggu)",
+    "description": "Supports urinary health and energy flow",
+    "timeWindow": "3-5 PM",
+    "instructions": "Apply firm pressure for 1-2 minutes",
+    "image": "BL-66.jpg",
+    "video": "BL-66.mp4"
+  },
+  {
+    "id": "KI-10",
+    "name": "Kidney-10",
+    "fullName": "Kidney-10 (Yingu)",
+    "description": "Supports kidney function and reproductive health",
+    "timeWindow": "5-7 PM",
+    "instructions": "Massage gently for 2-3 minutes",
+    "image": "KI-10.jpg",
+    "video": "KI-10.mp4"
+  },
+  {
+    "id": "PC-8",
+    "name": "Pericardium-8",
+    "fullName": "Pericardium-8 (Laogong)",
+    "description": "Supports cardiovascular health and emotional balance",
+    "timeWindow": "7-9 PM",
+    "instructions": "Apply gentle pressure in circular motion for 2-3 minutes",
+    "image": "PC-8.jpg",
+    "video": "PC-8.mp4"
+  },
+  {
+    "id": "SJ-6",
+    "name": "San Jiao-6",
+    "fullName": "San Jiao-6 (Zhigou)",
+    "description": "Supports lymphatic function and fluid balance",
+    "timeWindow": "9-11 PM",
+    "instructions": "Massage gently for 1-2 minutes",
+    "image": "SJ-6.jpg",
+    "video": "SJ-6.mp4"
+  },
+  {
+    "id": "GB-41",
+    "name": "Gallbladder-41",
+    "fullName": "Gallbladder-41 (Zulinqi)",
+    "description": "Supports digestive health and decision-making",
+    "timeWindow": "11 PM-1 AM",
+    "instructions": "Apply firm pressure for 1-2 minutes",
+    "image": "GB-41.jpg",
+    "video": "GB-41.mp4"
+  },
+  {
+    "id": "LIV-1",
+    "name": "Liver-1",
+    "fullName": "Liver-1 (Dadun)",
+    "description": "Supports liver function and emotional balance",
+    "timeWindow": "1-3 AM",
+    "instructions": "Apply light pressure for 1-2 minutes",
+    "image": "LIV-1.jpg",
+    "video": "LIV-1.mp4"
+  }
+] 
