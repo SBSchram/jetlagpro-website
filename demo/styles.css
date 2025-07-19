@@ -818,14 +818,14 @@ body {
 
 .point-media {
     display: grid;
-    grid-template-columns: 140px 140px;
+    grid-template-columns: 130px 130px;
     gap: 12px;
     margin-bottom: 16px;
 }
 
 .point-image {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
 }
 
 .point-image img {
@@ -836,8 +836,8 @@ body {
 }
 
 .point-video {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
 }
 
 .point-video video {
