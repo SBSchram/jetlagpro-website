@@ -135,7 +135,7 @@ class JetLagProDemo {
             resultsContainer.innerHTML = '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>';
         } else {
             resultsContainer.innerHTML = results.map(airport => `
-                <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
+                <div class="airport-result" onclick="console.log('🔍 [ONCLICK] Inline onclick fired for ${airport.code}'); demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                     <div class="airport-info">
                         <div class="airport-name">${airport.name}</div>
                         <div class="airport-location">${airport.city}, ${airport.country}</div>
@@ -152,6 +152,10 @@ class JetLagProDemo {
                 console.log(`🔍 [DOM] Airport result ${index} dimensions:`, element.getBoundingClientRect());
                 console.log(`🔍 [DOM] Airport result ${index} display:`, getComputedStyle(element).display);
                 console.log(`🔍 [DOM] Airport result ${index} onclick:`, element.onclick);
+                console.log(`🔍 [DOM] Airport result ${index} pointer-events:`, getComputedStyle(element).pointerEvents);
+                console.log(`🔍 [DOM] Airport result ${index} cursor:`, getComputedStyle(element).cursor);
+                console.log(`🔍 [DOM] Airport result ${index} position:`, getComputedStyle(element).position);
+                console.log(`🔍 [DOM] Airport result ${index} z-index:`, getComputedStyle(element).zIndex);
                 
                 // Add additional click event listener for debugging
                 element.addEventListener('click', (e) => {
@@ -159,6 +163,18 @@ class JetLagProDemo {
                     console.log(`🔍 [CLICK] Target:`, e.target);
                     console.log(`🔍 [CLICK] Coordinates:`, e.clientX, e.clientY);
                     console.log(`🔍 [CLICK] Event type:`, e.type);
+                    console.log(`🔍 [CLICK] Event phase:`, e.eventPhase);
+                    console.log(`🔍 [CLICK] Bubbles:`, e.bubbles);
+                    console.log(`🔍 [CLICK] Cancelable:`, e.cancelable);
+                });
+                
+                // Also add mousedown and mouseup for debugging
+                element.addEventListener('mousedown', (e) => {
+                    console.log(`🔍 [MOUSEDOWN] Mousedown event fired for ${airportCode}`);
+                });
+                
+                element.addEventListener('mouseup', (e) => {
+                    console.log(`🔍 [MOUSEUP] Mouseup event fired for ${airportCode}`);
                 });
             });
         }
