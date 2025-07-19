@@ -82,8 +82,18 @@ class JetLagProDemo {
 
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
-            // Don't hide if clicking on search results or search bar
-            if (!e.target.closest('.search-bar') && !e.target.closest('.search-results')) {
+            const target = e.target;
+            const isInSearchBar = target.closest('.search-bar');
+            const isInSearchResults = target.closest('.search-results');
+            const isAirportResult = target.closest('.airport-result');
+            
+            console.log('🔍 [DOCUMENT_CLICK] Target:', target);
+            console.log('🔍 [DOCUMENT_CLICK] Is in search bar:', !!isInSearchBar);
+            console.log('🔍 [DOCUMENT_CLICK] Is in search results:', !!isInSearchResults);
+            console.log('🔍 [DOCUMENT_CLICK] Is airport result:', !!isAirportResult);
+            
+            // Don't hide if clicking on search results, search bar, or airport results
+            if (!isInSearchBar && !isInSearchResults && !isAirportResult) {
                 console.log('🔍 [DOCUMENT_CLICK] Clicking outside search area, hiding results');
                 this.hideSearchResults();
             } else {
