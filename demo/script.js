@@ -101,6 +101,41 @@ const DOM = {
     }
 };
 
+// Simple time utilities to reduce repetitive code
+const TimeUtils = {
+    // Convert local time to destination timezone
+    toDestinationTime(timezone) {
+        const now = new Date();
+        return new Date(now.toLocaleString("en-US", {timeZone: timezone}));
+    },
+    
+    // Calculate timezone offset in seconds (simpler method)
+    getTimezoneOffset(timezone) {
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const destination = new Date(utc + (this.getTimezoneOffsetMinutes(timezone) * 60000));
+        return (now.getTime() - destination.getTime()) / 1000;
+    },
+    
+    // Get timezone offset in minutes (helper for above)
+    getTimezoneOffsetMinutes(timezone) {
+        const now = new Date();
+        const utc = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
+        const destination = new Date(utc.toLocaleString("en-US", {timeZone: timezone}));
+        return (destination.getTime() - utc.getTime()) / 60000;
+    },
+    
+    // Single time formatting method
+    formatTime(date, options = {}) {
+        const defaultOptions = {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        };
+        return date.toLocaleTimeString('en-US', { ...defaultOptions, ...options });
+    }
+};
+
 class JetLagProDemo {
     constructor() {
         console.log('JetLagPro Demo constructor called');
@@ -411,16 +446,9 @@ class JetLagProDemo {
         }
     }
 
-    getDestinationTimeString() {
+        getDestinationTimeString() {
         if (!this.selectedAirport) return '';
-        
-        const now = new Date();
-        const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
-        return destinationTime.toLocaleTimeString('en-US', { 
-            hour: 'numeric', 
-            minute: '2-digit',
-            hour12: true 
-        });
+        return TimeUtils.formatTime(TimeUtils.toDestinationTime(this.selectedAirport.timezone));
     }
 
     updateActivePoint() {
@@ -431,8 +459,7 @@ class JetLagProDemo {
             this.currentPoint = this.points.find(p => p.id === pointId);
         } else {
             // Destination case: find current point based on destination timezone
-            const now = new Date();
-            const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
+            const destinationTime = TimeUtils.toDestinationTime(this.selectedAirport.timezone);
             const destinationHour = destinationTime.getHours();
             const pointId = this.hourToPointId[destinationHour];
             this.currentPoint = this.points.find(p => p.id === pointId);
@@ -441,11 +468,7 @@ class JetLagProDemo {
 
     getDestinationTime() {
         if (!this.selectedAirport) return new Date();
-
-        // Get current time in destination timezone
-        const now = new Date();
-        const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
-        return destinationTime;
+        return TimeUtils.toDestinationTime(this.selectedAirport.timezone);
     }
 
     generatePointsList() {
@@ -582,17 +605,14 @@ class JetLagProDemo {
                 } else {
                     const destTime = this.formatTime(scheduleItem.destinationTime);
                     const localTime = this.formatTime(scheduleItem.localTime);
-                    return `Stimulate ${pointName} (${destTime}) at your ${localTime}`;
+                    return `Do ${pointName.toLowerCase()} (${destTime}) at your ${localTime}`;
                 }
             }
         }
     }
 
     formatTime(date) {
-        return date.toLocaleTimeString('en-US', { 
-            hour: 'numeric', 
-            hour12: true 
-        });
+        return TimeUtils.formatTime(date);
     }
 
     getPointTimeString(pointId) {
@@ -612,14 +632,10 @@ class JetLagProDemo {
         const hour = this.hourToPointId.indexOf(pointId);
         if (hour === -1) return '';
         
-        const now = new Date();
-        const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
+        const destinationTime = TimeUtils.toDestinationTime(this.selectedAirport.timezone);
         destinationTime.setHours(hour, 0, 0, 0);
         
-        return destinationTime.toLocaleTimeString('en-US', { 
-            hour: 'numeric', 
-            hour12: true 
-        });
+        return TimeUtils.formatTime(destinationTime);
     }
 
     getPointLocalTime(pointId) {
@@ -629,10 +645,7 @@ class JetLagProDemo {
         const now = new Date();
         now.setHours(hour, 0, 0, 0);
         
-        return now.toLocaleTimeString('en-US', { 
-            hour: 'numeric', 
-            hour12: true 
-        });
+        return TimeUtils.formatTime(now);
     }
 
     isPastPoint(pointId, currentPointId) {
