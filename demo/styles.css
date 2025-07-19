@@ -533,7 +533,8 @@ body {
     }
     
     .app-container {
-        height: 650px;
+        height: 85vh;
+        max-height: 650px;
         border-radius: 25px;
     }
     
@@ -552,7 +553,8 @@ body {
     }
     
     .app-container {
-        height: 600px;
+        height: 80vh;
+        max-height: 600px;
         border-radius: 20px;
     }
     
