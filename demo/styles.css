@@ -526,8 +526,16 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
     .phone-frame {
-        margin: 10px auto;
+        margin: 5px auto;
         padding: 15px;
         border-radius: 30px;
     }
@@ -546,14 +554,22 @@ body {
 }
 
 @media (max-width: 480px) {
+    .container {
+        padding: 5px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
     .phone-frame {
-        margin: 5px auto;
-        padding: 10px;
+        margin: 0 auto;
+        padding: 8px;
         border-radius: 25px;
     }
     
     .app-container {
-        height: 80vh;
+        height: 85vh;
         max-height: 600px;
         border-radius: 20px;
     }
