@@ -218,7 +218,15 @@ class JetLagProDemo {
                 console.log(`🔍 [DOM] Airport result ${index} position:`, getComputedStyle(element).position);
                 console.log(`🔍 [DOM] Airport result ${index} z-index:`, getComputedStyle(element).zIndex);
                 
-                // Add direct click event listener for Windows 11 compatibility
+                // Add pointerdown event listener for cross-platform compatibility
+                element.addEventListener('pointerdown', (e) => {
+                    console.log(`🔍 [POINTERDOWN] Pointerdown event fired for ${airportCode}`);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.selectAirport(airportCode);
+                });
+                
+                // Also keep click as fallback
                 element.addEventListener('click', (e) => {
                     console.log(`🔍 [CLICK] Direct click event fired for ${airportCode}`);
                     e.preventDefault();
