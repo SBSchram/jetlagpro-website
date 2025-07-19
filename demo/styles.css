@@ -845,15 +845,11 @@ body {
     grid-template-columns: 140px 140px;
     gap: 12px;
     margin-bottom: 16px;
-    height: 140px;
-    justify-content: center;
-    align-items: center;
 }
 
 .point-image {
     width: 140px;
     height: 140px;
-    flex-shrink: 0;
 }
 
 .point-image img {
@@ -866,7 +862,6 @@ body {
 .point-video {
     width: 140px;
     height: 140px;
-    flex-shrink: 0;
 }
 
 .point-video video {
@@ -949,18 +944,12 @@ body {
     .point-media {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
-        height: auto;
     }
     
     .point-image,
     .point-video {
         width: 100%;
         height: 120px;
-    }
-    
-    .point-image img,
-    .point-video video {
-        height: 100%;
     }
 } 
 
