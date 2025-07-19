@@ -668,6 +668,11 @@ class JetLagProDemo {
         // Clear localStorage
         this.clearSelectedAirport();
         
+        // Clear search results and show recent destinations
+        this.hideSearchResults();
+        this.clearSearch();
+        this.updateRecentDestinationsDisplay();
+        
         this.updateDestinationDisplay();
         this.generatePointsList();
         this.showDestinationTab(); // Show destination tab when journey ends
@@ -807,20 +812,27 @@ class JetLagProDemo {
     loadRecentDestinations() {
         try {
             const saved = localStorage.getItem('recentDestinations');
+            console.log('🔍 [PERSISTENCE] Loading recent destinations from localStorage:', saved);
             if (saved) {
                 this.recentDestinations = JSON.parse(saved);
+                console.log('🔍 [PERSISTENCE] Loaded recent destinations:', this.recentDestinations.length, this.recentDestinations.map(d => d.code));
+            } else {
+                console.log('🔍 [PERSISTENCE] No recent destinations found in localStorage');
+                this.recentDestinations = [];
             }
         } catch (error) {
-            console.error('Error loading recent destinations:', error);
+            console.error('🔍 [PERSISTENCE] Error loading recent destinations:', error);
             this.recentDestinations = [];
         }
     }
 
     saveRecentDestinations() {
         try {
-            localStorage.setItem('recentDestinations', JSON.stringify(this.recentDestinations));
+            const dataToSave = JSON.stringify(this.recentDestinations);
+            localStorage.setItem('recentDestinations', dataToSave);
+            console.log('🔍 [PERSISTENCE] Saved recent destinations to localStorage:', this.recentDestinations.length, this.recentDestinations.map(d => d.code));
         } catch (error) {
-            console.error('Error saving recent destinations:', error);
+            console.error('🔍 [PERSISTENCE] Error saving recent destinations:', error);
         }
     }
 
