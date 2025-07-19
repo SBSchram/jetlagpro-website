@@ -152,6 +152,11 @@ class JetLagProDemo {
             this.showEmptyState();
             
             console.log('Demo initialized successfully');
+            
+            // Debug: Check search bar styles after initialization
+            setTimeout(() => {
+                this.debugSearchBarStyles();
+            }, 1000);
         } catch (error) {
             console.error('Failed to initialize demo:', error);
             this.showError('Failed to load demo data. Please refresh the page.');
@@ -353,11 +358,7 @@ class JetLagProDemo {
 
     showEmptyState() {
         DOM.showFlex('emptyState');
-        if (this.recentDestinations.length > 0) {
-            DOM.show('recentDestinations');
-        } else {
-            DOM.hide('recentDestinations');
-        }
+        this.updateRecentDestinationsDisplay();
     }
 
     clearSearch() {
@@ -800,6 +801,7 @@ class JetLagProDemo {
     }
 
     clearRecentDestinations() {
+        console.log('clearRecentDestinations called');
         this.recentDestinations = [];
         this.saveRecentDestinations();
         this.updateRecentDestinationsDisplay();
@@ -811,11 +813,15 @@ class JetLagProDemo {
         
         if (!recentList || !recentDestinations) return;
         
+        console.log('updateRecentDestinationsDisplay called, length:', this.recentDestinations.length);
+        
         if (this.recentDestinations.length === 0) {
+            console.log('No recent destinations, hiding section');
             DOM.hide('recentDestinations');
             return;
         }
         
+        console.log('Has recent destinations, showing section');
         const recentHTML = this.recentDestinations.map(airport => `
             <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                 <div class="airport-info">
@@ -828,6 +834,7 @@ class JetLagProDemo {
         
         DOM.setHTML('recentList', recentHTML);
         DOM.show('recentDestinations');
+        DOM.hide('emptyState');
     }
 
     hideDestinationTab() {
@@ -937,6 +944,49 @@ class JetLagProDemo {
     getPointForHour(hour) {
         const pointId = this.hourToPointId[hour];
         return this.points.find(p => p.id === pointId) || this.points[0];
+    }
+    
+    debugSearchBarStyles() {
+        console.log('=== SEARCH BAR DEBUG ===');
+        
+        const searchBar = document.querySelector('.search-bar');
+        const searchInputWrapper = document.querySelector('.search-input-wrapper');
+        const searchInput = document.getElementById('airportSearch');
+        const destinationHeaderContent = document.querySelector('.destination-header-content');
+        
+        if (searchBar) {
+            const computedStyle = window.getComputedStyle(searchBar);
+            console.log('Search bar padding:', computedStyle.padding);
+            console.log('Search bar width:', computedStyle.width);
+            console.log('Search bar max-width:', computedStyle.maxWidth);
+            console.log('Search bar display:', computedStyle.display);
+        }
+        
+        if (searchInputWrapper) {
+            const computedStyle = window.getComputedStyle(searchInputWrapper);
+            console.log('Search input wrapper padding:', computedStyle.padding);
+            console.log('Search input wrapper width:', computedStyle.width);
+            console.log('Search input wrapper max-width:', computedStyle.maxWidth);
+            console.log('Search input wrapper display:', computedStyle.display);
+            console.log('Search input wrapper flex:', computedStyle.flex);
+        }
+        
+        if (searchInput) {
+            const computedStyle = window.getComputedStyle(searchInput);
+            console.log('Search input width:', computedStyle.width);
+            console.log('Search input padding:', computedStyle.padding);
+            console.log('Search input placeholder:', searchInput.placeholder);
+            console.log('Search input flex:', computedStyle.flex);
+        }
+        
+        if (destinationHeaderContent) {
+            const computedStyle = window.getComputedStyle(destinationHeaderContent);
+            console.log('Destination header content padding:', computedStyle.padding);
+            console.log('Destination header content width:', computedStyle.width);
+            console.log('Destination header content display:', computedStyle.display);
+        }
+        
+        console.log('=== END DEBUG ===');
     }
 }
 
