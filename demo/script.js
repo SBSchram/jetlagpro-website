@@ -80,26 +80,16 @@ class JetLagProDemo {
             console.error('Search input element not found!');
         }
 
-        // Close search results when clicking outside
+        // Simple approach: Only hide results when clicking on tab bar or other non-search areas
         document.addEventListener('click', (e) => {
             const target = e.target;
-            const isInSearchBar = target.closest('.search-bar');
-            const isInSearchResults = target.closest('.search-results');
-            const isAirportResult = target.closest('.airport-result');
-            const isInDestinationContent = target.closest('.destination-content');
+            const isInTabBar = target.closest('.tab-bar');
+            const isInSearchArea = target.closest('#destinationTab');
             
-            console.log('🔍 [DOCUMENT_CLICK] Target:', target);
-            console.log('🔍 [DOCUMENT_CLICK] Is in search bar:', !!isInSearchBar);
-            console.log('🔍 [DOCUMENT_CLICK] Is in search results:', !!isInSearchResults);
-            console.log('🔍 [DOCUMENT_CLICK] Is airport result:', !!isAirportResult);
-            console.log('🔍 [DOCUMENT_CLICK] Is in destination content:', !!isInDestinationContent);
-            
-            // Don't hide if clicking on search results, search bar, airport results, or destination content
-            if (!isInSearchBar && !isInSearchResults && !isAirportResult && !isInDestinationContent) {
-                console.log('🔍 [DOCUMENT_CLICK] Clicking outside search area, hiding results');
+            // Only hide if clicking on tab bar (switching tabs)
+            if (isInTabBar) {
+                console.log('🔍 [DOCUMENT_CLICK] Clicking on tab bar, hiding results');
                 this.hideSearchResults();
-            } else {
-                console.log('🔍 [DOCUMENT_CLICK] Clicking inside search area, keeping results');
             }
         });
     }
@@ -228,15 +218,12 @@ class JetLagProDemo {
                 console.log(`🔍 [DOM] Airport result ${index} position:`, getComputedStyle(element).position);
                 console.log(`🔍 [DOM] Airport result ${index} z-index:`, getComputedStyle(element).zIndex);
                 
-                // Add additional click event listener for debugging
+                // Add direct click event listener for Windows 11 compatibility
                 element.addEventListener('click', (e) => {
-                    console.log(`🔍 [CLICK] Click event fired for ${airportCode}`);
-                    console.log(`🔍 [CLICK] Target:`, e.target);
-                    console.log(`🔍 [CLICK] Coordinates:`, e.clientX, e.clientY);
-                    console.log(`🔍 [CLICK] Event type:`, e.type);
-                    console.log(`🔍 [CLICK] Event phase:`, e.eventPhase);
-                    console.log(`🔍 [CLICK] Bubbles:`, e.bubbles);
-                    console.log(`🔍 [CLICK] Cancelable:`, e.cancelable);
+                    console.log(`🔍 [CLICK] Direct click event fired for ${airportCode}`);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.selectAirport(airportCode);
                 });
                 
                 // Also add mousedown and mouseup for debugging
