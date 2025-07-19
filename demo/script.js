@@ -28,6 +28,20 @@ class JetLagProDemo {
             this.setupEventListeners();
             this.startTimeUpdates();
             
+            // Load saved airport if exists
+            const savedAirport = this.loadSelectedAirport();
+            if (savedAirport) {
+                console.log('🔍 [PERSISTENCE] Restoring saved airport:', savedAirport.code);
+                this.selectedAirport = savedAirport;
+                this.calculateTimezoneOffset(savedAirport);
+                this.generateNotificationSchedule(savedAirport);
+                this.updateDestinationDisplay();
+                this.updateActivePoint();
+                this.generatePointsList();
+                this.hideDestinationTab();
+                this.switchToTab('journey');
+            }
+            
             // Show default sections expanded
             this.showDefaultSections();
             
@@ -300,6 +314,7 @@ class JetLagProDemo {
         console.log('🔍 [STEP] Airport found:', airport.name);
 
         this.selectedAirport = airport;
+        this.saveSelectedAirport(airport); // Save to localStorage
         this.addRecentDestination(airport); // Add to recent destinations
         
         console.log('🔍 [STEP] Recent destination added');
@@ -650,10 +665,45 @@ class JetLagProDemo {
         this.notificationSchedule = []; // Clear notification schedule
         this.timezoneOffset = 0; // Reset timezone offset
         
+        // Clear localStorage
+        this.clearSelectedAirport();
+        
         this.updateDestinationDisplay();
         this.generatePointsList();
         this.showDestinationTab(); // Show destination tab when journey ends
         this.switchToTab('destination');
+    }
+    
+    saveSelectedAirport(airport) {
+        try {
+            localStorage.setItem('jetlagpro_selected_airport', JSON.stringify(airport));
+            console.log('🔍 [PERSISTENCE] Saved airport to localStorage:', airport.code);
+        } catch (error) {
+            console.error('🔍 [PERSISTENCE] Error saving airport:', error);
+        }
+    }
+    
+    loadSelectedAirport() {
+        try {
+            const savedAirport = localStorage.getItem('jetlagpro_selected_airport');
+            if (savedAirport) {
+                const airport = JSON.parse(savedAirport);
+                console.log('🔍 [PERSISTENCE] Loaded airport from localStorage:', airport.code);
+                return airport;
+            }
+        } catch (error) {
+            console.error('🔍 [PERSISTENCE] Error loading airport:', error);
+        }
+        return null;
+    }
+    
+    clearSelectedAirport() {
+        try {
+            localStorage.removeItem('jetlagpro_selected_airport');
+            console.log('🔍 [PERSISTENCE] Cleared airport from localStorage');
+        } catch (error) {
+            console.error('🔍 [PERSISTENCE] Error clearing airport:', error);
+        }
     }
 
     startTimeUpdates() {
