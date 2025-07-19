@@ -12,8 +12,10 @@ class JetLagProDemo {
         this.currentTab = 'home';
         this.expandedPointId = null;
         this.completedPoints = new Set();
-        this.recentDestinations = [];
-        this.maxRecentDestinations = 5;
+        this.recentDestinations = []; // Added for recent destinations
+        this.maxRecentDestinations = 5; // Added for recent destinations
+        this.notificationSchedule = []; // Added for notification schedule
+        this.timezoneOffset = 0; // Added for timezone offset
         
         this.init();
     }
@@ -181,7 +183,12 @@ class JetLagProDemo {
         }
 
         this.selectedAirport = airport;
-        this.addRecentDestination(airport);
+        this.addRecentDestination(airport); // Add to recent destinations
+        
+        // Calculate timezone offset and generate notification schedule
+        this.calculateTimezoneOffset(airport);
+        this.generateNotificationSchedule(airport);
+        
         this.updateDestinationDisplay();
         this.updateActivePoint();
         this.generatePointsList();
@@ -193,7 +200,8 @@ class JetLagProDemo {
             searchInput.value = '';
         }
         
-        // Switch to Journey tab to show the active point
+        // Hide destination tab and switch to Journey tab
+        this.hideDestinationTab();
         this.switchToTab('journey');
     }
 
@@ -239,15 +247,23 @@ class JetLagProDemo {
     }
 
     updateActivePoint() {
-        if (!this.selectedAirport) return;
-
-        const destinationTime = this.getDestinationTime();
-        const currentHour = destinationTime.getHours();
-        const pointId = this.hourToPointId[currentHour];
-        const point = this.points.find(p => p.id === pointId);
-
-        if (point) {
-            this.currentPoint = point;
+        if (!this.selectedAirport) {
+            // No destination case: calculate based on local time
+            const currentHour = new Date().getHours();
+            const pointId = this.hourToPointId[currentHour];
+            this.currentPoint = this.points.find(p => p.id === pointId);
+            console.log('🔍 [updateActivePoint] No destination - Current hour:', currentHour, 'Point ID:', pointId, 'Current point:', this.currentPoint?.id);
+        } else {
+            // Destination case: find current point based on destination timezone
+            const now = new Date();
+            const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: this.selectedAirport.timezone}));
+            const destinationHour = destinationTime.getHours();
+            const pointId = this.hourToPointId[destinationHour];
+            this.currentPoint = this.points.find(p => p.id === pointId);
+            
+            console.log('🔍 [updateActivePoint] With destination - Local time:', now.toLocaleString());
+            console.log('🔍 [updateActivePoint] Destination time:', destinationTime.toLocaleString());
+            console.log('🔍 [updateActivePoint] Destination hour:', destinationHour, 'Point ID:', pointId, 'Current point:', this.currentPoint?.id);
         }
     }
 
@@ -266,12 +282,17 @@ class JetLagProDemo {
 
         const orderedPoints = this.getOrderedPoints();
         const currentPointId = this.currentPoint ? this.currentPoint.id : null;
+        
+        console.log('🔍 [generatePointsList] Current point ID:', currentPointId);
+        console.log('🔍 [generatePointsList] Expanded point ID:', this.expandedPointId);
 
         const pointsHTML = orderedPoints.map((point, index) => {
             const isCurrent = point.id === currentPointId;
-            const isExpanded = this.expandedPointId === point.id;
+            const isExpanded = this.expandedPointId === point.id || isCurrent; // Auto-expand current point
             const isCompleted = this.completedPoints.has(point.id);
             const journeyOrder = index + 1;
+            
+            console.log(`🔍 [generatePointsList] Point ${point.id}: isCurrent=${isCurrent}, isExpanded=${isExpanded}`);
             
             const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId);
             
@@ -347,31 +368,33 @@ class JetLagProDemo {
             
             return orderedPoints;
         } else {
-            // Destination case: order points by notification schedule
-            // For demo, we'll use the hour-to-point mapping
-            const destinationTime = this.getDestinationTime();
-            const currentHour = destinationTime.getHours();
+            // Destination case: order points by notification schedule, with current point at top
+            const currentPointId = this.currentPoint ? this.currentPoint.id : null;
             
-            const orderedPoints = [];
-            const seenPointIds = new Set();
+            // Get all points from notification schedule
+            const schedulePoints = this.notificationSchedule.map(item => item.point);
             
-            for (let i = 0; i < 24; i++) {
-                const targetHour = (currentHour + i) % 24;
-                const pointId = this.hourToPointId[targetHour];
-                const point = this.points.find(p => p.id === pointId);
-                
-                if (point && !seenPointIds.has(point.id)) {
-                    orderedPoints.push(point);
-                    seenPointIds.add(point.id);
+            if (currentPointId) {
+                // Find the current point in the schedule and move it to the front
+                const currentPointIndex = schedulePoints.findIndex(p => p.id === currentPointId);
+                if (currentPointIndex !== -1) {
+                    const currentPoint = schedulePoints.splice(currentPointIndex, 1)[0];
+                    schedulePoints.unshift(currentPoint);
                 }
             }
             
-            return orderedPoints;
+            // Add any missing points from the original list
+            const missingPoints = this.points.filter(point => 
+                !schedulePoints.some(schedulePoint => schedulePoint.id === point.id)
+            );
+            
+            return schedulePoints.concat(missingPoints);
         }
     }
 
     formatStimulationText(point, journeyOrder, currentPointId) {
-        const pointName = `${point.name} (${point.chineseChars})`;
+        // Use ordinal number (journeyOrder) instead of point.id
+        const pointName = `Point ${journeyOrder}`;
         
         if (!this.selectedAirport) {
             // No destination case
@@ -381,7 +404,12 @@ class JetLagProDemo {
                 return `${pointName} will be active at ${this.getPointTimeString(point.id)}`;
             }
         } else {
-            // Destination case
+            // Destination case - use stored notification schedule
+            const scheduleItem = this.notificationSchedule.find(item => item.point.id === point.id);
+            if (!scheduleItem) {
+                return `${pointName} - schedule not available`;
+            }
+            
             if (point.id === currentPointId) {
                 return `${pointName} tells your body it is ${this.selectedAirport.code} time`;
             } else {
@@ -389,12 +417,19 @@ class JetLagProDemo {
                 if (isPast) {
                     return `${pointName} is no longer active`;
                 } else {
-                    const destTime = this.getPointDestinationTime(point.id);
-                    const localTime = this.getPointLocalTime(point.id);
+                    const destTime = this.formatTime(scheduleItem.destinationTime);
+                    const localTime = this.formatTime(scheduleItem.localTime);
                     return `Stimulate ${pointName} (${destTime}) at your ${localTime}`;
                 }
             }
         }
+    }
+
+    formatTime(date) {
+        return date.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            hour12: true 
+        });
     }
 
     getPointTimeString(pointId) {
@@ -474,9 +509,13 @@ class JetLagProDemo {
         this.currentPoint = null;
         this.expandedPointId = null;
         this.completedPoints.clear();
+        this.notificationSchedule = []; // Clear notification schedule
+        this.timezoneOffset = 0; // Reset timezone offset
         
         this.updateDestinationDisplay();
         this.generatePointsList();
+        this.showDestinationTab(); // Show destination tab when journey ends
+        this.switchToTab('destination');
     }
 
     startTimeUpdates() {
@@ -521,38 +560,6 @@ class JetLagProDemo {
         // Add active class to selected tab item
         const selectedTabItem = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
         if (selectedTabItem) selectedTabItem.classList.add('active');
-        
-        // Update header title based on tab
-        this.updateHeaderTitle(tabName);
-        
-        // Show/hide main app header based on tab
-        this.toggleMainHeader(tabName);
-    }
-
-    updateHeaderTitle(tabName) {
-        const headerTitle = document.getElementById('headerTitle');
-        if (!headerTitle) return;
-        
-        const titles = {
-            'home': 'How to be a Jet Lag Pro',
-            'destination': 'Destination',
-            'journey': 'Journey',
-            'info': 'Info'
-        };
-        
-        headerTitle.textContent = titles[tabName] || 'How to be a Jet Lag Pro';
-    }
-
-    toggleMainHeader(tabName) {
-        const mainHeader = document.querySelector('.app-header');
-        if (!mainHeader) return;
-        
-        // Only show main header on home tab since other tabs have their own headers
-        if (tabName === 'home') {
-            mainHeader.style.display = 'block';
-        } else {
-            mainHeader.style.display = 'none';
-        }
     }
 
     showError(message) {
@@ -628,6 +635,115 @@ class JetLagProDemo {
         `).join('');
         
         recentDestinations.style.display = 'block';
+    }
+
+    hideDestinationTab() {
+        const destinationTab = document.querySelector('.tab-item[onclick="switchTab(\'destination\')"]');
+        if (destinationTab) {
+            destinationTab.style.display = 'none';
+        }
+    }
+
+    showDestinationTab() {
+        const destinationTab = document.querySelector('.tab-item[onclick="switchTab(\'destination\')"]');
+        if (destinationTab) {
+            destinationTab.style.display = 'flex';
+        }
+    }
+
+    calculateTimezoneOffset(airport) {
+        try {
+            // Get destination timezone offset
+            const destinationDate = new Date();
+            const destinationTime = new Date(destinationDate.toLocaleString("en-US", {timeZone: airport.timezone}));
+            const localTime = new Date();
+            
+            // Calculate offset in seconds (local - destination)
+            this.timezoneOffset = (localTime.getTime() - destinationTime.getTime()) / 1000;
+            
+            const hoursDiff = Math.round(this.timezoneOffset / 3600);
+            console.log(`Timezone offset: ${hoursDiff > 0 ? '+' : ''}${hoursDiff} hours`);
+        } catch (error) {
+            console.error('Error calculating timezone offset:', error);
+            this.timezoneOffset = 0;
+        }
+    }
+
+    generateNotificationSchedule(airport) {
+        console.log('Generating notification schedule for:', airport.code);
+        this.notificationSchedule = [];
+        
+        try {
+            // Get current time in destination timezone
+            const now = new Date();
+            const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: airport.timezone}));
+            const currentHour = destinationTime.getHours();
+            
+            // Calculate next 12 odd-hour transitions
+            const transitionTimes = this.calculateNextTransitionTimes(currentHour, destinationTime);
+            
+            // Create schedule items
+            for (let i = 0; i < transitionTimes.length; i++) {
+                const transitionTime = transitionTimes[i];
+                const point = this.getPointForHour(transitionTime.getHours());
+                
+                // Convert destination time to local time
+                const localTime = new Date(transitionTime.getTime() + this.timezoneOffset * 1000);
+                
+                const scheduleItem = {
+                    point: point,
+                    destinationTime: transitionTime,
+                    localTime: localTime,
+                    transitionNumber: i + 1,
+                    destinationCode: airport.code,
+                    destinationTimezone: airport.timezone
+                };
+                
+                this.notificationSchedule.push(scheduleItem);
+            }
+            
+            console.log(`Generated ${this.notificationSchedule.length} schedule items`);
+        } catch (error) {
+            console.error('Error generating notification schedule:', error);
+        }
+    }
+
+    calculateNextTransitionTimes(currentHour, now) {
+        const transitionTimes = [];
+        
+        // Find the next odd hour from current time
+        let nextOddHour = currentHour;
+        if (nextOddHour % 2 === 0) {
+            nextOddHour += 1; // If even, go to next odd hour
+        } else {
+            nextOddHour += 2; // If odd, go to next odd hour
+        }
+        if (nextOddHour > 23) {
+            nextOddHour = 1; // Wrap around to 1 AM
+        }
+        
+        // Calculate 12 transition times (odd hours)
+        for (let i = 0; i < 12; i++) {
+            const targetHour = (nextOddHour + i * 2) % 24;
+            if (targetHour === 0) targetHour = 24; // Handle midnight
+            
+            const transitionTime = new Date(now);
+            transitionTime.setHours(targetHour, 0, 0, 0);
+            
+            // If this time has already passed today, move to tomorrow
+            if (transitionTime <= now) {
+                transitionTime.setDate(transitionTime.getDate() + 1);
+            }
+            
+            transitionTimes.push(transitionTime);
+        }
+        
+        return transitionTimes;
+    }
+
+    getPointForHour(hour) {
+        const pointId = this.hourToPointId[hour];
+        return this.points.find(p => p.id === pointId) || this.points[0];
     }
 }
 

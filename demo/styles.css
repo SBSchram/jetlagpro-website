@@ -82,45 +82,35 @@ body {
     position: relative;
 }
 
-/* Header */
-.app-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #ffffff;
-}
-
-.header-gradient {
-    background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+/* Home Tab Header */
+.home-header {
+    background: linear-gradient(135deg, #007AFF, #007AFF 80%);
     height: 80px;
+    margin: -12px -12px 0 -12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
-.header-content {
+.home-header-content {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 0 16px;
     height: 100%;
 }
 
-.app-title {
+.home-title {
     color: #ffffff;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 22px;
+    font-weight: 700;
     margin: 0;
     line-height: 1.2;
     text-align: center;
-    flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 
 
 /* Main Content Area */
@@ -695,19 +685,12 @@ body {
 
 /* Journey Tab Styles */
 .journey-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #ffffff;
-}
-
-.journey-header .header-gradient {
-    background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+    background: linear-gradient(135deg, #007AFF, #007AFF 80%);
     height: 80px;
+    margin: -12px -12px 0 -12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
 .journey-header-content {
@@ -715,8 +698,8 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 0 16px;
     height: 100%;
+    padding: 0 16px;
 }
 
 .destination-info {
@@ -786,6 +769,7 @@ body {
 
 .point-card.current {
     border-color: #34c759;
+    border: 2px solid #34c759;
 }
 
 .point-card.completed::after {
@@ -1059,14 +1043,21 @@ body {
 /* Destination Tab */
 .destination-header {
     background: linear-gradient(135deg, #007AFF, #007AFF 80%);
-    padding: 16px;
+    height: 120px;
     margin: -12px -12px 0 -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .destination-header-content {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 16px;
 }
 
 .destination-title {
@@ -1239,14 +1230,19 @@ body {
 /* Info Tab */
 .info-header {
     background: linear-gradient(135deg, #007AFF, #007AFF 80%);
-    padding: 16px;
+    height: 80px;
     margin: -12px -12px 0 -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .info-header-content {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .info-title {
