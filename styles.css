@@ -339,6 +339,46 @@ body {
     font-size: 0.9rem;
 }
 
+.science-references {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+}
+
+.science-references h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.science-references ul {
+    list-style: none;
+    padding: 0;
+}
+
+.science-references li {
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
+    position: relative;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+.science-references li:before {
+    content: "•";
+    color: #2563eb;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.science-references li strong {
+    color: #1e293b;
+}
+
 .meridian-clock {
     background: #f8f9fa;
     padding: 2rem;
@@ -366,67 +406,6 @@ body {
     font-size: 0.9rem;
     color: #374151;
     border-left: 4px solid #2563eb;
-}
-
-/* Points Section */
-.points {
-    padding: 80px 0;
-    background: #f8f9fa;
-}
-
-.points-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.point-card {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.point-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.point-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #f3f4f6;
-}
-
-.point-header h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1f2937;
-}
-
-.point-time {
-    background: #2563eb;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.point-content p {
-    margin-bottom: 1rem;
-    color: #4b5563;
-    line-height: 1.6;
-}
-
-.point-content strong {
-    color: #1f2937;
-    font-weight: 600;
 }
 
 /* Features Section */
@@ -752,10 +731,6 @@ body {
     .science-content {
         grid-template-columns: 1fr;
         gap: 2rem;
-    }
-    
-    .points-grid {
-        grid-template-columns: 1fr;
     }
     
     .features-grid {
