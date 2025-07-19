@@ -40,6 +40,67 @@ const Storage = {
     }
 };
 
+const DOM = {
+    // Get element safely (with null check and warning)
+    get(id) {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.warn(`Element with id '${id}' not found`);
+        }
+        return element;
+    },
+    
+    // Show/hide elements
+    show(id) {
+        const element = this.get(id);
+        if (element) element.style.display = 'block';
+    },
+    
+    hide(id) {
+        const element = this.get(id);
+        if (element) element.style.display = 'none';
+    },
+    
+    showFlex(id) {
+        const element = this.get(id);
+        if (element) element.style.display = 'flex';
+    },
+    
+    // Update content
+    setText(id, text) {
+        const element = this.get(id);
+        if (element) element.textContent = text;
+    },
+    
+    setHTML(id, html) {
+        const element = this.get(id);
+        if (element) element.innerHTML = html;
+    },
+    
+    // Set value (for inputs)
+    setValue(id, value) {
+        const element = this.get(id);
+        if (element) element.value = value;
+    },
+    
+    // Get value (for inputs)
+    getValue(id) {
+        const element = this.get(id);
+        return element ? element.value : '';
+    },
+    
+    // Add/remove classes
+    addClass(id, className) {
+        const element = this.get(id);
+        if (element) element.classList.add(className);
+    },
+    
+    removeClass(id, className) {
+        const element = this.get(id);
+        if (element) element.classList.remove(className);
+    }
+};
+
 class JetLagProDemo {
     constructor() {
         console.log('JetLagPro Demo constructor called');
@@ -236,12 +297,10 @@ class JetLagProDemo {
     }
 
     displaySearchResults(results) {
-        const resultsContainer = document.getElementById('searchResults');
-        
         if (results.length === 0) {
-            resultsContainer.innerHTML = '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>';
+            DOM.setHTML('searchResults', '<div class="airport-result"><div class="airport-info"><div class="airport-name">No airports found</div></div></div>');
         } else {
-            resultsContainer.innerHTML = results.map(airport => `
+            const resultsHTML = results.map(airport => `
                 <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                     <div class="airport-info">
                         <div class="airport-name">${airport.name}</div>
@@ -251,63 +310,59 @@ class JetLagProDemo {
                 </div>
             `).join('');
             
+            DOM.setHTML('searchResults', resultsHTML);
+            
             // Add event listeners for cross-platform compatibility
-            const airportResults = resultsContainer.querySelectorAll('.airport-result');
-            airportResults.forEach((element) => {
-                const airportCode = element.getAttribute('data-airport-code');
-                
-                // Add pointerdown event listener for cross-platform compatibility
-                element.addEventListener('pointerdown', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.selectAirport(airportCode);
+            const resultsContainer = DOM.get('searchResults');
+            if (resultsContainer) {
+                const airportResults = resultsContainer.querySelectorAll('.airport-result');
+                airportResults.forEach((element) => {
+                    const airportCode = element.getAttribute('data-airport-code');
+                    
+                    // Add pointerdown event listener for cross-platform compatibility
+                    element.addEventListener('pointerdown', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.selectAirport(airportCode);
+                    });
+                    
+                    // Also keep click as fallback
+                    element.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.selectAirport(airportCode);
+                    });
                 });
-                
-                // Also keep click as fallback
-                element.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.selectAirport(airportCode);
-                });
-            });
+            }
         }
         
         this.showSearchResults();
     }
 
     showSearchResults() {
-        const resultsContainer = document.getElementById('searchResults');
-        const emptyState = document.getElementById('emptyState');
-        const recentDestinations = document.getElementById('recentDestinations');
-        
         console.log('Showing search results');
-        if (resultsContainer) resultsContainer.style.display = 'block';
-        if (emptyState) emptyState.style.display = 'none';
-        if (recentDestinations) recentDestinations.style.display = 'none';
+        DOM.show('searchResults');
+        DOM.hide('emptyState');
+        DOM.hide('recentDestinations');
     }
 
     hideSearchResults() {
-        const resultsContainer = document.getElementById('searchResults');
         console.log('Hiding search results');
-        if (resultsContainer) resultsContainer.style.display = 'none';
+        DOM.hide('searchResults');
     }
 
     showEmptyState() {
-        const emptyState = document.getElementById('emptyState');
-        const recentDestinations = document.getElementById('recentDestinations');
-        
-        if (emptyState) emptyState.style.display = 'flex';
-        if (recentDestinations) {
-            recentDestinations.style.display = this.recentDestinations.length > 0 ? 'block' : 'none';
+        DOM.showFlex('emptyState');
+        if (this.recentDestinations.length > 0) {
+            DOM.show('recentDestinations');
+        } else {
+            DOM.hide('recentDestinations');
         }
     }
 
     clearSearch() {
-        const searchInput = document.getElementById('airportSearch');
-        if (searchInput) {
-            searchInput.value = '';
-            this.handleAirportSearch('');
-        }
+        DOM.setValue('airportSearch', '');
+        this.handleAirportSearch('');
     }
 
     selectAirport(airportCode) {
@@ -331,10 +386,7 @@ class JetLagProDemo {
         this.hideSearchResults();
         
         // Clear search input
-        const searchInput = document.getElementById('airportSearch');
-        if (searchInput) {
-            searchInput.value = '';
-        }
+        DOM.setValue('airportSearch', '');
         
         // Switch to Journey tab (don't hide destination tab yet)
         this.switchToTab('journey');
@@ -346,31 +398,15 @@ class JetLagProDemo {
     }
 
     updateDestinationDisplay() {
-        const destinationStatus = document.getElementById('destinationStatus');
-        const destinationName = document.getElementById('destinationName');
-        const endJourneyButton = document.getElementById('endJourneyButton');
-
         if (this.selectedAirport) {
-            if (destinationStatus) {
-                destinationStatus.innerHTML = `<span>Heading to ${this.selectedAirport.code} where it's <span id="destinationTime">${this.getDestinationTimeString()}</span></span>`;
-            }
-            if (destinationName) {
-                destinationName.textContent = this.selectedAirport.name;
-                destinationName.style.display = 'block';
-            }
-            if (endJourneyButton) {
-                endJourneyButton.style.display = 'flex';
-            }
+            DOM.setHTML('destinationStatus', `<span>Heading to ${this.selectedAirport.code} where it's <span id="destinationTime">${this.getDestinationTimeString()}</span></span>`);
+            DOM.setText('destinationName', this.selectedAirport.name);
+            DOM.show('destinationName');
+            DOM.showFlex('endJourneyButton');
         } else {
-            if (destinationStatus) {
-                destinationStatus.innerHTML = '<span>No Destination Yet</span>';
-            }
-            if (destinationName) {
-                destinationName.style.display = 'none';
-            }
-            if (endJourneyButton) {
-                endJourneyButton.style.display = 'none';
-            }
+            DOM.setHTML('destinationStatus', '<span>No Destination Yet</span>');
+            DOM.hide('destinationName');
+            DOM.hide('endJourneyButton');
         }
     }
 
@@ -412,7 +448,7 @@ class JetLagProDemo {
     }
 
     generatePointsList() {
-        const pointsList = document.getElementById('pointsList');
+        const pointsList = DOM.get('pointsList');
         if (!pointsList) return;
 
         const orderedPoints = this.getOrderedPoints();
@@ -468,7 +504,7 @@ class JetLagProDemo {
             `;
         }).join('');
 
-        pointsList.innerHTML = pointsHTML;
+        DOM.setHTML('pointsList', pointsHTML);
     }
 
     getOrderedPoints() {
@@ -713,7 +749,7 @@ class JetLagProDemo {
         tabItems.forEach(item => item.classList.remove('active'));
         
         // Show selected tab content
-        const selectedTab = document.getElementById(tabName + 'Tab');
+        const selectedTab = DOM.get(tabName + 'Tab');
         if (selectedTab) {
             selectedTab.classList.add('active');
         } else {
@@ -770,17 +806,17 @@ class JetLagProDemo {
     }
 
     updateRecentDestinationsDisplay() {
-        const recentList = document.getElementById('recentList');
-        const recentDestinations = document.getElementById('recentDestinations');
+        const recentList = DOM.get('recentList');
+        const recentDestinations = DOM.get('recentDestinations');
         
         if (!recentList || !recentDestinations) return;
         
         if (this.recentDestinations.length === 0) {
-            recentDestinations.style.display = 'none';
+            DOM.hide('recentDestinations');
             return;
         }
         
-        recentList.innerHTML = this.recentDestinations.map(airport => `
+        const recentHTML = this.recentDestinations.map(airport => `
             <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
                 <div class="airport-info">
                     <div class="airport-name">${airport.name}</div>
@@ -790,7 +826,8 @@ class JetLagProDemo {
             </div>
         `).join('');
         
-        recentDestinations.style.display = 'block';
+        DOM.setHTML('recentList', recentHTML);
+        DOM.show('recentDestinations');
     }
 
     hideDestinationTab() {
