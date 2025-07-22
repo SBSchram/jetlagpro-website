@@ -8,13 +8,22 @@
 </head>
 <body>
     <header class="header">
-        <nav class="navbar">
+        <nav class="nav">
             <div class="nav-container">
-                <div class="nav-logo">
-                    <h2>JetLag Pro</h2>
+                <div class="logo">
+                    <h1><a href="index.html">JetLagPro</a></h1>
                 </div>
-                <div class="nav-menu" id="nav-menu">
-                    <a href="index.html" class="nav-link">← Back to Main Page</a>
+                <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a href="#" class="active">Science Test</a>
+                    <a href="alternative-approaches.html">Alternatives</a>
+                    <a href="travel-tips.html">Travel Tips</a>
+                    <a href="index.html#download">Download</a>
                 </div>
             </div>
         </nav>
@@ -162,5 +171,12 @@
             }
         }
     </style>
+
+    <script>
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
 </body>
 </html> 

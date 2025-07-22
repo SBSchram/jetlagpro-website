@@ -25,6 +25,7 @@
                     <span></span>
                 </div>
                 <div class="nav-links" id="navLinks">
+                    <a href="#top">Home</a>
                     <a href="#science">The Science</a>
                     <a href="#how-it-works">How It Works</a>
                     <a href="alternative-approaches.html">Alternatives</a>
@@ -36,7 +37,7 @@
     </header>
 
     <main>
-        <section class="hero">
+        <section id="top" class="hero">
             <div class="hero-container">
                 <div class="hero-content">
                     <h1 class="hero-title">Beat Jet Lag with Ancient Wisdom</h1>
@@ -237,7 +238,6 @@
         <section id="how-it-works" class="how-it-works">
             <div class="container">
                 <h2 class="section-title">How JetLagPro Works</h2>
-                <p class="section-subtitle">A simple approach based on traditional acupressure techniques. The app guides you through stimulating specific pressure points at timed intervals.</p>
                 
                 <div class="steps">
                     <div class="step">
@@ -444,7 +444,8 @@
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
-        <div class="indicator active" data-section="science"></div>
+        <div class="indicator active" data-section="top"></div>
+        <div class="indicator" data-section="science"></div>
         <div class="indicator" data-section="how-it-works"></div>
         <div class="indicator" data-section="download"></div>
     </div>
@@ -506,7 +507,7 @@
         // Swipe Navigation Implementation
         class SwipeNavigation {
             constructor() {
-                this.sections = ['science', 'how-it-works', 'download'];
+                this.sections = ['top', 'science', 'how-it-works', 'download'];
                 this.currentSection = 0;
                 this.touchStartX = 0;
                 this.touchEndX = 0;
