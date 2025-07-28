@@ -73,9 +73,15 @@ function setupEventListeners() {
 // Setup slider functionality
 function setupSliders() {
     const sliders = document.querySelectorAll('.slider');
-    sliders.forEach(slider => {
+    console.log('🎚️ Found sliders:', sliders.length);
+    
+    sliders.forEach((slider, index) => {
+        console.log(`🎚️ Slider ${index + 1}:`, slider.id, 'value:', slider.value);
+        
         slider.addEventListener('input', function() {
             const value = this.value;
+            console.log(`🎚️ Slider input event:`, this.id, 'value:', value);
+            
             const valueDisplay = document.getElementById(this.id + 'Value');
             if (valueDisplay) {
                 valueDisplay.textContent = value;
@@ -83,8 +89,14 @@ function setupSliders() {
             
             // Save answer with question container ID
             const questionId = this.closest('.question-container').id;
+            console.log(`💾 Saving slider answer:`, questionId, value);
             saveAnswer(questionId, value);
         });
+        
+        // Save default value immediately
+        const questionId = slider.closest('.question-container').id;
+        console.log(`💾 Saving default slider value:`, questionId, slider.value);
+        saveAnswer(questionId, slider.value);
     });
 }
 
