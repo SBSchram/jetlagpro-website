@@ -103,7 +103,7 @@ function setupDemographicSelects() {
     demographicSelects.forEach(select => {
         select.addEventListener('change', function() {
             const value = this.value;
-            const questionId = 'q5b'; // All demographic questions are part of q5b
+            const questionId = this.id; // Use the select's ID as the question key
             saveAnswer(questionId, value);
         });
     });
@@ -218,6 +218,13 @@ function debugSurveyData() {
         const questionId = 'q' + i;
         console.log(`${questionId}:`, surveyData[questionId] || 'NOT ANSWERED');
     }
+    
+    // Also check demographic questions
+    const demographicQuestions = ['q5b_ageRange', 'q5b_gender', 'q5b_travelExperience', 'q5b_geographicRegion', 'q5b_travelPurpose'];
+    console.log('Demographic questions:');
+    demographicQuestions.forEach(qId => {
+        console.log(`${qId}:`, surveyData[qId] || 'NOT ANSWERED');
+    });
 }
 
 // Validate phase completion
