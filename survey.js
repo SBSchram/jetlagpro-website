@@ -8,8 +8,23 @@ let currentPhase = 1;
 
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    initializeSurvey();
-    setupEventListeners();
+    console.log('🚀 DOM Content Loaded - Starting survey initialization');
+    console.log('📄 Current page:', window.location.href);
+    console.log('🔍 Document ready state:', document.readyState);
+    
+    // Add global click listener for debugging
+    document.addEventListener('click', function(e) {
+        console.log('🖱️ Global click detected on:', e.target.tagName, e.target.className, e.target.textContent?.trim());
+    });
+    
+    // Check if we're on the survey page
+    if (window.location.pathname.includes('survey.html')) {
+        console.log('✅ Survey page detected');
+        initializeSurvey();
+        setupEventListeners();
+    } else {
+        console.log('❌ Not on survey page');
+    }
 });
 
 // Initialize survey
@@ -92,10 +107,22 @@ function setupButtonGrids() {
     const optionButtons = document.querySelectorAll('.option-button');
     console.log('🔘 Found option buttons:', optionButtons.length);
     
+    if (optionButtons.length === 0) {
+        console.log('❌ No option buttons found!');
+        console.log('🔍 Looking for elements with class "option-button"');
+        const allElements = document.querySelectorAll('*');
+        console.log('📊 Total elements on page:', allElements.length);
+        return;
+    }
+    
     optionButtons.forEach((button, index) => {
         console.log(`🔘 Button ${index + 1}:`, button.textContent.trim());
-        button.addEventListener('click', function() {
+        console.log(`🔘 Button ${index + 1} classes:`, button.className);
+        console.log(`🔘 Button ${index + 1} data-value:`, button.getAttribute('data-value'));
+        
+        button.addEventListener('click', function(e) {
             console.log('🔘 Button clicked:', this.textContent.trim());
+            console.log('🔘 Click event:', e);
             
             // Remove selected class from siblings
             const siblings = this.parentElement.querySelectorAll('.option-button');
@@ -110,6 +137,8 @@ function setupButtonGrids() {
             console.log('💾 Saving answer:', questionId, value);
             saveAnswer(questionId, value);
         });
+        
+        console.log(`✅ Event listener attached to button ${index + 1}`);
     });
 }
 
