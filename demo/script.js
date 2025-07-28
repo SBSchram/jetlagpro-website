@@ -1021,13 +1021,79 @@ function toggleSection(sectionId) {
     const chevron = document.getElementById(sectionId + 'Chevron');
     
     if (content && chevron) {
-        if (content.style.display === 'none' || content.style.display === '') {
-            content.style.display = 'block';
-            chevron.textContent = '▲';
-        } else {
-            content.style.display = 'none';
-            chevron.textContent = '▼';
-        }
+        const isExpanded = content.style.display === 'block';
+        content.style.display = isExpanded ? 'none' : 'block';
+        chevron.textContent = isExpanded ? '▼' : '▲';
+    }
+}
+
+// Copy survey code to clipboard
+function copySurveyCode() {
+    const surveyCode = 'JLP-A7B3C9D2';
+    
+    // Try to use the modern clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(surveyCode).then(() => {
+            showCopySuccess();
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            fallbackCopyTextToClipboard(surveyCode);
+        });
+    } else {
+        // Fallback for older browsers
+        fallbackCopyTextToClipboard(surveyCode);
+    }
+}
+
+// Fallback copy function for older browsers
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showCopySuccess();
+    } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+        showCopyError();
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Show copy success message
+function showCopySuccess() {
+    const copyButton = document.querySelector('.copy-button');
+    if (copyButton) {
+        const originalText = copyButton.textContent;
+        copyButton.textContent = 'Copied!';
+        copyButton.style.background = '#4CAF50';
+        
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+            copyButton.style.background = '#007AFF';
+        }, 2000);
+    }
+}
+
+// Show copy error message
+function showCopyError() {
+    const copyButton = document.querySelector('.copy-button');
+    if (copyButton) {
+        const originalText = copyButton.textContent;
+        copyButton.textContent = 'Failed';
+        copyButton.style.background = '#f44336';
+        
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+            copyButton.style.background = '#007AFF';
+        }, 2000);
     }
 }
 

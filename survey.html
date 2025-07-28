@@ -63,49 +63,40 @@
                             <li>Improve jet lag management for future users</li>
                         </ul>
                     </div>
-
-                    <div class="survey-process">
-                        <h3>Survey Process:</h3>
-                        <div class="process-steps">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h4>Pre-Travel Baseline</h4>
-                                    <p>Complete before your trip (5 minutes)</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h4>Immediate Post-Arrival</h4>
-                                    <p>Complete 1-2 days after arrival (3 minutes)</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h4>Full Assessment</h4>
-                                    <p>Complete 5-7 days after arrival (5 minutes)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="participation-benefits">
-                        <h3>Your Participation Benefits:</h3>
-                        <ul>
-                            <li>✅ Contribute to scientific research on jet lag management</li>
-                            <li>✅ Help improve treatments for future travelers</li>
-                            <li>✅ Receive free access to the final version of JetLagPro</li>
-                            <li>✅ Anonymous data collection - your privacy is protected</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="survey-container" id="surveyContainer">
+        <!-- Survey Code Validation Section -->
+        <section class="survey-validation" id="surveyValidation">
             <div class="container">
+                <div class="validation-content">
+                    <h2>Survey Access</h2>
+                    <p>This survey is available to JetLagPro app users. Please enter your survey code to continue.</p>
+                    
+                    <div class="code-input-section">
+                        <label for="surveyCode">Survey Code:</label>
+                        <input type="text" id="surveyCode" placeholder="Enter your survey code (e.g., JLP-XXXXXXXX)" maxlength="12">
+                        <button type="button" id="validateCode" class="btn btn-primary">Continue to Survey</button>
+                    </div>
+                    
+                    <div class="code-help">
+                        <h4>How to get your survey code:</h4>
+                        <ol>
+                            <li>Open the JetLagPro app</li>
+                            <li>Go to the Home screen</li>
+                            <li>Look for "Survey code to rate effectiveness"</li>
+                            <li>Copy your unique code and paste it above</li>
+                        </ol>
+                    </div>
+                    
+                    <div id="validationMessage" class="validation-message"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Survey Content (initially hidden) -->
+        <div id="surveyContent" style="display: none;">
                 <div class="survey-progress">
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -116,8 +107,7 @@
                 <!-- LJLQ-based survey redesign follows. All questions use dropdowns. -->
                 <!-- Section 1: Pre-Travel Baseline -->
                 <section class="survey-section" id="preBaseline">
-                  <h2>Pre-Travel Baseline</h2>
-                  <p>For each symptom, indicate the severity you typically experience after long-haul travel (crossing ≥3 time zones):</p>
+                  <h3>Pre-Travel Baseline</h3>
                   <form id="baselineForm">
                     <div class="symptom-row">
                       <label>Sleep disturbance</label>
@@ -174,8 +164,7 @@
 
                 <!-- Section 2: Post-Travel Assessment -->
                 <section class="survey-section" id="postAssessment">
-                  <h2>Post-Travel Assessment</h2>
-                  <p>For each symptom, indicate the severity and duration you experienced after this trip:</p>
+                  <h3>Post-Travel Assessment</h3>
                   <form id="postForm">
                     <div class="symptom-row">
                       <label>Sleep disturbance</label>
@@ -272,7 +261,7 @@
 
                 <!-- Section 3: Additional Context -->
                 <section class="survey-section" id="contextSection">
-                  <h2>Travel Context</h2>
+                  <h3>Travel Context</h3>
                   <form id="contextForm">
                     <div class="context-row">
                       <label>Direction of travel</label>

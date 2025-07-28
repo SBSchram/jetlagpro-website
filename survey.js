@@ -2,10 +2,89 @@
 
 // Global variables
 let surveyData = {};
+let isCodeValidated = false;
 
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 LJLQ Survey Initializing...');
+    
+    // Setup code validation first
+    setupCodeValidation();
+    
+    // Only proceed with survey setup if code is validated
+    if (isCodeValidated) {
+        initializeSurvey();
+    }
+    
+    console.log('✅ LJLQ Survey initialized');
+});
+
+// Setup survey code validation
+function setupCodeValidation() {
+    console.log('🔐 Setting up code validation...');
+    
+    const validateBtn = document.getElementById('validateCode');
+    const surveyCode = document.getElementById('surveyCode');
+    const validationMessage = document.getElementById('validationMessage');
+    const surveyValidation = document.getElementById('surveyValidation');
+    const surveyContent = document.getElementById('surveyContent');
+    
+    if (!validateBtn || !surveyCode) {
+        console.error('❌ Code validation elements not found');
+        return;
+    }
+    
+    // Handle code validation
+    validateBtn.addEventListener('click', function() {
+        const code = surveyCode.value.trim().toUpperCase();
+        
+        if (validateSurveyCode(code)) {
+            isCodeValidated = true;
+            validationMessage.innerHTML = '<div class="success">✅ Code validated! Loading survey...</div>';
+            validationMessage.className = 'validation-message success';
+            
+            // Hide validation section and show survey
+            setTimeout(() => {
+                surveyValidation.style.display = 'none';
+                surveyContent.style.display = 'block';
+                initializeSurvey();
+            }, 1000);
+            
+        } else {
+            validationMessage.innerHTML = '<div class="error">❌ Invalid code. Please check your survey code and try again.</div>';
+            validationMessage.className = 'validation-message error';
+        }
+    });
+    
+    // Handle Enter key in code input
+    surveyCode.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            validateBtn.click();
+        }
+    });
+    
+    console.log('✅ Code validation setup complete');
+}
+
+// Validate survey code format
+function validateSurveyCode(code) {
+    console.log('🔍 Validating code:', code);
+    
+    // Check if code matches JLP-XXXXXXXX format
+    const codePattern = /^JLP-[A-F0-9]{8}$/;
+    
+    if (codePattern.test(code)) {
+        console.log('✅ Code format is valid');
+        return true;
+    } else {
+        console.log('❌ Code format is invalid');
+        return false;
+    }
+}
+
+// Initialize survey functionality
+function initializeSurvey() {
+    console.log('📋 Initializing survey functionality...');
     
     // Load saved progress if exists
     loadSurveyProgress();
@@ -16,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show first section
     showSection('preBaseline');
     
-    console.log('✅ LJLQ Survey initialized');
-});
+    console.log('✅ Survey functionality initialized');
+}
 
 // Setup form event listeners for all dropdowns
 function setupFormListeners() {
