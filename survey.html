@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jet Lag Research Survey - JetLagPro</title>
+    <meta name="description" content="Help advance chronoacupuncture research by participating in our jet lag survey. Your feedback helps improve jet lag management for travelers worldwide.">
+    <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="survey.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><a href="index.html">JetLagPro</a></h1>
+                </div>
+                <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#science">The Science</a>
+                    <a href="alternative-approaches.html">Alternatives</a>
+                    <a href="travel-tips.html">Travel Tips</a>
+                    <a href="#" class="active">Research Survey</a>
+                    <a href="index.html#download">Download</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-simple">
+            <div class="container">
+                <h1>Jet Lag Research Survey</h1>
+                <p class="hero-subtitle">Help advance chronoacupuncture research and improve jet lag management for travelers worldwide</p>
+                <div class="research-badge">
+                    <span>🔬 Research Study</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="survey-intro">
+            <div class="container">
+                <div class="intro-content">
+                    <h2>About This Research</h2>
+                    <p>JetLagPro is conducting research to evaluate the effectiveness of chronoacupuncture for jet lag management. Your participation helps advance our understanding of this traditional Chinese medicine approach.</p>
+                    
+                    <div class="research-goals">
+                        <h3>Research Goals:</h3>
+                        <ul>
+                            <li>Evaluate chronoacupuncture effectiveness for jet lag</li>
+                            <li>Understand individual variation in treatment response</li>
+                            <li>Identify optimal usage patterns for travelers</li>
+                            <li>Improve jet lag management for future users</li>
+                        </ul>
+                    </div>
+
+                    <div class="survey-process">
+                        <h3>Survey Process:</h3>
+                        <div class="process-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Pre-Travel Baseline</h4>
+                                    <p>Complete before your trip (5 minutes)</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Immediate Post-Arrival</h4>
+                                    <p>Complete 1-2 days after arrival (3 minutes)</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Full Assessment</h4>
+                                    <p>Complete 5-7 days after arrival (5 minutes)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="participation-benefits">
+                        <h3>Your Participation Benefits:</h3>
+                        <ul>
+                            <li>✅ Contribute to scientific research on jet lag management</li>
+                            <li>✅ Help improve treatments for future travelers</li>
+                            <li>✅ Receive free access to the final version of JetLagPro</li>
+                            <li>✅ Anonymous data collection - your privacy is protected</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="survey-container" id="surveyContainer">
+            <div class="container">
+                <div class="survey-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Step 1 of 13</div>
+                </div>
+
+                <div class="survey-phase" id="phase1">
+                    <h2>Phase 1: Pre-Travel Baseline</h2>
+                    <p class="phase-description">Let's understand your typical jet lag experience and travel patterns.</p>
+                    
+                    <div class="question-container" id="q1">
+                        <h3>Question 1 of 5</h3>
+                        <div class="question">
+                            <h4>How severe is your typical jet lag?</h4>
+                            <p class="question-subtitle">Think about your past international travel experiences</p>
+                            
+                            <div class="slider-container">
+                                <input type="range" min="0" max="10" value="5" class="slider" id="baselineSeverity">
+                                <div class="slider-labels">
+                                    <span>No jet lag</span>
+                                    <span>Mild</span>
+                                    <span>Moderate</span>
+                                    <span>Severe</span>
+                                    <span>Very severe</span>
+                                </div>
+                                <div class="slider-value" id="baselineSeverityValue">5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q2" style="display: none;">
+                        <h3>Question 2 of 5</h3>
+                        <div class="question">
+                            <h4>How well do you usually sleep when traveling?</h4>
+                            <p class="question-subtitle">Consider your typical sleep quality during and after travel</p>
+                            
+                            <div class="emoji-scale">
+                                <div class="emoji-option" data-value="1">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Very poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="2">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="3">
+                                    <span class="emoji">😐</span>
+                                    <span class="label">Fair</span>
+                                </div>
+                                <div class="emoji-option" data-value="4">
+                                    <span class="emoji">😊</span>
+                                    <span class="label">Good</span>
+                                </div>
+                                <div class="emoji-option" data-value="5">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q3" style="display: none;">
+                        <h3>Question 3 of 5</h3>
+                        <div class="question">
+                            <h4>How many time zones will you cross on this trip?</h4>
+                            <p class="question-subtitle">Count the time difference between your departure and destination</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="1-3">1-3 time zones</button>
+                                <button class="option-button" data-value="4-6">4-6 time zones</button>
+                                <button class="option-button" data-value="7-9">7-9 time zones</button>
+                                <button class="option-button" data-value="10+">10+ time zones</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q4" style="display: none;">
+                        <h3>Question 4 of 5</h3>
+                        <div class="question">
+                            <h4>What's your usual sleep schedule?</h4>
+                            <p class="question-subtitle">Are you more of a morning person or night person?</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="early">Early bird (morning person)</button>
+                                <button class="option-button" data-value="balanced">Balanced</button>
+                                <button class="option-button" data-value="late">Night owl (evening person)</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q5" style="display: none;">
+                        <h3>Question 5 of 5</h3>
+                        <div class="question">
+                            <h4>How often do you travel internationally?</h4>
+                            <p class="question-subtitle">Consider your typical travel frequency</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="rarely">Rarely (once a year or less)</button>
+                                <button class="option-button" data-value="occasionally">Occasionally (2-4 times per year)</button>
+                                <button class="option-button" data-value="frequently">Frequently (5+ times per year)</button>
+                                <button class="option-button" data-value="very-frequently">Very frequently (monthly or more)</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="completePhase1()">Complete Phase 1</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-phase" id="phase2" style="display: none;">
+                    <h2>Phase 2: Immediate Post-Arrival</h2>
+                    <p class="phase-description">Let's check in on your travel experience and app usage.</p>
+                    
+                    <div class="question-container" id="q6">
+                        <h3>Question 1 of 3</h3>
+                        <div class="question">
+                            <h4>How often did you use the JetLagPro app during your trip?</h4>
+                            <p class="question-subtitle">Think about your app usage throughout the journey</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="never">Never used it</button>
+                                <button class="option-button" data-value="sometimes">Sometimes (a few times)</button>
+                                <button class="option-button" data-value="often">Often (most points)</button>
+                                <button class="option-button" data-value="always">Always (every point)</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q7" style="display: none;">
+                        <h3>Question 2 of 3</h3>
+                        <div class="question">
+                            <h4>How was your sleep during the flight?</h4>
+                            <p class="question-subtitle">Consider your sleep quality while traveling</p>
+                            
+                            <div class="emoji-scale">
+                                <div class="emoji-option" data-value="1">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Very poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="2">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="3">
+                                    <span class="emoji">😐</span>
+                                    <span class="label">Fair</span>
+                                </div>
+                                <div class="emoji-option" data-value="4">
+                                    <span class="emoji">😊</span>
+                                    <span class="label">Good</span>
+                                </div>
+                                <div class="emoji-option" data-value="5">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q8" style="display: none;">
+                        <h3>Question 3 of 3</h3>
+                        <div class="question">
+                            <h4>How do you feel right now?</h4>
+                            <p class="question-subtitle">Rate your current energy and alertness level</p>
+                            
+                            <div class="slider-container">
+                                <input type="range" min="0" max="10" value="5" class="slider" id="currentEnergy">
+                                <div class="slider-labels">
+                                    <span>Very tired</span>
+                                    <span>Tired</span>
+                                    <span>Okay</span>
+                                    <span>Alert</span>
+                                    <span>Very alert</span>
+                                </div>
+                                <div class="slider-value" id="currentEnergyValue">5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="completePhase2()">Complete Phase 2</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-phase" id="phase3" style="display: none;">
+                    <h2>Phase 3: Full Assessment</h2>
+                    <p class="phase-description">Now let's evaluate your complete jet lag experience.</p>
+                    
+                    <div class="question-container" id="q9">
+                        <h3>Question 1 of 5</h3>
+                        <div class="question">
+                            <h4>How severe was your jet lag this trip?</h4>
+                            <p class="question-subtitle">Consider your overall experience over the past week</p>
+                            
+                            <div class="slider-container">
+                                <input type="range" min="0" max="10" value="5" class="slider" id="tripSeverity">
+                                <div class="slider-labels">
+                                    <span>No jet lag</span>
+                                    <span>Mild</span>
+                                    <span>Moderate</span>
+                                    <span>Severe</span>
+                                    <span>Very severe</span>
+                                </div>
+                                <div class="slider-value" id="tripSeverityValue">5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q10" style="display: none;">
+                        <h3>Question 2 of 5</h3>
+                        <div class="question">
+                            <h4>How well did you sleep during your trip?</h4>
+                            <p class="question-subtitle">Consider your sleep quality throughout the journey</p>
+                            
+                            <div class="emoji-scale">
+                                <div class="emoji-option" data-value="1">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Very poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="2">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="3">
+                                    <span class="emoji">😐</span>
+                                    <span class="label">Fair</span>
+                                </div>
+                                <div class="emoji-option" data-value="4">
+                                    <span class="emoji">😊</span>
+                                    <span class="label">Good</span>
+                                </div>
+                                <div class="emoji-option" data-value="5">
+                                    <span class="emoji">😴</span>
+                                    <span class="label">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q11" style="display: none;">
+                        <h3>Question 3 of 5</h3>
+                        <div class="question">
+                            <h4>How quickly did you adjust to the new time zone?</h4>
+                            <p class="question-subtitle">How long did it take to feel normal in the new time zone?</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="same-day">Same day</button>
+                                <button class="option-button" data-value="1-2-days">1-2 days</button>
+                                <button class="option-button" data-value="3-5-days">3-5 days</button>
+                                <button class="option-button" data-value="6-7-days">6-7 days</button>
+                                <button class="option-button" data-value="more-than-week">More than a week</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q12" style="display: none;">
+                        <h3>Question 4 of 5</h3>
+                        <div class="question">
+                            <h4>How would you rate your overall travel experience?</h4>
+                            <p class="question-subtitle">Consider energy, productivity, and enjoyment during your trip</p>
+                            
+                            <div class="emoji-scale">
+                                <div class="emoji-option" data-value="1">
+                                    <span class="emoji">😞</span>
+                                    <span class="label">Poor</span>
+                                </div>
+                                <div class="emoji-option" data-value="2">
+                                    <span class="emoji">😐</span>
+                                    <span class="label">Fair</span>
+                                </div>
+                                <div class="emoji-option" data-value="3">
+                                    <span class="emoji">😊</span>
+                                    <span class="label">Good</span>
+                                </div>
+                                <div class="emoji-option" data-value="4">
+                                    <span class="emoji">😄</span>
+                                    <span class="label">Very good</span>
+                                </div>
+                                <div class="emoji-option" data-value="5">
+                                    <span class="emoji">🤩</span>
+                                    <span class="label">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="q13" style="display: none;">
+                        <h3>Question 5 of 5</h3>
+                        <div class="question">
+                            <h4>Would you recommend JetLagPro to a friend?</h4>
+                            <p class="question-subtitle">Based on your experience with the app</p>
+                            
+                            <div class="button-grid">
+                                <button class="option-button" data-value="yes">Yes, definitely</button>
+                                <button class="option-button" data-value="maybe">Maybe</button>
+                                <button class="option-button" data-value="no">No</button>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="completeSurvey()">Complete Survey</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-complete" id="surveyComplete" style="display: none;">
+                    <div class="completion-content">
+                        <div class="completion-icon">🎉</div>
+                        <h2>Survey Complete!</h2>
+                        <p>Thank you for participating in our research. Your feedback will help improve jet lag management for travelers worldwide.</p>
+                        
+                        <div class="completion-benefits">
+                            <h3>What happens next:</h3>
+                            <ul>
+                                <li>✅ Your anonymous data will be analyzed for research purposes</li>
+                                <li>✅ You'll receive free access to the final version of JetLagPro</li>
+                                <li>✅ Research results will be published to advance jet lag science</li>
+                                <li>✅ Your contribution helps future travelers</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="completion-actions">
+                            <a href="index.html" class="btn btn-primary">Return to JetLagPro</a>
+                            <a href="Chronoacupuncture_Research_Paper.md" class="btn btn-secondary" target="_blank">Read Our Research Paper</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 JetLagPro. All rights reserved. | <a href="privacy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <script src="survey.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+</body>
+</html> 

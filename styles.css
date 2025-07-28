@@ -2229,6 +2229,42 @@ body.swiping * {
     }
 } 
 
+/* Research CTA Styles */
+.research-cta {
+    text-align: center;
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+.research-cta .btn {
+    margin-bottom: 15px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.cta-note {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .research-cta {
+        margin: 20px 0;
+        padding: 20px;
+    }
+    
+    .research-cta .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+} 
+
 
 
  
