@@ -34,6 +34,18 @@ The beauty of this system is that it's both robust and flexible. Your circadian 
 
 This understanding of circadian biology provides the foundation for everything that follows in our discussion of chronoacupuncture. The Western scientific understanding of circadian rhythms, with its focus on molecular mechanisms, neural pathways, and environmental synchronization, gives us a robust framework for understanding how our internal clocks function.
 
+**Jet Lag: Circadian Disruption in Action**
+
+Jet lag occurs when rapid travel across time zones creates a mismatch between the body's internal circadian clock and the external environment. The suprachiasmatic nucleus (SCN) in the hypothalamus serves as the body's master clock, coordinating physiological processes across a 24-hour cycle. When travelers cross multiple time zones, the SCN continues operating on the departure time while the destination operates on a different schedule.
+
+This desynchronization affects multiple systems:
+- **Sleep-wake cycles** become misaligned with local day/night patterns
+- **Hormonal rhythms** (cortisol, melatonin) remain on departure time
+- **Digestive processes** continue operating on the original schedule
+- **Cognitive performance** and alertness patterns become disrupted
+
+The body naturally adapts to new time zones, but this process typically takes 1-2 days per time zone crossed. This creates the fundamental challenge that chronoacupuncture aims to address through targeted temporal interventions.
+
 But the recognition that biological processes follow predictable temporal patterns isn't unique to modern science. Traditional Chinese medicine has incorporated this fundamental understanding into its theoretical framework for thousands of years, developing sophisticated systems for mapping the temporal organization of physiological processes. The Chinese Organ Clock represents one such system, offering a traditional perspective on how the body's vital energy (Qi) flows through different organ systems in predictable cycles throughout the day and night.
 
 ## 3. Theoretical Foundations: Traditional Chinese Medicine and Temporal Organization
@@ -98,19 +110,7 @@ This theoretical framework—combining Western circadian biology with traditiona
 
 The integration of Western circadian biology with traditional Chinese medicine's temporal organization provides a compelling theoretical framework for understanding how chronoacupuncture might address jet lag symptoms. This framework suggests that targeted stimulation of horary points at specific times can help realign the internal circadian rhythm with new time zones.
 
-### 4.1 The Jet Lag Problem and Circadian Desynchronization
-
-Jet lag occurs when rapid travel across time zones creates a mismatch between the body's internal circadian clock and the external environment. The suprachiasmatic nucleus (SCN) in the hypothalamus serves as the body's master clock, coordinating physiological processes across a 24-hour cycle. When travelers cross multiple time zones, the SCN continues operating on the departure time while the destination operates on a different schedule.
-
-This desynchronization affects multiple systems:
-- **Sleep-wake cycles** become misaligned with local day/night patterns
-- **Hormonal rhythms** (cortisol, melatonin) remain on departure time
-- **Digestive processes** continue operating on the original schedule
-- **Cognitive performance** and alertness patterns become disrupted
-
-The body naturally adapts to new time zones, but this process typically takes 1-2 days per time zone crossed. Chronoacupuncture proposes to accelerate this adaptation through targeted temporal interventions.
-
-### 4.2 The Chronoacupuncture Hypothesis
+### 4.1 The Chronoacupuncture Hypothesis
 
 The chronoacupuncture hypothesis posits that stimulating horary points during their designated peak activity periods can serve as non-photic zeitgebers (time cues) that help synchronize the circadian system with the new time zone. This approach combines three key theoretical elements:
 
@@ -123,7 +123,7 @@ The Chinese Organ Clock identifies specific two-hour windows when each meridian 
 **Destination-Based Synchronization:**
 Rather than stimulating points based on departure time, chronoacupuncture stimulates points corresponding to the destination's local time. This creates a forward-looking temporal signal that helps the body prepare for the new time zone.
 
-### 4.3 Theoretical Mechanisms of Action
+### 4.2 Theoretical Mechanisms of Action
 
 **Neural Pathway Modulation:**
 Acupuncture stimulation activates sensory nerves that project to the spinal cord and brain. These signals can influence the SCN through ascending pathways, potentially providing temporal cues that help reset the master clock.
@@ -137,7 +137,7 @@ The timing of hormone secretion (particularly melatonin and cortisol) is crucial
 **Autonomic Nervous System Balance:**
 Jet lag often involves sympathetic nervous system activation (fight-or-flight response) due to travel stress and circadian disruption. Horary point stimulation may help restore parasympathetic dominance, promoting relaxation and sleep.
 
-### 4.4 Practical Application Framework
+### 4.3 Practical Application Framework
 
 **Pre-Travel Preparation:**
 Stimulating horary points corresponding to destination times before departure can begin the adaptation process. This creates a "temporal bridge" that helps the body anticipate the new schedule.
@@ -151,7 +151,7 @@ Continued stimulation after arrival reinforces the new temporal pattern and acce
 **Point Selection Protocol:**
 The protocol involves identifying the current time at the destination and stimulating the corresponding horary point. For example, if it's 9 AM at the destination, stimulate the Spleen horary point (SP-3) which is active during the 9-11 AM window.
 
-### 4.5 Integration with Existing Evidence
+### 4.4 Integration with Existing Evidence
 
 This theoretical framework aligns with existing research showing that acupuncture can influence circadian rhythms through clock gene expression and melatonin regulation. While previous studies used general acupuncture points, the chronoacupuncture approach specifically leverages temporal organization principles.
 
