@@ -113,433 +113,304 @@
                     <div class="progress-text" id="progressText">Step 1 of 13</div>
                 </div>
 
-                <div class="survey-phase" id="phase1">
-                    <h2>Phase 1: Pre-Travel Baseline</h2>
-                    <p class="phase-description">Let's understand your typical jet lag experience and travel patterns.</p>
-                    
-                    <div class="question-container" id="q1">
-                        <h3>Question 1 of 5</h3>
-                        <div class="question">
-                            <h4>How severe is your typical jet lag?</h4>
-                            <p class="question-subtitle">Think about your past international travel experiences</p>
-                            
-                            <div class="slider-container">
-                                <input type="range" min="0" max="10" value="5" class="slider" id="baselineSeverity">
-                                <div class="slider-labels">
-                                    <span>No jet lag</span>
-                                    <span>Mild</span>
-                                    <span>Moderate</span>
-                                    <span>Severe</span>
-                                    <span>Very severe</span>
-                                </div>
-                                <div class="slider-value" id="baselineSeverityValue">5</div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                <!-- LJLQ-based survey redesign follows. All questions use dropdowns. -->
+                <!-- Section 1: Pre-Travel Baseline -->
+                <section class="survey-section" id="preBaseline">
+                  <h2>Pre-Travel Baseline</h2>
+                  <p>For each symptom, indicate the severity you typically experience after long-haul travel (crossing ≥3 time zones):</p>
+                  <form id="baselineForm">
+                    <div class="symptom-row">
+                      <label>Sleep disturbance</label>
+                      <select name="baseline_sleep">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
                     </div>
+                    <div class="symptom-row">
+                      <label>Daytime fatigue</label>
+                      <select name="baseline_fatigue">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Difficulty concentrating</label>
+                      <select name="baseline_concentration">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Irritability</label>
+                      <select name="baseline_irritability">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Gastrointestinal issues</label>
+                      <select name="baseline_gi">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                    </div>
+                  </form>
+                </section>
 
-                    <div class="question-container" id="q2" style="display: none;">
-                        <h3>Question 2 of 5</h3>
-                        <div class="question">
-                            <h4>How well do you usually sleep when traveling?</h4>
-                            <p class="question-subtitle">Consider your typical sleep quality during and after travel</p>
-                            
-                            <div class="emoji-scale">
-                                <div class="emoji-option" data-value="1">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Very poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="2">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="3">
-                                    <span class="emoji">😐</span>
-                                    <span class="label">Fair</span>
-                                </div>
-                                <div class="emoji-option" data-value="4">
-                                    <span class="emoji">😊</span>
-                                    <span class="label">Good</span>
-                                </div>
-                                <div class="emoji-option" data-value="5">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Excellent</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                <!-- Section 2: Post-Travel Assessment -->
+                <section class="survey-section" id="postAssessment">
+                  <h2>Post-Travel Assessment</h2>
+                  <p>For each symptom, indicate the severity and duration you experienced after this trip:</p>
+                  <form id="postForm">
+                    <div class="symptom-row">
+                      <label>Sleep disturbance</label>
+                      <select name="post_sleep_severity">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                      <select name="post_sleep_duration">
+                        <option value="0">0 days</option>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5+">5+ days</option>
+                      </select>
                     </div>
+                    <div class="symptom-row">
+                      <label>Daytime fatigue</label>
+                      <select name="post_fatigue_severity">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                      <select name="post_fatigue_duration">
+                        <option value="0">0 days</option>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5+">5+ days</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Difficulty concentrating</label>
+                      <select name="post_concentration_severity">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                      <select name="post_concentration_duration">
+                        <option value="0">0 days</option>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5+">5+ days</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Irritability</label>
+                      <select name="post_irritability_severity">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                      <select name="post_irritability_duration">
+                        <option value="0">0 days</option>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5+">5+ days</option>
+                      </select>
+                    </div>
+                    <div class="symptom-row">
+                      <label>Gastrointestinal issues</label>
+                      <select name="post_gi_severity">
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="severe">Severe</option>
+                        <option value="very_severe">Very severe</option>
+                      </select>
+                      <select name="post_gi_duration">
+                        <option value="0">0 days</option>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5+">5+ days</option>
+                      </select>
+                    </div>
+                  </form>
+                </section>
 
-                    <div class="question-container" id="q3" style="display: none;">
-                        <h3>Question 3 of 5</h3>
-                        <div class="question">
-                            <h4>How many time zones will you cross on this trip?</h4>
-                            <p class="question-subtitle">Count the time difference between your departure and destination</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="1-3">1-3 time zones</button>
-                                <button class="option-button" data-value="4-6">4-6 time zones</button>
-                                <button class="option-button" data-value="7-9">7-9 time zones</button>
-                                <button class="option-button" data-value="10+">10+ time zones</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                <!-- Section 3: Additional Context -->
+                <section class="survey-section" id="contextSection">
+                  <h2>Travel Context</h2>
+                  <form id="contextForm">
+                    <div class="context-row">
+                      <label>Direction of travel</label>
+                      <select name="direction">
+                        <option value="east">Eastward</option>
+                        <option value="west">Westward</option>
+                        <option value="both">Both</option>
+                        <option value="not_sure">Not sure</option>
+                      </select>
                     </div>
+                    <div class="context-row">
+                      <label>Number of time zones crossed</label>
+                      <select name="timezones">
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12+">12+</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>Flight duration</label>
+                      <select name="flight_duration">
+                        <option value="lt6">&lt;6h</option>
+                        <option value="6-9">6–9h</option>
+                        <option value="9-12">9–12h</option>
+                        <option value="12-15">12–15h</option>
+                        <option value="15+">15h+</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>Did you use the JetLagPro app for this trip?</label>
+                      <select name="used_app">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>How many points did you stimulate during the flight?</label>
+                      <select name="points_flight">
+                        <option value="0">0</option>
+                        <option value="1-3">1–3</option>
+                        <option value="4-6">4–6</option>
+                        <option value="7-9">7–9</option>
+                        <option value="10-12">10–12</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>How many points did you stimulate after arrival?</label>
+                      <select name="points_arrival">
+                        <option value="0">0</option>
+                        <option value="1-3">1–3</option>
+                        <option value="4-6">4–6</option>
+                        <option value="7-9">7–9</option>
+                        <option value="10-12">10–12</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>Did you sleep during the flight?</label>
+                      <select name="slept_flight">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                      </select>
+                    </div>
+                    <div class="context-row">
+                      <label>If yes, how many points did you miss while sleeping?</label>
+                      <select name="missed_points">
+                        <option value="0">0</option>
+                        <option value="1-3">1–3</option>
+                        <option value="4-6">4–6</option>
+                        <option value="7-12">7–12</option>
+                      </select>
+                    </div>
+                  </form>
+                </section>
 
-                    <div class="question-container" id="q4" style="display: none;">
-                        <h3>Question 4 of 5</h3>
-                        <div class="question">
-                            <h4>What's your usual sleep schedule?</h4>
-                            <p class="question-subtitle">Are you more of a morning person or night person?</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="early">Early bird (morning person)</button>
-                                <button class="option-button" data-value="balanced">Balanced</button>
-                                <button class="option-button" data-value="late">Night owl (evening person)</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                <!-- Section 4: Demographics -->
+                <section class="survey-section" id="demographicsSection">
+                  <h2>Demographics (Optional)</h2>
+                  <form id="demographicsForm">
+                    <div class="demographic-row">
+                      <label>Age range</label>
+                      <select name="age_range">
+                        <option value="lt18">&lt;18</option>
+                        <option value="18-24">18–24</option>
+                        <option value="25-34">25–34</option>
+                        <option value="35-44">35–44</option>
+                        <option value="45-54">45–54</option>
+                        <option value="55-64">55–64</option>
+                        <option value="65+">65+</option>
+                      </select>
                     </div>
-
-                    <div class="question-container" id="q5" style="display: none;">
-                        <h3>Question 5 of 5</h3>
-                        <div class="question">
-                            <h4>How often do you travel internationally?</h4>
-                            <p class="question-subtitle">Consider your typical travel frequency</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="rarely">Rarely (once a year or less)</button>
-                                <button class="option-button" data-value="occasionally">Occasionally (2-4 times per year)</button>
-                                <button class="option-button" data-value="frequently">Frequently (5+ times per year)</button>
-                                <button class="option-button" data-value="very-frequently">Very frequently (monthly or more)</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-primary" onclick="completePhase1()">Complete Phase 1</button>
-                        </div>
+                    <div class="demographic-row">
+                      <label>Gender</label>
+                      <select name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="nonbinary">Non-binary</option>
+                        <option value="notsay">Prefer not to say</option>
+                      </select>
                     </div>
-
-                    <!-- Optional Demographic Questions -->
-                    <div class="question-container" id="q5b" style="display: none;">
-                        <h3>Optional: Help us understand our research better</h3>
-                        <div class="question">
-                            <h4>Demographic Information (Completely Anonymous)</h4>
-                            <p class="question-subtitle">These questions help us analyze our research data. All responses are anonymous and optional.</p>
-                            
-                            <div class="demographic-section">
-                                <div class="demographic-question">
-                                    <label for="q5b_ageRange">Age Range:</label>
-                                    <select id="q5b_ageRange" class="demographic-select">
-                                        <option value="">Select age range</option>
-                                        <option value="18-25">18-25 years</option>
-                                        <option value="26-35">26-35 years</option>
-                                        <option value="36-45">36-45 years</option>
-                                        <option value="46-55">46-55 years</option>
-                                        <option value="55+">55+ years</option>
-                                        <option value="prefer-not">Prefer not to say</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="demographic-question">
-                                    <label for="q5b_gender">Gender:</label>
-                                    <select id="q5b_gender" class="demographic-select">
-                                        <option value="">Select gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="non-binary">Non-binary</option>
-                                        <option value="prefer-not">Prefer not to say</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="demographic-question">
-                                    <label for="q5b_travelExperience">Travel Experience Level:</label>
-                                    <select id="q5b_travelExperience" class="demographic-select">
-                                        <option value="">Select experience level</option>
-                                        <option value="first-time">First time international traveler</option>
-                                        <option value="occasional">Occasional traveler (few trips)</option>
-                                        <option value="experienced">Experienced traveler (many trips)</option>
-                                        <option value="prefer-not">Prefer not to say</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="demographic-question">
-                                    <label for="q5b_geographicRegion">Geographic Region:</label>
-                                    <select id="q5b_geographicRegion" class="demographic-select">
-                                        <option value="">Select region</option>
-                                        <option value="north-america">North America</option>
-                                        <option value="europe">Europe</option>
-                                        <option value="asia">Asia</option>
-                                        <option value="australia-oceania">Australia/Oceania</option>
-                                        <option value="south-america">South America</option>
-                                        <option value="africa">Africa</option>
-                                        <option value="other">Other</option>
-                                        <option value="prefer-not">Prefer not to say</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="demographic-question">
-                                    <label for="q5b_travelPurpose">Primary Travel Purpose:</label>
-                                    <select id="q5b_travelPurpose" class="demographic-select">
-                                        <option value="">Select purpose</option>
-                                        <option value="business">Business</option>
-                                        <option value="leisure">Leisure/Vacation</option>
-                                        <option value="both">Both business and leisure</option>
-                                        <option value="other">Other</option>
-                                        <option value="prefer-not">Prefer not to say</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-primary" onclick="completePhase1()">Complete Phase 1</button>
-                        </div>
+                    <div class="demographic-row">
+                      <label>Travel experience</label>
+                      <select name="travel_experience">
+                        <option value="novice">Novice</option>
+                        <option value="occasional">Occasional</option>
+                        <option value="frequent">Frequent</option>
+                        <option value="very_frequent">Very frequent</option>
+                      </select>
                     </div>
-                </div>
-
-                <div class="survey-phase" id="phase2" style="display: none;">
-                    <h2>Phase 2: Immediate Post-Arrival</h2>
-                    <p class="phase-description">Let's check in on your travel experience and app usage.</p>
-                    
-                    <div class="question-container" id="q6">
-                        <h3>Question 1 of 3</h3>
-                        <div class="question">
-                            <h4>How often did you use the JetLagPro app during your trip?</h4>
-                            <p class="question-subtitle">Think about your app usage throughout the journey</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="never">Never used it</button>
-                                <button class="option-button" data-value="sometimes">Sometimes (a few times)</button>
-                                <button class="option-button" data-value="often">Often (most points)</button>
-                                <button class="option-button" data-value="always">Always (every point)</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                    <div class="demographic-row">
+                      <label>Geographic region</label>
+                      <select name="region">
+                        <option value="na">North America</option>
+                        <option value="eu">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="oceania">Oceania</option>
+                        <option value="africa">Africa</option>
+                        <option value="sa">South America</option>
+                        <option value="other">Other</option>
+                      </select>
                     </div>
-
-                    <div class="question-container" id="q7" style="display: none;">
-                        <h3>Question 2 of 3</h3>
-                        <div class="question">
-                            <h4>How was your sleep during the flight?</h4>
-                            <p class="question-subtitle">Consider your sleep quality while traveling</p>
-                            
-                            <div class="emoji-scale">
-                                <div class="emoji-option" data-value="1">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Very poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="2">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="3">
-                                    <span class="emoji">😐</span>
-                                    <span class="label">Fair</span>
-                                </div>
-                                <div class="emoji-option" data-value="4">
-                                    <span class="emoji">😊</span>
-                                    <span class="label">Good</span>
-                                </div>
-                                <div class="emoji-option" data-value="5">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Excellent</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
+                    <div class="demographic-row">
+                      <label>Primary travel purpose</label>
+                      <select name="purpose">
+                        <option value="business">Business</option>
+                        <option value="leisure">Leisure</option>
+                        <option value="family">Family</option>
+                        <option value="other">Other</option>
+                      </select>
                     </div>
-
-                    <div class="question-container" id="q8" style="display: none;">
-                        <h3>Question 3 of 3</h3>
-                        <div class="question">
-                            <h4>How do you feel right now?</h4>
-                            <p class="question-subtitle">Rate your current energy and alertness level</p>
-                            
-                            <div class="slider-container">
-                                <input type="range" min="0" max="10" value="5" class="slider" id="currentEnergy">
-                                <div class="slider-labels">
-                                    <span>Very tired</span>
-                                    <span>Tired</span>
-                                    <span>Okay</span>
-                                    <span>Alert</span>
-                                    <span>Very alert</span>
-                                </div>
-                                <div class="slider-value" id="currentEnergyValue">5</div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-primary" onclick="completePhase2()">Complete Phase 2</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="survey-phase" id="phase3" style="display: none;">
-                    <h2>Phase 3: Full Assessment</h2>
-                    <p class="phase-description">Now let's evaluate your complete jet lag experience.</p>
-                    
-                    <div class="question-container" id="q9">
-                        <h3>Question 1 of 5</h3>
-                        <div class="question">
-                            <h4>How severe was your jet lag this trip?</h4>
-                            <p class="question-subtitle">Consider your overall experience over the past week</p>
-                            
-                            <div class="slider-container">
-                                <input type="range" min="0" max="10" value="5" class="slider" id="tripSeverity">
-                                <div class="slider-labels">
-                                    <span>No jet lag</span>
-                                    <span>Mild</span>
-                                    <span>Moderate</span>
-                                    <span>Severe</span>
-                                    <span>Very severe</span>
-                                </div>
-                                <div class="slider-value" id="tripSeverityValue">5</div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
-                    </div>
-
-                    <div class="question-container" id="q10" style="display: none;">
-                        <h3>Question 2 of 5</h3>
-                        <div class="question">
-                            <h4>How well did you sleep during your trip?</h4>
-                            <p class="question-subtitle">Consider your sleep quality throughout the journey</p>
-                            
-                            <div class="emoji-scale">
-                                <div class="emoji-option" data-value="1">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Very poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="2">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="3">
-                                    <span class="emoji">😐</span>
-                                    <span class="label">Fair</span>
-                                </div>
-                                <div class="emoji-option" data-value="4">
-                                    <span class="emoji">😊</span>
-                                    <span class="label">Good</span>
-                                </div>
-                                <div class="emoji-option" data-value="5">
-                                    <span class="emoji">😴</span>
-                                    <span class="label">Excellent</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
-                    </div>
-
-                    <div class="question-container" id="q11" style="display: none;">
-                        <h3>Question 3 of 5</h3>
-                        <div class="question">
-                            <h4>How quickly did you adjust to the new time zone?</h4>
-                            <p class="question-subtitle">How long did it take to feel normal in the new time zone?</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="same-day">Same day</button>
-                                <button class="option-button" data-value="1-2-days">1-2 days</button>
-                                <button class="option-button" data-value="3-5-days">3-5 days</button>
-                                <button class="option-button" data-value="6-7-days">6-7 days</button>
-                                <button class="option-button" data-value="more-than-week">More than a week</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
-                    </div>
-
-                    <div class="question-container" id="q12" style="display: none;">
-                        <h3>Question 4 of 5</h3>
-                        <div class="question">
-                            <h4>How would you rate your overall travel experience?</h4>
-                            <p class="question-subtitle">Consider energy, productivity, and enjoyment during your trip</p>
-                            
-                            <div class="emoji-scale">
-                                <div class="emoji-option" data-value="1">
-                                    <span class="emoji">😞</span>
-                                    <span class="label">Poor</span>
-                                </div>
-                                <div class="emoji-option" data-value="2">
-                                    <span class="emoji">😐</span>
-                                    <span class="label">Fair</span>
-                                </div>
-                                <div class="emoji-option" data-value="3">
-                                    <span class="emoji">😊</span>
-                                    <span class="label">Good</span>
-                                </div>
-                                <div class="emoji-option" data-value="4">
-                                    <span class="emoji">😄</span>
-                                    <span class="label">Very good</span>
-                                </div>
-                                <div class="emoji-option" data-value="5">
-                                    <span class="emoji">🤩</span>
-                                    <span class="label">Excellent</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-secondary" onclick="nextQuestion()">Next Question</button>
-                        </div>
-                    </div>
-
-                    <div class="question-container" id="q13" style="display: none;">
-                        <h3>Question 5 of 5</h3>
-                        <div class="question">
-                            <h4>Would you recommend JetLagPro to a friend?</h4>
-                            <p class="question-subtitle">Based on your experience with the app</p>
-                            
-                            <div class="button-grid">
-                                <button class="option-button" data-value="yes">Yes, definitely</button>
-                                <button class="option-button" data-value="maybe">Maybe</button>
-                                <button class="option-button" data-value="no">No</button>
-                            </div>
-                        </div>
-                        
-                        <div class="question-navigation">
-                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
-                            <button class="btn btn-primary" onclick="completeSurvey()">Complete Survey</button>
-                        </div>
-                    </div>
-                </div>
+                  </form>
+                </section>
 
                 <div class="survey-complete" id="surveyComplete" style="display: none;">
                     <div class="completion-content">

@@ -1,457 +1,299 @@
-// Survey JavaScript Functionality
+// Liverpool Jet Lag Questionnaire (LJLQ) Survey JavaScript
 
 // Global variables
-let currentQuestion = 1;
-let totalQuestions = 13;
 let surveyData = {};
-let currentPhase = 1;
 
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 DOM Content Loaded - Starting survey initialization');
-    console.log('📄 Current page:', window.location.href);
-    console.log('🔍 Document ready state:', document.readyState);
-    
-    // Add global click listener for debugging
-    document.addEventListener('click', function(e) {
-        console.log('🖱️ Global click detected on:', e.target.tagName, e.target.className, e.target.textContent?.trim());
-    });
-    
-    // Check if we're on the survey page
-    if (window.location.pathname.includes('survey.html')) {
-        console.log('✅ Survey page detected');
-        initializeSurvey();
-        setupEventListeners();
-    } else {
-        console.log('❌ Not on survey page');
-    }
-});
-
-// Initialize survey
-function initializeSurvey() {
-    console.log('🔍 Initializing survey...');
+    console.log('🚀 LJLQ Survey Initializing...');
     
     // Load saved progress if exists
     loadSurveyProgress();
     
-    // Show first question
-    showQuestion(currentQuestion);
+    // Setup form event listeners
+    setupFormListeners();
     
-    // Update progress
-    updateProgress();
+    // Show first section
+    showSection('preBaseline');
     
-    console.log('✅ Survey initialized. Current question:', currentQuestion);
-    console.log('📊 Total questions:', totalQuestions);
-    console.log('📝 Survey data:', surveyData);
-    
-    // Test click detection
-    console.log('🧪 Testing click detection...');
-    document.body.addEventListener('click', function(e) {
-        console.log('🖱️ Click detected on:', e.target.tagName, e.target.className, e.target.textContent?.trim());
-    });
-}
+    console.log('✅ LJLQ Survey initialized');
+});
 
-// Setup event listeners
-function setupEventListeners() {
-    console.log('🔧 Setting up event listeners...');
+// Setup form event listeners for all dropdowns
+function setupFormListeners() {
+    console.log('🔧 Setting up form listeners...');
     
-    // Slider event listeners
-    setupSliders();
+    // Get all select elements
+    const selects = document.querySelectorAll('select');
     
-    // Emoji scale event listeners
-    setupEmojiScales();
-    
-    // Button grid event listeners
-    setupButtonGrids();
-    
-    // Demographic select event listeners
-    setupDemographicSelects();
-    
-    console.log('✅ Event listeners setup complete');
-}
-
-// Setup slider functionality
-function setupSliders() {
-    const sliders = document.querySelectorAll('.slider');
-    console.log('🎚️ Found sliders:', sliders.length);
-    
-    sliders.forEach((slider, index) => {
-        console.log(`🎚️ Slider ${index + 1}:`, slider.id, 'value:', slider.value);
-        
-        slider.addEventListener('input', function() {
-            const value = this.value;
-            console.log(`🎚️ Slider input event:`, this.id, 'value:', value);
-            
-            const valueDisplay = document.getElementById(this.id + 'Value');
-            if (valueDisplay) {
-                valueDisplay.textContent = value;
-            }
-            
-            // Save answer with question container ID
-            const questionId = this.closest('.question-container').id;
-            console.log(`💾 Saving slider answer:`, questionId, value);
-            saveAnswer(questionId, value);
-        });
-        
-        // Save default value immediately
-        const questionId = slider.closest('.question-container').id;
-        console.log(`💾 Saving default slider value:`, questionId, slider.value);
-        saveAnswer(questionId, slider.value);
-    });
-}
-
-// Setup emoji scale functionality
-function setupEmojiScales() {
-    const emojiOptions = document.querySelectorAll('.emoji-option');
-    emojiOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            // Remove selected class from siblings
-            const siblings = this.parentElement.querySelectorAll('.emoji-option');
-            siblings.forEach(sib => sib.classList.remove('selected'));
-            
-            // Add selected class to clicked option
-            this.classList.add('selected');
-            
-            // Save answer
-            const value = this.getAttribute('data-value');
-            const questionId = this.closest('.question-container').id;
-            saveAnswer(questionId, value);
-        });
-    });
-}
-
-// Setup button grid functionality
-function setupButtonGrids() {
-    const optionButtons = document.querySelectorAll('.option-button');
-    console.log('🔘 Found option buttons:', optionButtons.length);
-    
-    if (optionButtons.length === 0) {
-        console.log('❌ No option buttons found!');
-        console.log('🔍 Looking for elements with class "option-button"');
-        const allElements = document.querySelectorAll('*');
-        console.log('📊 Total elements on page:', allElements.length);
-        return;
-    }
-    
-    optionButtons.forEach((button, index) => {
-        console.log(`🔘 Button ${index + 1}:`, button.textContent.trim());
-        console.log(`🔘 Button ${index + 1} classes:`, button.className);
-        console.log(`🔘 Button ${index + 1} data-value:`, button.getAttribute('data-value'));
-        
-        button.addEventListener('click', function(e) {
-            console.log('🔘 Button clicked:', this.textContent.trim());
-            console.log('🔘 Click event:', e);
-            
-            // Remove selected class from siblings
-            const siblings = this.parentElement.querySelectorAll('.option-button');
-            siblings.forEach(sib => sib.classList.remove('selected'));
-            
-            // Add selected class to clicked button
-            this.classList.add('selected');
-            
-            // Save answer
-            const value = this.getAttribute('data-value');
-            const questionId = this.closest('.question-container').id;
-            console.log('💾 Saving answer:', questionId, value);
-            saveAnswer(questionId, value);
-        });
-        
-        console.log(`✅ Event listener attached to button ${index + 1}`);
-    });
-}
-
-// Setup demographic select functionality
-function setupDemographicSelects() {
-    const demographicSelects = document.querySelectorAll('.demographic-select');
-    demographicSelects.forEach(select => {
+    selects.forEach(select => {
         select.addEventListener('change', function() {
-            const value = this.value;
-            const questionId = this.id; // Use the select's ID as the question key
-            saveAnswer(questionId, value);
+            console.log('📝 Dropdown changed:', this.name, '=', this.value);
+            saveFormData();
         });
     });
+    
+    // Setup navigation buttons
+    setupNavigation();
+    
+    console.log('✅ Form listeners setup complete');
 }
 
-// Show specific question
-function showQuestion(questionNumber) {
-    // Hide all questions
-    const questions = document.querySelectorAll('.question-container');
-    questions.forEach(q => q.style.display = 'none');
+// Setup navigation between sections
+function setupNavigation() {
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
     
-    // Show current question
-    const currentQ = document.getElementById('q' + questionNumber);
-    if (currentQ) {
-        currentQ.style.display = 'block';
-    }
-    
-    // Update current question
-    currentQuestion = questionNumber;
-    
-    // Update progress
-    updateProgress();
-    
-    // Save progress
-    saveSurveyProgress();
-}
-
-// Next question
-function nextQuestion() {
-    if (currentQuestion === 5) {
-        // After q5, show demographic questions (q5b)
-        showQuestion('5b');
-    } else if (currentQuestion === '5b') {
-        // After demographics, complete phase 1
-        completePhase1();
-    } else if (currentQuestion < totalQuestions) {
-        showQuestion(currentQuestion + 1);
-    }
-}
-
-// Previous question
-function previousQuestion() {
-    if (currentQuestion === '5b') {
-        // Go back from demographics to q5
-        showQuestion(5);
-    } else if (currentQuestion > 1) {
-        showQuestion(currentQuestion - 1);
-    }
-}
-
-// Complete Phase 1
-function completePhase1() {
-    // Validate all questions are answered
-    if (!validatePhase(1)) {
-        alert('Please answer all questions before proceeding.');
-        return;
-    }
-    
-    // Hide Phase 1, show Phase 2
-    document.getElementById('phase1').style.display = 'none';
-    document.getElementById('phase2').style.display = 'block';
-    
-    // Reset to first question of Phase 2
-    currentQuestion = 6;
-    showQuestion(currentQuestion);
-    currentPhase = 2;
-}
-
-// Complete Phase 2
-function completePhase2() {
-    // Validate all questions are answered
-    if (!validatePhase(2)) {
-        alert('Please answer all questions before proceeding.');
-        return;
-    }
-    
-    // Hide Phase 2, show Phase 3
-    document.getElementById('phase2').style.display = 'none';
-    document.getElementById('phase3').style.display = 'block';
-    
-    // Reset to first question of Phase 3
-    currentQuestion = 9;
-    showQuestion(currentQuestion);
-    currentPhase = 3;
-}
-
-// Complete entire survey
-function completeSurvey() {
-    // Validate all questions are answered
-    if (!validatePhase(3)) {
-        alert('Please answer all questions before proceeding.');
-        return;
-    }
-    
-    // Save final data
-    saveSurveyData();
-    
-    // Show completion screen
-    document.getElementById('phase3').style.display = 'none';
-    document.getElementById('surveyComplete').style.display = 'block';
-    
-    // Clear progress (survey complete)
-    localStorage.removeItem('jetlagpro_survey_progress');
-    localStorage.removeItem('jetlagpro_survey_data');
-}
-
-// Debug function to check saved answers
-function debugSurveyData() {
-    console.log('Current surveyData:', surveyData);
-    console.log('Phase 1 validation:', validatePhase(1));
-    for (let i = 1; i <= 5; i++) {
-        const questionId = 'q' + i;
-        console.log(`${questionId}:`, surveyData[questionId] || 'NOT ANSWERED');
-    }
-    
-    // Also check demographic questions
-    const demographicQuestions = ['q5b_ageRange', 'q5b_gender', 'q5b_travelExperience', 'q5b_geographicRegion', 'q5b_travelPurpose'];
-    console.log('Demographic questions:');
-    demographicQuestions.forEach(qId => {
-        console.log(`${qId}:`, surveyData[qId] || 'NOT ANSWERED');
+    sections.forEach((sectionId, index) => {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        // Add navigation buttons
+        const navDiv = document.createElement('div');
+        navDiv.className = 'section-navigation';
+        
+        if (index > 0) {
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'btn btn-secondary';
+            prevBtn.textContent = 'Previous Section';
+            prevBtn.onclick = () => showSection(sections[index - 1]);
+            navDiv.appendChild(prevBtn);
+        }
+        
+        if (index < sections.length - 1) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn btn-primary';
+            nextBtn.textContent = 'Next Section';
+            nextBtn.onclick = () => showSection(sections[index + 1]);
+            navDiv.appendChild(nextBtn);
+        } else {
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn btn-success';
+            submitBtn.textContent = 'Submit Survey';
+            submitBtn.onclick = submitSurvey;
+            navDiv.appendChild(submitBtn);
+        }
+        
+        section.appendChild(navDiv);
     });
 }
 
-// Validate phase completion
-function validatePhase(phase) {
-    let startQ, endQ;
+// Show specific section
+function showSection(sectionId) {
+    console.log('📄 Showing section:', sectionId);
     
-    switch(phase) {
-        case 1:
-            startQ = 1;
-            endQ = 5;
-            break;
-        case 2:
-            startQ = 6;
-            endQ = 8;
-            break;
-        case 3:
-            startQ = 9;
-            endQ = 13;
-            break;
-    }
-    
-    for (let i = startQ; i <= endQ; i++) {
-        const questionId = 'q' + i;
-        if (!surveyData[questionId]) {
-            console.log('Missing answer for question:', questionId);
-            console.log('Current surveyData:', surveyData);
-            return false;
-        }
-    }
-    
-    // Note: Demographic questions (q5b) are optional and don't block phase completion
-    return true;
-}
-
-// Save answer
-function saveAnswer(questionId, value) {
-    surveyData[questionId] = value;
-    saveSurveyData();
-}
-
-// Save survey data
-function saveSurveyData() {
-    const data = {
-        timestamp: new Date().toISOString(),
-        phase: currentPhase,
-        data: surveyData
-    };
-    
-    localStorage.setItem('jetlagpro_survey_data', JSON.stringify(data));
-}
-
-// Save survey progress
-function saveSurveyProgress() {
-    const progress = {
-        currentQuestion: currentQuestion,
-        currentPhase: currentPhase,
-        timestamp: new Date().toISOString()
-    };
-    
-    localStorage.setItem('jetlagpro_survey_progress', JSON.stringify(progress));
-}
-
-// Load survey progress
-function loadSurveyProgress() {
-    const progress = localStorage.getItem('jetlagpro_survey_progress');
-    const data = localStorage.getItem('jetlagpro_survey_data');
-    
-    if (progress) {
-        const progressData = JSON.parse(progress);
-        currentQuestion = progressData.currentQuestion;
-        currentPhase = progressData.currentPhase;
-    }
-    
-    if (data) {
-        const surveyDataObj = JSON.parse(data);
-        surveyData = surveyDataObj.data || {};
-        
-        // Restore selected values
-        restoreSelectedValues();
-    }
-}
-
-// Restore selected values
-function restoreSelectedValues() {
-    // Restore slider values
-    Object.keys(surveyData).forEach(questionId => {
-        const value = surveyData[questionId];
-        
-        // Check if it's a slider
-        const slider = document.getElementById(questionId);
-        if (slider && slider.type === 'range') {
-            slider.value = value;
-            const valueDisplay = document.getElementById(questionId + 'Value');
-            if (valueDisplay) {
-                valueDisplay.textContent = value;
-            }
-        }
-        
-        // Check if it's an emoji option
-        const emojiOption = document.querySelector(`[data-value="${value}"]`);
-        if (emojiOption && emojiOption.classList.contains('emoji-option')) {
-            emojiOption.classList.add('selected');
-        }
-        
-        // Check if it's a button option
-        const buttonOption = document.querySelector(`[data-value="${value}"]`);
-        if (buttonOption && buttonOption.classList.contains('option-button')) {
-            buttonOption.classList.add('selected');
+    // Hide all sections
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            section.style.display = 'none';
         }
     });
+    
+    // Show target section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+    
+    // Update progress indicator
+    updateProgress(sectionId);
 }
 
-// Update progress bar
-function updateProgress() {
+// Update progress indicator
+function updateProgress(currentSection) {
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    const currentIndex = sections.indexOf(currentSection);
+    const totalSections = sections.length;
+    
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
     
     if (progressFill && progressText) {
-        const percentage = (currentQuestion / totalQuestions) * 100;
-        progressFill.style.width = percentage + '%';
-        progressText.textContent = `Step ${currentQuestion} of ${totalQuestions}`;
+        const progress = ((currentIndex + 1) / totalSections) * 100;
+        progressFill.style.width = progress + '%';
+        progressText.textContent = `Section ${currentIndex + 1} of ${totalSections}`;
     }
 }
 
-// Export survey data (for research purposes)
+// Save form data to localStorage
+function saveFormData() {
+    console.log('💾 Saving form data...');
+    
+    // Collect all form data
+    const forms = ['baselineForm', 'postForm', 'contextForm', 'demographicsForm'];
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                if (value) {
+                    surveyData[key] = value;
+                }
+            }
+        }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('ljlqSurveyData', JSON.stringify(surveyData));
+    console.log('✅ Form data saved:', surveyData);
+}
+
+// Load saved progress
+function loadSurveyProgress() {
+    console.log('📂 Loading saved progress...');
+    
+    const saved = localStorage.getItem('ljlqSurveyData');
+    if (saved) {
+        try {
+            surveyData = JSON.parse(saved);
+            console.log('✅ Loaded saved data:', surveyData);
+            
+            // Populate forms with saved data
+            populateForms();
+        } catch (e) {
+            console.error('❌ Error loading saved data:', e);
+            surveyData = {};
+        }
+    }
+}
+
+// Populate forms with saved data
+function populateForms() {
+    console.log('🔄 Populating forms with saved data...');
+    
+    Object.keys(surveyData).forEach(key => {
+        const select = document.querySelector(`select[name="${key}"]`);
+        if (select) {
+            select.value = surveyData[key];
+        }
+    });
+    
+    console.log('✅ Forms populated');
+}
+
+// Validate required fields
+function validateSection(sectionId) {
+    console.log('🔍 Validating section:', sectionId);
+    
+    const section = document.getElementById(sectionId);
+    if (!section) return true;
+    
+    const requiredSelects = section.querySelectorAll('select[required]');
+    let isValid = true;
+    
+    requiredSelects.forEach(select => {
+        if (!select.value) {
+            isValid = false;
+            select.classList.add('error');
+        } else {
+            select.classList.remove('error');
+        }
+    });
+    
+    console.log('✅ Section validation:', isValid);
+    return isValid;
+}
+
+// Submit survey
+function submitSurvey() {
+    console.log('📤 Submitting survey...');
+    
+    // Validate all sections
+    const sections = ['preBaseline', 'postAssessment', 'contextSection'];
+    let isValid = true;
+    
+    sections.forEach(sectionId => {
+        if (!validateSection(sectionId)) {
+            isValid = false;
+        }
+    });
+    
+    if (!isValid) {
+        alert('Please complete all required fields before submitting.');
+        return;
+    }
+    
+    // Save final data
+    saveFormData();
+    
+    // Export data
+    exportSurveyData();
+    
+    // Show completion message
+    showCompletion();
+}
+
+// Export survey data
 function exportSurveyData() {
-    const data = localStorage.getItem('jetlagpro_survey_data');
-    if (data) {
-        const surveyDataObj = JSON.parse(data);
-        
-        // Create downloadable file
-        const blob = new Blob([JSON.stringify(surveyDataObj, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'jetlagpro_survey_data.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    console.log('📊 Exporting survey data...');
+    
+    const timestamp = new Date().toISOString();
+    const exportData = {
+        timestamp: timestamp,
+        surveyData: surveyData
+    };
+    
+    // Create download link
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ljlq_survey_${timestamp.split('T')[0]}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    
+    console.log('✅ Survey data exported');
+}
+
+// Show completion message
+function showCompletion() {
+    console.log('🎉 Showing completion message...');
+    
+    // Hide all sections
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            section.style.display = 'none';
+        }
+    });
+    
+    // Show completion section
+    const completion = document.getElementById('surveyComplete');
+    if (completion) {
+        completion.style.display = 'block';
     }
+    
+    // Clear saved data
+    localStorage.removeItem('ljlqSurveyData');
+    
+    console.log('✅ Survey completed');
 }
 
-// Clear survey data (for testing)
-function clearSurveyData() {
-    localStorage.removeItem('jetlagpro_survey_progress');
-    localStorage.removeItem('jetlagpro_survey_data');
-    location.reload();
-}
-
-// Analytics tracking (optional)
-function trackSurveyEvent(event, data) {
-    // This could be integrated with Google Analytics or other tracking
-    console.log('Survey Event:', event, data);
-}
-
-// Handle page visibility change (save progress when user leaves)
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        saveSurveyProgress();
-    }
-});
-
-// Handle beforeunload (save progress when user closes tab)
-window.addEventListener('beforeunload', function() {
-    saveSurveyProgress();
-}); 
+// Reset survey
+function resetSurvey() {
+    console.log('🔄 Resetting survey...');
+    
+    // Clear all form data
+    const forms = ['baselineForm', 'postForm', 'contextForm', 'demographicsForm'];
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.reset();
+        }
+    });
+    
+    // Clear saved data
+    surveyData = {};
+    localStorage.removeItem('ljlqSurveyData');
+    
+    // Show first section
+    showSection('preBaseline');
+    
+    console.log('✅ Survey reset complete');
+} 

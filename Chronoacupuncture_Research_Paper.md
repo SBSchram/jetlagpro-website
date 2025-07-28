@@ -506,3 +506,10 @@ The question of chronoacupuncture's effectiveness for jet lag management is not 
 ---
 
 *This paper represents a synthesis of classical TCM theory, modern scientific research, and clinical observations. The current evidence base for chronoacupuncture is limited, and further research is needed to establish the efficacy of these approaches through rigorous clinical trials.* 
+
+## Methods: Jet Lag Symptom Assessment
+
+Jet lag symptoms were assessed using the Liverpool Jet Lag Questionnaire (LJLQ), a validated instrument for quantifying the severity and duration of jet lag–related symptoms (Waterhouse et al., 2000). Participants rated the severity and duration of core symptoms (sleep disturbance, fatigue, concentration, irritability, gastrointestinal issues) using dropdown menus in a web-based survey. The digital survey closely followed the original LJLQ structure, with minor adaptations for online administration and additional context questions relevant to the JetLagPro app study.
+
+**Reference:**
+Waterhouse J, Reilly T, Atkinson G, Edwards B. Jet lag: trends and coping strategies. The Lancet. 2007;369(9567):1117-1129. 
