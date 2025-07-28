@@ -43,6 +43,12 @@ function initializeSurvey() {
     console.log('✅ Survey initialized. Current question:', currentQuestion);
     console.log('📊 Total questions:', totalQuestions);
     console.log('📝 Survey data:', surveyData);
+    
+    // Test click detection
+    console.log('🧪 Testing click detection...');
+    document.body.addEventListener('click', function(e) {
+        console.log('🖱️ Click detected on:', e.target.tagName, e.target.className, e.target.textContent?.trim());
+    });
 }
 
 // Setup event listeners
