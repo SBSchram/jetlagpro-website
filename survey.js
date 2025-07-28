@@ -47,8 +47,9 @@ function setupSliders() {
                 valueDisplay.textContent = value;
             }
             
-            // Save answer
-            saveAnswer(this.id, value);
+            // Save answer with question container ID
+            const questionId = this.closest('.question-container').id;
+            saveAnswer(questionId, value);
         });
     });
 }
@@ -185,6 +186,16 @@ function completeSurvey() {
     localStorage.removeItem('jetlagpro_survey_data');
 }
 
+// Debug function to check saved answers
+function debugSurveyData() {
+    console.log('Current surveyData:', surveyData);
+    console.log('Phase 1 validation:', validatePhase(1));
+    for (let i = 1; i <= 5; i++) {
+        const questionId = 'q' + i;
+        console.log(`${questionId}:`, surveyData[questionId] || 'NOT ANSWERED');
+    }
+}
+
 // Validate phase completion
 function validatePhase(phase) {
     let startQ, endQ;
@@ -207,6 +218,8 @@ function validatePhase(phase) {
     for (let i = startQ; i <= endQ; i++) {
         const questionId = 'q' + i;
         if (!surveyData[questionId]) {
+            console.log('Missing answer for question:', questionId);
+            console.log('Current surveyData:', surveyData);
             return false;
         }
     }
