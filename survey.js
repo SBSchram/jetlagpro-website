@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize survey
 function initializeSurvey() {
+    console.log('🔍 Initializing survey...');
+    
     // Load saved progress if exists
     loadSurveyProgress();
     
@@ -22,10 +24,16 @@ function initializeSurvey() {
     
     // Update progress
     updateProgress();
+    
+    console.log('✅ Survey initialized. Current question:', currentQuestion);
+    console.log('📊 Total questions:', totalQuestions);
+    console.log('📝 Survey data:', surveyData);
 }
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log('🔧 Setting up event listeners...');
+    
     // Slider event listeners
     setupSliders();
     
@@ -37,6 +45,8 @@ function setupEventListeners() {
     
     // Demographic select event listeners
     setupDemographicSelects();
+    
+    console.log('✅ Event listeners setup complete');
 }
 
 // Setup slider functionality
@@ -80,8 +90,13 @@ function setupEmojiScales() {
 // Setup button grid functionality
 function setupButtonGrids() {
     const optionButtons = document.querySelectorAll('.option-button');
-    optionButtons.forEach(button => {
+    console.log('🔘 Found option buttons:', optionButtons.length);
+    
+    optionButtons.forEach((button, index) => {
+        console.log(`🔘 Button ${index + 1}:`, button.textContent.trim());
         button.addEventListener('click', function() {
+            console.log('🔘 Button clicked:', this.textContent.trim());
+            
             // Remove selected class from siblings
             const siblings = this.parentElement.querySelectorAll('.option-button');
             siblings.forEach(sib => sib.classList.remove('selected'));
@@ -92,6 +107,7 @@ function setupButtonGrids() {
             // Save answer
             const value = this.getAttribute('data-value');
             const questionId = this.closest('.question-container').id;
+            console.log('💾 Saving answer:', questionId, value);
             saveAnswer(questionId, value);
         });
     });
