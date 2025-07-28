@@ -235,6 +235,84 @@
                             <button class="btn btn-primary" onclick="completePhase1()">Complete Phase 1</button>
                         </div>
                     </div>
+
+                    <!-- Optional Demographic Questions -->
+                    <div class="question-container" id="q5b" style="display: none;">
+                        <h3>Optional: Help us understand our research better</h3>
+                        <div class="question">
+                            <h4>Demographic Information (Completely Anonymous)</h4>
+                            <p class="question-subtitle">These questions help us analyze our research data. All responses are anonymous and optional.</p>
+                            
+                            <div class="demographic-section">
+                                <div class="demographic-question">
+                                    <label for="ageRange">Age Range:</label>
+                                    <select id="ageRange" class="demographic-select">
+                                        <option value="">Select age range</option>
+                                        <option value="18-25">18-25 years</option>
+                                        <option value="26-35">26-35 years</option>
+                                        <option value="36-45">36-45 years</option>
+                                        <option value="46-55">46-55 years</option>
+                                        <option value="55+">55+ years</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="demographic-question">
+                                    <label for="gender">Gender:</label>
+                                    <select id="gender" class="demographic-select">
+                                        <option value="">Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="non-binary">Non-binary</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="demographic-question">
+                                    <label for="travelExperience">Travel Experience Level:</label>
+                                    <select id="travelExperience" class="demographic-select">
+                                        <option value="">Select experience level</option>
+                                        <option value="first-time">First time international traveler</option>
+                                        <option value="occasional">Occasional traveler (few trips)</option>
+                                        <option value="experienced">Experienced traveler (many trips)</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="demographic-question">
+                                    <label for="geographicRegion">Geographic Region:</label>
+                                    <select id="geographicRegion" class="demographic-select">
+                                        <option value="">Select region</option>
+                                        <option value="north-america">North America</option>
+                                        <option value="europe">Europe</option>
+                                        <option value="asia">Asia</option>
+                                        <option value="australia-oceania">Australia/Oceania</option>
+                                        <option value="south-america">South America</option>
+                                        <option value="africa">Africa</option>
+                                        <option value="other">Other</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="demographic-question">
+                                    <label for="travelPurpose">Primary Travel Purpose:</label>
+                                    <select id="travelPurpose" class="demographic-select">
+                                        <option value="">Select purpose</option>
+                                        <option value="business">Business</option>
+                                        <option value="leisure">Leisure/Vacation</option>
+                                        <option value="both">Both business and leisure</option>
+                                        <option value="other">Other</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-navigation">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="completePhase1()">Complete Phase 1</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="survey-phase" id="phase2" style="display: none;">

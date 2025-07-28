@@ -34,6 +34,9 @@ function setupEventListeners() {
     
     // Button grid event listeners
     setupButtonGrids();
+    
+    // Demographic select event listeners
+    setupDemographicSelects();
 }
 
 // Setup slider functionality
@@ -94,6 +97,18 @@ function setupButtonGrids() {
     });
 }
 
+// Setup demographic select functionality
+function setupDemographicSelects() {
+    const demographicSelects = document.querySelectorAll('.demographic-select');
+    demographicSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            const value = this.value;
+            const questionId = 'q5b'; // All demographic questions are part of q5b
+            saveAnswer(questionId, value);
+        });
+    });
+}
+
 // Show specific question
 function showQuestion(questionNumber) {
     // Hide all questions
@@ -118,14 +133,23 @@ function showQuestion(questionNumber) {
 
 // Next question
 function nextQuestion() {
-    if (currentQuestion < totalQuestions) {
+    if (currentQuestion === 5) {
+        // After q5, show demographic questions (q5b)
+        showQuestion('5b');
+    } else if (currentQuestion === '5b') {
+        // After demographics, complete phase 1
+        completePhase1();
+    } else if (currentQuestion < totalQuestions) {
         showQuestion(currentQuestion + 1);
     }
 }
 
 // Previous question
 function previousQuestion() {
-    if (currentQuestion > 1) {
+    if (currentQuestion === '5b') {
+        // Go back from demographics to q5
+        showQuestion(5);
+    } else if (currentQuestion > 1) {
         showQuestion(currentQuestion - 1);
     }
 }
@@ -224,6 +248,7 @@ function validatePhase(phase) {
         }
     }
     
+    // Note: Demographic questions (q5b) are optional and don't block phase completion
     return true;
 }
 

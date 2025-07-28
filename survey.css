@@ -368,31 +368,66 @@
 
 /* Survey Complete */
 .survey-complete {
-    max-width: 600px;
-    margin: 0 auto;
     text-align: center;
-    padding: 60px 20px;
-}
-
-.completion-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    margin-top: 30px;
 }
 
 .survey-complete h2 {
-    color: #2c3e50;
+    color: #28a745;
     margin-bottom: 20px;
     font-size: 2rem;
-    font-weight: 600;
 }
 
 .survey-complete p {
-    color: #495057;
+    color: #6c757d;
+    margin-bottom: 15px;
     font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
 }
 
+/* Demographic Questions */
+.demographic-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #dee2e6;
+}
+
+.demographic-question {
+    margin-bottom: 20px;
+}
+
+.demographic-question label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+}
+
+.demographic-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+.demographic-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.demographic-select option {
+    padding: 8px;
+}
+
+/* Completion Benefits */
 .completion-benefits {
     background: #f8f9fa;
     padding: 25px;
