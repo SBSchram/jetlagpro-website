@@ -2265,6 +2265,36 @@ body.swiping * {
     }
 } 
 
+.research-paper-link {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.research-paper-link .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.research-paper-link .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.research-paper-link .btn::before {
+    content: "📄";
+    font-size: 1.2em;
+} 
+
 
 
  
