@@ -2295,6 +2295,130 @@ body.swiping * {
     font-size: 1.2em;
 } 
 
+/* Chinese Organ Clock Page Styles */
+.organ-clock-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    line-height: 1.6;
+}
+
+.organ-clock-content h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 20px;
+}
+
+.organ-clock-content .lead {
+    font-size: 1.2em;
+    color: #666;
+    text-align: center;
+    margin-bottom: 40px;
+    font-style: italic;
+}
+
+.clock-visualization {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.organ-clock-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.image-caption {
+    margin-top: 15px;
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.clock-explanation {
+    margin-top: 40px;
+}
+
+.clock-explanation h2 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-left: 4px solid #3498db;
+    padding-left: 15px;
+}
+
+.clock-explanation h3 {
+    font-size: 1.4em;
+    color: #34495e;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.clock-explanation p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.time-slot {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+    font-size: 0.95em;
+}
+
+.time-slot strong {
+    color: #2c3e50;
+}
+
+.cta-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    margin-top: 40px;
+    text-align: center;
+    border-left: 4px solid #3498db;
+}
+
+.cta-section h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.cta-section p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .organ-clock-content {
+        padding: 20px 15px;
+    }
+    
+    .organ-clock-content h1 {
+        font-size: 2em;
+    }
+    
+    .time-slots {
+        grid-template-columns: 1fr;
+    }
+    
+    .time-slot {
+        font-size: 0.9em;
+    }
+} 
+
 
 
  
