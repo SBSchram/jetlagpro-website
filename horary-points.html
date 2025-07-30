@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horary Points - JetLagPro</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .horary-points-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .wheel-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .wheel-image {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .point-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .point-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .point-number {
+            background: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .point-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .point-time {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .point-description {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        
+        .theory-section {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .research-link {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .research-link:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="horary-points-container">
+        <a href="index.html" class="back-link">← Back to JetLagPro</a>
+        
+        <div class="hero-section">
+            <h1>The 12 Horary Points</h1>
+            <p class="lead">Understanding the Chinese Organ Clock and Traditional Chinese Medicine's Time-Based Acupressure System</p>
+        </div>
+
+        <div class="theory-section">
+            <h2>The Chinese Organ Clock</h2>
+            <p>According to Traditional Chinese Medicine (TCM), each of the twelve meridians has a daily two-hour window when it is most active, known as "Horary Time." This creates a 24-hour cycle where different organ systems are energetically dominant at specific times.</p>
+            
+            <p>The most fascinating aspect of this system is that when you stimulate the horary point associated with your destination time—rather than your current time—you help your body begin syncing with the new time zone in advance. This technique signals your internal clock to shift from the departure time zone toward your destination's rhythm.</p>
+        </div>
+
+        <div class="wheel-section">
+            <h2>The Chinese Organ Clock Wheel</h2>
+            <img src="assets/images/wheel.jpg" alt="Chinese Organ Clock showing the 12 meridians and their time periods" class="wheel-image">
+            <p><em>The Chinese Organ Clock shows each meridian's peak activity time and its associated element. Each point aligns with one of the twelve meridians and its peak energetic activity.</em></p>
+        </div>
+
+        <h2>The 12 Horary Points</h2>
+        <p>Each point is stimulated during its corresponding two-hour window to support the function of that meridian. Here are the 12 points used in JetLagPro:</p>
+
+        <div class="points-grid">
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">1</div>
+                    <div>
+                        <div class="point-name">Lung-8 (LU-8)</div>
+                        <div class="point-time">3:00 AM - 5:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> On the thumb side of the wrist, approximately 1 inch above the wrist crease, in the depression next to the bone.<br><br>
+                    <strong>Stimulation:</strong> Press into the point and rub it deeply with firm pressure. If you feel like you're pressing against the bone, you have it right!
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">2</div>
+                    <div>
+                        <div class="point-name">Large Intestine-1 (LI-1)</div>
+                        <div class="point-time">5:00 AM - 7:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> On the thumb side of the index finger, at the upper corner of the nail.<br><br>
+                    <strong>Stimulation:</strong> Press into this point and rub it with firm pressure for about a minute.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">3</div>
+                    <div>
+                        <div class="point-name">Stomach-36 (ST-36)</div>
+                        <div class="point-time">7:00 AM - 9:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> Approximately 3 inches below the kneecap, between the shin bone and fibula. It may be tender when pressed.<br><br>
+                    <strong>Stimulation:</strong> Bend down and firmly massage the muscle with your fingers pressing into the flesh. Or cross your leg over the other and massage it that way.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">4</div>
+                    <div>
+                        <div class="point-name">Spleen-3 (SP-3)</div>
+                        <div class="point-time">9:00 AM - 11:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> Along the inner edge of your foot where a large bump begins before reaching the big toe.<br><br>
+                    <strong>Stimulation:</strong> Use your thumb to press up and into this point. It should feel like you're rubbing against the bone and will likely be tender.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">5</div>
+                    <div>
+                        <div class="point-name">Heart-8 (HT-8)</div>
+                        <div class="point-time">11:00 AM - 1:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> In the palm of your hand, find the large crease. The point is where your little finger touches the crease between the bones.<br><br>
+                    <strong>Stimulation:</strong> Use your index finger or knuckle to press this point that's between the bones. Press firmly and rub in an up and down motion.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">6</div>
+                    <div>
+                        <div class="point-name">Small Intestine-5 (SI-5)</div>
+                        <div class="point-time">1:00 PM - 3:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> Bend your elbow so your thumb points toward your nose. Use your index finger to find the depression on the little finger side where the arm bone meets the wrist.<br><br>
+                    <strong>Stimulation:</strong> Use your index finger to press into this point while moving your hand away from and toward your body.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">7</div>
+                    <div>
+                        <div class="point-name">Bladder-66 (BL-66)</div>
+                        <div class="point-time">3:00 PM - 5:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> On the outer edge of the foot where the little toe meets the larger bone.<br><br>
+                    <strong>Stimulation:</strong> Use your index or middle finger to rub at the base of the large bone. It may be tender so be both firm and gentle.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">8</div>
+                    <div>
+                        <div class="point-name">Kidney-10 (KI-10)</div>
+                        <div class="point-time">5:00 PM - 7:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> While sitting, find the tender spot on the top of your lower leg as shown in the video.<br><br>
+                    <strong>Stimulation:</strong> Rub your thumb around this area. It will be tender so don't press too hard. Apply firm pressure and press into the point with a press and release method.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">9</div>
+                    <div>
+                        <div class="point-name">Pericardium-8 (PC-8)</div>
+                        <div class="point-time">7:00 PM - 9:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> Find the spot on the long crease in your palm where your middle finger touches it.<br><br>
+                    <strong>Stimulation:</strong> Press between the bones with your index finger, thumb, or knuckle. Press firmly and rub back and forth.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">10</div>
+                    <div>
+                        <div class="point-name">San Jiao-6 (SJ-6)</div>
+                        <div class="point-time">9:00 PM - 11:00 PM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> With your hand down, lift your fingers to find the wrist crease. Put four fingers on the wrist crease. The point is above the top finger, between the two arm bones.<br><br>
+                    <strong>Stimulation:</strong> Use your index finger or thumb to press between the bones and into the point.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">11</div>
+                    <div>
+                        <div class="point-name">Gallbladder-41 (GB-41)</div>
+                        <div class="point-time">11:00 PM - 1:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> On the top of the foot, between the fourth and fifth toes, in the depression.<br><br>
+                    <strong>Stimulation:</strong> Use your thumb to press and rub this point with firm pressure for about a minute.
+                </div>
+            </div>
+
+            <div class="point-card">
+                <div class="point-header">
+                    <div class="point-number">12</div>
+                    <div>
+                        <div class="point-name">Liver-1 (LIV-1)</div>
+                        <div class="point-time">1:00 AM - 3:00 AM</div>
+                    </div>
+                </div>
+                <div class="point-description">
+                    <strong>Location:</strong> On the big toe, at the corner of the nail on the side closest to the second toe.<br><br>
+                    <strong>Stimulation:</strong> Press and rub this point with your thumb using firm pressure for about a minute.
+                </div>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <h2>How This Works for Jet Lag</h2>
+            <p>When you travel across time zones, your body's internal clock (circadian rhythm) remains synchronized with your departure time zone. By stimulating the horary points associated with your destination time zone, you're essentially "telling" your body what time it should be at your destination.</p>
+            
+            <p>For example, if you're flying from New York to London (5-hour time difference), and it's 3:00 PM in New York but 8:00 PM in London, you would stimulate the point that's active at 8:00 PM (Pericardium-8) rather than the point active at 3:00 PM (Small Intestine-5).</p>
+            
+            <p>This technique helps your body begin the process of adjusting to the new time zone before you even arrive, potentially reducing the severity and duration of jet lag symptoms.</p>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="research-paper.html" class="research-link">Read the Full Research Paper →</a>
+        </div>
+    </div>
+</body>
+</html> 
