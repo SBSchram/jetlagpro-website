@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Science Behind JetLagPro</title>
+  <meta name="description" content="The scientific foundation of JetLagPro: circadian rhythms, Chinese medicine, and modern research.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+  <div id="main-header"></div>
+  <script>
+    fetch('header.html')
+      .then(r => r.text())
+      .then(html => { document.getElementById('main-header').innerHTML = html; });
+  </script>
+
+  <section class="hero-simple">
+    <div class="container">
+      <h1>The Science Behind JetLagPro</h1>
+      <p class="hero-subtitle">How circadian rhythms and Chinese medicine inform our approach.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="science">
+      <div class="container">
+        <h2 class="section-title">The Science Behind JetLagPro</h2>
+        <p class="science-lead science-lead-centered">Jet lag isn't just tiredness—it's your body's internal clock fighting against a new time zone.</p>
+        <div class="science-content-formatted">
+          <div class="science-block">
+            <div class="block-header">
+              <h3>What Does Science Tell Us?</h3>
+            </div>
+            <div class="block-content">
+              <ul>
+                <li>We all have our own circadian rhythm - our personal 24-hour clock.<sup><a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">1</a></sup></li>
+                <li>This clock tells us when to feel sleepy, when to be alert, and regulates many other body functions.<sup><a href="https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001567" target="_blank">2</a></sup></li>
+                <li>Even our individual cells have their own timekeepers.<sup><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6466121/" target="_blank">3</a></sup></li>
+                <li>Recent research shows that acupuncture can reset our body's internal clock.<sup><a href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1346635/full" target="_blank">4</a></sup></li>
+              </ul>
+            </div>
+          </div>
+          <div class="science-block">
+            <div class="block-header">
+              <h3>Chinese Medicine to the Rescue</h3>
+            </div>
+            <div class="block-content">
+              <p>Chinese medicine has understood our body's natural rhythms for thousands of years.<sup><a href="#ref5">5</a></sup> They discovered that different systems in our body are most active during specific two-hour periods throughout the day.</p>
+              <img src="./image1.jpg" alt="24-Hour Meridian Clock showing horary points" class="meridian-clock-image">
+              <p>In 1978, researcher Willem Khoe suggested that specific acupuncture points could help reset our body clock for jet lag.<sup><a href="#ref6">6</a></sup> Dr. John Amaro built on this concept and developed it further.<sup><a href="#ref7">7</a></sup><sup><a href="#ref8">8</a></sup></p>
+            </div>
+          </div>
+          <div class="science-block">
+            <div class="block-header">
+              <h3>Putting Research Into Practice</h3>
+            </div>
+            <div class="block-content">
+              <p>JetLagPro does exactly this: we've taken this ancient wisdom and modern research to create an app that makes it easy for any traveler to access these powerful techniques.</p>
+            </div>
+          </div>
+          <div class="science-block">
+            <div class="block-header">
+              <h3>Dive Deeper Into the Research</h3>
+            </div>
+            <div class="block-content">
+              <p>Want to understand the full scientific foundation behind JetLagPro? Read our comprehensive research paper that explores the intersection of traditional Chinese medicine and modern circadian science.</p>
+              <div class="research-paper-link">
+                <a href="research-paper.html" class="btn btn-secondary">Read the Research Paper</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

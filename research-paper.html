@@ -192,6 +192,12 @@
     </style>
 </head>
 <body>
+    <div id="main-header"></div>
+    <script>
+      fetch('header.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-header').innerHTML = html; });
+    </script>
     <section class="hero-simple">
   <div class="container">
     <h1>JetLagPro Research Paper</h1>
