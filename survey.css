@@ -2,60 +2,61 @@
 
 /* Survey Preview Section */
 .survey-preview {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .preview-content h2 {
     color: #333;
-    margin-bottom: 15px;
-    font-size: 28px;
+    margin-bottom: 12px;
+    font-size: 24px;
     text-align: center;
 }
 
 .preview-content p {
     color: #666;
-    margin-bottom: 30px;
-    font-size: 16px;
+    margin-bottom: 25px;
+    font-size: 15px;
     line-height: 1.5;
     text-align: center;
 }
 
 .preview-notice {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .notice-box {
     background: #f8f9fa;
     padding: 20px;
-    border-radius: 6px;
+    border-radius: 8px;
     border-left: 4px solid #007bff;
 }
 
 .notice-box h4 {
     color: #333;
-    margin-bottom: 15px;
-    font-size: 18px;
+    margin-bottom: 12px;
+    font-size: 16px;
 }
 
 .notice-box p {
     color: #666;
-    margin-bottom: 15px;
-    line-height: 1.6;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    text-align: left;
 }
 
 .notice-box ol {
     color: #666;
-    line-height: 1.6;
-    padding-left: 20px;
+    line-height: 1.5;
+    padding-left: 18px;
 }
 
 .notice-box li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 /* Survey Validation Section */
@@ -180,24 +181,24 @@
 
 /* Survey Container */
 .survey-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 /* Progress Bar */
 .survey-progress {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .progress-bar {
     width: 100%;
-    height: 8px;
+    height: 6px;
     background: #e0e0e0;
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
 }
 
@@ -209,82 +210,90 @@
 
 .progress-text {
     text-align: center;
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 8px;
+    font-size: 13px;
     color: #666;
+    font-weight: 500;
 }
 
 /* Survey Sections */
 .survey-section {
-    margin-bottom: 20px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
+    margin-bottom: 25px;
+    padding: 25px;
+    background: #fafafa;
+    border-radius: 10px;
     border-left: 4px solid #4CAF50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+/* Section Headings */
 .survey-section h3 {
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 18px;
+    font-weight: 600;
 }
 
 .survey-section p {
     color: #666;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
-/* Form Styling */
+/* Form Elements */
 form {
     margin: 0;
 }
 
-/* Symptom Rows (Baseline and Post-Assessment) */
 .symptom-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #fff;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    transition: border-color 0.3s ease;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0;
+}
+
+.symptom-row:last-child {
+    border-bottom: none;
 }
 
 .symptom-row:hover {
-    border-color: #4CAF50;
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 12px 8px;
+    margin: 0 -8px;
 }
 
 .symptom-row label {
-    font-weight: 600;
-    color: #333;
     flex: 1;
-    margin-right: 20px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .symptom-row select {
-    min-width: 150px;
+    width: 120px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
     font-size: 14px;
-    color: #333;
+    background: white;
+    cursor: pointer;
     transition: border-color 0.3s ease;
 }
 
 .symptom-row select:focus {
     outline: none;
     border-color: #4CAF50;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .symptom-row select.error {
-    border-color: #f44336;
-    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
 }
 
 /* Disabled form elements */
@@ -313,28 +322,38 @@ form {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #fff;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0;
+}
+
+.context-row:last-child {
+    border-bottom: none;
 }
 
 .context-row label {
+    flex: 1;
     font-weight: 500;
     color: #333;
-    flex: 1;
-    margin-right: 20px;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .context-row select {
-    min-width: 120px;
+    width: 120px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
     font-size: 14px;
-    color: #333;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.context-row select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 /* Demographic Rows */
@@ -342,44 +361,56 @@ form {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #fff;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0;
+}
+
+.demographic-row:last-child {
+    border-bottom: none;
 }
 
 .demographic-row label {
+    flex: 1;
     font-weight: 500;
     color: #333;
-    flex: 1;
-    margin-right: 20px;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .demographic-row select {
-    min-width: 120px;
+    width: 120px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
     font-size: 14px;
-    color: #333;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
 }
 
-/* Navigation Buttons */
+.demographic-row select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Navigation */
 .section-navigation {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    align-items: center;
+    margin-top: 25px;
     padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #eee;
 }
 
+/* Buttons */
 .btn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -389,24 +420,22 @@ form {
 }
 
 .btn-primary {
-    background: #4CAF50;
+    background: #007bff;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #45a049;
+    background: #0056b3;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
-    background: #f0f0f0;
-    color: #333;
-    border: 1px solid #ddd;
+    background: #6c757d;
+    color: white;
 }
 
 .btn-secondary:hover {
-    background: #e0e0e0;
+    background: #545b62;
     transform: translateY(-1px);
 }
 
@@ -416,9 +445,8 @@ form {
 }
 
 .btn-success:hover {
-    background: #218838;
+    background: #1e7e34;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Survey Completion */
