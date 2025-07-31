@@ -1,5 +1,63 @@
 /* Liverpool Jet Lag Questionnaire (LJLQ) Survey Styles */
 
+/* Survey Preview Section */
+.survey-preview {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.preview-content h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 28px;
+    text-align: center;
+}
+
+.preview-content p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.preview-notice {
+    margin-bottom: 30px;
+}
+
+.notice-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+}
+
+.notice-box h4 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.notice-box p {
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.notice-box ol {
+    color: #666;
+    line-height: 1.6;
+    padding-left: 20px;
+}
+
+.notice-box li {
+    margin-bottom: 8px;
+}
+
 /* Survey Validation Section */
 .survey-validation {
     max-width: 600px;
@@ -227,6 +285,27 @@ form {
 .symptom-row select.error {
     border-color: #f44336;
     box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
+}
+
+/* Disabled form elements */
+.symptom-row select:disabled,
+.demographic-row select:disabled,
+.context-row select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+}
+
+/* Disabled submit button */
+.btn.disabled {
+    background-color: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
+.btn.disabled:hover {
+    background-color: #ccc !important;
 }
 
 /* Context Rows */

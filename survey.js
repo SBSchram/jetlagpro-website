@@ -11,10 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup code validation first
     setupCodeValidation();
     
-    // Only proceed with survey setup if code is validated
-    if (isCodeValidated) {
-        initializeSurvey();
-    }
+    // Always initialize survey (but submission will be disabled without code)
+    initializeSurvey();
     
     console.log('✅ LJLQ Survey initialized');
 });
@@ -26,8 +24,6 @@ function setupCodeValidation() {
     const validateBtn = document.getElementById('validateCode');
     const surveyCode = document.getElementById('surveyCode');
     const validationMessage = document.getElementById('validationMessage');
-    const surveyValidation = document.getElementById('surveyValidation');
-    const surveyContent = document.getElementById('surveyContent');
     
     if (!validateBtn || !surveyCode) {
         console.error('❌ Code validation elements not found');
@@ -40,15 +36,11 @@ function setupCodeValidation() {
         
         if (validateSurveyCode(code)) {
             isCodeValidated = true;
-            validationMessage.innerHTML = '<div class="success">✅ Code validated! Loading survey...</div>';
+            validationMessage.innerHTML = '<div class="success">✅ Code validated! Survey submission enabled.</div>';
             validationMessage.className = 'validation-message success';
             
-            // Hide validation section and show survey
-            setTimeout(() => {
-                surveyValidation.style.display = 'none';
-                surveyContent.style.display = 'block';
-                initializeSurvey();
-            }, 1000);
+            // Enable survey submission
+            enableSurveySubmission();
             
         } else {
             validationMessage.innerHTML = '<div class="error">❌ Invalid code. Please check your survey code and try again.</div>';
@@ -64,6 +56,64 @@ function setupCodeValidation() {
     });
     
     console.log('✅ Code validation setup complete');
+}
+
+// Enable survey submission when code is validated
+function enableSurveySubmission() {
+    console.log('✅ Enabling survey submission...');
+    
+    // Enable all form inputs
+    const allSelects = document.querySelectorAll('select');
+    const allInputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    
+    allSelects.forEach(select => {
+        select.disabled = false;
+        select.style.opacity = '1';
+    });
+    
+    allInputs.forEach(input => {
+        input.disabled = false;
+        input.style.opacity = '1';
+    });
+    
+    // Enable submit button
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Survey';
+        submitBtn.classList.remove('disabled');
+    }
+    
+    console.log('✅ Survey submission enabled');
+}
+
+// Disable survey submission initially
+function disableSurveySubmission() {
+    console.log('🔒 Disabling survey submission...');
+    
+    // Disable all form inputs
+    const allSelects = document.querySelectorAll('select');
+    const allInputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    
+    allSelects.forEach(select => {
+        select.disabled = true;
+        select.style.opacity = '0.5';
+    });
+    
+    allInputs.forEach(input => {
+        input.disabled = true;
+        input.style.opacity = '0.5';
+    });
+    
+    // Disable submit button
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enter Survey Code to Submit';
+        submitBtn.classList.add('disabled');
+    }
+    
+    console.log('🔒 Survey submission disabled');
 }
 
 // Validate survey code format
@@ -94,6 +144,9 @@ function initializeSurvey() {
     
     // Show first section
     showSection('preBaseline');
+    
+    // Disable all form inputs initially (until code is validated)
+    disableSurveySubmission();
     
     console.log('✅ Survey functionality initialized');
 }
@@ -146,9 +199,10 @@ function setupNavigation() {
             navDiv.appendChild(nextBtn);
         } else {
             const submitBtn = document.createElement('button');
-            submitBtn.className = 'btn btn-success';
-            submitBtn.textContent = 'Submit Survey';
+            submitBtn.className = 'btn btn-success btn-submit';
+            submitBtn.textContent = 'Enter Survey Code to Submit';
             submitBtn.onclick = submitSurvey;
+            submitBtn.disabled = true;
             navDiv.appendChild(submitBtn);
         }
         
@@ -278,6 +332,12 @@ function validateSection(sectionId) {
 // Submit survey
 function submitSurvey() {
     console.log('📤 Submitting survey...');
+    
+    // Check if code is validated
+    if (!isCodeValidated) {
+        alert('Please enter a valid survey code to submit your responses.');
+        return;
+    }
     
     // Validate all sections
     const sections = ['preBaseline', 'postAssessment', 'contextSection'];
