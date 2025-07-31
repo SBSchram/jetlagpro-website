@@ -145,8 +145,8 @@ function initializeSurvey() {
     // Show first section
     showSection('preBaseline');
     
-    // Disable all form inputs initially (until code is validated)
-    disableSurveySubmission();
+    // All form controls should be enabled by default.
+    // Submission is still blocked in submitSurvey() if code is not validated.
     
     console.log('✅ Survey functionality initialized');
 }
