@@ -13,19 +13,13 @@
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1><a href="index.html" style="text-decoration: none; color: inherit;">JetLagPro</a></h1>
-                </div>
-                <div class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="research-paper.html">Research Paper</a>
-                    <a href="survey.html">Research Survey</a>
-                </div>
-            </div>
-        </nav>
+        <div id="main-nav"></div>
     </header>
+    <script>
+        fetch('nav.html')
+            .then(response => response.text())
+            .then(html => { document.getElementById('main-nav').innerHTML = html; });
+    </script>
 
     <main style="padding-top: 80px;">
         <div class="container">

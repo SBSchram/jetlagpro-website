@@ -8,26 +8,13 @@
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1><a href="index.html">JetLagPro</a></h1>
-                </div>
-                <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <div class="nav-links" id="navLinks">
-                    <a href="index.html">Home</a>
-                    <a href="index.html#science">The Science</a>
-                    <a href="alternative-approaches.html">Alternatives</a>
-                    <a href="#" class="active">Travel Tips</a>
-                    <a href="index.html#download">Download</a>
-                </div>
-            </div>
-        </nav>
+        <div id="main-nav"></div>
     </header>
+    <script>
+        fetch('nav.html')
+            .then(response => response.text())
+            .then(html => { document.getElementById('main-nav').innerHTML = html; });
+    </script>
 
     <main>
         <section class="hero-simple">
