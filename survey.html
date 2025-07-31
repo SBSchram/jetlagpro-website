@@ -15,32 +15,17 @@
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <div class="logo">
-                    <h1><a href="index.html">JetLagPro</a></h1>
-                </div>
-                <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <div class="nav-links" id="navLinks">
-                    <a href="index.html">Home</a>
-                    <a href="index.html#science">The Science</a>
-                    <a href="alternative-approaches.html">Alternatives</a>
-                    <a href="travel-tips.html">Travel Tips</a>
-                    <a href="#" class="active">Research Survey</a>
-                    <a href="research-paper.html">Research Paper</a>
-                    <a href="index.html#download">Download</a>
-                </div>
-            </div>
-        </nav>
+        <div id="main-nav"></div>
     </header>
+    <script>
+        fetch('nav.html')
+            .then(response => response.text())
+            .then(html => { document.getElementById('main-nav').innerHTML = html; });
+    </script>
 
     <main>
         <div class="survey-main-column">
-            <section class="hero-simple survey-card">
+            <section class="hero-simple">
                 <div class="container">
                     <h1>Jet Lag Research Survey</h1>
                     <p class="hero-subtitle">Help advance chronoacupuncture research and improve jet lag management for travelers worldwide</p>
