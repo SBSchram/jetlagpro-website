@@ -653,3 +653,32 @@ form {
     font-size: 14px;
     margin-top: 5px;
 } 
+
+.survey-main-column {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 0 48px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.survey-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 28px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .survey-main-column {
+    max-width: 100%;
+    padding: 16px 0 24px 0;
+    gap: 20px;
+  }
+  .survey-card {
+    padding: 18px 6vw;
+  }
+} 

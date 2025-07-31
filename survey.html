@@ -31,6 +31,7 @@
                     <a href="alternative-approaches.html">Alternatives</a>
                     <a href="travel-tips.html">Travel Tips</a>
                     <a href="#" class="active">Research Survey</a>
+                    <a href="research-paper.html">Research Paper</a>
                     <a href="index.html#download">Download</a>
                 </div>
             </div>
@@ -38,401 +39,402 @@
     </header>
 
     <main>
-        <section class="hero-simple">
-            <div class="container">
-                <h1>Jet Lag Research Survey</h1>
-                <p class="hero-subtitle">Help advance chronoacupuncture research and improve jet lag management for travelers worldwide</p>
-                <div class="research-badge">
-                    <span>🔬 Research Study</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="survey-intro">
-            <div class="container">
-                <div class="intro-content">
-                    <h2>About This Research</h2>
-                    <p>JetLagPro is conducting research to evaluate the effectiveness of chronoacupuncture for jet lag management. Your participation helps advance our understanding of this traditional Chinese medicine approach.</p>
-                    
-                    <div class="research-goals">
-                        <h3>Research Goals:</h3>
-                        <ul>
-                            <li>Evaluate chronoacupuncture effectiveness for jet lag</li>
-                            <li>Understand individual variation in treatment response</li>
-                            <li>Identify optimal usage patterns for travelers</li>
-                            <li>Improve jet lag management for future users</li>
-                        </ul>
+        <div class="survey-main-column">
+            <section class="hero-simple survey-card">
+                <div class="container">
+                    <h1>Jet Lag Research Survey</h1>
+                    <p class="hero-subtitle">Help advance chronoacupuncture research and improve jet lag management for travelers worldwide</p>
+                    <div class="research-badge">
+                        <span>🔬 Research Study</span>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Survey Preview Section -->
-        <section class="survey-preview">
-            <div class="container">
-                <div class="preview-content">
-                    <h2>Survey Preview</h2>
-                    <p>Below is a preview of the research survey questions. To participate in the actual survey and contribute to our research, you'll need a survey code from the JetLagPro app.</p>
-                    
-                    <div class="preview-notice">
-                        <div class="notice-box">
-                            <h4>🔬 Research Participation</h4>
-                            <p>This survey is part of ongoing research into chronoacupuncture for jet lag management. To participate:</p>
-                            <ol>
-                                <li>Download the JetLagPro app</li>
-                                <li>Complete a journey in the app</li>
-                                <li>Get your unique survey code from the Home screen</li>
-                                <li>Return here and enter your code to submit responses</li>
-                            </ol>
-                        </div>
-                    </div>
-                    
-                    <div class="code-input-section">
-                        <label for="surveyCode">Survey Code (Required for Submission):</label>
-                        <input type="text" id="surveyCode" placeholder="Enter your survey code (e.g., JLP-XXXXXXXX)" maxlength="12">
-                        <button type="button" id="validateCode" class="btn btn-primary">Enable Survey Submission</button>
-                    </div>
-                    
-                    <div id="validationMessage" class="validation-message"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Survey Content (always visible, but submission disabled without code) -->
-        <div id="surveyContent" class="survey-layout-container">
-                <div class="survey-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <div class="progress-text" id="progressText">Step 1 of 13</div>
-                </div>
-
-                <!-- LJLQ-based survey redesign follows. All questions use dropdowns. -->
-                <!-- Section 1: Pre-Travel Baseline -->
-                <section class="survey-section" id="preBaseline">
-                  <h3>Pre-Travel Baseline</h3>
-                  <p>Please rate your typical symptoms before this trip:</p>
-                  <form id="baselineForm">
-                    <div class="symptom-row">
-                      <label>Sleep disturbance</label>
-                      <select name="baseline_sleep">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Daytime fatigue</label>
-                      <select name="baseline_fatigue">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Difficulty concentrating</label>
-                      <select name="baseline_concentration">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Irritability</label>
-                      <select name="baseline_irritability">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Gastrointestinal issues</label>
-                      <select name="baseline_gi">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                    </div>
-                  </form>
-                </section>
-
-                <!-- Section 2: Post-Travel Assessment -->
-                <section class="survey-section" id="postAssessment">
-                  <h3>Post-Travel Assessment</h3>
-                  <p>Please rate your symptoms after this trip and how long they lasted:</p>
-                  <form id="postForm">
-                    <div class="symptom-row">
-                      <label>Sleep disturbance</label>
-                      <select name="post_sleep_severity">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                      <select name="post_sleep_duration">
-                        <option value="0">0 days</option>
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5+">5+ days</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Daytime fatigue</label>
-                      <select name="post_fatigue_severity">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                      <select name="post_fatigue_duration">
-                        <option value="0">0 days</option>
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5+">5+ days</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Difficulty concentrating</label>
-                      <select name="post_concentration_severity">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                      <select name="post_concentration_duration">
-                        <option value="0">0 days</option>
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5+">5+ days</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Irritability</label>
-                      <select name="post_irritability_severity">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                      <select name="post_irritability_duration">
-                        <option value="0">0 days</option>
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5+">5+ days</option>
-                      </select>
-                    </div>
-                    <div class="symptom-row">
-                      <label>Gastrointestinal issues</label>
-                      <select name="post_gi_severity">
-                        <option value="none">None</option>
-                        <option value="mild">Mild</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="severe">Severe</option>
-                        <option value="very_severe">Very severe</option>
-                      </select>
-                      <select name="post_gi_duration">
-                        <option value="0">0 days</option>
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5+">5+ days</option>
-                      </select>
-                    </div>
-                  </form>
-                </section>
-
-                <!-- Section 3: Additional Context -->
-                <section class="survey-section" id="contextSection">
-                  <h3>Travel Context</h3>
-                  <p>Please provide details about your travel experience:</p>
-                  <form id="contextForm">
-                    <div class="context-row">
-                      <label>Direction of travel</label>
-                      <select name="direction">
-                        <option value="east">Eastward</option>
-                        <option value="west">Westward</option>
-                        <option value="both">Both</option>
-                        <option value="not_sure">Not sure</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>Number of time zones crossed</label>
-                      <select name="timezones">
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12+">12+</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>Flight duration</label>
-                      <select name="flight_duration">
-                        <option value="lt6">&lt;6h</option>
-                        <option value="6-9">6–9h</option>
-                        <option value="9-12">9–12h</option>
-                        <option value="12-15">12–15h</option>
-                        <option value="15+">15h+</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>Did you use the JetLagPro app for this trip?</label>
-                      <select name="used_app">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>How many points did you stimulate during the flight?</label>
-                      <select name="points_flight">
-                        <option value="0">0</option>
-                        <option value="1-3">1–3</option>
-                        <option value="4-6">4–6</option>
-                        <option value="7-9">7–9</option>
-                        <option value="10-12">10–12</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>How many points did you stimulate after arrival?</label>
-                      <select name="points_arrival">
-                        <option value="0">0</option>
-                        <option value="1-3">1–3</option>
-                        <option value="4-6">4–6</option>
-                        <option value="7-9">7–9</option>
-                        <option value="10-12">10–12</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>Did you sleep during the flight?</label>
-                      <select name="slept_flight">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                      </select>
-                    </div>
-                    <div class="context-row">
-                      <label>If yes, how many points did you miss while sleeping?</label>
-                      <select name="missed_points">
-                        <option value="0">0</option>
-                        <option value="1-3">1–3</option>
-                        <option value="4-6">4–6</option>
-                        <option value="7-12">7–12</option>
-                      </select>
-                    </div>
-                  </form>
-                </section>
-
-                <!-- Section 4: Demographics -->
-                <section class="survey-section" id="demographicsSection">
-                  <h3>Demographics (Optional)</h3>
-                  <p>This information helps us understand the diversity of our research participants:</p>
-                  <form id="demographicsForm">
-                    <div class="demographic-row">
-                      <label>Age range</label>
-                      <select name="age_range">
-                        <option value="lt18">&lt;18</option>
-                        <option value="18-24">18–24</option>
-                        <option value="25-34">25–34</option>
-                        <option value="35-44">35–44</option>
-                        <option value="45-54">45–54</option>
-                        <option value="55-64">55–64</option>
-                        <option value="65+">65+</option>
-                      </select>
-                    </div>
-                    <div class="demographic-row">
-                      <label>Gender</label>
-                      <select name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="nonbinary">Non-binary</option>
-                        <option value="notsay">Prefer not to say</option>
-                      </select>
-                    </div>
-                    <div class="demographic-row">
-                      <label>Travel experience</label>
-                      <select name="travel_experience">
-                        <option value="novice">Novice</option>
-                        <option value="occasional">Occasional</option>
-                        <option value="frequent">Frequent</option>
-                        <option value="very_frequent">Very frequent</option>
-                      </select>
-                    </div>
-                    <div class="demographic-row">
-                      <label>Geographic region</label>
-                      <select name="region">
-                        <option value="na">North America</option>
-                        <option value="eu">Europe</option>
-                        <option value="asia">Asia</option>
-                        <option value="oceania">Oceania</option>
-                        <option value="africa">Africa</option>
-                        <option value="sa">South America</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div class="demographic-row">
-                      <label>Primary travel purpose</label>
-                      <select name="purpose">
-                        <option value="business">Business</option>
-                        <option value="leisure">Leisure</option>
-                        <option value="family">Family</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </form>
-                </section>
-
-                <div class="survey-complete" id="surveyComplete" style="display: none;">
-                    <div class="completion-content">
-                        <div class="completion-icon">🎉</div>
-                        <h2>Survey Complete!</h2>
-                        <p>Thank you for participating in our research. Your feedback will help improve jet lag management for travelers worldwide.</p>
+            <section class="survey-intro survey-card">
+                <div class="container">
+                    <div class="intro-content">
+                        <h2>About This Research</h2>
+                        <p>JetLagPro is conducting research to evaluate the effectiveness of chronoacupuncture for jet lag management. Your participation helps advance our understanding of this traditional Chinese medicine approach.</p>
                         
-                        <div class="completion-benefits">
-                            <h3>What happens next:</h3>
+                        <div class="research-goals">
+                            <h3>Research Goals:</h3>
                             <ul>
-                                <li>✅ Your anonymous data will be analyzed for research purposes</li>
-                                <li>✅ You'll receive free access to the final version of JetLagPro</li>
-                                <li>✅ Research results will be published to advance jet lag science</li>
-                                <li>✅ Your contribution helps future travelers</li>
+                                <li>Evaluate chronoacupuncture effectiveness for jet lag</li>
+                                <li>Understand individual variation in treatment response</li>
+                                <li>Identify optimal usage patterns for travelers</li>
+                                <li>Improve jet lag management for future users</li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Survey Preview Section -->
+            <section class="survey-preview survey-card">
+                <div class="container">
+                    <div class="preview-content">
+                        <h2>Survey Preview</h2>
+                        <p>Below is a preview of the research survey questions. To participate in the actual survey and contribute to our research, you'll need a survey code from the JetLagPro app.</p>
                         
-                        <div class="completion-actions">
-                            <a href="index.html" class="btn btn-primary">Return to JetLagPro</a>
-                            <a href="research-paper.html" class="btn btn-secondary" target="_blank">Read Our Research Paper</a>
+                        <div class="preview-notice">
+                            <div class="notice-box">
+                                <h4>🔬 Research Participation</h4>
+                                <p>This survey is part of ongoing research into chronoacupuncture for jet lag management. To participate:</p>
+                                <ol>
+                                    <li>Download the JetLagPro app</li>
+                                    <li>Complete a journey in the app</li>
+                                    <li>Get your unique survey code from the Home screen</li>
+                                    <li>Return here and enter your code to submit responses</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="code-input-section">
+                            <label for="surveyCode">Survey Code (Required for Submission):</label>
+                            <input type="text" id="surveyCode" placeholder="Enter your survey code (e.g., JLP-XXXXXXXX)" maxlength="12">
+                            <button type="button" id="validateCode" class="btn btn-primary">Enable Survey Submission</button>
+                        </div>
+                        
+                        <div id="validationMessage" class="validation-message"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Survey Content (always visible, but submission disabled without code) -->
+            <div id="surveyContent" class="survey-layout-container survey-card">
+                    <div class="survey-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Step 1 of 13</div>
+                    </div>
+
+                    <!-- LJLQ-based survey redesign follows. All questions use dropdowns. -->
+                    <!-- Section 1: Pre-Travel Baseline -->
+                    <section class="survey-section" id="preBaseline">
+                      <h3>Pre-Travel Baseline</h3>
+                      <p>Please rate your typical symptoms before this trip:</p>
+                      <form id="baselineForm">
+                        <div class="symptom-row">
+                          <label>Sleep disturbance</label>
+                          <select name="baseline_sleep">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Daytime fatigue</label>
+                          <select name="baseline_fatigue">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Difficulty concentrating</label>
+                          <select name="baseline_concentration">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Irritability</label>
+                          <select name="baseline_irritability">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Gastrointestinal issues</label>
+                          <select name="baseline_gi">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                        </div>
+                      </form>
+                    </section>
+
+                    <!-- Section 2: Post-Travel Assessment -->
+                    <section class="survey-section" id="postAssessment">
+                      <h3>Post-Travel Assessment</h3>
+                      <p>Please rate your symptoms after this trip and how long they lasted:</p>
+                      <form id="postForm">
+                        <div class="symptom-row">
+                          <label>Sleep disturbance</label>
+                          <select name="post_sleep_severity">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                          <select name="post_sleep_duration">
+                            <option value="0">0 days</option>
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3">3 days</option>
+                            <option value="4">4 days</option>
+                            <option value="5+">5+ days</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Daytime fatigue</label>
+                          <select name="post_fatigue_severity">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                          <select name="post_fatigue_duration">
+                            <option value="0">0 days</option>
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3">3 days</option>
+                            <option value="4">4 days</option>
+                            <option value="5+">5+ days</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Difficulty concentrating</label>
+                          <select name="post_concentration_severity">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                          <select name="post_concentration_duration">
+                            <option value="0">0 days</option>
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3">3 days</option>
+                            <option value="4">4 days</option>
+                            <option value="5+">5+ days</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Irritability</label>
+                          <select name="post_irritability_severity">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                          <select name="post_irritability_duration">
+                            <option value="0">0 days</option>
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3">3 days</option>
+                            <option value="4">4 days</option>
+                            <option value="5+">5+ days</option>
+                          </select>
+                        </div>
+                        <div class="symptom-row">
+                          <label>Gastrointestinal issues</label>
+                          <select name="post_gi_severity">
+                            <option value="none">None</option>
+                            <option value="mild">Mild</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                            <option value="very_severe">Very severe</option>
+                          </select>
+                          <select name="post_gi_duration">
+                            <option value="0">0 days</option>
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3">3 days</option>
+                            <option value="4">4 days</option>
+                            <option value="5+">5+ days</option>
+                          </select>
+                        </div>
+                      </form>
+                    </section>
+
+                    <!-- Section 3: Additional Context -->
+                    <section class="survey-section" id="contextSection">
+                      <h3>Travel Context</h3>
+                      <p>Please provide details about your travel experience:</p>
+                      <form id="contextForm">
+                        <div class="context-row">
+                          <label>Direction of travel</label>
+                          <select name="direction">
+                            <option value="east">Eastward</option>
+                            <option value="west">Westward</option>
+                            <option value="both">Both</option>
+                            <option value="not_sure">Not sure</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>Number of time zones crossed</label>
+                          <select name="timezones">
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12+">12+</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>Flight duration</label>
+                          <select name="flight_duration">
+                            <option value="lt6">&lt;6h</option>
+                            <option value="6-9">6–9h</option>
+                            <option value="9-12">9–12h</option>
+                            <option value="12-15">12–15h</option>
+                            <option value="15+">15h+</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>Did you use the JetLagPro app for this trip?</label>
+                          <select name="used_app">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>How many points did you stimulate during the flight?</label>
+                          <select name="points_flight">
+                            <option value="0">0</option>
+                            <option value="1-3">1–3</option>
+                            <option value="4-6">4–6</option>
+                            <option value="7-9">7–9</option>
+                            <option value="10-12">10–12</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>How many points did you stimulate after arrival?</label>
+                          <select name="points_arrival">
+                            <option value="0">0</option>
+                            <option value="1-3">1–3</option>
+                            <option value="4-6">4–6</option>
+                            <option value="7-9">7–9</option>
+                            <option value="10-12">10–12</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>Did you sleep during the flight?</label>
+                          <select name="slept_flight">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                          </select>
+                        </div>
+                        <div class="context-row">
+                          <label>If yes, how many points did you miss while sleeping?</label>
+                          <select name="missed_points">
+                            <option value="0">0</option>
+                            <option value="1-3">1–3</option>
+                            <option value="4-6">4–6</option>
+                            <option value="7-12">7–12</option>
+                          </select>
+                        </div>
+                      </form>
+                    </section>
+
+                    <!-- Section 4: Demographics -->
+                    <section class="survey-section" id="demographicsSection">
+                      <h3>Demographics (Optional)</h3>
+                      <p>This information helps us understand the diversity of our research participants:</p>
+                      <form id="demographicsForm">
+                        <div class="demographic-row">
+                          <label>Age range</label>
+                          <select name="age_range">
+                            <option value="lt18">&lt;18</option>
+                            <option value="18-24">18–24</option>
+                            <option value="25-34">25–34</option>
+                            <option value="35-44">35–44</option>
+                            <option value="45-54">45–54</option>
+                            <option value="55-64">55–64</option>
+                            <option value="65+">65+</option>
+                          </select>
+                        </div>
+                        <div class="demographic-row">
+                          <label>Gender</label>
+                          <select name="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="nonbinary">Non-binary</option>
+                            <option value="notsay">Prefer not to say</option>
+                          </select>
+                        </div>
+                        <div class="demographic-row">
+                          <label>Travel experience</label>
+                          <select name="travel_experience">
+                            <option value="novice">Novice</option>
+                            <option value="occasional">Occasional</option>
+                            <option value="frequent">Frequent</option>
+                            <option value="very_frequent">Very frequent</option>
+                          </select>
+                        </div>
+                        <div class="demographic-row">
+                          <label>Geographic region</label>
+                          <select name="region">
+                            <option value="na">North America</option>
+                            <option value="eu">Europe</option>
+                            <option value="asia">Asia</option>
+                            <option value="oceania">Oceania</option>
+                            <option value="africa">Africa</option>
+                            <option value="sa">South America</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                        <div class="demographic-row">
+                          <label>Primary travel purpose</label>
+                          <select name="purpose">
+                            <option value="business">Business</option>
+                            <option value="leisure">Leisure</option>
+                            <option value="family">Family</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                      </form>
+                    </section>
+
+                    <div class="survey-complete survey-card" id="surveyComplete" style="display: none;">
+                        <div class="completion-content">
+                            <div class="completion-icon">🎉</div>
+                            <h2>Survey Complete!</h2>
+                            <p>Thank you for participating in our research. Your feedback will help improve jet lag management for travelers worldwide.</p>
+                            
+                            <div class="completion-benefits">
+                                <h3>What happens next:</h3>
+                                <ul>
+                                    <li>✅ Your anonymous data will be analyzed for research purposes</li>
+                                    <li>✅ You'll receive free access to the final version of JetLagPro</li>
+                                    <li>✅ Research results will be published to advance jet lag science</li>
+                                    <li>✅ Your contribution helps future travelers</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="completion-actions">
+                                <a href="index.html" class="btn btn-primary">Return to JetLagPro</a>
+                                <a href="research-paper.html" class="btn btn-secondary" target="_blank">Read Our Research Paper</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </main>
 
     <footer class="footer">
         <div class="container">
