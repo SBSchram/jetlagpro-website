@@ -166,6 +166,106 @@
             transform: translateY(-2px);
         }
         
+        /* Print button styling */
+        .print-button {
+            position: fixed;
+            top: 120px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .print-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        /* Author and copyright info */
+        .author-info {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        /* Print media queries */
+        @media print {
+            .print-button {
+                display: none;
+            }
+            
+            @page {
+                margin: 1in;
+                size: letter;
+            }
+            
+            .research-paper {
+                max-width: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .research-paper h1 {
+                page-break-after: avoid;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            
+            .research-paper h2 {
+                page-break-after: avoid;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            
+            .research-paper h3 {
+                page-break-after: avoid;
+            }
+            
+            .research-paper p {
+                page-break-inside: avoid;
+                orphans: 3;
+                widows: 3;
+            }
+            
+            .research-paper table {
+                page-break-inside: avoid;
+            }
+            
+            .research-paper .references {
+                page-break-inside: auto;
+            }
+            
+            .research-paper .references li {
+                page-break-inside: avoid;
+            }
+            
+            .research-paper .figure {
+                page-break-inside: avoid;
+            }
+            
+            .research-paper .abstract {
+                page-break-inside: avoid;
+            }
+        }
+        
         @media (max-width: 768px) {
             .research-paper {
                 padding: 20px 15px;
@@ -188,6 +288,13 @@
                 right: 20px;
                 padding: 12px;
             }
+            
+            .print-button {
+                position: static;
+                margin: 20px auto;
+                display: block;
+                width: fit-content;
+            }
         }
     </style>
 </head>
@@ -204,10 +311,12 @@
     <p class="hero-subtitle">The science, evidence, and rationale behind the JetLagPro approach.</p>
   </div>
 </section>
+    <button class="print-button" onclick="window.print()">Print Paper</button>
+    
     <div class="research-paper">
         <h1>Exploring Jet Lag Management through Chronoacupuncture and Circadian Rhythm Regulation</h1>
         
-        <div style="text-align: center; margin-bottom: 30px; color: #666; font-style: italic;">
+        <div class="author-info">
             <p><strong>Steven Schram PhD, DC, LAc</strong></p>
         </div>
         
@@ -300,12 +409,20 @@
                 <li>Roenneberg, T., & Merrow, M. (2016). <a href="https://doi.org/10.1016/j.cub.2016.04.011" target="_blank">The Circadian Clock and Human Health</a>. <em>Current Biology</em>, 26(10), R432-R443.</li>
                 <li>Hastings, M. H., Reddy, A. B., & Maywood, E. S. (2003). <a href="https://www.nature.com/articles/nrn1177" target="_blank">A clockwork web: circadian timing in brain and periphery, in health and disease</a>. <em>Nature Reviews Neuroscience</em>, 4(8), 649-661.</li>
                 <li>Dibner, C., Schibler, U., & Albrecht, U. (2010). <a href="https://www.annualreviews.org/doi/10.1146/annurev-physiol-021909-135821" target="_blank">The mammalian circadian timing system: organization and coordination of central and peripheral clocks</a>. <em>Annual Review of Physiology</em>, 72, 517-549.</li>
+                <li>Paschos, G.K., & FitzGerald, G.A. (2010). <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">Circadian clocks and vascular function</a>. <em>Circulation Research</em>, 106(5), 833-841.</li>
+                <li>Panda, S. (2022). <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">Foundations of circadian medicine</a>. <em>PLoS Biology</em>, 20(3), e3001567.</li>
+                <li>Honma, K., & Honma, S. (2019). <a href="https://doi.org/10.3390/biology8010013" target="_blank">The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker</a>. <em>Biology</em>, 8(1), 13.</li>
                 <li>Huangdi Neijing (黃帝內經). The Yellow Emperor's Inner Canon.</li>
                 <li>Wu, J., & Zhao, Z. (2024). <a href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1346635/full" target="_blank">Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms</a>. <em>Frontiers in Neuroscience</em>, 18, 1346635.</li>
                 <li>Amaro, J. (2001). <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">Time Travel: Contemporary Applications for Jet Lag from Ancient Principles</a>. <em>Acupuncture Today</em>, October 2001.</li>
+                <li>Heyde, I., & Oster, H. (2019). <a href="https://doi.org/10.1016/j.cub.2019.01.064" target="_blank">Differentiating external zeitgeber impact on peripheral circadian clock resetting</a>. <em>Current Biology</em>, 29(7), R235-R237.</li>
                 <li>Khoe, W.H. (1978). Treatment of jet lag syndrome by acupuncture. <em>American Journal of Acupuncture</em>, 6(2), 135-139.</li>
                 <li>Huangdi Bashiyi Nanjing (黃帝八十一難經). The Yellow Emperor's Canon of Eighty-One Difficult Issues.</li>
             </ol>
+        </div>
+
+        <div class="copyright">
+            <p>© 2025 Steven Schram. All rights reserved.</p>
         </div>
 
         <p><em>This paper represents a synthesis of classical TCM theory, modern scientific research, and clinical observations. The current evidence base for chronoacupuncture is limited, and further research is needed to establish the efficacy of these approaches through rigorous clinical trials.</em></p>
