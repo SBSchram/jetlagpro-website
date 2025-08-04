@@ -100,7 +100,7 @@
             }
             
             @page {
-                margin: 1in;
+                margin: 1in 0.75in;
                 size: letter;
             }
             
@@ -144,6 +144,11 @@
                 page-break-inside: avoid;
             }
             
+            /* Ensure adequate space for double-digit list numbers */
+            .research-paper ol {
+                padding-left: 30px;
+            }
+            
             /* Abstract styling for print */
             .abstract {
                 background: none !important;
@@ -169,7 +174,7 @@
         <div class="research-paper">
         <h1>JetLagPro: A Mobile Platform for Evaluating Chronoacupuncture as a Tool for Jet Lag Management</h1>
         
-        <p style="text-align: center; margin-bottom: 30px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
+        <p style="text-align: center; margin-bottom: 5px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
         <p style="text-align: center; margin-bottom: 30px;">© 2025 Steven Schram. All rights reserved.</p>
         
         <div class="abstract">
@@ -188,21 +193,21 @@
         <p>Chronoacupuncture applies this temporal understanding by stimulating specific (horary) acupuncture points during their designated active periods. For jet lag applications, practitioners adjust timing to match the destination time zone rather than local time, theoretically facilitating faster circadian adaptation. Despite advocacy and use among acupuncturists, this approach lacks systematic evaluation, representing a significant gap between traditional practice and evidence-based medicine.</p>
 
         <h2>2. Circadian Biology: Mechanisms of Internal Clocks</h2>
-        <p>Circadian rhythms synchronize physiological processes to a 24-26 hour cycle, governed by the suprachiasmatic nucleus (SCN), a hypothalamic cluster of neurons entrained by light via melanopsin-containing retinal cells.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>6</sup> Zeitgebers, such as light, temperature, activity, and meals, maintain synchronization.</p>
+        <p>Circadian rhythms synchronize physiological processes to a 24-26 hour cycle, governed by the suprachiasmatic nucleus (SCN), a hypothalamic cluster of neurons entrained by light via melanopsin-containing retinal cells.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>6</sup> Zeitgebers, such as light, temperature, activity, and meals, maintain synchronization.<sup>7</sup></p>
 
         <p>Jet lag occurs when rapid time zone changes desynchronize these clocks, delaying adaptation, particularly for eastbound travel.<sup>1</sup> Adaptation rates vary widely, underscoring the need for novel interventions. This scientific framework parallels TCM's temporal perspective, as embodied in the Chinese Organ Clock, suggesting a synergy between modern circadian biology and traditional practices.</p>
 
         <h2>3. Traditional Chinese Medicine: A Temporal Understanding</h2>
-        <p>Traditional Chinese Medicine (TCM) maps physiological processes to a 24-hour cycle through the Chinese Organ Clock, where vital energy (Qi) flows through 12 meridians, each peaking during a two-hour window.<sup>7</sup> Horary points are specific acupuncture points along these meridians that are most active during these peak periods.</p>
+        <p>Traditional Chinese Medicine (TCM) maps physiological processes to a 24-hour cycle through the Chinese Organ Clock, where vital energy (Qi) flows through 12 meridians, each peaking during a two-hour window.<sup>8</sup> Horary points are specific acupuncture points along these meridians that are most active during these peak periods.</p>
 
-        <p>Over 20 years ago, Khoe and Amaro postulated that stimulating horary points sequentially could help realign organ systems with new time zones, addressing jet lag's circadian misalignment.<sup>8,9</sup> While jet lag was unknown in ancient times, the time theory of acupuncture meridians was well documented. This temporal understanding parallels the SCN-driven circadian rhythms described earlier.</p>
+        <p>Over 40 years ago, Khoe and then Amaro postulated that stimulating horary points sequentially could help realign organ systems with new time zones, addressing jet lag's circadian misalignment.<sup>9,10</sup> While jet lag was unknown in ancient times, the time theory of acupuncture meridians was well documented. This temporal understanding parallels the SCN-driven circadian rhythms described earlier.</p>
 
         <p>While acupuncturists report using horary points for jet lag for many decades, no formal studies validate its efficacy, necessitating empirical investigation. This synergy between TCM and circadian biology informs the proposed method for testing chronoacupuncture's potential.</p>
 
         <h2>4. Theoretical System for Jet Lag Application</h2>
         <p>Chronoacupuncture hypothesizes that stimulating horary points during their peak activity periods acts as a non-photic zeitgeber, synchronizing circadian rhythms with destination time zones. This approach leverages the Chinese Organ Clock and may modulate peripheral clocks via autonomic or hormonal pathways.</p>
 
-        <p>Recent comprehensive reviews validate that acupuncture significantly affects circadian biology, demonstrating measurable impacts on circadian clock genes, neurotransmitter regulation, and sleep-wake cycles (Wu & Zhao, 2024).<sup>11</sup> While these studies employed general acupuncture approaches rather than the horary point methodology proposed here, they establish the neurobiological plausibility of acupuncture serving as a non-photic zeitgeber for circadian rhythm modulation.</p>
+        <p>A recent comprehensive review validates that acupuncture significantly affects circadian biology, demonstrating measurable impacts on circadian clock genes, neurotransmitter regulation, and sleep-wake cycles (Wu & Zhao, 2024).<sup>11</sup> While these studies employed known acupuncture points known to assist with sleep issues rather than the horary point methodology proposed here, they establish the neurobiological plausibility of acupuncture serving as a non-photic zeitgeber for circadian rhythm modulation.</p>
 
         <p>The JetLagPro mobile application operationalizes this method by guiding users to stimulate horary points based on destination time. Starting at the airport, users select their destination, and the app identifies the first active horary point (e.g., Spleen point for 9–11 AM). In-flight reminders and post-arrival continuation complete a 24-hour cycle.</p>
 
@@ -243,6 +248,9 @@
             <li>Hastings, M. H., et al. (2003). A clockwork web: circadian timing in brain and periphery. Nature Reviews Neuroscience, 4(8), 649–661. <a href="https://doi.org/10.1038/nrn1177" target="_blank">https://doi.org/10.1038/nrn1177</a><br>
             <em>Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
             
+            <li>Nangle, S. N., Rosensweig, C., Koike, N., Tei, H., Takahashi, J. S., Green, C. B., & Zheng, N. (2014). Molecular assembly of the period-cryptochrome circadian transcriptional repressor complex. eLife, 3, e03674. <a href="https://doi.org/10.7554/eLife.03674" target="_blank">https://doi.org/10.7554/eLife.03674</a><br>
+            <em>Crystal structure analysis of the Period-Cryptochrome complex revealing the molecular basis of circadian transcriptional repression, demonstrating how Period and Cryptochrome proteins interact to form the core negative feedback loop that drives mammalian circadian rhythms.</em></li>
+            
             <li>Heyde, I., & Oster, H. (2019). Differentiating external zeitgeber impact on peripheral circadian clock resetting. Scientific Reports, 9, 20114. <a href="https://doi.org/10.1038/s41598-019-56323-z" target="_blank">https://doi.org/10.1038/s41598-019-56323-z</a><br>
             <em>Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
             
@@ -254,10 +262,7 @@
             
             <li>Amaro, J. (2001). Time Travel: Contemporary Applications for Jet Lag from Ancient Principles. Acupuncture Today, October 2001. <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles</a><br>
             <em>Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
-            
-            <li>Roenneberg, T., & Merrow, M. (2016). The Circadian Clock and Human Health. Current Biology, 26(10), R432–R443. <a href="https://doi.org/10.1016/j.cub.2016.04.011" target="_blank">https://doi.org/10.1016/j.cub.2016.04.011</a><br>
-            <em>Comprehensive review establishing the framework for circadian medicine, demonstrating how circadian disruption connects to the health/disease balance in aetiology, disease severity, and recovery components across multiple physiological systems.</em></li>
-            
+                        
             <li>Wu, J., & Zhao, Z. (2024). Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms. Frontiers in Neuroscience, 18, 1346635. <a href="https://doi.org/10.3389/fnins.2024.1346635" target="_blank">https://doi.org/10.3389/fnins.2024.1346635</a><br>
             <em>Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
         </ol>
