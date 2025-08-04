@@ -364,17 +364,44 @@ function submitSurvey() {
     showCompletion();
 }
 
-// Export survey data
-function exportSurveyData() {
+// Export survey data and save to Firestore
+async function exportSurveyData() {
     console.log('📊 Exporting survey data...');
     
     const timestamp = new Date().toISOString();
+    const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
+    
     const exportData = {
         timestamp: timestamp,
+        surveyCode: surveyCode,
         surveyData: surveyData
     };
     
-    // Create download link
+    // Save to Firestore first
+    try {
+        console.log('💾 Saving to Firestore...');
+        
+        if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc) {
+            const docRef = await window.firebaseAddDoc(
+                window.firebaseCollection(window.firebaseDB, 'survey_responses'), 
+                {
+                    surveyCode: surveyCode,
+                    timestamp: window.firebaseServerTimestamp(),
+                    submittedAt: timestamp,
+                    responses: surveyData,
+                    version: 'ljlq_v1'
+                }
+            );
+            console.log('✅ Survey saved to Firestore with ID:', docRef.id);
+        } else {
+            console.warn('⚠️ Firebase not available, skipping cloud save');
+        }
+    } catch (error) {
+        console.error('❌ Error saving to Firestore:', error);
+        // Don't fail the whole process if Firestore fails
+    }
+    
+    // Still create download link as backup
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], {type: 'application/json'});
     const url = URL.createObjectURL(dataBlob);
@@ -386,7 +413,7 @@ function exportSurveyData() {
     
     URL.revokeObjectURL(url);
     
-    console.log('✅ Survey data exported');
+    console.log('✅ Survey data exported (local backup + cloud save)');
 }
 
 // Show completion message

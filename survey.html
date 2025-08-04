@@ -422,6 +422,36 @@
         </div>
     </footer>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcck2Ca7xBjlZcCwTcQBNQUueFsO0wyBA",
+            authDomain: "jetlagpro-research.firebaseapp.com",
+            projectId: "jetlagpro-research",
+            storageBucket: "jetlagpro-research.firebasestorage.app",
+            messagingSenderId: "202766013439",
+            appId: "1:202766013439:web:c835e22cf3a12332920dca",
+            measurementId: "G-8JV71DX3W3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally for survey.js
+        window.firebaseApp = app;
+        window.firebaseDB = db;
+        window.firebaseCollection = collection;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseServerTimestamp = serverTimestamp;
+
+        console.log('🔥 Firebase initialized successfully');
+    </script>
     <script src="survey.js"></script>
     <script>
         // Mobile menu toggle
