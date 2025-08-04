@@ -414,19 +414,7 @@ async function exportSurveyData() {
         // Don't fail the whole process if Firestore fails
     }
     
-    // Still create download link as backup
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ljlq_survey_${timestamp.split('T')[0]}.json`;
-    link.click();
-    
-    URL.revokeObjectURL(url);
-    
-    console.log('✅ Survey data exported (local backup + cloud save)');
+    console.log('✅ Survey data saved to research database');
 }
 
 // Show completion message
