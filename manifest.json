@@ -1,0 +1,75 @@
+{
+  "name": "JetLagPro - Chronoacupuncture for Jet Lag",
+  "short_name": "JetLagPro",
+  "description": "Beat jet lag with ancient wisdom. Chronoacupuncture app for travelers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "categories": ["health", "travel", "wellness"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "assets/images/app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/iPhone_6.5_Screenshot_1.png",
+      "sizes": "1170x2532",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "assets/screenshots/iPhone_6.5_Screenshot_2.png",
+      "sizes": "1170x2532", 
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Take Survey",
+      "short_name": "Survey",
+      "description": "Complete jet lag research survey",
+      "url": "/survey.html",
+      "icons": [
+        {
+          "src": "assets/images/app-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Travel Tips",
+      "short_name": "Tips",
+      "description": "Expert jet lag travel tips",
+      "url": "/travel-tips.html",
+      "icons": [
+        {
+          "src": "assets/images/app-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/jetlagpro",
+      "id": "your-ios-app-id"
+    }
+  ]
+}

@@ -11,6 +11,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="JetLagPro">
 </head>
 <body>
     <div id="main-header"></div>
@@ -18,6 +23,43 @@
       fetch('header.html')
         .then(r => r.text())
         .then(html => { document.getElementById('main-header').innerHTML = html; });
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('✅ PWA: Service Worker registered successfully');
+              console.log('📱 JetLagPro PWA ready for offline use');
+              
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                console.log('🔄 PWA: New version available');
+              });
+            })
+            .catch(error => {
+              console.error('❌ PWA: Service Worker registration failed:', error);
+            });
+        });
+
+        // Listen for installation prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+          console.log('📱 PWA: Install prompt available');
+          e.preventDefault();
+          deferredPrompt = e;
+          
+          // Show custom install button (if you want to add one later)
+          // showInstallButton();
+        });
+
+        // Handle successful installation
+        window.addEventListener('appinstalled', (evt) => {
+          console.log('🎉 PWA: JetLagPro installed successfully');
+        });
+      }
     </script>
 
     <main>
