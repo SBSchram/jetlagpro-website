@@ -380,8 +380,15 @@ async function exportSurveyData() {
     // Save to Firestore first
     try {
         console.log('💾 Saving to Firestore...');
+        console.log('🔍 Firebase availability check:', {
+            firebaseDB: !!window.firebaseDB,
+            firebaseCollection: !!window.firebaseCollection, 
+            firebaseAddDoc: !!window.firebaseAddDoc,
+            firebaseServerTimestamp: !!window.firebaseServerTimestamp
+        });
         
-        if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc) {
+        if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc && window.firebaseServerTimestamp) {
+            console.log('🚀 Attempting Firestore save...');
             const docRef = await window.firebaseAddDoc(
                 window.firebaseCollection(window.firebaseDB, 'survey_responses'), 
                 {
@@ -395,6 +402,12 @@ async function exportSurveyData() {
             console.log('✅ Survey saved to Firestore with ID:', docRef.id);
         } else {
             console.warn('⚠️ Firebase not available, skipping cloud save');
+            console.warn('Missing Firebase functions:', {
+                firebaseDB: !window.firebaseDB,
+                firebaseCollection: !window.firebaseCollection,
+                firebaseAddDoc: !window.firebaseAddDoc,
+                firebaseServerTimestamp: !window.firebaseServerTimestamp
+            });
         }
     } catch (error) {
         console.error('❌ Error saving to Firestore:', error);
