@@ -25,7 +25,7 @@
         <section class="travel-tips-content">
             <div class="container">
                 <div class="intro-text">
-                    <p>The best way to beat jet lag is to be strategic about your entire travel experience. Here are expert-recommended tips that work well with JetLagPro's acupressure approach.</p>
+                    <p>The best way to beat jet lag is to be strategic about your entire travel experience. Here are expert-recommended tips that work well with JetLagPro's chronoacupuncture approach.</p>
                 </div>
 
                 <div class="tips-timeline">
@@ -174,11 +174,11 @@
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 JetLagPro. All rights reserved.</p>
-            <p><a href="index.html">Back to Home</a> | <a href="alternative-approaches.html">Alternative Approaches</a></p>
-        </div>
-    </footer>
+    <div id="main-footer"></div>
+    <script>
+      fetch('footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
 </body>
 </html> 

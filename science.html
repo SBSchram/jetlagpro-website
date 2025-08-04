@@ -19,17 +19,16 @@
       .then(html => { document.getElementById('main-header').innerHTML = html; });
   </script>
 
-  <section class="hero-simple">
-    <div class="container">
-      <h1>The Science Behind JetLagPro</h1>
-      <p class="hero-subtitle">How circadian rhythms and Chinese medicine inform our approach.</p>
-    </div>
-  </section>
-
   <main>
+    <section class="hero-simple">
+      <div class="container">
+        <h1>The Science Behind JetLagPro</h1>
+        <p class="hero-subtitle">How circadian rhythms and Chinese medicine inform our approach.</p>
+      </div>
+    </section>
+
     <section class="science">
       <div class="container">
-        <h2 class="section-title">The Science Behind JetLagPro</h2>
         <p class="science-lead science-lead-centered">Jet lag isn't just tiredness—it's your body's internal clock fighting against a new time zone.</p>
         <div class="science-content-formatted">
           <div class="science-block">
@@ -78,5 +77,12 @@
       </div>
     </section>
   </main>
+
+  <div id="main-footer"></div>
+  <script>
+    fetch('footer.html')
+      .then(r => r.text())
+      .then(html => { document.getElementById('main-footer').innerHTML = html; });
+  </script>
 </body>
 </html>

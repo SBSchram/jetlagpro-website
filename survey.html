@@ -430,5 +430,12 @@
             navLinks.classList.toggle('active');
         }
     </script>
+
+    <div id="main-footer"></div>
+    <script>
+      fetch('footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
 </body>
 </html> 

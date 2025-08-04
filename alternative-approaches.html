@@ -156,11 +156,11 @@
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 JetLagPro. All rights reserved.</p>
-            <p><a href="index.html">Back to Home</a> | <a href="travel-tips.html">Travel Tips</a></p>
-        </div>
-    </footer>
+    <div id="main-footer"></div>
+    <script>
+      fetch('footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
 </body>
 </html> 

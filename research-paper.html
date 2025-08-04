@@ -3,79 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JetLagPro Research Paper - A Mobile Platform for Evaluating Chronoacupuncture</title>
+    <title>Chronoacupuncture Research Paper - JetLagPro</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .paper-container {
+        .research-paper {
             max-width: 800px;
             margin: 0 auto;
             padding: 40px 20px;
             line-height: 1.6;
             color: #333;
-            background: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
-        .paper-container h1 {
-            font-size: 2.2em;
-            color: #2c3e50;
-            margin-bottom: 20px;
+        .research-paper h1 {
             text-align: center;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 20px;
-        }
-        
-        .paper-container h2 {
-            font-size: 1.6em;
-            color: #2c3e50;
-            margin-top: 40px;
             margin-bottom: 20px;
-            border-left: 4px solid #3498db;
-            padding-left: 15px;
         }
         
-        .paper-container .author-info {
-            text-align: center;
+        .research-paper h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .research-paper h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .research-paper p {
+            margin-bottom: 15px;
+        }
+        
+        .abstract {
+            background: #f8f9fa;
+            padding: 20px;
             margin-bottom: 30px;
-            color: #666;
-            font-style: italic;
         }
         
-        .paper-container .copyright {
-            text-align: center;
-            margin: 30px 0;
-            color: #999;
-            font-size: 0.9em;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
+        .keywords {
+            font-style: italic;
+            margin-top: 15px;
+        }
+        
+        /* Print Button Styling */
+        .print-button-container {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            z-index: 1000;
         }
         
         .print-button {
-            position: fixed;
-            top: 120px;
-            right: 30px;
-            background: #3498db;
+            background: #2563eb;
             color: white;
-            padding: 12px 20px;
             border: none;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
         }
         
         .print-button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
+            background: #1d4ed8;
         }
         
+        @media (max-width: 768px) {
+            .print-button-container {
+                position: static;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+        }
+
         @media print {
-            .print-button { display: none; }
-            @page { margin: 1in; size: letter; }
-            .paper-container { max-width: none; margin: 0; padding: 0; }
+            /* Hide all webpage elements */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Show only the research paper content */
+            .research-paper, .research-paper * {
+                visibility: visible;
+            }
+            
+            /* Position the research paper at the top */
+            .research-paper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                max-width: none;
+                padding: 20px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            @page {
+                margin: 1in;
+                size: letter;
+            }
+            
+            /* Keep headings with content but allow natural flow */
+            .research-paper h1,
+            .research-paper h2,
+            .research-paper h3 {
+                page-break-inside: avoid;
+            }
+            
+            /* Allow paragraphs to break naturally */
+            .research-paper p {
+                orphans: 2;
+                widows: 2;
+            }
+            
+            /* Keep special sections together */
+            .research-paper .abstract,
+            .research-paper ol,
+            .research-paper ul {
+                page-break-inside: avoid;
+            }
+            
+            /* Keep headings with following content */
+            .research-paper h1,
+            .research-paper h2,
+            .research-paper h3 {
+                page-break-after: avoid;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            
+            /* Ensure proper spacing for print */
+            .research-paper h1 {
+                margin-top: 0;
+            }
+            
+            /* Keep lists together when possible */
+            .research-paper ol,
+            .research-paper ul {
+                page-break-inside: avoid;
+            }
+            
+            /* Abstract styling for print */
+            .abstract {
+                background: none !important;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
@@ -86,135 +160,115 @@
         .then(r => r.text())
         .then(html => { document.getElementById('main-header').innerHTML = html; });
     </script>
-    
-    <section class="hero-simple">
-        <div class="container">
-            <h1>JetLagPro Research Paper</h1>
-            <p class="hero-subtitle">A Mobile Platform for Evaluating Chronoacupuncture</p>
-        </div>
-    </section>
-    
-    <button class="print-button" onclick="window.print()">Print Paper</button>
-    
-    <div class="paper-container">
+
+    <div class="print-button-container">
+        <button class="print-button" onclick="window.print()">Print Paper</button>
+    </div>
+
+    <main style="padding-top: 120px;">
+        <div class="research-paper">
         <h1>JetLagPro: A Mobile Platform for Evaluating Chronoacupuncture as a Tool for Jet Lag Management</h1>
         
-        <div class="author-info">
-            <p><strong>Steven Schram PhD, DC, LAc</strong></p>
-        </div>
+        <p style="text-align: center; margin-bottom: 30px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
+        <p style="text-align: center; margin-bottom: 30px;">© 2025 Steven Schram. All rights reserved.</p>
         
-        <div class="copyright">
-            <p>© 2025 Steven Schram. All rights reserved.</p>
-        </div>
-        
-        <div class="abstract" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #3498db;">
+        <div class="abstract">
             <p><strong>Abstract</strong></p>
             <p>Jet lag affects over 90% of long-haul travelers, yet conventional treatments yield inconsistent results. This study proposes evaluating chronoacupuncture, a Traditional Chinese Medicine approach using acupressure on "horary points" aligned with destination time zones as a novel jet lag intervention. We present the JetLagPro mobile application as a research platform to systematically test this method while collecting user data on symptom severity and recovery patterns. This represents the first formal investigation of chronoacupuncture for jet lag management, aimed at either validating this traditional approach or redirecting research toward more effective alternatives.</p>
-            
-            <div style="font-style: italic; color: #666; margin-top: 15px;">
+            <div class="keywords">
                 <strong>Keywords:</strong> chronoacupuncture, circadian rhythm, jet lag, horary points, Traditional Chinese Medicine, acupressure
             </div>
         </div>
 
         <h2>1. Introduction</h2>
-        <p>The global increase in air travel has made jet lag a widespread health concern, with economic implications including reduced productivity and increased healthcare costs. Current interventions of light therapy, melatonin, strategic sleep and varied meal scheduling show variable efficacy, particularly for eastbound travel and longer distances. Individual differences in circadian flexibility further complicate treatment approaches [1].</p>
-        
+        <p>The global increase in air travel has made jet lag a widespread health concern, with economic implications including reduced productivity and increased healthcare costs. Current interventions of light therapy, melatonin, strategic sleep and varied meal scheduling show variable efficacy, particularly for eastbound travel and longer distances. Individual differences in circadian flexibility further complicate treatment approaches.<sup>1</sup></p>
+
         <p>Traditional Chinese Medicine offers an alternative perspective through its understanding of temporal physiology. The Chinese Organ Clock, documented in classical texts dating back millennia, describes a 24-hour cycle where different organ systems reach peak activity during specific two-hour windows. This temporal understanding parallels modern discoveries in circadian biology, where peripheral clocks in organs coordinate with the central circadian pacemaker.</p>
-        
+
         <p>Chronoacupuncture applies this temporal understanding by stimulating specific (horary) acupuncture points during their designated active periods. For jet lag applications, practitioners adjust timing to match the destination time zone rather than local time, theoretically facilitating faster circadian adaptation. Despite advocacy and use among acupuncturists, this approach lacks systematic evaluation, representing a significant gap between traditional practice and evidence-based medicine.</p>
 
         <h2>2. Circadian Biology: Mechanisms of Internal Clocks</h2>
-        <p>Circadian rhythms synchronize physiological processes to a 24-26 hour cycle, governed by the suprachiasmatic nucleus (SCN), a hypothalamic cluster of neurons entrained by light via melanopsin-containing retinal cells.[2,3] The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.[4,5] Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.[6] Zeitgebers, such as light, temperature, activity, and meals, maintain synchronization.[7]</p>
-        
-        <p>Jet lag occurs when rapid time zone changes desynchronize these clocks, delaying adaptation, particularly for eastbound travel.[1] Adaptation rates vary widely, underscoring the need for novel interventions. This scientific framework parallels TCM's temporal perspective, as embodied in the Chinese Organ Clock, suggesting a synergy between modern circadian biology and traditional practices.</p>
+        <p>Circadian rhythms synchronize physiological processes to a 24-26 hour cycle, governed by the suprachiasmatic nucleus (SCN), a hypothalamic cluster of neurons entrained by light via melanopsin-containing retinal cells.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>6</sup> Zeitgebers, such as light, temperature, activity, and meals, maintain synchronization.</p>
+
+        <p>Jet lag occurs when rapid time zone changes desynchronize these clocks, delaying adaptation, particularly for eastbound travel.<sup>1</sup> Adaptation rates vary widely, underscoring the need for novel interventions. This scientific framework parallels TCM's temporal perspective, as embodied in the Chinese Organ Clock, suggesting a synergy between modern circadian biology and traditional practices.</p>
 
         <h2>3. Traditional Chinese Medicine: A Temporal Understanding</h2>
-        <p>Traditional Chinese Medicine (TCM) maps physiological processes to a 24-hour cycle through the Chinese Organ Clock, where vital energy (Qi) flows through 12 meridians, each peaking during a two-hour window.[8] Horary points are specific acupuncture points along these meridians that are most active during these peak periods (Figure 1).</p>
-        
-        <p>Over 20 years ago, Khoe and Amaro postulated that stimulating horary points sequentially could help realign organ systems with new time zones, addressing jet lag's circadian misalignment.[9,10] While jet lag was unknown in ancient times, the time theory of acupuncture meridians was well documented. This temporal understanding parallels the SCN-driven circadian rhythms described earlier.</p>
-        
-        <p>While acupuncturists report using chronoacupuncture for jet lag for many decades, no formal studies validate its efficacy, necessitating empirical investigation. This synergy between TCM and circadian biology informs the proposed method for testing chronoacupuncture's potential.</p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <img src="assets/images/wheel.jpg" alt="Chinese Organ Clock" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <p style="margin-top: 10px; font-style: italic; color: #666;"><strong>Figure 1:</strong> Chinese Organ Clock Visualization</p>
-        </div>
+        <p>Traditional Chinese Medicine (TCM) maps physiological processes to a 24-hour cycle through the Chinese Organ Clock, where vital energy (Qi) flows through 12 meridians, each peaking during a two-hour window.<sup>7</sup> Horary points are specific acupuncture points along these meridians that are most active during these peak periods.</p>
+
+        <p>Over 20 years ago, Khoe and Amaro postulated that stimulating horary points sequentially could help realign organ systems with new time zones, addressing jet lag's circadian misalignment.<sup>8,9</sup> While jet lag was unknown in ancient times, the time theory of acupuncture meridians was well documented. This temporal understanding parallels the SCN-driven circadian rhythms described earlier.</p>
+
+        <p>While acupuncturists report using horary points for jet lag for many decades, no formal studies validate its efficacy, necessitating empirical investigation. This synergy between TCM and circadian biology informs the proposed method for testing chronoacupuncture's potential.</p>
 
         <h2>4. Theoretical System for Jet Lag Application</h2>
         <p>Chronoacupuncture hypothesizes that stimulating horary points during their peak activity periods acts as a non-photic zeitgeber, synchronizing circadian rhythms with destination time zones. This approach leverages the Chinese Organ Clock and may modulate peripheral clocks via autonomic or hormonal pathways.</p>
-        
-        <p>The JetLagPro mobile application operationalizes this method by guiding users to stimulate horary points based on destination time. Starting at the airport, users select their destination, and the app identifies the first active horary point (e.g., Spleen point for 9–11 AM). In-flight reminders and post-arrival continuation complete a 24-hour cycle.</p>
-        
-        <p>A link in the app to the JetLagPro website presents survey questions on symptom severity (e.g., fatigue, insomnia) and adaptation timescales inspired by many Jet Lag Questionnaires (Liverpool Questionaire, Columbia Jet Lag Scale, and symptom domains used in published studies).</p>
-        
-        <p>This exploratory study aims to gather preliminary statistical evidence across diverse travel conditions, addressing the absence of formal chronoacupuncture studies. While anecdotal reports from acupuncturists suggest efficacy [9,10], this platform seeks to validate or refute chronoacupuncture as a non-pharmacological tool for jet lag management.</p>
 
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <caption style="font-weight: bold; margin-bottom: 10px;"><strong>Table 1: JetLagPro Protocol Overview</strong></caption>
-            <thead>
-                <tr>
-                    <th style="background: #3498db; color: white; padding: 12px; text-align: left; font-weight: bold;">Stage</th>
-                    <th style="background: #3498db; color: white; padding: 12px; text-align: left; font-weight: bold;">Action</th>
-                    <th style="background: #3498db; color: white; padding: 12px; text-align: left; font-weight: bold;">Example</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="background: #f8f9fa;">
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Airport</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Select destination; stimulate first point</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Stomach (7–9 AM)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">In-Flight</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Follow reminders for subsequent points</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Spleen (9–11 AM)</td>
-                </tr>
-                <tr style="background: #f8f9fa;">
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Post-Arrival</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Continue until 24-hour cycle ends</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Large Intestine (5–7 AM)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Survey</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Report symptoms and adaptation time</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Survey tool on web</td>
-                </tr>
-            </tbody>
-        </table>
+        <p>Recent comprehensive reviews validate that acupuncture significantly affects circadian biology, demonstrating measurable impacts on circadian clock genes, neurotransmitter regulation, and sleep-wake cycles (Wu & Zhao, 2024).<sup>11</sup> While these studies employed general acupuncture approaches rather than the horary point methodology proposed here, they establish the neurobiological plausibility of acupuncture serving as a non-photic zeitgeber for circadian rhythm modulation.</p>
+
+        <p>The JetLagPro mobile application operationalizes this method by guiding users to stimulate horary points based on destination time. Starting at the airport, users select their destination, and the app identifies the first active horary point (e.g., Spleen point for 9–11 AM). In-flight reminders and post-arrival continuation complete a 24-hour cycle.</p>
+
+        <p>A link in the app to the JetLagPro website presents survey questions on symptom severity (e.g., fatigue, insomnia) and adaptation timescales inspired by many Jet Lag Questionnaires (Liverpool Questionaire, Columbia Jet Lag Scale, and symptom domains used in published studies).</p>
+
+        <p>This exploratory study aims to gather preliminary statistical evidence across diverse travel conditions, addressing the absence of formal chronoacupuncture studies. While anecdotal reports from acupuncturists suggest efficacy, this platform seeks to validate or refute chronoacupuncture as a non-pharmacological tool for jet lag management.</p>
 
         <h2>5. Discussion</h2>
         <p>The proposed mechanism for chronoacupuncture involves tactile stimulation of acupressure points triggering afferent nerve pathways that may influence the hypothalamic-pituitary-adrenal axis and autonomic nervous system. This peripheral stimulation could modulate melatonin secretion patterns, cortisol rhythms, and peripheral clock gene expression, effectively serving as a non-photic zeitgeber to accelerate circadian realignment.</p>
-        
+
         <p>Traditional clinical trials face significant challenges in jet lag research due to the logistical complexity of controlling travel variables, participant demographics, and environmental factors. JetLagPro's naturalistic data collection approach circumvents these limitations while capturing real-world efficacy across diverse travel conditions. However, this methodology introduces potential confounding variables including participant compliance, placebo effects inherent in tactile interventions, and subjective symptom reporting.</p>
-        
+
         <p>The interdisciplinary framework merging TCM's temporal concepts with circadian biology creates a testable hypothesis from traditionally anecdotal practices. If validated, chronoacupuncture could provide a non-invasive, cost-effective intervention accessible to travelers without medical supervision. Negative findings would redirect research toward alternative non-photic zeitgebers and inform the scientific evaluation of other TCM temporal therapies.</p>
-        
+
         <p>Study limitations include the exploratory survey design, potential selection bias toward tech-savvy travelers, and the absence of blinded controls. Future research should incorporate objective circadian markers (cortisol, core body temperature) alongside subjective measures to strengthen mechanistic understanding and clinical validation.</p>
 
         <h2>6. Conclusion</h2>
         <p>Chronoacupuncture represents a testable hypothesis merging Traditional Chinese Medicine's horary point theory with contemporary circadian biology. The JetLagPro platform enables systematic evaluation of whether sequential acupressure stimulation can function as a non-photic zeitgeber, potentially modulating circadian rhythms through peripheral nerve pathways and hormonal signaling.</p>
-        
+
         <p>Success metrics include reduced jet lag symptom severity, accelerated adaptation times, and correlation between compliance and outcomes across diverse travel conditions. Validation would establish an accessible, non-pharmacological intervention for the 90% of long-haul travelers experiencing jet lag. Negative results would inform the scientific assessment of TCM temporal therapies and guide development of alternative circadian interventions.</p>
-        
+
         <p>This interdisciplinary approach demonstrates how mobile technology can bridge traditional medicine and modern research methodologies, creating scalable platforms for evidence-based evaluation of culturally-rooted health practices in contemporary medical contexts.</p>
 
-        <div class="references" style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #3498db;">
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">References</h2>
-            <ol style="counter-reset: reference-counter;">
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Waterhouse, J., et al. (2007). <a href="https://doi.org/10.1016/S0140-6736(07)60529-7" target="_blank">Jet lag: trends and coping strategies</a>. <em>The Lancet</em>, 369(9567), 1117–1129.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Panda, S. (2022). <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">Foundations of circadian medicine</a>. <em>PLoS Biology</em>, 20(3), e3001567.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Honma, S., & Honma, K.I. (2019). <a href="https://doi.org/10.3390/biology8010013" target="_blank">The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker</a>. <em>Biology</em>, 8(1), 13.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Paschos, G.K., & FitzGerald, G.A. (2010). <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">Circadian clocks and vascular function</a>. <em>Circulation Research</em>, 106(5), 833-841.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Hastings, M. H., et al. (2003). <a href="https://doi.org/10.1038/nrn1177" target="_blank">A clockwork web: circadian timing in brain and periphery</a>. <em>Nature Reviews Neuroscience</em>, 4(8), 649–661.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Heyde, I., & Oster, H. (2019). <a href="https://doi.org/10.1038/s41598-019-56323-z" target="_blank">Differentiating external zeitgeber impact on peripheral circadian clock resetting</a>. <em>Scientific Reports</em>, 9, 20114.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Khoe, W.H. (1978). Treatment of jet lag syndrome by acupuncture. <em>American Journal of Acupuncture</em>, 6(2), 135–139.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Amaro, J. (2001). <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">Time Travel: Contemporary Applications for Jet Lag from Ancient Principles</a>. <em>Acupuncture Today</em>, October 2001.</li>
-                <li style="counter-increment: reference-counter; margin-bottom: 15px; padding-left: 20px; position: relative;">Roenneberg, T., & Merrow, M. (2016). <a href="https://doi.org/10.1016/j.cub.2016.04.011" target="_blank">The Circadian Clock and Human Health</a>. <em>Current Biology</em>, 26(10), R432–R443.</li>
-            </ol>
+        <h2>References</h2>
+        <ol>
+            <li>Waterhouse, J., et al. (2007). Jet lag: trends and coping strategies. The Lancet, 369(9567), 1117–1129. <a href="https://doi.org/10.1016/S0140-6736(07)60529-7" target="_blank">https://doi.org/10.1016/S0140-6736(07)60529-7</a><br>
+            <em>Reviews jet lag symptoms, causes, and methods to alleviate negative effects of time-zone transitions, including advice for travelers flying in different directions across multiple time zones.</em></li>
+            
+            <li>Panda, S. (2022). Foundations of circadian medicine. PLoS Biology, 20(3), e3001567. <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">https://doi.org/10.1371/journal.pbio.3001567</a><br>
+            <em>Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
+            
+            <li>Honma, S., & Honma, K.I. (2019). The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker. Biology, 8(1), 13. <a href="https://doi.org/10.3390/biology8010013" target="_blank">https://doi.org/10.3390/biology8010013</a><br>
+            <em>Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
+            
+            <li>Paschos, G.K., & FitzGerald, G.A. (2010). Circadian clocks and vascular function. Circulation Research, 106(5), 833-841. <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">https://doi.org/10.1161/CIRCRESAHA.109.211706</a><br>
+            <em>Comprehensive review demonstrating that circadian clocks regulate vascular function through control of blood pressure rhythms, thrombogenesis, endothelial function, and response to vascular injury, based on genetic disruption studies in clock-deficient mice.</em></li>
+            
+            <li>Hastings, M. H., et al. (2003). A clockwork web: circadian timing in brain and periphery. Nature Reviews Neuroscience, 4(8), 649–661. <a href="https://doi.org/10.1038/nrn1177" target="_blank">https://doi.org/10.1038/nrn1177</a><br>
+            <em>Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
+            
+            <li>Heyde, I., & Oster, H. (2019). Differentiating external zeitgeber impact on peripheral circadian clock resetting. Scientific Reports, 9, 20114. <a href="https://doi.org/10.1038/s41598-019-56323-z" target="_blank">https://doi.org/10.1038/s41598-019-56323-z</a><br>
+            <em>Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
+            
+            <li>Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]<br>
+            <em>Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
+            
+            <li>Khoe, W.H. (1978). Treatment of jet lag syndrome by acupuncture. American Journal of Acupuncture, 6(2), 135–139.<br>
+            <em>Historical paper on acupuncture treatment for jet lag syndrome (content not accessible for detailed summary).</em></li>
+            
+            <li>Amaro, J. (2001). Time Travel: Contemporary Applications for Jet Lag from Ancient Principles. Acupuncture Today, October 2001. <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles</a><br>
+            <em>Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
+            
+            <li>Roenneberg, T., & Merrow, M. (2016). The Circadian Clock and Human Health. Current Biology, 26(10), R432–R443. <a href="https://doi.org/10.1016/j.cub.2016.04.011" target="_blank">https://doi.org/10.1016/j.cub.2016.04.011</a><br>
+            <em>Comprehensive review establishing the framework for circadian medicine, demonstrating how circadian disruption connects to the health/disease balance in aetiology, disease severity, and recovery components across multiple physiological systems.</em></li>
+            
+            <li>Wu, J., & Zhao, Z. (2024). Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms. Frontiers in Neuroscience, 18, 1346635. <a href="https://doi.org/10.3389/fnins.2024.1346635" target="_blank">https://doi.org/10.3389/fnins.2024.1346635</a><br>
+            <em>Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
+        </ol>
         </div>
+    </main>
 
-        <p style="margin-top: 30px;"><em>This paper represents a synthesis of classical TCM theory, modern scientific research, and clinical observations. The current evidence base for chronoacupuncture is limited, and further research is needed to establish the efficacy of these approaches through rigorous clinical trials.</em></p>
-    </div>
+    <div id="main-footer"></div>
+    <script>
+      fetch('footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
 </body>
 </html>
