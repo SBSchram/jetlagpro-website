@@ -16,6 +16,7 @@ const CACHE_URLS = [
   './styles.css',
   './survey.css',
   './survey.js',
+  './js/translate.js',
   './manifest.json',
   './assets/images/app-icon.png',
   './assets/point-images/BL-66.jpg',
