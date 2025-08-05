@@ -52,11 +52,11 @@
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
           console.log('📱 PWA: Install prompt available');
-          e.preventDefault();
+          // DON'T prevent default - let browser show install prompt
+          // e.preventDefault();
           deferredPrompt = e;
           
-          // Show custom install button (if you want to add one later)
-          // showInstallButton();
+          console.log('🎉 PWA: Browser install prompt should be visible now');
         });
 
         // Handle successful installation

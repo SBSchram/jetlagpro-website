@@ -53,10 +53,20 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('📦 Caching app shell and content...');
-        return cache.addAll(CACHE_URLS);
+        // Cache files individually to avoid 206 partial response issues
+        return Promise.allSettled(
+          CACHE_URLS.map(url => {
+            return cache.add(url).catch(error => {
+              console.warn('⚠️ Failed to cache:', url, error);
+              return null; // Continue with other files
+            });
+          })
+        );
       })
-      .then(() => {
-        console.log('✅ Service Worker installed successfully');
+      .then((results) => {
+        const successful = results.filter(result => result.status === 'fulfilled').length;
+        const failed = results.filter(result => result.status === 'rejected').length;
+        console.log(`✅ Service Worker: Cached ${successful} files, ${failed} failed`);
         // Force activation of new service worker
         return self.skipWaiting();
       })
