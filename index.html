@@ -29,6 +29,10 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
+          console.log('🔍 PWA: Starting PWA setup...');
+          console.log('🔍 PWA: Current URL:', window.location.href);
+          console.log('🔍 PWA: Manifest URL:', document.querySelector('link[rel="manifest"]')?.href);
+          
           navigator.serviceWorker.register('./sw.js')
             .then(registration => {
               console.log('✅ PWA: Service Worker registered successfully');
