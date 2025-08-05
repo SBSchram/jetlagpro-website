@@ -55,16 +55,86 @@
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
           console.log('📱 PWA: Install prompt available');
-          // DON'T prevent default - let browser show install prompt
-          // e.preventDefault();
+          e.preventDefault(); // Prevent automatic prompt
           deferredPrompt = e;
           
-          console.log('🎉 PWA: Browser install prompt should be visible now');
+          // Show custom install button for Android users
+          showInstallButton();
         });
+
+        function showInstallButton() {
+          // Check if this is likely Android (not iOS)
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          
+          if (isAndroid && !isIOS) {
+            console.log('📱 PWA: Showing install button for Android user');
+            
+            // Create install button
+            const installButton = document.createElement('button');
+            installButton.id = 'pwa-install-btn';
+            installButton.innerHTML = '📱 Install JetLagPro App';
+            installButton.style.cssText = `
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              background: #2563eb;
+              color: white;
+              border: none;
+              padding: 12px 20px;
+              border-radius: 25px;
+              font-weight: 600;
+              font-size: 14px;
+              box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+              cursor: pointer;
+              z-index: 1000;
+              transition: all 0.3s ease;
+            `;
+            
+            // Add hover effect
+            installButton.addEventListener('mouseenter', () => {
+              installButton.style.transform = 'scale(1.05)';
+              installButton.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.4)';
+            });
+            
+            installButton.addEventListener('mouseleave', () => {
+              installButton.style.transform = 'scale(1)';
+              installButton.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
+            });
+            
+            // Install button click handler
+            installButton.addEventListener('click', async () => {
+              if (deferredPrompt) {
+                console.log('🚀 PWA: Triggering install prompt');
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`🎯 PWA: User choice: ${outcome}`);
+                
+                if (outcome === 'accepted') {
+                  console.log('✅ PWA: User accepted the install');
+                } else {
+                  console.log('❌ PWA: User dismissed the install');
+                }
+                
+                deferredPrompt = null;
+                installButton.remove();
+              }
+            });
+            
+            // Add button to page
+            document.body.appendChild(installButton);
+          }
+        }
 
         // Handle successful installation
         window.addEventListener('appinstalled', (evt) => {
           console.log('🎉 PWA: JetLagPro installed successfully');
+          
+          // Remove install button if it exists
+          const installButton = document.getElementById('pwa-install-btn');
+          if (installButton) {
+            installButton.remove();
+          }
         });
       }
     </script>
