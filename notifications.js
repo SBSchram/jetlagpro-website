@@ -1,0 +1,232 @@
+// JetLagPro PWA Notification Manager
+// Handles push notifications, scheduling, and user permissions
+
+class NotificationManager {
+  constructor() {
+    this.registration = null;
+    this.subscription = null;
+    this.isSupported = 'serviceWorker' in navigator && 'PushManager' in window;
+    this.permission = Notification.permission;
+    
+    console.log('🔔 NotificationManager initialized', {
+      supported: this.isSupported,
+      permission: this.permission
+    });
+  }
+
+  // Check if notifications are supported
+  isNotificationSupported() {
+    return this.isSupported;
+  }
+
+  // Request notification permission
+  async requestPermission() {
+    if (!this.isSupported) {
+      throw new Error('Push notifications not supported');
+    }
+
+    console.log('🔔 Requesting notification permission...');
+    
+    const permission = await Notification.requestPermission();
+    this.permission = permission;
+    
+    console.log('🎯 Permission result:', permission);
+    
+    if (permission === 'granted') {
+      console.log('✅ Notification permission granted');
+      return true;
+    } else {
+      console.log('❌ Notification permission denied');
+      return false;
+    }
+  }
+
+  // Initialize push subscription
+  async initializePushSubscription() {
+    if (!this.isSupported || this.permission !== 'granted') {
+      throw new Error('Notifications not available');
+    }
+
+    try {
+      // Get service worker registration
+      this.registration = await navigator.serviceWorker.ready;
+      console.log('📱 Service Worker ready for notifications');
+
+      // Check for existing subscription
+      this.subscription = await this.registration.pushManager.getSubscription();
+      
+      if (this.subscription) {
+        console.log('✅ Existing push subscription found');
+        return this.subscription;
+      } else {
+        console.log('🔄 Creating new push subscription...');
+        return await this.createPushSubscription();
+      }
+    } catch (error) {
+      console.error('❌ Failed to initialize push subscription:', error);
+      throw error;
+    }
+  }
+
+  // Create new push subscription
+  async createPushSubscription() {
+    try {
+      // TODO: Replace with your actual Firebase VAPID key when ready
+      // For now, we'll skip push subscription and use local notifications only
+      console.log('⚠️ VAPID key not configured - using local notifications only');
+      
+      // For local notifications, we don't need a push subscription
+      // The service worker and notification permission are sufficient
+      return null;
+    } catch (error) {
+      console.error('❌ Failed to create push subscription:', error);
+      // Don't throw - we can still use local notifications
+      return null;
+    }
+  }
+
+  // Send subscription to Firebase/server
+  async sendSubscriptionToServer(subscription) {
+    try {
+      console.log('📤 Sending subscription to server...');
+      
+      // Store subscription in Firebase Firestore
+      if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc) {
+        await window.firebaseAddDoc(
+          window.firebaseCollection(window.firebaseDB, 'push_subscriptions'),
+          {
+            subscription: subscription,
+            timestamp: window.firebaseServerTimestamp(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+          }
+        );
+        console.log('✅ Subscription saved to Firebase');
+      }
+    } catch (error) {
+      console.error('❌ Failed to save subscription:', error);
+      // Don't throw - notifications can still work locally
+    }
+  }
+
+  // Schedule local notifications for jet lag reminders
+  scheduleJetLagReminders(travelData) {
+    if (!this.registration || this.permission !== 'granted') {
+      console.warn('⚠️ Cannot schedule notifications - permission not granted');
+      return;
+    }
+
+    console.log('⏰ Scheduling jet lag reminders:', travelData);
+
+    // Calculate notification times based on travel data
+    const notificationTimes = this.calculateNotificationTimes(travelData);
+    
+    // Schedule each notification
+    notificationTimes.forEach((notif, index) => {
+      this.scheduleNotification(notif, index);
+    });
+
+    console.log(`✅ Scheduled ${notificationTimes.length} notifications`);
+  }
+
+  // Calculate when notifications should fire
+  calculateNotificationTimes(travelData) {
+    const notifications = [];
+    const startTime = new Date(travelData.departureTime);
+    const endTime = new Date(startTime.getTime() + (72 * 60 * 60 * 1000)); // 72 hours
+    
+    // Create notification every 2 hours
+    for (let time = new Date(startTime); time <= endTime; time.setHours(time.getHours() + 2)) {
+      const pointIndex = Math.floor((time.getTime() - startTime.getTime()) / (2 * 60 * 60 * 1000)) % 12;
+      const points = ['LU-8', 'LI-1', 'ST-36', 'SP-3', 'HT-8', 'SI-5', 'BL-66', 'KI-10', 'PC-8', 'SJ-6', 'GB-41', 'LIV-1'];
+      
+      notifications.push({
+        time: new Date(time),
+        pointName: points[pointIndex],
+        title: `JetLagPro: ${points[pointIndex]} Time`,
+        body: `Time to stimulate the ${points[pointIndex]} acupressure point. This should take about 30 seconds.`,
+        tag: `jetlag-${pointIndex}`,
+        url: `./demo/index.html?point=${points[pointIndex]}`
+      });
+    }
+    
+    return notifications;
+  }
+
+  // Schedule individual notification
+  scheduleNotification(notificationData, index) {
+    const delay = notificationData.time.getTime() - Date.now();
+    
+    if (delay > 0) {
+      setTimeout(() => {
+        this.showLocalNotification(notificationData);
+      }, delay);
+      
+      console.log(`⏰ Notification ${index + 1} scheduled for ${notificationData.time.toLocaleString()}`);
+    }
+  }
+
+  // Show local notification
+  async showLocalNotification(data) {
+    if (this.registration && this.permission === 'granted') {
+      try {
+        await this.registration.showNotification(data.title, {
+          body: data.body,
+          icon: './assets/images/app-icon.png',
+          badge: './assets/images/app-icon.png',
+          tag: data.tag,
+          requireInteraction: true,
+          actions: [
+            { action: 'open', title: 'Open App' },
+            { action: 'dismiss', title: 'Dismiss' }
+          ],
+          data: {
+            url: data.url,
+            pointName: data.pointName,
+            timestamp: Date.now()
+          }
+        });
+        
+        console.log(`✅ Local notification shown: ${data.title}`);
+      } catch (error) {
+        console.error('❌ Failed to show notification:', error);
+      }
+    }
+  }
+
+  // Test notification
+  async testNotification() {
+    if (this.permission !== 'granted') {
+      throw new Error('Notification permission not granted');
+    }
+
+    await this.showLocalNotification({
+      title: 'JetLagPro Test',
+      body: 'Notifications are working! You\'ll receive reminders every 2 hours during your trip.',
+      tag: 'test-notification',
+      pointName: 'TEST',
+      url: './'
+    });
+  }
+
+  // Utility function to convert VAPID key
+  urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+}
+
+// Initialize global notification manager
+window.NotificationManager = NotificationManager;
+
+console.log('🔔 Notification Manager loaded and ready');

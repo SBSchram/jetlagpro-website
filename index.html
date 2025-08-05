@@ -139,6 +139,83 @@
       }
     </script>
     
+    <!-- Notification Setup Logic -->
+    <script>
+      let notificationManager = null;
+      
+      // Initialize notification features when page loads
+      document.addEventListener('DOMContentLoaded', async () => {
+        // Check if this is likely Android and supports PWA notifications
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isChrome = /Chrome/i.test(navigator.userAgent);
+        const supportsPWA = 'serviceWorker' in navigator && 'PushManager' in window;
+        
+        if (isAndroid && isChrome && supportsPWA) {
+          console.log('📱 Android PWA detected - showing notification setup');
+          
+          // Show notification setup section
+          const notificationSection = document.getElementById('notification-setup');
+          if (notificationSection) {
+            notificationSection.style.display = 'block';
+          }
+          
+          // Initialize notification manager
+          notificationManager = new NotificationManager();
+          
+          // Setup event listeners
+          setupNotificationEventListeners();
+        }
+      });
+      
+      function setupNotificationEventListeners() {
+        const enableBtn = document.getElementById('enable-notifications');
+        const testBtn = document.getElementById('test-notification');
+        const statusDiv = document.getElementById('notification-status');
+        
+        if (enableBtn) {
+          enableBtn.addEventListener('click', async () => {
+            try {
+              enableBtn.disabled = true;
+              enableBtn.textContent = 'Requesting Permission...';
+              statusDiv.textContent = 'Requesting notification permission...';
+              
+              const granted = await notificationManager.requestPermission();
+              
+              if (granted) {
+                statusDiv.textContent = '✅ Notifications enabled! You will receive reminders every 2 hours during your trips.';
+                enableBtn.style.display = 'none';
+                testBtn.style.display = 'inline-block';
+                
+                // Initialize push subscription
+                await notificationManager.initializePushSubscription();
+              } else {
+                statusDiv.textContent = '❌ Notification permission denied. You can enable it later in your browser settings.';
+                enableBtn.disabled = false;
+                enableBtn.textContent = 'Enable Notifications';
+              }
+            } catch (error) {
+              console.error('Notification setup error:', error);
+              statusDiv.textContent = '⚠️ There was an issue setting up notifications. Please try again.';
+              enableBtn.disabled = false;
+              enableBtn.textContent = 'Enable Notifications';
+            }
+          });
+        }
+        
+        if (testBtn) {
+          testBtn.addEventListener('click', async () => {
+            try {
+              await notificationManager.testNotification();
+              statusDiv.textContent = '🔔 Test notification sent! Check your notifications.';
+            } catch (error) {
+              console.error('Test notification error:', error);
+              statusDiv.textContent = '⚠️ Could not send test notification.';
+            }
+          });
+        }
+      }
+    </script>
+    
     <!-- Google Translate -->
     <script type="text/javascript">
       function googleTranslateElementInit() {
@@ -151,6 +228,9 @@
       }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Notification Manager -->
+    <script src="notifications.js"></script>
 
     <main>
         <section class="hero-simple">
@@ -160,6 +240,21 @@
                 <div class="hero-buttons">
                     <a href="demo/" class="btn btn-primary">Try Interactive Demo</a>
                     <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-secondary" target="_blank">Join Beta</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notification Setup (Android PWA) -->
+        <section id="notification-setup" class="notification-section" style="display: none;">
+            <div class="container">
+                <div class="notification-card">
+                    <h3>📱 Enable Jet Lag Reminders</h3>
+                    <p>Get automatic notifications every 2 hours to stay on schedule with your acupressure points.</p>
+                    <div class="notification-buttons">
+                        <button id="enable-notifications" class="btn-primary">Enable Notifications</button>
+                        <button id="test-notification" class="btn-secondary" style="display: none;">Test Notification</button>
+                    </div>
+                    <div id="notification-status" class="notification-status"></div>
                 </div>
             </div>
         </section>

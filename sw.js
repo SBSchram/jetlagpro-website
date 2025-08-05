@@ -1,5 +1,5 @@
 // JetLagPro Service Worker
-// Enables offline functionality and PWA features
+// Enables offline functionality, PWA features, and push notifications
 
 const CACHE_NAME = 'jetlagpro-v1';
 const OFFLINE_URL = './offline.html';
@@ -211,6 +211,76 @@ self.addEventListener('notificationclick', event => {
       self.clients.openWindow('/')
     );
   }
+});
+
+// Push notification event handlers
+self.addEventListener('push', event => {
+  console.log('📬 Push notification received:', event);
+  
+  if (event.data) {
+    const data = event.data.json();
+    console.log('📋 Push data:', data);
+    
+    const options = {
+      body: data.body || 'Time for your next acupressure point!',
+      icon: './assets/images/app-icon.png',
+      badge: './assets/images/app-icon.png',
+      tag: 'jetlagpro-reminder',
+      requireInteraction: true,
+      actions: [
+        {
+          action: 'open',
+          title: 'Open App',
+          icon: './assets/images/app-icon.png'
+        },
+        {
+          action: 'dismiss',
+          title: 'Dismiss'
+        }
+      ],
+      data: {
+        url: data.url || './',
+        pointName: data.pointName || '',
+        timestamp: Date.now()
+      }
+    };
+    
+    event.waitUntil(
+      self.registration.showNotification(data.title || 'JetLagPro Reminder', options)
+    );
+  }
+});
+
+// Handle notification clicks
+self.addEventListener('notificationclick', event => {
+  console.log('🔔 Notification clicked:', event);
+  
+  event.notification.close();
+  
+  if (event.action === 'open' || !event.action) {
+    // Open the app
+    event.waitUntil(
+      clients.matchAll({ type: 'window' }).then(clientList => {
+        // Check if app is already open
+        for (const client of clientList) {
+          if (client.url.includes('jetlagpro.com') && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // Open new window if app not open
+        if (clients.openWindow) {
+          return clients.openWindow(event.notification.data.url || './');
+        }
+      })
+    );
+  }
+  
+  // Log interaction for analytics
+  console.log('🎯 Notification interaction:', {
+    action: event.action,
+    pointName: event.notification.data.pointName,
+    timestamp: event.notification.data.timestamp
+  });
 });
 
 console.log('🔥 JetLagPro Service Worker loaded');

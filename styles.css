@@ -110,6 +110,96 @@ body {
     top: 0 !important;
 }
 
+/* Notification Setup Section */
+.notification-section {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.notification-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.notification-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+    color: white;
+}
+
+.notification-card p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.notification-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.notification-buttons .btn-primary {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.notification-buttons .btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.notification-buttons .btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.notification-buttons .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.notification-status {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    min-height: 20px;
+}
+
+@media (max-width: 768px) {
+    .notification-card {
+        padding: 30px 20px;
+    }
+    
+    .notification-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .notification-buttons button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
 /* Hero Section */
 .hero {
     padding: 120px 0 80px;
