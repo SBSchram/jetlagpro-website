@@ -110,15 +110,22 @@ class NotificationManager {
   }
 
   // Schedule local notifications for jet lag reminders
+  // travelData should include: { destinationCode: 'LAX', destinationTimezone: 'America/Los_Angeles' }
   scheduleJetLagReminders(travelData) {
     if (!this.registration || this.permission !== 'granted') {
       console.warn('⚠️ Cannot schedule notifications - permission not granted');
       return;
     }
 
-    console.log('⏰ Scheduling jet lag reminders:', travelData);
+    // Validate required travel data
+    if (!travelData.destinationTimezone) {
+      console.error('❌ Missing destinationTimezone in travel data');
+      return;
+    }
 
-    // Calculate notification times based on travel data
+    console.log('⏰ Scheduling jet lag reminders for destination:', travelData);
+
+    // Calculate notification times based on destination timezone
     const notificationTimes = this.calculateNotificationTimes(travelData);
     
     // Schedule each notification
@@ -126,30 +133,58 @@ class NotificationManager {
       this.scheduleNotification(notif, index);
     });
 
-    console.log(`✅ Scheduled ${notificationTimes.length} notifications`);
+    console.log(`✅ Scheduled ${notificationTimes.length} notifications for ${travelData.destinationCode}`);
   }
 
-  // Calculate when notifications should fire
+  // Calculate when notifications should fire (matches iOS app logic)
   calculateNotificationTimes(travelData) {
     const notifications = [];
-    const startTime = new Date(travelData.departureTime);
-    const endTime = new Date(startTime.getTime() + (72 * 60 * 60 * 1000)); // 72 hours
     
-    // Create notification every 2 hours
-    for (let time = new Date(startTime); time <= endTime; time.setHours(time.getHours() + 2)) {
-      const pointIndex = Math.floor((time.getTime() - startTime.getTime()) / (2 * 60 * 60 * 1000)) % 12;
-      const points = ['LU-8', 'LI-1', 'ST-36', 'SP-3', 'HT-8', 'SI-5', 'BL-66', 'KI-10', 'PC-8', 'SJ-6', 'GB-41', 'LIV-1'];
+    // Get destination timezone (this should be passed in travelData)
+    const destinationTimezone = travelData.destinationTimezone || 'UTC';
+    const destinationCode = travelData.destinationCode || 'DEST';
+    
+    // Get current time in destination timezone
+    const now = new Date();
+    const destinationTime = new Date(now.toLocaleString("en-US", {timeZone: destinationTimezone}));
+    const currentDestinationHour = destinationTime.getHours();
+    
+    // Calculate next 11 transition times (every 2 hours in destination time)
+    const points = ['LU-8', 'LI-1', 'ST-36', 'SP-3', 'HT-8', 'SI-5', 'BL-66', 'KI-10', 'PC-8', 'SJ-6', 'GB-41', 'LIV-1'];
+    
+    for (let i = 0; i < 11; i++) {
+      // Calculate next notification time in destination timezone
+      const hoursFromNow = (i + 1) * 2;
+      const destinationNotificationTime = new Date(destinationTime.getTime() + (hoursFromNow * 60 * 60 * 1000));
+      
+      // Convert back to local time for scheduling
+      const localNotificationTime = new Date(now.getTime() + (hoursFromNow * 60 * 60 * 1000));
+      
+      // Format destination time for display
+      const destTimeString = destinationNotificationTime.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        hour12: true,
+        timeZone: destinationTimezone
+      });
+      
+      const pointIndex = i % 12;
+      const pointName = points[pointIndex];
       
       notifications.push({
-        time: new Date(time),
-        pointName: points[pointIndex],
-        title: `JetLagPro: ${points[pointIndex]} Time`,
-        body: `Time to stimulate the ${points[pointIndex]} acupressure point. This should take about 30 seconds.`,
+        time: localNotificationTime, // When to trigger (local time)
+        destinationTime: destinationNotificationTime, // What time it is at destination
+        pointName: pointName,
+        title: `It's ${destTimeString} at ${destinationCode}`, // Matches iOS format
+        body: `Time to stimulate the ${pointName} acupressure point.`,
         tag: `jetlag-${pointIndex}`,
-        url: `./demo/index.html?point=${points[pointIndex]}`
+        url: `./demo/index.html?point=${pointName}`,
+        transitionNumber: i + 1,
+        destinationCode: destinationCode,
+        destinationTimezone: destinationTimezone
       });
     }
     
+    console.log(`📋 Calculated ${notifications.length} notifications for ${destinationCode} (${destinationTimezone})`);
     return notifications;
   }
 
@@ -194,15 +229,22 @@ class NotificationManager {
     }
   }
 
-  // Test notification
+  // Test notification (shows format similar to actual notifications)
   async testNotification() {
     if (this.permission !== 'granted') {
       throw new Error('Notification permission not granted');
     }
 
+    // Show test notification in the same format as real notifications
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      hour12: true
+    });
+
     await this.showLocalNotification({
-      title: 'JetLagPro Test',
-      body: 'Notifications are working! You\'ll receive reminders every 2 hours during your trip.',
+      title: `It's ${timeString} at TEST`,
+      body: 'Notifications are working! You\'ll receive reminders every 2 hours based on your destination timezone.',
       tag: 'test-notification',
       pointName: 'TEST',
       url: './'
