@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jet Lag Research & Travel Health Blog | JetLagPro</title>
+    <meta name="description" content="Expert insights on jet lag research, chronoacupuncture studies, and travel health tips. Stay updated on the latest developments in circadian rhythm science.">
+    <meta name="keywords" content="jet lag research, chronoacupuncture blog, travel health, circadian rhythm studies, acupressure research, travel medicine">
+    <link rel="canonical" href="https://jetlagpro.com/blog/">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main-header"></div>
+    <script>
+      fetch('../header.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-header').innerHTML = html; });
+    </script>
+
+    <main>
+        <section class="hero-simple">
+            <div class="container">
+                <h1>JetLagPro Research & Travel Health Blog</h1>
+                <p class="hero-subtitle">Expert insights on chronoacupuncture, circadian science, and natural jet lag solutions</p>
+            </div>
+        </section>
+
+        <section class="blog-posts">
+            <div class="container">
+                <div class="blog-grid">
+                    
+                    <article class="blog-post">
+                        <h2><a href="why-your-body-clock-gets-confused.html">Why Your Body Clock Gets Confused When You Travel</a></h2>
+                        <p class="blog-meta">December 30, 2024 • Dr. Steven Schram</p>
+                        <p>Understanding the science behind jet lag helps explain why traditional approaches often fail and how chronoacupuncture offers a more effective solution...</p>
+                        <a href="why-your-body-clock-gets-confused.html" class="read-more">Read Full Article →</a>
+                    </article>
+
+                    <article class="blog-post">
+                        <h2><a href="science-behind-chronoacupuncture.html">The Science Behind Chronoacupuncture for Jet Lag</a></h2>
+                        <p class="blog-meta">December 28, 2024 • Dr. Steven Schram</p>
+                        <p>Chronoacupuncture combines ancient Chinese medicine wisdom with modern understanding of circadian rhythms. Here's how it works...</p>
+                        <a href="science-behind-chronoacupuncture.html" class="read-more">Read Full Article →</a>
+                    </article>
+
+                    <article class="blog-post">
+                        <h2><a href="12-acupressure-points-reset-circadian-rhythm.html">12 Acupressure Points That Reset Your Circadian Rhythm</a></h2>
+                        <p class="blog-meta">December 26, 2024 • Dr. Steven Schram</p>
+                        <p>Learn about the specific horary points used in chronoacupuncture and how each one corresponds to different times of day...</p>
+                        <a href="12-acupressure-points-reset-circadian-rhythm.html" class="read-more">Read Full Article →</a>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="main-footer"></div>
+    <script>
+      fetch('../footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
+
+    <style>
+        .blog-posts {
+            padding: 80px 0;
+        }
+        
+        .blog-grid {
+            display: grid;
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .blog-post {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .blog-post h2 {
+            margin-bottom: 10px;
+        }
+        
+        .blog-post h2 a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+        
+        .blog-post h2 a:hover {
+            color: #2563eb;
+        }
+        
+        .blog-meta {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .read-more {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .read-more:hover {
+            text-decoration: underline;
+        }
+    </style>
+</body>
+</html>

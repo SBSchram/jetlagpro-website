@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /demo/
+Allow: /science.html
+Allow: /travel-tips.html
+Allow: /research-paper.html
+
+# Sitemap location
+Sitemap: https://jetlagpro.com/sitemap.xml
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
