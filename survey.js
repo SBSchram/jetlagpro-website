@@ -284,7 +284,7 @@ function setupFormListeners() {
 
 // Setup navigation between sections
 function setupNavigation() {
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
     
     sections.forEach((sectionId, index) => {
         const section = document.getElementById(sectionId);
@@ -326,7 +326,7 @@ function showSection(sectionId) {
     console.log('📄 Showing section:', sectionId);
     
     // Hide all sections
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
     sections.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
@@ -346,7 +346,7 @@ function showSection(sectionId) {
 
 // Update progress indicator
 function updateProgress(currentSection) {
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
     const currentIndex = sections.indexOf(currentSection);
     const totalSections = sections.length;
     
