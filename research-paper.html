@@ -160,6 +160,11 @@
 </head>
 <body>
     <div id="main-header"></div>
+    <script>
+      fetch('header.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-header').innerHTML = html; });
+    </script>
 
     <div class="print-button-container">
         <button class="print-button" onclick="window.print()">Print Paper</button>
@@ -265,11 +270,10 @@
     </main>
 
     <div id="main-footer"></div>
-
-    <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js"></script>
-
-    <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js"></script>
+    <script>
+      fetch('footer.html')
+        .then(r => r.text())
+        .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
 </body>
 </html>
