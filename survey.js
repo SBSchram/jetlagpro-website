@@ -4,6 +4,55 @@
 let surveyData = {};
 let isCodeValidated = false;
 
+// Security functions for comment sanitization
+function sanitizeComment(input) {
+    if (!input || typeof input !== 'string') {
+        return '';
+    }
+    
+    return input
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/[<>]/g, '')     // Remove < > characters
+        .replace(/javascript:/gi, '') // Remove javascript: protocol
+        .replace(/on\w+\s*=/gi, '') // Remove event handlers
+        .trim()
+        .substring(0, 1000);      // Limit length
+}
+
+function validateComment(input) {
+    if (!input || typeof input !== 'string') {
+        return { isValid: false, message: 'Invalid input' };
+    }
+    
+    const sanitized = sanitizeComment(input);
+    
+    if (sanitized.length === 0) {
+        return { isValid: true, message: 'Comment is optional' };
+    }
+    
+    if (sanitized.length < 10) {
+        return { isValid: false, message: 'Comment must be at least 10 characters long' };
+    }
+    
+    // Check for suspicious patterns
+    const suspiciousPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /eval\s*\(/i,
+        /document\./i,
+        /window\./i
+    ];
+    
+    for (const pattern of suspiciousPatterns) {
+        if (pattern.test(sanitized)) {
+            return { isValid: false, message: 'Comment contains invalid content' };
+        }
+    }
+    
+    return { isValid: true, message: 'Comment is valid' };
+}
+
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 LJLQ Survey Initializing...');
@@ -13,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Always initialize survey (but submission will be disabled without code)
     initializeSurvey();
+    
+    // Initialize comment section
+    initializeCommentSection();
     
     console.log('✅ LJLQ Survey initialized');
 });
@@ -58,6 +110,51 @@ function setupCodeValidation() {
     console.log('✅ Code validation setup complete');
 }
 
+// Initialize comment section with character counter and validation
+function initializeCommentSection() {
+    console.log('💬 Initializing comment section...');
+    
+    const commentTextarea = document.getElementById('userComment');
+    const charCounter = document.getElementById('commentCharCount');
+    
+    if (!commentTextarea || !charCounter) {
+        console.error('❌ Comment section elements not found');
+        return;
+    }
+    
+    // Character counter
+    commentTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        charCounter.textContent = currentLength;
+        
+        // Visual feedback for character limit
+        if (currentLength > 900) {
+            charCounter.style.color = '#dc2626'; // Red
+        } else if (currentLength > 800) {
+            charCounter.style.color = '#f59e0b'; // Orange
+        } else {
+            charCounter.style.color = '#6b7280'; // Gray
+        }
+    });
+    
+    // Real-time validation
+    commentTextarea.addEventListener('blur', function() {
+        const validation = validateComment(this.value);
+        if (!validation.isValid && this.value.trim().length > 0) {
+            this.style.borderColor = '#dc2626';
+            // Could add a validation message here if needed
+        } else {
+            this.style.borderColor = '#d1d5db';
+        }
+    });
+    
+    // Disable initially (will be enabled with code validation)
+    commentTextarea.disabled = true;
+    commentTextarea.style.opacity = '0.5';
+    
+    console.log('✅ Comment section initialized');
+}
+
 // Enable survey submission when code is validated
 function enableSurveySubmission() {
     console.log('✅ Enabling survey submission...');
@@ -65,6 +162,7 @@ function enableSurveySubmission() {
     // Enable all form inputs
     const allSelects = document.querySelectorAll('select');
     const allInputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    const commentTextarea = document.getElementById('userComment');
     
     allSelects.forEach(select => {
         select.disabled = false;
@@ -75,6 +173,12 @@ function enableSurveySubmission() {
         input.disabled = false;
         input.style.opacity = '1';
     });
+    
+    // Enable comment textarea
+    if (commentTextarea) {
+        commentTextarea.disabled = false;
+        commentTextarea.style.opacity = '1';
+    }
     
     // Enable submit button
     const submitBtn = document.querySelector('.btn-submit');
@@ -94,6 +198,7 @@ function disableSurveySubmission() {
     // Disable all form inputs
     const allSelects = document.querySelectorAll('select');
     const allInputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    const commentTextarea = document.getElementById('userComment');
     
     allSelects.forEach(select => {
         select.disabled = true;
@@ -104,6 +209,12 @@ function disableSurveySubmission() {
         input.disabled = true;
         input.style.opacity = '0.5';
     });
+    
+    // Disable comment textarea
+    if (commentTextarea) {
+        commentTextarea.disabled = true;
+        commentTextarea.style.opacity = '0.5';
+    }
     
     // Disable submit button
     const submitBtn = document.querySelector('.btn-submit');
@@ -268,6 +379,15 @@ function saveFormData() {
         }
     });
     
+    // Save comment data
+    const commentTextarea = document.getElementById('userComment');
+    if (commentTextarea) {
+        const commentValue = commentTextarea.value.trim();
+        if (commentValue) {
+            surveyData.userComment = commentValue;
+        }
+    }
+    
     // Save to localStorage
     localStorage.setItem('ljlqSurveyData', JSON.stringify(surveyData));
     console.log('✅ Form data saved:', surveyData);
@@ -302,6 +422,19 @@ function populateForms() {
             select.value = surveyData[key];
         }
     });
+    
+    // Restore comment if saved
+    if (surveyData.userComment) {
+        const commentTextarea = document.getElementById('userComment');
+        if (commentTextarea) {
+            commentTextarea.value = surveyData.userComment;
+            // Update character counter
+            const charCounter = document.getElementById('commentCharCount');
+            if (charCounter) {
+                charCounter.textContent = surveyData.userComment.length;
+            }
+        }
+    }
     
     console.log('✅ Forms populated');
 }
@@ -389,15 +522,27 @@ async function exportSurveyData() {
         
         if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc && window.firebaseServerTimestamp) {
             console.log('🚀 Attempting Firestore save...');
+            
+            // Prepare data with sanitized comment
+            const firestoreData = {
+                surveyCode: surveyCode,
+                timestamp: window.firebaseServerTimestamp(),
+                submittedAt: timestamp,
+                responses: surveyData,
+                version: 'ljlq_v1'
+            };
+            
+            // Add sanitized comment if present
+            if (surveyData.userComment) {
+                const sanitizedComment = sanitizeComment(surveyData.userComment);
+                if (sanitizedComment) {
+                    firestoreData.comment = sanitizedComment;
+                }
+            }
+            
             const docRef = await window.firebaseAddDoc(
                 window.firebaseCollection(window.firebaseDB, 'survey_responses'), 
-                {
-                    surveyCode: surveyCode,
-                    timestamp: window.firebaseServerTimestamp(),
-                    submittedAt: timestamp,
-                    responses: surveyData,
-                    version: 'ljlq_v1'
-                }
+                firestoreData
             );
             console.log('✅ Survey saved to Firestore with ID:', docRef.id);
         } else {
@@ -422,7 +567,7 @@ function showCompletion() {
     console.log('🎉 Showing completion message...');
     
     // Hide all sections
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection'];
+    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
     sections.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
