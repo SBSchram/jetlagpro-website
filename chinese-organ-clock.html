@@ -13,11 +13,6 @@
 </head>
 <body>
     <div id="main-header"></div>
-    <script>
-        fetch('header.html')
-            .then(r => r.text())
-            .then(html => { document.getElementById('main-header').innerHTML = html; });
-    </script>
 
     <main>
         <section class="hero-simple">
@@ -101,5 +96,8 @@
             <p>&copy; 2025 JetLagPro. Developed by Dr. Steven Schram, PhD, DC, LAc.</p>
         </div>
     </footer>
+
+    <!-- Centralized Components (Header/Footer) -->
+    <script src="js/components.js"></script>
 </body>
 </html> 
