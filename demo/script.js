@@ -500,7 +500,7 @@ class JetLagProDemo {
                                 <img src="../assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
                             </div>
                             <div class="point-video">
-                                <video controls preload="metadata" autoplay loop muted>
+                                <video preload="metadata" autoplay loop muted playsinline>
                                     <source src="../assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
