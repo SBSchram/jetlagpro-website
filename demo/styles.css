@@ -654,6 +654,12 @@ body {
         background: #2c2c2e;
     }
     
+    .instruction-text,
+    .tip-text,
+    .notification-text {
+        color: #ffffff;
+    }
+    
     .search-input {
         background: #2c2c2e;
         border-color: #38383a;
