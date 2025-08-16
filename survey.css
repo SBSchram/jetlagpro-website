@@ -63,6 +63,23 @@
     color: #6b7280;
 }
 
+/* Flight Landing Time Validation Styles */
+.context-row input[type="datetime-local"].valid {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.context-row input[type="datetime-local"].invalid {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.context-row input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
 
 .hero-simple h1 {
     font-size: 32px;

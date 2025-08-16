@@ -66,8 +66,66 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize comment section
     initializeCommentSection();
     
+    // Setup flight landing time validation
+    setupFlightLandingValidation();
+    
     console.log('✅ LJLQ Survey initialized');
 });
+
+// Setup flight landing time validation
+function setupFlightLandingValidation() {
+    console.log('✈️ Setting up flight landing time validation...');
+    
+    const flightLandingInput = document.querySelector('input[name="flight_landing_time"]');
+    
+    if (!flightLandingInput) {
+        console.error('❌ Flight landing time input not found');
+        return;
+    }
+    
+    // Set max attribute to current date/time to prevent future dates
+    const now = new Date();
+    const nowString = now.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
+    flightLandingInput.setAttribute('max', nowString);
+    
+    // Add real-time validation
+    flightLandingInput.addEventListener('input', function() {
+        validateFlightLandingTime(this);
+    });
+    
+    // Add blur validation for immediate feedback
+    flightLandingInput.addEventListener('blur', function() {
+        validateFlightLandingTime(this);
+    });
+    
+    console.log('✅ Flight landing time validation setup complete');
+}
+
+// Validate flight landing time
+function validateFlightLandingTime(input) {
+    const value = input.value;
+    const now = new Date();
+    
+    // Remove any existing validation styling
+    input.classList.remove('valid', 'invalid');
+    
+    if (!value) {
+        // Field is empty, no validation needed yet
+        return;
+    }
+    
+    const selectedDate = new Date(value);
+    
+    if (selectedDate > now) {
+        // Future date selected
+        input.classList.add('invalid');
+        input.title = 'Flight landing time cannot be in the future';
+    } else {
+        // Valid date
+        input.classList.add('valid');
+        input.title = '';
+    }
+}
 
 // Setup survey code validation
 function setupCodeValidation() {
