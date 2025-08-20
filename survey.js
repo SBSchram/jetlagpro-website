@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup code validation first
     setupCodeValidation();
     
+    // Auto-fill survey code from URL parameter
+    autoFillSurveyCode();
+    
     // Always initialize survey (but submission will be disabled without code)
     initializeSurvey();
     
@@ -71,6 +74,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ LJLQ Survey initialized');
 });
+
+// Auto-fill survey code from URL parameter
+function autoFillSurveyCode() {
+    console.log('🔗 Checking for survey code in URL...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    
+    if (code) {
+        console.log('✅ Found survey code in URL:', code);
+        const surveyCodeInput = document.getElementById('surveyCode');
+        if (surveyCodeInput) {
+            surveyCodeInput.value = code.toUpperCase();
+            
+            // Auto-validate the code
+            setTimeout(() => {
+                const validateBtn = document.getElementById('validateCode');
+                if (validateBtn) {
+                    validateBtn.click();
+                }
+            }, 500); // Small delay to ensure everything is loaded
+        }
+    } else {
+        console.log('ℹ️ No survey code found in URL');
+    }
+}
 
 // Setup flight landing time validation
 function setupFlightLandingValidation() {
