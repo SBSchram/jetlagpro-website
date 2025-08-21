@@ -88,14 +88,35 @@ function setupScaleSliders() {
             const selectedValue = this.value;
             const selectedValueDiv = this.parentElement.querySelector('.selected-value');
             if (selectedValueDiv) {
-                selectedValueDiv.textContent = `Selected: ${selectedValue}`;
+                // Handle duration sliders (show "X days")
+                if (this.name.includes('duration')) {
+                    if (selectedValue === '0') {
+                        selectedValueDiv.textContent = 'Selected: 0 days';
+                    } else if (selectedValue === '5') {
+                        selectedValueDiv.textContent = 'Selected: 5+ days';
+                    } else {
+                        selectedValueDiv.textContent = `Selected: ${selectedValue} day${selectedValue === '1' ? '' : 's'}`;
+                    }
+                } else {
+                    selectedValueDiv.textContent = `Selected: ${selectedValue}`;
+                }
             }
         });
         
         // Initialize display
         const selectedValueDiv = slider.parentElement.querySelector('.selected-value');
         if (selectedValueDiv) {
-            selectedValueDiv.textContent = `Selected: ${slider.value}`;
+            if (slider.name.includes('duration')) {
+                if (slider.value === '0') {
+                    selectedValueDiv.textContent = 'Selected: 0 days';
+                } else if (slider.value === '5') {
+                    selectedValueDiv.textContent = 'Selected: 5+ days';
+                } else {
+                    selectedValueDiv.textContent = `Selected: ${slider.value} day${slider.value === '1' ? '' : 's'}`;
+                }
+            } else {
+                selectedValueDiv.textContent = `Selected: ${slider.value}`;
+            }
         }
     });
 }

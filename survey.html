@@ -111,43 +111,47 @@
                         </div>
                         <div class="symptom-row">
                           <label>Daytime fatigue</label>
-                          <select name="baseline_fatigue">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
+                          <div class="scale-container">
+                            <input type="range" name="baseline_fatigue" min="1" max="5" value="1" class="scale-slider">
+                            <div class="scale-labels">
+                              <span>1 - None</span>
+                              <span>5 - Very Severe</span>
+                            </div>
+                            <div class="selected-value">Selected: 1</div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Difficulty concentrating</label>
-                          <select name="baseline_concentration">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
+                          <div class="scale-container">
+                            <input type="range" name="baseline_concentration" min="1" max="5" value="1" class="scale-slider">
+                            <div class="scale-labels">
+                              <span>1 - None</span>
+                              <span>5 - Very Severe</span>
+                            </div>
+                            <div class="selected-value">Selected: 1</div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Irritability</label>
-                          <select name="baseline_irritability">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
+                          <div class="scale-container">
+                            <input type="range" name="baseline_irritability" min="1" max="5" value="1" class="scale-slider">
+                            <div class="scale-labels">
+                              <span>1 - None</span>
+                              <span>5 - Very Severe</span>
+                            </div>
+                            <div class="selected-value">Selected: 1</div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Gastrointestinal issues</label>
-                          <select name="baseline_gi">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
+                          <div class="scale-container">
+                            <input type="range" name="baseline_gi" min="1" max="5" value="1" class="scale-slider">
+                            <div class="scale-labels">
+                              <span>1 - None</span>
+                              <span>5 - Very Severe</span>
+                            </div>
+                            <div class="selected-value">Selected: 1</div>
+                          </div>
                         </div>
                       </form>
                     </section>
@@ -159,93 +163,138 @@
                       <form id="postForm">
                         <div class="symptom-row">
                           <label>Sleep disturbance</label>
-                          <select name="post_sleep_severity">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
-                          <select name="post_sleep_duration">
-                            <option value="0">0 days</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="4">4 days</option>
-                            <option value="5+">5+ days</option>
-                          </select>
+                          <div class="symptom-assessment">
+                            <div class="severity-section">
+                              <h4>Severity:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_sleep_severity" min="1" max="5" value="1" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>1 - None</span>
+                                  <span>5 - Very Severe</span>
+                                </div>
+                                <div class="selected-value">Selected: 1</div>
+                              </div>
+                            </div>
+                            <div class="duration-section">
+                              <h4>Duration:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_sleep_duration" min="0" max="5" value="0" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>0 days</span>
+                                  <span>5+ days</span>
+                                </div>
+                                <div class="selected-value">Selected: 0 days</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Daytime fatigue</label>
-                          <select name="post_fatigue_severity">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
-                          <select name="post_fatigue_duration">
-                            <option value="0">0 days</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="4">4 days</option>
-                            <option value="5+">5+ days</option>
-                          </select>
+                          <div class="symptom-assessment">
+                            <div class="severity-section">
+                              <h4>Severity:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_fatigue_severity" min="1" max="5" value="1" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>1 - None</span>
+                                  <span>5 - Very Severe</span>
+                                </div>
+                                <div class="selected-value">Selected: 1</div>
+                              </div>
+                            </div>
+                            <div class="duration-section">
+                              <h4>Duration:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_fatigue_duration" min="0" max="5" value="0" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>0 days</span>
+                                  <span>5+ days</span>
+                                </div>
+                                <div class="selected-value">Selected: 0 days</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Difficulty concentrating</label>
-                          <select name="post_concentration_severity">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
-                          <select name="post_concentration_duration">
-                            <option value="0">0 days</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="4">4 days</option>
-                            <option value="5+">5+ days</option>
-                          </select>
+                          <div class="symptom-assessment">
+                            <div class="severity-section">
+                              <h4>Severity:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_concentration_severity" min="1" max="5" value="1" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>1 - None</span>
+                                  <span>5 - Very Severe</span>
+                                </div>
+                                <div class="selected-value">Selected: 1</div>
+                              </div>
+                            </div>
+                            <div class="duration-section">
+                              <h4>Duration:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_concentration_duration" min="0" max="5" value="0" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>0 days</span>
+                                  <span>5+ days</span>
+                                </div>
+                                <div class="selected-value">Selected: 0 days</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Irritability</label>
-                          <select name="post_irritability_severity">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
-                          <select name="post_irritability_duration">
-                            <option value="0">0 days</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="4">4 days</option>
-                            <option value="5+">5+ days</option>
-                          </select>
+                          <div class="symptom-assessment">
+                            <div class="severity-section">
+                              <h4>Severity:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_irritability_severity" min="1" max="5" value="1" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>1 - None</span>
+                                  <span>5 - Very Severe</span>
+                                </div>
+                                <div class="selected-value">Selected: 1</div>
+                              </div>
+                            </div>
+                            <div class="duration-section">
+                              <h4>Duration:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_irritability_duration" min="0" max="5" value="0" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>0 days</span>
+                                  <span>5+ days</span>
+                                </div>
+                                <div class="selected-value">Selected: 0 days</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Gastrointestinal issues</label>
-                          <select name="post_gi_severity">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
-                          <select name="post_gi_duration">
-                            <option value="0">0 days</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="4">4 days</option>
-                            <option value="5+">5+ days</option>
-                          </select>
+                          <div class="symptom-assessment">
+                            <div class="severity-section">
+                              <h4>Severity:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_gi_severity" min="1" max="5" value="1" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>1 - None</span>
+                                  <span>5 - Very Severe</span>
+                                </div>
+                                <div class="selected-value">Selected: 1</div>
+                              </div>
+                            </div>
+                            <div class="duration-section">
+                              <h4>Duration:</h4>
+                              <div class="scale-container">
+                                <input type="range" name="post_gi_duration" min="0" max="5" value="0" class="scale-slider">
+                                <div class="scale-labels">
+                                  <span>0 days</span>
+                                  <span>5+ days</span>
+                                </div>
+                                <div class="selected-value">Selected: 0 days</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </form>
                     </section>
