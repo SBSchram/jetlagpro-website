@@ -72,8 +72,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup flight landing time validation
     setupFlightLandingValidation();
     
+    // Setup scale sliders
+    setupScaleSliders();
+    
     console.log('✅ LJLQ Survey initialized');
 });
+
+// Setup scale sliders functionality
+function setupScaleSliders() {
+    const sliders = document.querySelectorAll('.scale-slider');
+    
+    sliders.forEach(slider => {
+        // Update display on change
+        slider.addEventListener('input', function() {
+            const selectedValue = this.value;
+            const selectedValueDiv = this.parentElement.querySelector('.selected-value');
+            if (selectedValueDiv) {
+                selectedValueDiv.textContent = `Selected: ${selectedValue}`;
+            }
+        });
+        
+        // Initialize display
+        const selectedValueDiv = slider.parentElement.querySelector('.selected-value');
+        if (selectedValueDiv) {
+            selectedValueDiv.textContent = `Selected: ${slider.value}`;
+        }
+    });
+}
 
 // Auto-fill survey code from URL parameter
 function autoFillSurveyCode() {

@@ -100,13 +100,14 @@
                       <form id="baselineForm">
                         <div class="symptom-row">
                           <label>Sleep disturbance</label>
-                          <select name="baseline_sleep">
-                            <option value="none">None</option>
-                            <option value="mild">Mild</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="severe">Severe</option>
-                            <option value="very_severe">Very severe</option>
-                          </select>
+                          <div class="scale-container">
+                            <input type="range" name="baseline_sleep" min="1" max="5" value="1" class="scale-slider">
+                            <div class="scale-labels">
+                              <span>1 - None</span>
+                              <span>5 - Very Severe</span>
+                            </div>
+                            <div class="selected-value">Selected: 1</div>
+                          </div>
                         </div>
                         <div class="symptom-row">
                           <label>Daytime fatigue</label>
