@@ -158,6 +158,25 @@
                 border: 1px solid #ccc;
                 page-break-inside: avoid;
             }
+            
+            /* Methods section print styling */
+            .methods-screenshots {
+                page-break-inside: avoid;
+                page-break-before: auto;
+                page-break-after: auto;
+            }
+            
+            /* Ensure Methods section doesn't start a new page */
+            h2:has(+ p + .methods-screenshots) {
+                page-break-before: auto;
+            }
+            
+            /* Methods screenshots - keep together on same page when printing */
+            .methods-screenshots {
+                page-break-inside: avoid;
+                page-break-before: auto;
+                page-break-after: auto;
+            }
         }
     </style>
 </head>
@@ -216,7 +235,7 @@
         <h2>Methods</h2>
 		<p>The mobile application provides users with timing and instructions to stimulate specific horary points based on the destination time. Ideally starting at the airport (or anytime thereafter), users select the destination. The app immediately identifies the first active horary point matching the destination time. This process is illustrated below.</p>
 
-		<div style="text-align: center; margin: 30px 0;">
+		<div class="methods-screenshots" style="text-align: center; margin: 30px 0;">
             <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
                 <div style="flex: 1; min-width: 200px; max-width: 250px;">
                     <img src="assets/images/research-photo-1.png" alt="JetLagPro App Screenshot 1" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
