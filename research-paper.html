@@ -187,11 +187,13 @@
                 page-break-inside: avoid;
             }
             
-            /* Methods section print styling */
+            /* Methods section print styling - force images to stay with Methods text */
             .methods-screenshots {
                 page-break-inside: avoid;
                 page-break-before: auto;
                 page-break-after: auto;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
             /* Ensure Methods section doesn't start a new page */
@@ -199,11 +201,17 @@
                 page-break-before: auto;
             }
             
-            /* Methods screenshots - keep together on same page when printing */
-            .methods-screenshots {
+            /* Force Methods section and images to stay together */
+            h2:contains("Methods") + p + .methods-screenshots {
                 page-break-inside: avoid;
                 page-break-before: auto;
                 page-break-after: auto;
+            }
+            
+            /* Allow content to extend into margins if needed */
+            .methods-screenshots img {
+                max-width: 100% !important;
+                height: auto !important;
             }
         }
     </style>
