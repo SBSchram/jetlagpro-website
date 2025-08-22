@@ -298,54 +298,66 @@
 
 		<p>At the end of the trip, a 2 day reminder is set up to ask the user to complete our survey on the website. Survey questions were based on and inspired by many jet lag questionnaires such as the Liverpool Questionaire, Columbia Jet Lag Scale, and symptom domains used in published studies. Participation is voluntary but encouraged by presenting a reward for free lifetime use of the app. This is limited to 1000 respondants, which should be enough for a valid statistical analysis.</p>
 
-        <div style="margin: 30px 0; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #2563eb;">
+        <div style="margin: 30px 0; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
             <h3>Survey Questions</h3>
             <p style="margin-bottom: 20px; font-style: italic;">The following questions are used to assess jet lag symptoms and treatment effectiveness:</p>
             
-            <h4>Section 1: Pre-Travel Baseline</h4>
-            <p style="margin-bottom: 10px;">Please rate your typical symptoms before this trip (1-5 scale: None to Severe):</p>
-            <ul style="margin-bottom: 20px;">
-                <li>Sleep disturbance</li>
-                <li>Daytime fatigue</li>
-                <li>Difficulty concentrating</li>
-                <li>Irritability</li>
-                <li>Gastrointestinal issues</li>
-            </ul>
-
-            <h4>Section 2: Post-Travel Assessment</h4>
-            <p style="margin-bottom: 10px;">Please rate your symptoms after this trip and how long they lasted:</p>
-            <ul style="margin-bottom: 20px;">
-                <li>Sleep disturbance (severity: 1-5 scale, duration: 0-5+ days)</li>
-                <li>Daytime fatigue (severity: 1-5 scale, duration: 0-5+ days)</li>
-                <li>Difficulty concentrating (severity: 1-5 scale, duration: 0-5+ days)</li>
-                <li>Irritability (severity: 1-5 scale, duration: 0-5+ days)</li>
-                <li>Gastrointestinal issues (severity: 1-5 scale, duration: 0-5+ days)</li>
-            </ul>
-
-            <h4>Section 3: Travel Context</h4>
-            <ul style="margin-bottom: 20px;">
-                <li>When did your flight land (date & time)?</li>
-                <li>Direction of travel (Eastward/Westward/Both/Not sure)</li>
-                <li>Number of time zones crossed (3-12+)</li>
-                <li>Flight duration (&lt;6h, 6–9h, 9–12h, 12–15h, 15h+)</li>
-                <li>Did you use the JetLagPro app for this trip? (Yes/No)</li>
-                <li>How many points did you stimulate during the flight? (0, 1–3, 4–6, 7–9, 10–12)</li>
-                <li>How many points did you stimulate after arrival? (0, 1–3, 4–6, 7–9, 10–12)</li>
-                <li>Did you sleep during the flight? (Yes/No)</li>
-                <li>If yes, how many points did you miss while sleeping? (0, 1–3, 4–6, 7–12)</li>
-            </ul>
-
-            <h4>Section 4: Demographics (Optional)</h4>
-            <ul style="margin-bottom: 20px;">
-                <li>Age range (&lt;18, 18–24, 25–34, 35–44, 45–54, 55–64, 65+)</li>
-                <li>Gender (Male/Female/Non-binary/Prefer not to say)</li>
-                <li>Travel experience (Novice/Occasional/Frequent/Very frequent)</li>
-                <li>Geographic region (North America/Europe/Asia/Oceania/Africa/South America/Other)</li>
-                <li>Primary travel purpose (Business/Leisure/Family/Other)</li>
-            </ul>
-
-            <h4>Section 5: Additional Comments (Optional)</h4>
-            <p>Open text field for additional feedback about chronoacupuncture experience and jet lag management.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <div>
+                    <h4>Section 1: Pre-Travel Baseline</h4>
+                    <p style="margin-bottom: 10px;">Please rate your typical symptoms before this trip (1-5 scale: None to Severe):</p>
+                    <ul style="margin-bottom: 20px;">
+                        <li>Sleep disturbance</li>
+                        <li>Daytime fatigue</li>
+                        <li>Difficulty concentrating</li>
+                        <li>Irritability</li>
+                        <li>Gastrointestinal issues</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Section 2: Post-Travel Assessment</h4>
+                    <p style="margin-bottom: 10px;">Please rate your symptoms after this trip and how long they lasted:</p>
+                    <ul style="margin-bottom: 20px;">
+                        <li>Sleep disturbance (severity: 1-5 scale, duration: 0-5+ days)</li>
+                        <li>Daytime fatigue (severity: 1-5 scale, duration: 0-5+ days)</li>
+                        <li>Difficulty concentrating (severity: 1-5 scale, duration: 0-5+ days)</li>
+                        <li>Irritability (severity: 1-5 scale, duration: 0-5+ days)</li>
+                        <li>Gastrointestinal issues (severity: 1-5 scale, duration: 0-5+ days)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Section 3: Travel Context</h4>
+                    <ul style="margin-bottom: 20px;">
+                        <li>When did your flight land (date & time)?</li>
+                        <li>Direction of travel (Eastward/Westward/Both/Not sure)</li>
+                        <li>Number of time zones crossed (3-12+)</li>
+                        <li>Flight duration (&lt;6h, 6–9h, 9–12h, 12–15h, 15h+)</li>
+                        <li>Did you use the JetLagPro app for this trip? (Yes/No)</li>
+                        <li>How many points did you stimulate during the flight? (0, 1–3, 4–6, 7–9, 10–12)</li>
+                        <li>How many points did you stimulate after arrival? (0, 1–3, 4–6, 7–9, 10–12)</li>
+                        <li>Did you sleep during the flight? (Yes/No)</li>
+                        <li>If yes, how many points did you miss while sleeping? (0, 1–3, 4–6, 7–12)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Section 4: Demographics (Optional)</h4>
+                    <ul style="margin-bottom: 20px;">
+                        <li>Age range (&lt;18, 18–24, 25–34, 35–44, 45–54, 55–64, 65+)</li>
+                        <li>Gender (Male/Female/Non-binary/Prefer not to say)</li>
+                        <li>Travel experience (Novice/Occasional/Frequent/Very frequent)</li>
+                        <li>Geographic region (North America/Europe/Asia/Oceania/Africa/South America/Other)</li>
+                        <li>Primary travel purpose (Business/Leisure/Family/Other)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                <h4>Section 5: Additional Comments (Optional)</h4>
+                <p>Open text field for additional feedback about chronoacupuncture experience and jet lag management.</p>
+            </div>
         </div>
 
         <p>This exploratory study aims to gather preliminary statistical evidence across diverse travel conditions, addressing the absence of formal chronoacupuncture studies. While anecdotal reports from acupuncturists suggest efficacy, this platform seeks to validate or refute chronoacupuncture as a non-pharmacological tool for jet lag management.</p>
