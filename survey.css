@@ -6,13 +6,50 @@
     padding: 0;
     background: transparent;
     border: none;
+    position: relative;
+}
+
+/* Add bubbles along the slider track */
+.scale-container::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+        to right,
+        #e5e7eb 0%,
+        #e5e7eb calc(20% - 3px),
+        #d1d5db calc(20% - 3px),
+        #d1d5db 20%,
+        #e5e7eb 20%,
+        #e5e7eb calc(40% - 3px),
+        #d1d5db calc(40% - 3px),
+        #d1d5db 40%,
+        #e5e7eb 40%,
+        #e5e7eb calc(60% - 3px),
+        #d1d5db calc(60% - 3px),
+        #d1d5db 60%,
+        #e5e7eb 60%,
+        #e5e7eb calc(80% - 3px),
+        #d1d5db calc(80% - 3px),
+        #d1d5db 80%,
+        #e5e7eb 80%,
+        #e5e7eb calc(100% - 3px),
+        #d1d5db calc(100% - 3px),
+        #d1d5db 100%
+    );
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .scale-slider {
     width: 100%;
     height: 6px;
     border-radius: 3px;
-    background: #e5e7eb;
+    background: transparent;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
@@ -20,10 +57,11 @@
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
+    z-index: 2;
 }
 
 .scale-slider:focus {
-    background: #d1d5db;
+    /* Focus state handled by the pseudo-element */
 }
 
 .scale-slider::-webkit-slider-thumb {
@@ -98,26 +136,15 @@
     padding-right: 0;
 }
 
-/* Google Forms Style Selected Value */
-.selected-value {
-    text-align: center;
-    font-weight: 500;
-    color: #1a73e8;
-    margin-top: 15px;
-    font-size: 16px;
-    background: #e8f0fe;
-    padding: 8px 16px;
-    border-radius: 6px;
-    display: inline-block;
-    min-width: 100px;
-}
+/* Removed selected-value styling - no longer needed with visual bubbles */
 
-/* Modern Symptom Assessment Layout */
+/* Modern Symptom Assessment Layout - Horizontal */
 .symptom-assessment {
     display: flex;
-    flex-direction: column;
-    gap: 25px;
+    flex-direction: row;
+    gap: 30px;
     margin-top: 20px;
+    align-items: flex-start;
 }
 
 .severity-section,
@@ -128,6 +155,8 @@
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
+    flex: 1;
+    min-width: 0; /* Allow flex items to shrink */
 }
 
 .severity-section:hover,
@@ -193,6 +222,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .symptom-assessment {
+        flex-direction: column;
         gap: 20px;
     }
     
