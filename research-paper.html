@@ -112,6 +112,23 @@
                 padding-top: 0 !important;
             }
             
+            /* Target the specific inline style */
+            main[style*="padding-top: 120px"] {
+                padding-top: 0 !important;
+            }
+            
+            /* Reset all margins and padding for print */
+            body, html {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Ensure research paper starts at top */
+            .research-paper {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            
             /* Hide header and print button when printing */
             #main-header,
             .print-button-container {
