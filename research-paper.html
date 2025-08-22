@@ -170,7 +170,6 @@
             }
             
             /* Keep headings with following content */
-            .research-paper h1,
             .research-paper h2,
             .research-paper h3 {
                 page-break-after: avoid;
@@ -180,7 +179,8 @@
             
             /* Ensure proper spacing for print */
             .research-paper h1 {
-                margin-top: 0;
+                margin-top: 0 !important;
+                margin-bottom: 10px;
             }
             
             /* Keep lists together when possible */
