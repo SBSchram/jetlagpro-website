@@ -161,6 +161,17 @@
                 page-break-inside: avoid;
             }
             
+            /* Keep survey section headings with their content */
+            .research-paper h4 {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            /* Keep survey sections together */
+            .research-paper div[style*="display: grid"] {
+                page-break-inside: avoid;
+            }
+            
             /* Keep headings with following content */
             .research-paper h2,
             .research-paper h3 {
