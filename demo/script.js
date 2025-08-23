@@ -500,7 +500,7 @@ class JetLagProDemo {
                                 <img src="../assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
                             </div>
                             <div class="point-video">
-                                <video preload="metadata" autoplay loop muted playsinline>
+                                <video preload="metadata" muted playsinline controls disablePictureInPicture webkit-playsinline>
                                     <source src="../assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
@@ -531,6 +531,9 @@ class JetLagProDemo {
         }).join('');
 
         DOM.setHTML('pointsList', pointsHTML);
+        
+        // Add comprehensive video management to prevent mobile Safari issues
+        this.setupVideoManagement();
     }
 
     getOrderedPoints() {
@@ -1107,4 +1110,74 @@ document.addEventListener('keydown', (e) => {
 // Add touch support for mobile devices
 if ('ontouchstart' in window) {
     document.addEventListener('touchstart', () => {}, {passive: true});
+}
+
+// Comprehensive video management to prevent fullscreen issues
+function setupVideoManagement() {
+    const videos = document.querySelectorAll('video');
+    
+    videos.forEach(video => {
+        // Prevent fullscreen on any event
+        video.addEventListener('webkitbeginfullscreen', (e) => {
+            e.preventDefault();
+            video.webkitExitFullscreen();
+        });
+        
+        video.addEventListener('webkitendfullscreen', (e) => {
+            e.preventDefault();
+        });
+        
+        video.addEventListener('fullscreenchange', (e) => {
+            if (document.fullscreenElement === video) {
+                document.exitFullscreen();
+            }
+        });
+        
+        video.addEventListener('webkitfullscreenchange', (e) => {
+            if (document.webkitFullscreenElement === video) {
+                document.webkitExitFullscreen();
+            }
+        });
+        
+        // Prevent picture-in-picture
+        video.addEventListener('enterpictureinpicture', (e) => {
+            e.preventDefault();
+            if (document.pictureInPictureElement) {
+                document.exitPictureInPicture();
+            }
+        });
+        
+        // Ensure videos stay contained
+        video.addEventListener('loadedmetadata', () => {
+            video.style.maxWidth = '100%';
+            video.style.maxHeight = '100%';
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'cover';
+        });
+        
+        // Prevent any click events from triggering fullscreen
+        video.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        
+        // Prevent double-tap to zoom on mobile
+        video.addEventListener('touchend', (e) => {
+            e.preventDefault();
+        });
+    });
+    
+    // Global event listeners to catch any fullscreen attempts
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    });
+    
+    document.addEventListener('webkitfullscreenchange', () => {
+        if (document.webkitFullscreenElement) {
+            document.webkitExitFullscreen();
+        }
+    });
 } 
