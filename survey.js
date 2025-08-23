@@ -134,16 +134,55 @@ function autoFillSurveyCode() {
         if (surveyCodeInput) {
             surveyCodeInput.value = code.toUpperCase();
             
-            // Auto-validate the code
+            // Auto-validate the code and hide the preview section
             setTimeout(() => {
                 const validateBtn = document.getElementById('validateCode');
                 if (validateBtn) {
                     validateBtn.click();
+                    
+                    // After validation, hide the preview section and show clean survey
+                    setTimeout(() => {
+                        hideSurveyPreview();
+                        scrollToSurvey();
+                    }, 1000); // Wait for validation to complete
                 }
-            }, 500); // Small delay to ensure everything is loaded
+            }, 500);
         }
     } else {
         console.log('ℹ️ No survey code found in URL');
+    }
+}
+
+// Hide the survey preview section when code is validated
+function hideSurveyPreview() {
+    const previewSection = document.querySelector('.survey-preview');
+    if (previewSection) {
+        previewSection.classList.add('hidden');
+        // Remove from DOM after transition
+        setTimeout(() => {
+            previewSection.style.display = 'none';
+        }, 500);
+    }
+    
+    // Also hide the intro section to show clean survey
+    const introSection = document.querySelector('.survey-intro');
+    if (introSection) {
+        introSection.classList.add('hidden');
+        // Remove from DOM after transition
+        setTimeout(() => {
+            introSection.style.display = 'none';
+        }, 500);
+    }
+}
+
+// Scroll to the survey content
+function scrollToSurvey() {
+    const surveyContent = document.getElementById('surveyContent');
+    if (surveyContent) {
+        surveyContent.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
     }
 }
 
@@ -226,6 +265,12 @@ function setupCodeValidation() {
             
             // Enable survey submission
             enableSurveySubmission();
+            
+            // Hide preview section and scroll to survey for clean experience
+            setTimeout(() => {
+                hideSurveyPreview();
+                scrollToSurvey();
+            }, 1500); // Show success message briefly, then clean up
             
         } else {
             validationMessage.innerHTML = '<div class="error">❌ Invalid code. Please check your survey code and try again.</div>';
@@ -386,8 +431,8 @@ function initializeSurvey() {
     // Setup form event listeners
     setupFormListeners();
     
-    // Show first section
-    showSection('preBaseline');
+    // Show all sections for scrollable experience
+    showAllSections();
     
     // All form controls should be enabled by default.
     // Submission is still blocked in submitSurvey() if code is not validated.
@@ -409,89 +454,77 @@ function setupFormListeners() {
         });
     });
     
-    // Setup navigation buttons
-    setupNavigation();
+    // Setup single submit button at the bottom
+    setupSubmitButton();
     
     console.log('✅ Form listeners setup complete');
 }
 
-// Setup navigation between sections
-function setupNavigation() {
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
+// Setup single submit button at the bottom
+function setupSubmitButton() {
+    console.log('📝 Setting up single submit button');
     
-    sections.forEach((sectionId, index) => {
-        const section = document.getElementById(sectionId);
-        if (!section) return;
+    // Remove any existing navigation buttons
+    const existingNavs = document.querySelectorAll('.section-navigation');
+    existingNavs.forEach(nav => nav.remove());
+    
+    // Find the last section (comment section) to add submit button
+    const commentSection = document.getElementById('commentSection');
+    if (commentSection) {
+        // Create submit button container
+        const submitContainer = document.createElement('div');
+        submitContainer.className = 'submit-container';
+        submitContainer.style.cssText = `
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        `;
         
-        // Add navigation buttons
-        const navDiv = document.createElement('div');
-        navDiv.className = 'section-navigation';
+        // Create submit button
+        const submitBtn = document.createElement('button');
+        submitBtn.className = 'btn btn-success btn-submit';
+        submitBtn.textContent = 'Enter Survey Code to Submit';
+        submitBtn.onclick = submitSurvey;
+        submitBtn.disabled = true;
+        submitBtn.style.cssText = `
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        `;
         
-        if (index > 0) {
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'btn btn-secondary';
-            prevBtn.textContent = 'Previous Section';
-            prevBtn.onclick = () => showSection(sections[index - 1]);
-            navDiv.appendChild(prevBtn);
-        }
-        
-        if (index < sections.length - 1) {
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'btn btn-primary';
-            nextBtn.textContent = 'Next Section';
-            nextBtn.onclick = () => showSection(sections[index + 1]);
-            navDiv.appendChild(nextBtn);
-        } else {
-            const submitBtn = document.createElement('button');
-            submitBtn.className = 'btn btn-success btn-submit';
-            submitBtn.textContent = 'Enter Survey Code to Submit';
-            submitBtn.onclick = submitSurvey;
-            submitBtn.disabled = true;
-            navDiv.appendChild(submitBtn);
-        }
-        
-        section.appendChild(navDiv);
-    });
+        submitContainer.appendChild(submitBtn);
+        commentSection.appendChild(submitContainer);
+    }
+    
+    console.log('✅ Submit button setup complete');
 }
 
-// Show specific section
-function showSection(sectionId) {
-    console.log('📄 Showing section:', sectionId);
+// Show all sections for scrollable experience
+function showAllSections() {
+    console.log('📄 Showing all sections for scrollable experience');
     
-    // Hide all sections
+    // Show all sections
     const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
     sections.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
-            section.style.display = 'none';
+            section.style.display = 'block';
         }
     });
     
-    // Show target section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.style.display = 'block';
+    // Hide progress indicator for single-page experience
+    const progressBar = document.querySelector('.survey-progress');
+    if (progressBar) {
+        progressBar.style.display = 'none';
     }
-    
-    // Update progress indicator
-    updateProgress(sectionId);
 }
 
-// Update progress indicator
-function updateProgress(currentSection) {
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
-    const currentIndex = sections.indexOf(currentSection);
-    const totalSections = sections.length;
-    
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    
-    if (progressFill && progressText) {
-        const progress = ((currentIndex + 1) / totalSections) * 100;
-        progressFill.style.width = progress + '%';
-        progressText.textContent = `Section ${currentIndex + 1} of ${totalSections}`;
-    }
-}
+// Progress indicator removed - using single scrollable page instead
 
 // Save form data to localStorage
 function saveFormData() {

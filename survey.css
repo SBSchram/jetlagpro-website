@@ -1,5 +1,47 @@
 /* Liverpool Jet Lag Questionnaire (LJLQ) Survey Styles */
 
+/* Smooth transitions for hiding preview sections */
+.survey-intro,
+.survey-preview {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.survey-intro.hidden,
+.survey-preview.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+/* Single-page scrollable survey styling */
+.survey-section {
+    margin-bottom: 40px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.survey-section:last-child {
+    border-bottom: none;
+}
+
+.survey-section h3 {
+    margin-bottom: 15px;
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.survey-section p {
+    margin-bottom: 20px;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+/* Hide progress bar for single-page experience */
+.survey-progress {
+    display: none;
+}
+
 /* Modern Scale Slider Design - Inspired by Google Forms & SurveyMonkey */
 .scale-container {
     margin: 30px 0;
