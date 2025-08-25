@@ -203,13 +203,13 @@ class JetLagProDemo {
     async loadData() {
         try {
             // Load airports data
-            const airportsResponse = await fetch('../data/airports.json');
+            const airportsResponse = await fetch('airports.json');
             const airportsData = await airportsResponse.json();
             this.airports = airportsData.airports;
             console.log('Loaded airports:', this.airports.length);
 
             // Load points data
-            const pointsResponse = await fetch('../data/points.json');
+            const pointsResponse = await fetch('points.json');
             const pointsData = await pointsResponse.json();
             this.points = pointsData.points;
             
@@ -525,11 +525,11 @@ class JetLagProDemo {
                     <div class="point-content">
                         <div class="point-media">
                             <div class="point-image">
-                                <img src="../assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
+                                <img src="assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
                             </div>
                             <div class="point-video">
                                 <video preload="metadata" muted playsinline autoplay loop controls disablePictureInPicture webkit-playsinline>
-                                    <source src="../assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
+                                    <source src="assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
