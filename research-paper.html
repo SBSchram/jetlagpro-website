@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronoacupuncture Research Paper - JetLagPro</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Add jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Add html2canvas for capturing content -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Add docx library for Word document generation -->
+    <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
     <style>
         .research-paper {
             max-width: 800px;
@@ -48,15 +54,20 @@
             margin-top: 15px;
         }
         
-        /* Print Button Styling */
-        .print-button-container {
+        /* Export Button Styling */
+        .export-button-container {
             position: fixed;
             top: 120px;
             right: 20px;
             z-index: 1000;
         }
         
-        .print-button {
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .export-button {
             background: #2563eb;
             color: white;
             border: none;
@@ -66,17 +77,60 @@
             font-weight: 500;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: background-color 0.3s ease;
+            min-width: 140px;
         }
         
-        .print-button:hover {
+        .export-button:hover {
+            background: #1d4ed8;
+        }
+        
+        .export-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .export-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .export-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .export-dropdown:hover .export-content {
+            display: block;
+        }
+        
+        .export-dropdown:hover .export-button {
             background: #1d4ed8;
         }
         
         @media (max-width: 768px) {
-            .print-button-container {
+            .export-button-container {
                 position: static;
                 text-align: center;
                 margin-bottom: 20px;
+            }
+            
+            .export-content {
+                position: static;
+                display: none;
+                margin-top: 10px;
+            }
+            
+            .export-dropdown:hover .export-content {
+                display: block;
             }
         }
 
@@ -137,7 +191,7 @@
             
             /* Hide header and print button when printing */
             #main-header,
-            .print-button-container {
+            .export-button-container {
                 display: none !important;
             }
             
@@ -244,8 +298,15 @@
         .then(html => { document.getElementById('main-header').innerHTML = html; });
     </script>
 
-    <div class="print-button-container">
-        <button class="print-button" onclick="window.print()">Print Paper</button>
+    <div class="export-button-container">
+        <div class="export-dropdown">
+            <button class="export-button">Export Paper</button>
+            <div class="export-content">
+                <a href="#" onclick="exportToPDF()">PDF</a>
+                <a href="#" onclick="exportToWord()">Word</a>
+                <a href="#" onclick="exportToHTML()">HTML</a>
+            </div>
+        </div>
     </div>
 
     <main style="padding-top: 120px;">
@@ -492,6 +553,205 @@
       fetch('footer.html')
         .then(r => r.text())
         .then(html => { document.getElementById('main-footer').innerHTML = html; });
+    </script>
+
+    <!-- Export Functions -->
+    <script>
+        // PDF Export Function
+        async function exportToPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const paperContent = document.querySelector('.research-paper');
+                
+                // Show loading message
+                const loadingDiv = document.createElement('div');
+                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
+                loadingDiv.innerHTML = 'Generating PDF... Please wait.';
+                document.body.appendChild(loadingDiv);
+                
+                // Convert content to canvas
+                const canvas = await html2canvas(paperContent, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // Add first page
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Save the PDF
+                doc.save('JetLagPro_Research_Paper.pdf');
+                
+                // Remove loading message
+                document.body.removeChild(loadingDiv);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            }
+        }
+        
+        // Word Document Export Function
+        async function exportToWord() {
+            try {
+                const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = window.docx;
+                const paperContent = document.querySelector('.research-paper');
+                
+                // Show loading message
+                const loadingDiv = document.createElement('div');
+                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
+                loadingDiv.innerHTML = 'Generating Word document... Please wait.';
+                document.body.appendChild(loadingDiv);
+                
+                // Create document
+                const doc = new Document({
+                    sections: [{
+                        properties: {},
+                        children: []
+                    }]
+                });
+                
+                // Extract text content and create paragraphs
+                const walker = document.createTreeWalker(
+                    paperContent,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+                
+                const paragraphs = [];
+                let currentText = '';
+                
+                while (walker.nextNode()) {
+                    const node = walker.currentNode;
+                    const parent = node.parentElement;
+                    
+                    if (parent.tagName === 'H1') {
+                        if (currentText) {
+                            paragraphs.push(new Paragraph({
+                                children: [new TextRun({ text: currentText, size: 24 })],
+                                alignment: AlignmentType.CENTER
+                            }));
+                            currentText = '';
+                        }
+                        paragraphs.push(new Paragraph({
+                            children: [new TextRun({ text: node.textContent, size: 28, bold: true })],
+                            alignment: AlignmentType.CENTER,
+                            heading: HeadingLevel.HEADING_1
+                        }));
+                    } else if (parent.tagName === 'H2') {
+                        if (currentText) {
+                            paragraphs.push(new Paragraph({
+                                children: [new TextRun({ text: currentText, size: 24 })],
+                                alignment: AlignmentType.LEFT
+                            }));
+                            currentText = '';
+                        }
+                        paragraphs.push(new Paragraph({
+                            children: [new TextRun({ text: node.textContent, size: 24, bold: true })],
+                            heading: HeadingLevel.HEADING_2
+                        }));
+                    } else if (parent.tagName === 'P') {
+                        currentText += node.textContent + ' ';
+                    } else if (parent.tagName === 'LI') {
+                        currentText += '• ' + node.textContent + '\n';
+                    }
+                }
+                
+                // Add remaining text
+                if (currentText) {
+                    paragraphs.push(new Paragraph({
+                        children: [new TextRun({ text: currentText, size: 24 })],
+                        alignment: AlignmentType.LEFT
+                    }));
+                }
+                
+                // Add paragraphs to document
+                doc.sections[0].children.push(...paragraphs);
+                
+                // Generate and download document
+                const blob = await Packer.toBlob(doc);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'JetLagPro_Research_Paper.docx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                // Remove loading message
+                document.body.removeChild(loadingDiv);
+                
+            } catch (error) {
+                console.error('Error generating Word document:', error);
+                alert('Error generating Word document. Please try again.');
+            }
+        }
+        
+        // HTML Export Function
+        function exportToHTML() {
+            try {
+                const paperContent = document.querySelector('.research-paper');
+                const htmlContent = paperContent.outerHTML;
+                
+                // Create complete HTML document
+                const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Research Paper</title>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; }
+        h3 { margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; }
+        .abstract { background: #f8f9fa; padding: 20px; margin-bottom: 30px; }
+        img { max-width: 100%; height: auto; }
+        @media print { body { max-width: none; padding: 0; } }
+    </style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+                
+                // Create download link
+                const blob = new Blob([fullHTML], { type: 'text/html' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'JetLagPro_Research_Paper.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+            } catch (error) {
+                console.error('Error generating HTML:', error);
+                alert('Error generating HTML. Please try again.');
+            }
+        }
     </script>
 </body>
 </html>
