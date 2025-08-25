@@ -134,6 +134,9 @@ function autoFillSurveyCode() {
         if (surveyCodeInput) {
             surveyCodeInput.value = code.toUpperCase();
             
+            // Auto-populate point data if available
+            autoFillPointData();
+            
             // Auto-validate the code and hide the preview section
             setTimeout(() => {
                 const validateBtn = document.getElementById('validateCode');
@@ -150,6 +153,51 @@ function autoFillSurveyCode() {
         }
     } else {
         console.log('ℹ️ No survey code found in URL');
+    }
+}
+
+// Auto-fill point completion data from URL parameters
+function autoFillPointData() {
+    console.log('📊 Checking for point data in URL...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const pointsCompleted = urlParams.get('points');
+    const totalPoints = urlParams.get('total');
+    
+    if (pointsCompleted && totalPoints) {
+        console.log(`✅ Found point data: ${pointsCompleted}/${totalPoints} points completed`);
+        
+        // Auto-fill the flight points question
+        const flightPointsSelect = document.querySelector('select[name="points_flight"]');
+        if (flightPointsSelect) {
+            flightPointsSelect.value = pointsCompleted;
+            console.log(`📝 Auto-filled flight points: ${pointsCompleted}`);
+        }
+        
+        // Auto-fill the arrival points question (default to 0)
+        const arrivalPointsSelect = document.querySelector('select[name="points_arrival"]');
+        if (arrivalPointsSelect) {
+            arrivalPointsSelect.value = '0';
+            console.log('📝 Auto-filled arrival points: 0');
+        }
+        
+        // Show a helpful message to the user
+        const pointDataMessage = document.createElement('div');
+        pointDataMessage.className = 'point-data-message';
+        pointDataMessage.innerHTML = `
+            <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 16px 0;">
+                <strong>📊 Point Data Auto-filled:</strong> Your app data shows you completed ${pointsCompleted} out of ${totalPoints} points during your journey. 
+                This data has been automatically filled in the survey below. You can modify these numbers if needed.
+            </div>
+        `;
+        
+        // Insert the message before the first survey section
+        const firstSection = document.querySelector('.survey-section');
+        if (firstSection) {
+            firstSection.parentNode.insertBefore(pointDataMessage, firstSection);
+        }
+    } else {
+        console.log('ℹ️ No point data found in URL - user will need to enter manually');
     }
 }
 

@@ -1,5 +1,36 @@
 /* Liverpool Jet Lag Questionnaire (LJLQ) Survey Styles */
 
+/* Point data auto-fill message styling */
+.point-data-message {
+    margin: 20px 0;
+    animation: fadeInUp 0.5s ease;
+}
+
+.point-data-message div {
+    background: #e8f5e8;
+    border: 1px solid #4caf50;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.point-data-message strong {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Smooth transitions for hiding preview sections */
 .survey-intro,
 .survey-preview {
