@@ -212,35 +212,7 @@ class JetLagProDemo {
             const pointsResponse = await fetch('points.json');
             const pointsData = await pointsResponse.json();
             this.points = pointsData.points;
-            
-            // Create hourToPointId mapping from the points data
-            this.hourToPointId = [
-                11, // 0:00-0:59 -> GB-41 (11 PM-1 AM)
-                12, // 1:00-1:59 -> LIV-1 (1-3 AM)
-                12, // 2:00-2:59 -> LIV-1 (1-3 AM)
-                1,  // 3:00-3:59 -> LU-8 (3-5 AM)
-                1,  // 4:00-4:59 -> LU-8 (3-5 AM)
-                2,  // 5:00-5:59 -> LI-1 (5-7 AM)
-                2,  // 6:00-6:59 -> LI-1 (5-7 AM)
-                3,  // 7:00-7:59 -> ST-36 (7-9 AM)
-                3,  // 8:00-8:59 -> ST-36 (7-9 AM)
-                4,  // 9:00-9:59 -> SP-3 (9-11 AM)
-                4,  // 10:00-10:59 -> SP-3 (9-11 AM)
-                5,  // 11:00-11:59 -> HT-8 (11 AM-1 PM)
-                5,  // 12:00-12:59 -> HT-8 (11 AM-1 PM)
-                6,  // 13:00-13:59 -> SI-5 (1-3 PM)
-                6,  // 14:00-14:59 -> SI-5 (1-3 PM)
-                7,  // 15:00-15:59 -> BL-66 (3-5 PM)
-                7,  // 16:00-16:59 -> BL-66 (3-5 PM)
-                8,  // 17:00-17:59 -> KI-10 (5-7 PM)
-                8,  // 18:00-18:59 -> KI-10 (5-7 PM)
-                9,  // 19:00-19:59 -> PC-8 (7-9 PM)
-                9,  // 20:00-20:59 -> PC-8 (7-9 PM)
-                10, // 21:00-21:59 -> SJ-6 (9-11 PM)
-                10, // 22:00-22:59 -> SJ-6 (9-11 PM)
-                11, // 23:00-23:59 -> GB-41 (11 PM-1 AM)
-            ];
-            
+            this.hourToPointId = pointsData.hourToPointId;
             console.log('Loaded points:', this.points.length);
         } catch (error) {
             console.error('Error loading data:', error);
@@ -528,7 +500,7 @@ class JetLagProDemo {
                                 <img src="assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
                             </div>
                             <div class="point-video">
-                                <video preload="metadata" muted playsinline autoplay loop controls disablePictureInPicture webkit-playsinline>
+                                <video preload="metadata" autoplay loop muted playsinline>
                                     <source src="assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
@@ -559,9 +531,6 @@ class JetLagProDemo {
         }).join('');
 
         DOM.setHTML('pointsList', pointsHTML);
-        
-        // Add comprehensive video management to prevent mobile Safari issues
-        this.setupVideoManagement();
     }
 
     getOrderedPoints() {
@@ -1138,74 +1107,4 @@ document.addEventListener('keydown', (e) => {
 // Add touch support for mobile devices
 if ('ontouchstart' in window) {
     document.addEventListener('touchstart', () => {}, {passive: true});
-}
-
-// Comprehensive video management to prevent fullscreen issues
-function setupVideoManagement() {
-    const videos = document.querySelectorAll('video');
-    
-    videos.forEach(video => {
-        // Prevent fullscreen on any event
-        video.addEventListener('webkitbeginfullscreen', (e) => {
-            e.preventDefault();
-            video.webkitExitFullscreen();
-        });
-        
-        video.addEventListener('webkitendfullscreen', (e) => {
-            e.preventDefault();
-        });
-        
-        video.addEventListener('fullscreenchange', (e) => {
-            if (document.fullscreenElement === video) {
-                document.exitFullscreen();
-            }
-        });
-        
-        video.addEventListener('webkitfullscreenchange', (e) => {
-            if (document.webkitFullscreenElement === video) {
-                document.webkitExitFullscreen();
-            }
-        });
-        
-        // Prevent picture-in-picture
-        video.addEventListener('enterpictureinpicture', (e) => {
-            e.preventDefault();
-            if (document.pictureInPictureElement) {
-                document.exitPictureInPicture();
-            }
-        });
-        
-        // Ensure videos stay contained
-        video.addEventListener('loadedmetadata', () => {
-            video.style.maxWidth = '100%';
-            video.style.maxHeight = '100%';
-            video.style.width = '100%';
-            video.style.height = '100%';
-            video.style.objectFit = 'cover';
-        });
-        
-        // Prevent any click events from triggering fullscreen
-        video.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        });
-        
-        // Prevent double-tap to zoom on mobile
-        video.addEventListener('touchend', (e) => {
-            e.preventDefault();
-        });
-    });
-    
-    // Global event listeners to catch any fullscreen attempts
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        }
-    });
-    
-    document.addEventListener('webkitfullscreenchange', () => {
-        if (document.webkitFullscreenElement) {
-            document.webkitExitFullscreen();
-        }
-    });
 } 
