@@ -595,7 +595,7 @@
 
     <!-- Export Functions -->
     <script>
-        // PDF Export Function
+        // PDF Export Function - Text-based with proper margins
         async function exportToPDF() {
             try {
                 const { jsPDF } = window.jspdf;
@@ -608,31 +608,132 @@
                 loadingDiv.innerHTML = 'Generating PDF... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
-                // Convert content to canvas
-                const canvas = await html2canvas(paperContent, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff'
-                });
+                // Set margins (in mm)
+                const margin = 20;
+                const pageWidth = 210 - (2 * margin); // A4 width minus margins
+                const pageHeight = 297 - (2 * margin); // A4 height minus margins
                 
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 295; // A4 height in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 0;
+                // Set font and styling
+                doc.setFont('helvetica');
+                doc.setFontSize(12);
+                doc.setTextColor(51, 51, 51); // #333
                 
-                // Add first page
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                let yPosition = margin + 10;
+                let currentPage = 1;
                 
-                // Add additional pages if needed
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    doc.addPage();
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
+                // Helper function to add text with word wrapping
+                function addText(text, fontSize = 12, isBold = false, isCentered = false) {
+                    if (isBold) doc.setFont('helvetica', 'bold');
+                    else doc.setFont('helvetica', 'normal');
+                    
+                    doc.setFontSize(fontSize);
+                    
+                    if (isCentered) {
+                        const textWidth = doc.getTextWidth(text);
+                        const xPosition = (210 - textWidth) / 2;
+                        doc.text(text, xPosition, yPosition);
+                    } else {
+                        const lines = doc.splitTextToSize(text, pageWidth);
+                        for (let line of lines) {
+                            if (yPosition > pageHeight) {
+                                doc.addPage();
+                                currentPage++;
+                                yPosition = margin + 10;
+                            }
+                            doc.text(line, margin, yPosition);
+                            yPosition += 6;
+                        }
+                    }
+                    yPosition += 8;
+                }
+                
+                // Helper function to add heading
+                function addHeading(text, level = 2) {
+                    const fontSize = level === 1 ? 18 : level === 2 ? 16 : 14;
+                    addText(text, fontSize, true);
+                    yPosition += 5;
+                }
+                
+                // Helper function to add list items
+                function addListItems(items) {
+                    for (let item of items) {
+                        if (yPosition > pageHeight) {
+                            doc.addPage();
+                            currentPage++;
+                            yPosition = margin + 10;
+                        }
+                        const lines = doc.splitTextToSize(`• ${item}`, pageWidth - 10);
+                        for (let line of lines) {
+                            doc.text(line, margin + 5, yPosition);
+                            yPosition += 6;
+                        }
+                        yPosition += 2;
+                    }
+                }
+                
+                // Extract and add content
+                const title = paperContent.querySelector('h1').textContent;
+                addHeading(title, 1);
+                
+                // Add subtitle if exists
+                const subtitle = paperContent.querySelector('p[style*="text-align: center"]');
+                if (subtitle) {
+                    addText(subtitle.textContent, 12, false, true);
+                }
+                
+                // Process all content elements
+                const elements = paperContent.children;
+                for (let element of elements) {
+                    if (yPosition > pageHeight) {
+                        doc.addPage();
+                        currentPage++;
+                        yPosition = margin + 10;
+                    }
+                    
+                    if (element.tagName === 'H1') {
+                        // Skip title as already added
+                        continue;
+                    } else if (element.tagName === 'H2') {
+                        addHeading(element.textContent, 2);
+                    } else if (element.tagName === 'H3') {
+                        addHeading(element.textContent, 3);
+                    } else if (element.tagName === 'H4') {
+                        addHeading(element.textContent, 3);
+                    } else if (element.tagName === 'P') {
+                        addText(element.textContent);
+                    } else if (element.tagName === 'UL') {
+                        const items = Array.from(element.querySelectorAll('li')).map(li => li.textContent);
+                        addListItems(items);
+                    } else if (element.tagName === 'OL') {
+                        const items = Array.from(element.querySelectorAll('li')).map((li, index) => `${index + 1}. ${li.textContent}`);
+                        addListItems(items);
+                    } else if (element.tagName === 'DIV' && element.querySelector('h2')) {
+                        // Survey questions section
+                        addHeading('Survey Questions', 2);
+                        yPosition += 5;
+                        
+                        // Process survey sections
+                        const sections = element.querySelectorAll('div[style*="border"]');
+                        for (let section of sections) {
+                            const sectionTitle = section.querySelector('h4');
+                            if (sectionTitle) {
+                                addHeading(sectionTitle.textContent, 3);
+                            }
+                            
+                            const sectionText = section.querySelector('p');
+                            if (sectionText) {
+                                addText(sectionText.textContent);
+                            }
+                            
+                            const sectionList = section.querySelector('ul');
+                            if (sectionList) {
+                                const items = Array.from(sectionList.querySelectorAll('li')).map(li => li.textContent);
+                                addListItems(items);
+                            }
+                            
+                            yPosition += 10;
+                        }
+                    }
                 }
                 
                 // Save the PDF
@@ -643,7 +744,7 @@
                 
             } catch (error) {
                 console.error('Error generating PDF:', error);
-                alert('Error generating PDF. Please try again.');
+                alert('Error generating PDF. Please try again. Error: ' + error.message);
             }
         }
         
