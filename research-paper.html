@@ -608,10 +608,11 @@
                 loadingDiv.innerHTML = 'Generating PDF... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
-                // Set margins (in mm)
+                // Set margins (in mm) - reduced bottom margin
                 const margin = 20;
+                const bottomMargin = 15; // Smaller bottom margin
                 const pageWidth = 210 - (2 * margin); // A4 width minus margins
-                const pageHeight = 297 - (2 * margin); // A4 height minus margins
+                const pageHeight = 297 - margin - bottomMargin; // A4 height minus top and bottom margins
                 
                 // Set font and styling
                 doc.setFont('helvetica');
@@ -675,9 +676,9 @@
                 const title = paperContent.querySelector('h1').textContent;
                 addHeading(title, 1);
                 
-                // Add subtitle if exists
-                const subtitle = paperContent.querySelector('p[style*="text-align: center"]');
-                if (subtitle) {
+                // Add subtitle if exists (avoid duplication)
+                const subtitle = paperContent.querySelector('p[style*="text-align: center"][style*="font-style: italic"]');
+                if (subtitle && subtitle.textContent.includes('Pilot Study')) {
                     addText(subtitle.textContent, 12, false, true);
                 }
                 
@@ -700,6 +701,10 @@
                     } else if (element.tagName === 'H4') {
                         addHeading(element.textContent, 3);
                     } else if (element.tagName === 'P') {
+                        // Skip subtitle as already added
+                        if (element.style.textAlign === 'center' && element.style.fontStyle === 'italic') {
+                            continue;
+                        }
                         addText(element.textContent);
                     } else if (element.tagName === 'UL') {
                         const items = Array.from(element.querySelectorAll('li')).map(li => li.textContent);
@@ -707,6 +712,50 @@
                     } else if (element.tagName === 'OL') {
                         const items = Array.from(element.querySelectorAll('li')).map((li, index) => `${index + 1}. ${li.textContent}`);
                         addListItems(items);
+                    } else if (element.tagName === 'IMG') {
+                        // Handle images
+                        try {
+                            if (yPosition > pageHeight - 50) { // Leave space for image
+                                doc.addPage();
+                                currentPage++;
+                                yPosition = margin + 10;
+                            }
+                            
+                            // Add image caption if available
+                            const caption = element.alt || element.title || '';
+                            if (caption) {
+                                addText(`[Image: ${caption}]`, 10, false, true);
+                            }
+                            
+                            // Note: For text-based PDF, we'll add a placeholder
+                            addText('[Image included in document]', 10, true, true);
+                            yPosition += 15;
+                        } catch (error) {
+                            console.warn('Could not process image:', error);
+                            addText('[Image]', 10, true, true);
+                            yPosition += 10;
+                        }
+                    } else if (element.tagName === 'TABLE') {
+                        // Handle tables
+                        if (yPosition > pageHeight - 30) {
+                            doc.addPage();
+                            currentPage++;
+                            yPosition = margin + 10;
+                        }
+                        
+                        addText('[Table structure preserved]', 10, true, true);
+                        yPosition += 10;
+                        
+                        // Process table content as text
+                        const rows = element.querySelectorAll('tr');
+                        for (let row of rows) {
+                            const cells = row.querySelectorAll('td, th');
+                            const rowText = Array.from(cells).map(cell => cell.textContent.trim()).join(' | ');
+                            if (rowText) {
+                                addText(rowText, 10);
+                            }
+                        }
+                        yPosition += 10;
                     } else if (element.tagName === 'DIV' && element.querySelector('h2')) {
                         // Survey questions section
                         addHeading('Survey Questions', 2);
@@ -733,6 +782,37 @@
                             
                             yPosition += 10;
                         }
+                    } else if (element.tagName === 'DIV' && element.querySelector('table')) {
+                        // Handle divs containing tables (like the app screenshots and point images)
+                        if (yPosition > pageHeight - 30) {
+                            doc.addPage();
+                            currentPage++;
+                            yPosition = margin + 10;
+                        }
+                        
+                        const tableTitle = element.querySelector('h3');
+                        if (tableTitle) {
+                            addHeading(tableTitle.textContent, 3);
+                        }
+                        
+                        addText('[Table with images preserved]', 10, true, true);
+                        yPosition += 10;
+                        
+                        // Process table content
+                        const table = element.querySelector('table');
+                        const rows = table.querySelectorAll('tr');
+                        for (let row of rows) {
+                            const cells = row.querySelectorAll('td, th');
+                            const rowText = Array.from(cells).map(cell => {
+                                const img = cell.querySelector('img');
+                                const text = cell.textContent.trim();
+                                return img ? `[Image: ${img.alt || 'Screenshot'}]` : text;
+                            }).join(' | ');
+                            if (rowText) {
+                                addText(rowText, 10);
+                            }
+                        }
+                        yPosition += 15;
                     }
                 }
                 
