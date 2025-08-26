@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Add html2canvas for capturing content -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Note: Word export uses RTF format for better compatibility -->
+    <!-- Note: Word export uses HTML format with embedded images for full compatibility -->
     <style>
         .research-paper {
             max-width: 800px;
@@ -608,32 +608,53 @@
             }
         }
         
-        // Word Document Export Function (HTML format for Word compatibility)
-        function exportToWord() {
+        // Word Document Export Function (HTML format with embedded images)
+        async function exportToWord() {
             try {
                 const paperContent = document.querySelector('.research-paper');
                 
                 // Show loading message
                 const loadingDiv = document.createElement('div');
                 loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating Word document... Please wait.';
+                loadingDiv.innerHTML = 'Generating Word document with embedded images... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
                 // Clone the content to modify for Word
                 const wordContent = paperContent.cloneNode(true);
                 
-                // Convert relative image paths to absolute URLs for Word compatibility
+                // Convert images to base64 for embedding
                 const images = wordContent.querySelectorAll('img');
-                images.forEach(img => {
-                    if (img.src && !img.src.startsWith('http')) {
-                        // Convert relative paths to absolute URLs
-                        const currentUrl = window.location.origin + window.location.pathname;
-                        const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
-                        img.src = baseUrl + '/' + img.src.replace(window.location.origin, '');
+                for (let img of images) {
+                    try {
+                        // Create canvas to convert image to base64
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const tempImg = new Image();
+                        
+                        // Wait for image to load
+                        await new Promise((resolve, reject) => {
+                            tempImg.onload = resolve;
+                            tempImg.onerror = reject;
+                            tempImg.crossOrigin = 'anonymous';
+                            tempImg.src = img.src;
+                        });
+                        
+                        // Set canvas size and draw image
+                        canvas.width = tempImg.naturalWidth;
+                        canvas.height = tempImg.naturalHeight;
+                        ctx.drawImage(tempImg, 0, 0);
+                        
+                        // Convert to base64
+                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
+                        img.src = base64;
+                        
+                    } catch (error) {
+                        console.warn('Could not embed image:', img.src, error);
+                        // Keep original src if embedding fails
                     }
-                });
+                }
                 
-                // Create Word-compatible HTML with embedded styles
+                // Create Word-compatible HTML with embedded styles and images
                 const wordHTML = `<!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
@@ -751,11 +772,51 @@ ${wordContent.outerHTML}
             }
         }
         
-        // HTML Export Function
-        function exportToHTML() {
+        // HTML Export Function with embedded images
+        async function exportToHTML() {
             try {
                 const paperContent = document.querySelector('.research-paper');
-                const htmlContent = paperContent.outerHTML;
+                
+                // Show loading message
+                const loadingDiv = document.createElement('div');
+                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
+                loadingDiv.innerHTML = 'Generating HTML with embedded images... Please wait.';
+                document.body.appendChild(loadingDiv);
+                
+                // Clone content to modify
+                const htmlContent = paperContent.cloneNode(true);
+                
+                // Convert images to base64 for embedding
+                const images = htmlContent.querySelectorAll('img');
+                for (let img of images) {
+                    try {
+                        // Create canvas to convert image to base64
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const tempImg = new Image();
+                        
+                        // Wait for image to load
+                        await new Promise((resolve, reject) => {
+                            tempImg.onload = resolve;
+                            tempImg.onerror = reject;
+                            tempImg.crossOrigin = 'anonymous';
+                            tempImg.src = img.src;
+                        });
+                        
+                        // Set canvas size and draw image
+                        canvas.width = tempImg.naturalWidth;
+                        canvas.height = tempImg.naturalHeight;
+                        ctx.drawImage(tempImg, 0, 0);
+                        
+                        // Convert to base64
+                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
+                        img.src = base64;
+                        
+                    } catch (error) {
+                        console.warn('Could not embed image:', img.src, error);
+                        // Keep original src if embedding fails
+                    }
+                }
                 
                 // Create complete HTML document
                 const fullHTML = `<!DOCTYPE html>
@@ -765,18 +826,39 @@ ${wordContent.outerHTML}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JetLagPro Research Paper</title>
     <style>
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
         h1 { text-align: center; margin-bottom: 20px; }
         h2 { font-size: 1.5rem; font-weight: 600; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; }
         h3 { margin-top: 20px; margin-bottom: 10px; }
         p { margin-bottom: 15px; }
         .abstract { background: #f8f9fa; padding: 20px; margin-bottom: 30px; }
-        img { max-width: 100%; height: auto; }
-        @media print { body { max-width: none; padding: 0; } }
+        img { 
+            max-width: 100%; 
+            height: auto; 
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .methods-screenshots img {
+            max-width: 200px;
+            margin: 10px;
+        }
+        @media print { 
+            body { max-width: none; padding: 0; } 
+            img { box-shadow: none; }
+        }
     </style>
 </head>
 <body>
-${htmlContent}
+${htmlContent.outerHTML}
 </body>
 </html>`;
                 
@@ -791,9 +873,12 @@ ${htmlContent}
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
                 
+                // Remove loading message
+                document.body.removeChild(loadingDiv);
+                
             } catch (error) {
                 console.error('Error generating HTML:', error);
-                alert('Error generating HTML. Please try again.');
+                alert('Error generating HTML. Please try again. Error: ' + error.message);
             }
         }
     </script>
