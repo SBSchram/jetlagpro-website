@@ -648,11 +648,65 @@
                     yPosition += 8;
                 }
                 
+                // Helper function to add image
+                async function addImage(imgElement) {
+                    try {
+                        if (yPosition > pageHeight - 80) { // Leave space for image
+                            doc.addPage();
+                            currentPage++;
+                            yPosition = margin + 10;
+                        }
+                        
+                        // Add image caption if available
+                        const caption = imgElement.alt || imgElement.title || '';
+                        if (caption) {
+                            addText(`[${caption}]`, 10, false, true);
+                        }
+                        
+                        // Convert image to base64 and add to PDF
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const tempImg = new Image();
+                        
+                        await new Promise((resolve, reject) => {
+                            tempImg.onload = resolve;
+                            tempImg.onerror = reject;
+                            tempImg.crossOrigin = 'anonymous';
+                            tempImg.src = imgElement.src;
+                        });
+                        
+                        // Set canvas size and draw image
+                        canvas.width = tempImg.naturalWidth;
+                        canvas.height = tempImg.naturalHeight;
+                        ctx.drawImage(tempImg, 0, 0);
+                        
+                        // Convert to base64
+                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
+                        
+                        // Calculate image size for PDF (max 150mm width)
+                        const maxWidth = 150;
+                        const imgWidth = Math.min(maxWidth, (canvas.width * maxWidth) / canvas.width);
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                        
+                        // Center the image
+                        const xPosition = (210 - imgWidth) / 2;
+                        
+                        // Add image to PDF
+                        doc.addImage(imgData, 'JPEG', xPosition, yPosition, imgWidth, imgHeight);
+                        yPosition += imgHeight + 10;
+                        
+                    } catch (error) {
+                        console.warn('Could not add image to PDF:', error);
+                        addText('[Image could not be included]', 10, true, true);
+                        yPosition += 15;
+                    }
+                }
+                
                 // Helper function to add heading
                 function addHeading(text, level = 2) {
                     const fontSize = level === 1 ? 18 : level === 2 ? 16 : 14;
                     addText(text, fontSize, true);
-                    yPosition += 5;
+                    yPosition += 10; // More spacing after headings
                 }
                 
                 // Helper function to add list items
@@ -713,28 +767,8 @@
                         const items = Array.from(element.querySelectorAll('li')).map((li, index) => `${index + 1}. ${li.textContent}`);
                         addListItems(items);
                     } else if (element.tagName === 'IMG') {
-                        // Handle images
-                        try {
-                            if (yPosition > pageHeight - 50) { // Leave space for image
-                                doc.addPage();
-                                currentPage++;
-                                yPosition = margin + 10;
-                            }
-                            
-                            // Add image caption if available
-                            const caption = element.alt || element.title || '';
-                            if (caption) {
-                                addText(`[Image: ${caption}]`, 10, false, true);
-                            }
-                            
-                            // Note: For text-based PDF, we'll add a placeholder
-                            addText('[Image included in document]', 10, true, true);
-                            yPosition += 15;
-                        } catch (error) {
-                            console.warn('Could not process image:', error);
-                            addText('[Image]', 10, true, true);
-                            yPosition += 10;
-                        }
+                        // Handle images - actually include them in PDF
+                        await addImage(element);
                     } else if (element.tagName === 'TABLE') {
                         // Handle tables
                         if (yPosition > pageHeight - 30) {
@@ -795,22 +829,23 @@
                             addHeading(tableTitle.textContent, 3);
                         }
                         
-                        addText('[Table with images preserved]', 10, true, true);
-                        yPosition += 10;
-                        
-                        // Process table content
+                        // Process table content and include images
                         const table = element.querySelector('table');
                         const rows = table.querySelectorAll('tr');
                         for (let row of rows) {
                             const cells = row.querySelectorAll('td, th');
-                            const rowText = Array.from(cells).map(cell => {
+                            for (let cell of cells) {
                                 const img = cell.querySelector('img');
                                 const text = cell.textContent.trim();
-                                return img ? `[Image: ${img.alt || 'Screenshot'}]` : text;
-                            }).join(' | ');
-                            if (rowText) {
-                                addText(rowText, 10);
+                                
+                                if (img) {
+                                    // Add image to PDF
+                                    await addImage(img);
+                                } else if (text) {
+                                    addText(text, 10);
+                                }
                             }
+                            yPosition += 5; // Space between rows
                         }
                         yPosition += 15;
                     }
@@ -874,11 +909,26 @@
                         const base64 = canvas.toDataURL('image/jpeg', 0.8);
                         img.src = base64;
                         
-                        // Restore original styling and dimensions
-                        if (originalStyle) img.setAttribute('style', originalStyle);
-                        if (originalWidth) img.setAttribute('width', originalWidth);
-                        if (originalHeight) img.setAttribute('height', originalHeight);
-                        if (originalClass) img.setAttribute('class', originalClass);
+                        // Apply strict size constraints for Word compatibility
+                        let finalStyle = '';
+                        
+                        // Handle different image types with appropriate sizing
+                        if (originalClass && originalClass.includes('methods-screenshots')) {
+                            // App screenshots - keep small
+                            finalStyle = 'max-width: 200px; height: auto; display: inline-block; margin: 10px; border: 1px solid #ddd;';
+                        } else if (originalClass && originalClass.includes('point-image')) {
+                            // Point images - keep small
+                            finalStyle = 'max-width: 150px; height: auto; display: inline-block; margin: 5px; border: 1px solid #ddd;';
+                        } else {
+                            // Other images - use original size or reasonable default
+                            if (originalWidth && originalHeight) {
+                                finalStyle = `width: ${originalWidth}px; height: ${originalHeight}px; display: block; margin: 20px auto; border: 1px solid #ddd;`;
+                            } else {
+                                finalStyle = 'max-width: 400px; height: auto; display: block; margin: 20px auto; border: 1px solid #ddd;';
+                            }
+                        }
+                        
+                        img.setAttribute('style', finalStyle);
                         
                     } catch (error) {
                         console.warn('Could not embed image:', img.src, error);
@@ -939,6 +989,20 @@
             display: block;
             margin: 20px auto;
             border: 1px solid #ddd;
+        }
+        /* Preserve 2x2 survey table layout */
+        div[style*="grid-template-columns: 1fr 1fr"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: 1fr 1fr !important;
+            gap: 20px !important;
+            margin: 20px 0 !important;
+        }
+        div[style*="border: 1px solid #ddd"] {
+            border: 1px solid #ddd !important;
+            padding: 20px !important;
+            border-radius: 8px !important;
+            background: white !important;
         }
         ul, ol {
             margin-bottom: 15px;
