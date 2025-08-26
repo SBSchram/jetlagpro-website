@@ -472,63 +472,66 @@
         <div style="margin: 30px 0; background-color: #f8f9fa; border-radius: 8px;">
             <h2>Survey Questions</h2>
             
-            <!-- 2x2 Table Layout -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 20px; margin: 20px 0;">
-                <!-- Top Left: Section 1 -->
-                <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: white;">
-                    <h4>Section 1: Pre-Travel Baseline</h4>
-                    <p style="margin-bottom: 10px;">Please rate the severity of your typical symptoms before this trip:</p>
-                    <ul style="margin-bottom: 20px;">
-                        <li>Sleep disturbance</li>
-                        <li>Daytime fatigue</li>
-                        <li>Difficulty concentrating</li>
-                        <li>Irritability</li>
-                        <li>Gastrointestinal issues</li>
-                    </ul>
-                </div>
-                
-                <!-- Top Right: Section 2 -->
-                <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: white;">
-                    <h4>Section 2: Post-Travel Assessment</h4>
-                    <p style="margin-bottom: 10px;">Please rate duration and severity of your symptoms after this trip:</p>
-                    <ul style="margin-bottom: 20px;">
-                        <li>Sleep disturbance</li>
-                        <li>Daytime fatigue </li>
-                        <li>Difficulty concentrating</li>
-                        <li>Irritability </li>
-                        <li>Gastrointestinal issues</li>
-                    </ul>
-                </div>
-                
-                <!-- Bottom Left: Section 3 -->
-                <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: white;">
-                    <h4>Section 3: Travel Context</h4>
-                    <ul style="margin-bottom: 20px;">
-                        <li>When did your flight land (date & time)?</li>
-                        <li>Direction of travel</li>
-                        <li>Number of time zones crossed</li>
-                        <li>Flight duration</li>
-                        <li>How many points did you stimulate in-flight?</li>
-                        <li>How many points did you stimulate post-flight?</li>
-                        <li>Did you sleep during the flight?</li>
-                    </ul>
-                </div>
-                
-                <!-- Bottom Right: Sections 4 & 5 Combined -->
-                <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: white;">
-                    <h4>Section 4: Demographics (Optional)</h4>
-                    <ul style="margin-bottom: 20px;">
-                        <li>Age range</li>
-                        <li>Gender</li>
-                        <li>Travel experience</li>
-                        <li>Geographic region</li>
-                        <li>Primary travel purpose</li>
-                    </ul>
+            <!-- 2x2 Table Layout for Word compatibility -->
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <tr>
+                    <!-- Top Left: Section 1 -->
+                    <td style="width: 50%; border: 1px solid #ddd; padding: 20px; vertical-align: top; background: white;">
+                        <h4>Section 1: Pre-Travel Baseline</h4>
+                        <p style="margin-bottom: 10px;">Please rate the severity of your typical symptoms before this trip:</p>
+                        <ul style="margin-bottom: 20px;">
+                            <li>Sleep disturbance</li>
+                            <li>Daytime fatigue</li>
+                            <li>Difficulty concentrating</li>
+                            <li>Irritability</li>
+                            <li>Gastrointestinal issues</li>
+                        </ul>
+                    </td>
                     
-                    <h4>Section 5: Additional Comments (Optional)</h4>
-                    <p>Open text field for additional feedback.</p>
-                </div>
-            </div>
+                    <!-- Top Right: Section 2 -->
+                    <td style="width: 50%; border: 1px solid #ddd; padding: 20px; vertical-align: top; background: white;">
+                        <h4>Section 2: Post-Travel Assessment</h4>
+                        <p style="margin-bottom: 10px;">Please rate duration and severity of your symptoms after this trip:</p>
+                        <ul style="margin-bottom: 20px;">
+                            <li>Sleep disturbance</li>
+                            <li>Daytime fatigue </li>
+                            <li>Difficulty concentrating</li>
+                            <li>Irritability </li>
+                            <li>Gastrointestinal issues</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- Bottom Left: Section 3 -->
+                    <td style="width: 50%; border: 1px solid #ddd; padding: 20px; vertical-align: top; background: white;">
+                        <h4>Section 3: Travel Context</h4>
+                        <ul style="margin-bottom: 20px;">
+                            <li>When did your flight land (date & time)?</li>
+                            <li>Direction of travel</li>
+                            <li>Number of time zones crossed</li>
+                            <li>Flight duration</li>
+                            <li>How many points did you stimulate in-flight?</li>
+                            <li>How many points did you stimulate post-flight?</li>
+                            <li>Did you sleep during the flight?</li>
+                        </ul>
+                    </td>
+                    
+                    <!-- Bottom Right: Sections 4 & 5 Combined -->
+                    <td style="width: 50%; border: 1px solid #ddd; padding: 20px; vertical-align: top; background: white;">
+                        <h4>Section 4: Demographics (Optional)</h4>
+                        <ul style="margin-bottom: 20px;">
+                            <li>Age range</li>
+                            <li>Gender</li>
+                            <li>Travel experience</li>
+                            <li>Geographic region</li>
+                            <li>Primary travel purpose</li>
+                        </ul>
+                        
+                        <h4>Section 5: Additional Comments (Optional)</h4>
+                        <p>Open text field for additional feedback.</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 		<h2>Expected Outcomes and Significance</h2>
         <p>This paper presents an exploratory study aiming to gather preliminary statistical evidence across diverse travel conditions, addressing the absence of formal chronoacupuncture studies. While anecdotal reports from acupuncturists suggest efficacy, this platform seeks to validate or refute chronoacupuncture as a non-pharmacological tool for jet lag management. At present, the app is in beta testing among a small number of users that the author has identified as qualified to test the app. Within the next year, we hope to be able to present results.</p>
@@ -841,17 +844,23 @@
                         
                         // Handle different image types with appropriate sizing
                         if (originalClass && originalClass.includes('methods-screenshots')) {
-                            // App screenshots - keep small
-                            finalStyle = 'max-width: 200px; height: auto; display: inline-block; margin: 10px; border: 1px solid #ddd;';
-                        } else if (originalClass && originalClass.includes('point-image')) {
-                            // Point images - keep small
-                            finalStyle = 'max-width: 150px; height: auto; display: inline-block; margin: 5px; border: 1px solid #ddd;';
+                            // App screenshots - keep smaller for Word
+                            finalStyle = 'width: 150px; height: auto; display: inline-block; margin: 5px; border: none;';
+                        } else if (img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || img.src.includes('ST-36.jpg') || 
+                                  img.src.includes('SP-3.jpg') || img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
+                                  img.src.includes('BL-66.jpg') || img.src.includes('KI-10.jpg') || img.src.includes('PC-8.jpg') ||
+                                  img.src.includes('SJ-6.jpg') || img.src.includes('GB-41.jpg') || img.src.includes('LIV-1.jpg')) {
+                            // Point images - remove borders and keep very small
+                            finalStyle = 'width: 60px; height: auto; display: inline-block; margin: 3px; border: none;';
+                        } else if (img.src.includes('Wheel-Complex.jpg')) {
+                            // Chinese Organ Clock - moderate size, no border
+                            finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                         } else {
-                            // Other images - use original size or reasonable default
+                            // Other images - use original size or reasonable default, no border
                             if (originalWidth && originalHeight) {
-                                finalStyle = `width: ${originalWidth}px; height: ${originalHeight}px; display: block; margin: 20px auto; border: 1px solid #ddd;`;
+                                finalStyle = `width: ${Math.min(parseInt(originalWidth), 400)}px; height: auto; display: block; margin: 20px auto; border: none;`;
                             } else {
-                                finalStyle = 'max-width: 400px; height: auto; display: block; margin: 20px auto; border: 1px solid #ddd;';
+                                finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                             }
                         }
                         
@@ -915,7 +924,7 @@
             height: auto;
             display: block;
             margin: 20px auto;
-            border: 1px solid #ddd;
+            border: none;
         }
         /* Preserve 2x2 survey table layout */
         div[style*="grid-template-columns: 1fr 1fr"] {
