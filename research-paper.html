@@ -9,8 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Add html2canvas for capturing content -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Add docx library for Word document generation -->
-    <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+    <!-- Note: Word export uses RTF format for better compatibility -->
     <style>
         .research-paper {
             max-width: 800px;
@@ -609,10 +608,9 @@
             }
         }
         
-        // Word Document Export Function
-        async function exportToWord() {
+        // Word Document Export Function (RTF format)
+        function exportToWord() {
             try {
-                const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = window.docx;
                 const paperContent = document.querySelector('.research-paper');
                 
                 // Show loading message
@@ -621,78 +619,38 @@
                 loadingDiv.innerHTML = 'Generating Word document... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
-                // Create document
-                const doc = new Document({
-                    sections: [{
-                        properties: {},
-                        children: []
-                    }]
+                // Create RTF content
+                let rtfContent = '{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Times New Roman;}}';
+                rtfContent += '\\f0\\fs24\\par';
+                
+                // Extract and format content
+                const elements = paperContent.querySelectorAll('h1, h2, h3, p, li, ol, ul');
+                
+                elements.forEach(element => {
+                    const text = element.textContent.trim();
+                    if (!text) return;
+                    
+                    if (element.tagName === 'H1') {
+                        rtfContent += '\\b\\fs36 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
+                    } else if (element.tagName === 'H2') {
+                        rtfContent += '\\b\\fs28 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
+                    } else if (element.tagName === 'H3') {
+                        rtfContent += '\\b\\fs26 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
+                    } else if (element.tagName === 'P') {
+                        rtfContent += text.replace(/[\\{}]/g, '\\\\$&') + '\\par\\par';
+                    } else if (element.tagName === 'LI') {
+                        rtfContent += '\\bullet ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\par';
+                    }
                 });
                 
-                // Extract text content and create paragraphs
-                const walker = document.createTreeWalker(
-                    paperContent,
-                    NodeFilter.SHOW_TEXT,
-                    null,
-                    false
-                );
+                rtfContent += '}';
                 
-                const paragraphs = [];
-                let currentText = '';
-                
-                while (walker.nextNode()) {
-                    const node = walker.currentNode;
-                    const parent = node.parentElement;
-                    
-                    if (parent.tagName === 'H1') {
-                        if (currentText) {
-                            paragraphs.push(new Paragraph({
-                                children: [new TextRun({ text: currentText, size: 24 })],
-                                alignment: AlignmentType.CENTER
-                            }));
-                            currentText = '';
-                        }
-                        paragraphs.push(new Paragraph({
-                            children: [new TextRun({ text: node.textContent, size: 28, bold: true })],
-                            alignment: AlignmentType.CENTER,
-                            heading: HeadingLevel.HEADING_1
-                        }));
-                    } else if (parent.tagName === 'H2') {
-                        if (currentText) {
-                            paragraphs.push(new Paragraph({
-                                children: [new TextRun({ text: currentText, size: 24 })],
-                                alignment: AlignmentType.LEFT
-                            }));
-                            currentText = '';
-                        }
-                        paragraphs.push(new Paragraph({
-                            children: [new TextRun({ text: node.textContent, size: 24, bold: true })],
-                            heading: HeadingLevel.HEADING_2
-                        }));
-                    } else if (parent.tagName === 'P') {
-                        currentText += node.textContent + ' ';
-                    } else if (parent.tagName === 'LI') {
-                        currentText += '• ' + node.textContent + '\n';
-                    }
-                }
-                
-                // Add remaining text
-                if (currentText) {
-                    paragraphs.push(new Paragraph({
-                        children: [new TextRun({ text: currentText, size: 24 })],
-                        alignment: AlignmentType.LEFT
-                    }));
-                }
-                
-                // Add paragraphs to document
-                doc.sections[0].children.push(...paragraphs);
-                
-                // Generate and download document
-                const blob = await Packer.toBlob(doc);
+                // Create and download file
+                const blob = new Blob([rtfContent], { type: 'application/rtf' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'JetLagPro_Research_Paper.docx';
+                a.download = 'JetLagPro_Research_Paper.rtf';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -703,7 +661,7 @@
                 
             } catch (error) {
                 console.error('Error generating Word document:', error);
-                alert('Error generating Word document. Please try again.');
+                alert('Error generating Word document. Please try again. Error: ' + error.message);
             }
         }
         
