@@ -608,7 +608,7 @@
             }
         }
         
-        // Word Document Export Function (RTF format)
+        // Word Document Export Function (HTML format for Word compatibility)
         function exportToWord() {
             try {
                 const paperContent = document.querySelector('.research-paper');
@@ -619,38 +619,124 @@
                 loadingDiv.innerHTML = 'Generating Word document... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
-                // Create RTF content
-                let rtfContent = '{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Times New Roman;}}';
-                rtfContent += '\\f0\\fs24\\par';
+                // Clone the content to modify for Word
+                const wordContent = paperContent.cloneNode(true);
                 
-                // Extract and format content
-                const elements = paperContent.querySelectorAll('h1, h2, h3, p, li, ol, ul');
-                
-                elements.forEach(element => {
-                    const text = element.textContent.trim();
-                    if (!text) return;
-                    
-                    if (element.tagName === 'H1') {
-                        rtfContent += '\\b\\fs36 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
-                    } else if (element.tagName === 'H2') {
-                        rtfContent += '\\b\\fs28 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
-                    } else if (element.tagName === 'H3') {
-                        rtfContent += '\\b\\fs26 ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\b0\\fs24\\par\\par';
-                    } else if (element.tagName === 'P') {
-                        rtfContent += text.replace(/[\\{}]/g, '\\\\$&') + '\\par\\par';
-                    } else if (element.tagName === 'LI') {
-                        rtfContent += '\\bullet ' + text.replace(/[\\{}]/g, '\\\\$&') + '\\par';
+                // Convert relative image paths to absolute URLs for Word compatibility
+                const images = wordContent.querySelectorAll('img');
+                images.forEach(img => {
+                    if (img.src && !img.src.startsWith('http')) {
+                        // Convert relative paths to absolute URLs
+                        const currentUrl = window.location.origin + window.location.pathname;
+                        const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+                        img.src = baseUrl + '/' + img.src.replace(window.location.origin, '');
                     }
                 });
                 
-                rtfContent += '}';
+                // Create Word-compatible HTML with embedded styles
+                const wordHTML = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Research Paper</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            font-size: 12pt;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .abstract {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2563eb;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .methods-screenshots {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .methods-screenshots img {
+            max-width: 200px;
+            margin: 10px;
+        }
+        /* Word-specific styles */
+        @page {
+            margin: 1in;
+        }
+        /* Ensure proper page breaks */
+        h1, h2 {
+            page-break-after: avoid;
+        }
+        img {
+            page-break-inside: avoid;
+        }
+    </style>
+    <!-- Word-specific meta tags -->
+    <xml>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+            <w:DoNotHyphenateCaps/>
+            <w:PunctuationKerning/>
+            <w:DrawingGridHorizontalSpacing>9.35 pt</w:DrawingGridHorizontalSpacing>
+            <w:DrawingGridVerticalSpacing>9.35 pt</w:DrawingGridVerticalSpacing>
+        </w:WordDocument>
+    </xml>
+</head>
+<body>
+${wordContent.outerHTML}
+</body>
+</html>`;
                 
                 // Create and download file
-                const blob = new Blob([rtfContent], { type: 'application/rtf' });
+                const blob = new Blob([wordHTML], { type: 'application/msword' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'JetLagPro_Research_Paper.rtf';
+                a.download = 'JetLagPro_Research_Paper.doc';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
