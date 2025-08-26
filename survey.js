@@ -231,6 +231,14 @@ function scrollToSurvey() {
             behavior: 'smooth', 
             block: 'start' 
         });
+        
+        // Additional scroll to ensure we're at the very top of the form
+        setTimeout(() => {
+            window.scrollTo({
+                top: surveyContent.offsetTop - 20, // 20px offset for better positioning
+                behavior: 'smooth'
+            });
+        }, 100);
     }
 }
 
