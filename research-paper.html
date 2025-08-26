@@ -595,7 +595,7 @@
 
     <!-- Export Functions -->
     <script>
-        // PDF Export Function - Text-based with proper margins
+        // PDF Export Function - Hybrid approach with proper layout handling
         async function exportToPDF() {
             try {
                 const { jsPDF } = window.jspdf;
@@ -605,24 +605,22 @@
                 // Show loading message
                 const loadingDiv = document.createElement('div');
                 loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating PDF... Please wait.';
+                loadingDiv.innerHTML = 'Generating PDF with proper layouts... Please wait.';
                 document.body.appendChild(loadingDiv);
                 
-                // Set margins (in mm) - reduced bottom margin
+                // Set margins (in mm)
                 const margin = 20;
-                const bottomMargin = 15; // Smaller bottom margin
-                const pageWidth = 210 - (2 * margin); // A4 width minus margins
-                const pageHeight = 297 - margin - bottomMargin; // A4 height minus top and bottom margins
+                const bottomMargin = 15;
+                const pageWidth = 210 - (2 * margin);
+                const pageHeight = 297 - margin - bottomMargin;
                 
-                // Set font and styling
                 doc.setFont('helvetica');
                 doc.setFontSize(12);
-                doc.setTextColor(51, 51, 51); // #333
+                doc.setTextColor(51, 51, 51);
                 
                 let yPosition = margin + 10;
-                let currentPage = 1;
                 
-                // Helper function to add text with word wrapping
+                // Helper function to add text
                 function addText(text, fontSize = 12, isBold = false, isCentered = false) {
                     if (isBold) doc.setFont('helvetica', 'bold');
                     else doc.setFont('helvetica', 'normal');
@@ -633,221 +631,147 @@
                         const textWidth = doc.getTextWidth(text);
                         const xPosition = (210 - textWidth) / 2;
                         doc.text(text, xPosition, yPosition);
+                        yPosition += fontSize * 0.5 + 8;
                     } else {
                         const lines = doc.splitTextToSize(text, pageWidth);
                         for (let line of lines) {
                             if (yPosition > pageHeight) {
                                 doc.addPage();
-                                currentPage++;
                                 yPosition = margin + 10;
                             }
                             doc.text(line, margin, yPosition);
                             yPosition += 6;
                         }
+                        yPosition += 8;
                     }
-                    yPosition += 8;
                 }
                 
-                // Helper function to add image
-                async function addImage(imgElement) {
+                // Helper function to add heading with better spacing
+                function addHeading(text, level = 2) {
+                    if (yPosition > pageHeight - 30) {
+                        doc.addPage();
+                        yPosition = margin + 10;
+                    }
+                    
+                    yPosition += level === 1 ? 10 : (level === 2 ? 15 : 10); // Space before heading
+                    const fontSize = level === 1 ? 18 : level === 2 ? 16 : 14;
+                    addText(text, fontSize, true, level === 1);
+                    yPosition += 5; // Space after heading
+                }
+                
+                // Helper function to render complex layouts as images
+                async function addLayoutAsImage(element, title = '') {
                     try {
-                        if (yPosition > pageHeight - 80) { // Leave space for image
+                        if (yPosition > pageHeight - 100) {
                             doc.addPage();
-                            currentPage++;
                             yPosition = margin + 10;
                         }
                         
-                        // Add image caption if available
-                        const caption = imgElement.alt || imgElement.title || '';
-                        if (caption) {
-                            addText(`[${caption}]`, 10, false, true);
+                        if (title) {
+                            addText(title, 12, true, true);
+                            yPosition += 10;
                         }
                         
-                        // Convert image to base64 and add to PDF
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const tempImg = new Image();
-                        
-                        await new Promise((resolve, reject) => {
-                            tempImg.onload = resolve;
-                            tempImg.onerror = reject;
-                            tempImg.crossOrigin = 'anonymous';
-                            tempImg.src = imgElement.src;
+                        // Create canvas from element
+                        const canvas = await html2canvas(element, {
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: true,
+                            backgroundColor: '#ffffff',
+                            width: element.offsetWidth,
+                            height: element.offsetHeight
                         });
                         
-                        // Set canvas size and draw image
-                        canvas.width = tempImg.naturalWidth;
-                        canvas.height = tempImg.naturalHeight;
-                        ctx.drawImage(tempImg, 0, 0);
+                        const imgData = canvas.toDataURL('image/png');
                         
-                        // Convert to base64
-                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
-                        
-                        // Calculate image size for PDF (max 150mm width)
-                        const maxWidth = 150;
-                        const imgWidth = Math.min(maxWidth, (canvas.width * maxWidth) / canvas.width);
+                        // Calculate size to fit page width
+                        const maxWidth = pageWidth;
+                        const imgWidth = Math.min(maxWidth, pageWidth);
                         const imgHeight = (canvas.height * imgWidth) / canvas.width;
                         
-                        // Center the image
-                        const xPosition = (210 - imgWidth) / 2;
-                        
-                        // Add image to PDF
-                        doc.addImage(imgData, 'JPEG', xPosition, yPosition, imgWidth, imgHeight);
-                        yPosition += imgHeight + 10;
-                        
-                    } catch (error) {
-                        console.warn('Could not add image to PDF:', error);
-                        addText('[Image could not be included]', 10, true, true);
-                        yPosition += 15;
-                    }
-                }
-                
-                // Helper function to add heading
-                function addHeading(text, level = 2) {
-                    const fontSize = level === 1 ? 18 : level === 2 ? 16 : 14;
-                    addText(text, fontSize, true);
-                    yPosition += 10; // More spacing after headings
-                }
-                
-                // Helper function to add list items
-                function addListItems(items) {
-                    for (let item of items) {
-                        if (yPosition > pageHeight) {
+                        // Check if image fits on current page
+                        if (yPosition + imgHeight > pageHeight) {
                             doc.addPage();
-                            currentPage++;
                             yPosition = margin + 10;
                         }
-                        const lines = doc.splitTextToSize(`• ${item}`, pageWidth - 10);
-                        for (let line of lines) {
-                            doc.text(line, margin + 5, yPosition);
-                            yPosition += 6;
-                        }
-                        yPosition += 2;
+                        
+                        // Center the image
+                        const xPosition = margin + (pageWidth - imgWidth) / 2;
+                        
+                        doc.addImage(imgData, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+                        yPosition += imgHeight + 15;
+                        
+                    } catch (error) {
+                        console.warn('Could not render layout as image:', error);
+                        addText(`[${title || 'Complex layout'} - content preserved in document]`, 10, true, true);
+                        yPosition += 20;
                     }
                 }
                 
-                // Extract and add content
+                // Add title and subtitle
                 const title = paperContent.querySelector('h1').textContent;
                 addHeading(title, 1);
                 
-                // Add subtitle if exists (avoid duplication)
                 const subtitle = paperContent.querySelector('p[style*="text-align: center"][style*="font-style: italic"]');
                 if (subtitle && subtitle.textContent.includes('Pilot Study')) {
                     addText(subtitle.textContent, 12, false, true);
                 }
                 
-                // Process all content elements
-                const elements = paperContent.children;
+                // Process content with special handling for complex layouts
+                const elements = Array.from(paperContent.children);
+                
                 for (let element of elements) {
-                    if (yPosition > pageHeight) {
-                        doc.addPage();
-                        currentPage++;
-                        yPosition = margin + 10;
+                    // Skip already processed elements
+                    if (element.tagName === 'H1' || 
+                        (element.tagName === 'P' && element.style.textAlign === 'center' && element.style.fontStyle === 'italic')) {
+                        continue;
                     }
                     
-                    if (element.tagName === 'H1') {
-                        // Skip title as already added
-                        continue;
-                    } else if (element.tagName === 'H2') {
+                    // Handle different content types
+                    if (element.tagName === 'H2') {
                         addHeading(element.textContent, 2);
                     } else if (element.tagName === 'H3') {
                         addHeading(element.textContent, 3);
-                    } else if (element.tagName === 'H4') {
-                        addHeading(element.textContent, 3);
                     } else if (element.tagName === 'P') {
-                        // Skip subtitle as already added
-                        if (element.style.textAlign === 'center' && element.style.fontStyle === 'italic') {
-                            continue;
-                        }
                         addText(element.textContent);
-                    } else if (element.tagName === 'UL') {
-                        const items = Array.from(element.querySelectorAll('li')).map(li => li.textContent);
-                        addListItems(items);
-                    } else if (element.tagName === 'OL') {
-                        const items = Array.from(element.querySelectorAll('li')).map((li, index) => `${index + 1}. ${li.textContent}`);
-                        addListItems(items);
-                    } else if (element.tagName === 'IMG') {
-                        // Handle images - actually include them in PDF
-                        await addImage(element);
-                    } else if (element.tagName === 'TABLE') {
-                        // Handle tables
-                        if (yPosition > pageHeight - 30) {
-                            doc.addPage();
-                            currentPage++;
-                            yPosition = margin + 10;
-                        }
+                    } else if (element.tagName === 'UL' || element.tagName === 'OL') {
+                        const items = Array.from(element.querySelectorAll('li')).map((li, index) => {
+                            return element.tagName === 'OL' ? `${index + 1}. ${li.textContent}` : `• ${li.textContent}`;
+                        });
                         
-                        addText('[Table structure preserved]', 10, true, true);
-                        yPosition += 10;
-                        
-                        // Process table content as text
-                        const rows = element.querySelectorAll('tr');
-                        for (let row of rows) {
-                            const cells = row.querySelectorAll('td, th');
-                            const rowText = Array.from(cells).map(cell => cell.textContent.trim()).join(' | ');
-                            if (rowText) {
-                                addText(rowText, 10);
+                        for (let item of items) {
+                            if (yPosition > pageHeight) {
+                                doc.addPage();
+                                yPosition = margin + 10;
                             }
+                            const lines = doc.splitTextToSize(item, pageWidth - 10);
+                            for (let line of lines) {
+                                doc.text(line, margin + 5, yPosition);
+                                yPosition += 6;
+                            }
+                            yPosition += 2;
                         }
                         yPosition += 10;
-                    } else if (element.tagName === 'DIV' && element.querySelector('h2')) {
-                        // Survey questions section
-                        addHeading('Survey Questions', 2);
-                        yPosition += 5;
-                        
-                        // Process survey sections
-                        const sections = element.querySelectorAll('div[style*="border"]');
-                        for (let section of sections) {
-                            const sectionTitle = section.querySelector('h4');
-                            if (sectionTitle) {
-                                addHeading(sectionTitle.textContent, 3);
+                    } else if (element.tagName === 'DIV') {
+                        // Special handling for complex divs
+                        if (element.querySelector('table')) {
+                            // Tables with images - render as image to preserve layout
+                            const title = element.querySelector('h3')?.textContent || 'Table with Images';
+                            await addLayoutAsImage(element, title);
+                        } else if (element.style.display && element.style.display.includes('grid')) {
+                            // Grid layouts (like survey questions) - render as image
+                            const title = element.querySelector('h2')?.textContent || 'Survey Questions';
+                            await addLayoutAsImage(element, title);
+                        } else if (element.classList.contains('abstract')) {
+                            // Abstract section
+                            addText(element.textContent);
+                        } else {
+                            // Other divs - process text content
+                            const textContent = element.textContent.trim();
+                            if (textContent) {
+                                addText(textContent);
                             }
-                            
-                            const sectionText = section.querySelector('p');
-                            if (sectionText) {
-                                addText(sectionText.textContent);
-                            }
-                            
-                            const sectionList = section.querySelector('ul');
-                            if (sectionList) {
-                                const items = Array.from(sectionList.querySelectorAll('li')).map(li => li.textContent);
-                                addListItems(items);
-                            }
-                            
-                            yPosition += 10;
                         }
-                    } else if (element.tagName === 'DIV' && element.querySelector('table')) {
-                        // Handle divs containing tables (like the app screenshots and point images)
-                        if (yPosition > pageHeight - 30) {
-                            doc.addPage();
-                            currentPage++;
-                            yPosition = margin + 10;
-                        }
-                        
-                        const tableTitle = element.querySelector('h3');
-                        if (tableTitle) {
-                            addHeading(tableTitle.textContent, 3);
-                        }
-                        
-                        // Process table content and include images
-                        const table = element.querySelector('table');
-                        const rows = table.querySelectorAll('tr');
-                        for (let row of rows) {
-                            const cells = row.querySelectorAll('td, th');
-                            for (let cell of cells) {
-                                const img = cell.querySelector('img');
-                                const text = cell.textContent.trim();
-                                
-                                if (img) {
-                                    // Add image to PDF
-                                    await addImage(img);
-                                } else if (text) {
-                                    addText(text, 10);
-                                }
-                            }
-                            yPosition += 5; // Space between rows
-                        }
-                        yPosition += 15;
                     }
                 }
                 
@@ -860,6 +784,9 @@
             } catch (error) {
                 console.error('Error generating PDF:', error);
                 alert('Error generating PDF. Please try again. Error: ' + error.message);
+                // Remove loading message if still present
+                const loadingDiv = document.querySelector('div[style*="position:fixed"]');
+                if (loadingDiv) document.body.removeChild(loadingDiv);
             }
         }
         
