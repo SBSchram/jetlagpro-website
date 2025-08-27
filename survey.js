@@ -685,7 +685,7 @@ function validateSection(sectionId) {
 }
 
 // Submit survey
-function submitSurvey() {
+async function submitSurvey() {
     console.log('📤 Submitting survey...');
     
     // Check if code is validated
@@ -713,7 +713,13 @@ function submitSurvey() {
     saveFormData();
     
     // Export data
-    exportSurveyData();
+    try {
+        await exportSurveyData();
+        console.log('✅ Survey data export completed successfully');
+    } catch (error) {
+        console.error('❌ Error during survey data export:', error);
+        alert('Survey submitted locally, but there was an issue saving to the research database. Your responses are still recorded.');
+    }
     
     // Show completion message
     showCompletion();
