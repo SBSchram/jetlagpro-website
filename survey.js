@@ -180,6 +180,9 @@ function autoFillSurveyCode() {
             // Auto-populate point data if available
             autoFillPointData();
             
+            // Auto-populate timezone and direction data if available
+            autoFillTimezoneData();
+            
             // Auto-validate the code and hide the preview section
             setTimeout(() => {
                 const validateBtn = document.getElementById('validateCode');
@@ -241,6 +244,63 @@ function autoFillPointData() {
         }
     } else {
         console.log('ℹ️ No point data found in URL - user will need to enter manually');
+    }
+}
+
+// Auto-fill timezone, direction, and destination data from URL parameters
+function autoFillTimezoneData() {
+    console.log('🌍 Checking for timezone and travel data in URL...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const timezones = urlParams.get('timezones');
+    const direction = urlParams.get('direction');
+    const destination = urlParams.get('destination');
+    const startDate = urlParams.get('startDate');
+    
+    let autoFilledData = [];
+    
+    // Auto-fill timezone count
+    if (timezones) {
+        const timezonesSelect = document.querySelector('select[name="timezones"]');
+        if (timezonesSelect) {
+            // Handle 12+ case
+            const value = parseInt(timezones) >= 12 ? '12+' : timezones;
+            timezonesSelect.value = value;
+            console.log(`✅ Auto-filled timezones: ${value}`);
+            autoFilledData.push(`${value} timezones`);
+        }
+    }
+    
+    // Auto-fill travel direction
+    if (direction) {
+        const directionSelect = document.querySelector('select[name="direction"]');
+        if (directionSelect) {
+            directionSelect.value = direction;
+            console.log(`✅ Auto-filled direction: ${direction}`);
+            autoFilledData.push(`${direction}ward travel`);
+        }
+    }
+    
+    // Landing time is intentionally left for user input - they know exactly when they landed
+    
+    // Show comprehensive auto-fill message if any data was populated
+    if (autoFilledData.length > 0) {
+        const travelDataMessage = document.createElement('div');
+        travelDataMessage.className = 'travel-data-message';
+        travelDataMessage.innerHTML = `
+            <div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 8px; padding: 12px; margin: 16px 0;">
+                <strong>✈️ Travel Data Auto-filled:</strong> Your app data has automatically populated: ${autoFilledData.join(', ')}${destination ? `, destination: ${destination}` : ''}. 
+                You can modify any of these values if needed.
+            </div>
+        `;
+        
+        // Insert the message before the travel context section
+        const contextForm = document.querySelector('#contextForm');
+        if (contextForm) {
+            contextForm.parentNode.insertBefore(travelDataMessage, contextForm);
+        }
+    } else {
+        console.log('ℹ️ No timezone/travel data found in URL - user will need to enter manually');
     }
 }
 
