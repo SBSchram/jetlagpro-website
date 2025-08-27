@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jet Lag Research Survey - JetLagPro</title>
+    
+    <!-- Aggressive cache busting -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="description" content="Help advance chronoacupuncture research by participating in our jet lag survey. Your feedback helps improve jet lag management for travelers worldwide.">
     <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="survey.css">
+    <link rel="stylesheet" href="styles.css?v=2025011902">
+    <link rel="stylesheet" href="survey.css?v=2025011902">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -85,16 +90,9 @@
 
             <!-- Survey Content (always visible, but submission disabled without code) -->
             <div id="surveyContent" class="survey-layout-container survey-card">
-                    <div class="survey-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                        <div class="progress-text" id="progressText">Step 1 of 5</div>
-                    </div>
 
-                    <!-- LJLQ-based survey redesign follows. All questions use dropdowns. -->
-                    <!-- Section 1: Pre-Travel Baseline -->
-                    <section class="survey-section" id="preBaseline">
+                    <!-- LJLQ-based survey - Single scrollable form -->
+                    <div class="survey-content">
                       <h3>Pre-Travel Baseline</h3>
                       <p>Please rate your typical symptoms before this trip:</p>
                       <form id="baselineForm">
@@ -149,11 +147,8 @@
                           </div>
                         </div>
                       </form>
-                    </section>
 
-                    <!-- Section 2: Post-Travel Assessment -->
-                    <section class="survey-section" id="postAssessment">
-                      <h3>Post-Travel Assessment</h3>
+                      <h3 style="margin-top: 40px;">Post-Travel Assessment</h3>
                       <p>Please rate your symptoms after this trip and how long they lasted:</p>
                       <form id="postForm">
                         <div class="symptom-row">
@@ -282,11 +277,8 @@
                           </div>
                         </div>
                       </form>
-                    </section>
 
-                    <!-- Section 3: Additional Context -->
-                    <section class="survey-section" id="contextSection">
-                      <h3>Travel Context</h3>
+                      <h3 style="margin-top: 40px;">Travel Context</h3>
                       <p>Please provide details about your travel experience and app usage:</p>
                       <form id="contextForm">
                         <div class="context-row">
@@ -358,11 +350,7 @@
                           </select>
                         </div>
                       </form>
-                    </section>
-
-                    <!-- Section 4: Demographics -->
-                    <section class="survey-section" id="demographicsSection">
-                      <h3>Demographics (Optional)</h3>
+                      <h3 style="margin-top: 40px;">Demographics (Optional)</h3>
                       <p>This information helps us understand the diversity of our research participants:</p>
                       <form id="demographicsForm">
                         <div class="demographic-row">
@@ -417,11 +405,7 @@
                           </select>
                         </div>
                       </form>
-                    </section>
-
-                    <!-- Section 5: Additional Comments -->
-                    <section class="survey-section" id="commentSection">
-                        <h3>Additional Comments (Optional)</h3>
+                        <h3 style="margin-top: 40px;">Additional Comments (Optional)</h3>
                         <p>Your feedback helps improve our research and the JetLagPro app. Please share any additional thoughts about your experience with chronoacupuncture or jet lag management.</p>
                         
                         <div class="comment-container">
@@ -441,7 +425,7 @@
                                 <small>💡 Your comments are anonymous and will be used for research purposes only.</small>
                             </div>
                         </div>
-                    </section>
+                    </div> <!-- End survey-content -->
 
                     <div class="survey-complete survey-card" id="surveyComplete" style="display: none;">
                         <div class="completion-content">
@@ -505,7 +489,35 @@
 
         console.log('🔥 Firebase initialized successfully');
     </script>
-    <script src="survey.js"></script>
+    <script src="survey.js?v=2025011902"></script>
+    
+    <!-- Force cache refresh script -->
+    <script>
+        // Force fresh content load
+        (function() {
+            const expectedVersion = '2025011902';
+            const currentVersion = new URLSearchParams(window.location.search).get('cv') || '';
+            
+            // If no cache version or wrong version, reload with cache bust
+            if (!currentVersion || currentVersion !== expectedVersion) {
+                const url = new URL(window.location);
+                url.searchParams.set('cv', expectedVersion);
+                url.searchParams.set('_t', Date.now());
+                
+                console.log('🔄 Force refreshing for latest content...');
+                window.location.replace(url.toString());
+                return;
+            }
+            
+            // Double check - if we don't see the expected mobile alert function, force reload
+            setTimeout(() => {
+                if (typeof showMobileAlert === 'undefined') {
+                    console.log('🔄 Stale JS detected, forcing reload...');
+                    window.location.reload(true);
+                }
+            }, 1000);
+        })();
+    </script>
     <script>
         // Mobile menu toggle
         function toggleMobileMenu() {

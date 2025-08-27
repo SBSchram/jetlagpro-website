@@ -53,9 +53,47 @@ function validateComment(input) {
     return { isValid: true, message: 'Comment is valid' };
 }
 
+// Check if coming from app and refresh if needed
+function checkAndRefreshFromApp() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromApp = urlParams.get('from') === 'app';
+    
+    if (fromApp && !sessionStorage.getItem('appRefreshDone')) {
+        console.log('🔄 Coming from app - forcing fresh load...');
+        sessionStorage.setItem('appRefreshDone', 'true');
+        
+        // Add timestamp to force refresh
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('t', Date.now().toString());
+        
+        // Force reload with cache bust
+        window.location.href = newUrl.toString();
+        return;
+    }
+}
+
+// Force scroll to very top (mobile-optimized)
+function forceScrollToTop() {
+    console.log('📍 Forcing scroll to top...');
+    
+    // Multiple methods to ensure it works on all mobile browsers
+    document.body.scrollTop = 0; // Safari
+    document.documentElement.scrollTop = 0; // Chrome/Firefox
+    window.scrollTo(0, 0);
+    
+    // Also scroll the survey container itself
+    const surveyContainer = document.querySelector('.survey-container');
+    if (surveyContainer) {
+        surveyContainer.scrollTop = 0;
+    }
+}
+
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 LJLQ Survey Initializing...');
+    
+    // Check if coming from app and force refresh if needed
+    checkAndRefreshFromApp();
     
     // Setup code validation first
     setupCodeValidation();
@@ -74,6 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup scale sliders
     setupScaleSliders();
+    
+    // Always scroll to top on mobile
+    if (window.innerWidth <= 768) {
+        setTimeout(forceScrollToTop, 500);
+    }
     
     console.log('✅ LJLQ Survey initialized');
 });
@@ -560,23 +603,22 @@ function setupSubmitButton() {
     console.log('✅ Submit button setup complete');
 }
 
-// Show all sections for scrollable experience
+// Initialize frictionless single-page survey 
 function showAllSections() {
-    console.log('📄 Showing all sections for scrollable experience');
+    console.log('📄 Frictionless single-page survey ready');
     
-    // Show all sections
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
-    sections.forEach(id => {
-        const section = document.getElementById(id);
-        if (section) {
-            section.style.display = 'block';
-        }
-    });
+    // Remove any section navigation or barriers
+    const navElements = document.querySelectorAll('.section-navigation, .nav-buttons, .continue-btn, .next-btn, .prev-btn');
+    navElements.forEach(el => el.remove());
     
-    // Hide progress indicator for single-page experience
-    const progressBar = document.querySelector('.survey-progress');
-    if (progressBar) {
-        progressBar.style.display = 'none';
+    // Remove progress indicators completely
+    const progressElements = document.querySelectorAll('.survey-progress, .progress-bar, .progress-text');
+    progressElements.forEach(el => el.style.display = 'none');
+    
+    // Ensure all content is visible and flows naturally
+    const surveyContent = document.querySelector('.survey-content');
+    if (surveyContent) {
+        surveyContent.style.display = 'block';
     }
 }
 
@@ -694,13 +736,17 @@ async function submitSurvey() {
         return;
     }
     
-    // Validate all sections
-    const sections = ['preBaseline', 'postAssessment', 'contextSection'];
+    // Validate all required fields in the single survey form
     let isValid = true;
     
-    sections.forEach(sectionId => {
-        if (!validateSection(sectionId)) {
+    // Get all required fields
+    const requiredFields = document.querySelectorAll('input[required], select[required]');
+    requiredFields.forEach(field => {
+        if (!field.value || field.value.trim() === '') {
             isValid = false;
+            field.style.borderColor = '#ef4444';
+        } else {
+            field.style.borderColor = '';
         }
     });
     
@@ -718,7 +764,8 @@ async function submitSurvey() {
         console.log('✅ Survey data export completed successfully');
     } catch (error) {
         console.error('❌ Error during survey data export:', error);
-        alert('Survey submitted locally, but there was an issue saving to the research database. Your responses are still recorded.');
+        showMobileAlert('⚠️ Partial Save', 'Survey submitted locally, but there was an issue saving to the research database. Your responses are still recorded.', 'error');
+        return; // Don't show completion if Firebase failed
     }
     
     // Show completion message
@@ -790,29 +837,96 @@ async function exportSurveyData() {
     console.log('✅ Survey data saved to research database');
 }
 
-// Show completion message
+// Show completion message with visual feedback
 function showCompletion() {
     console.log('🎉 Showing completion message...');
     
-    // Hide all sections
-    const sections = ['preBaseline', 'postAssessment', 'contextSection', 'demographicsSection', 'commentSection'];
-    sections.forEach(id => {
-        const section = document.getElementById(id);
-        if (section) {
-            section.style.display = 'none';
-        }
-    });
+    // Show immediate visual feedback
+    showMobileAlert('🎉 Survey Submitted!', 'Your responses have been saved to our research database. Thank you for participating!', 'success');
+    
+    // Hide the survey content
+    const surveyContent = document.querySelector('.survey-content');
+    if (surveyContent) {
+        surveyContent.style.display = 'none';
+    }
     
     // Show completion section
     const completion = document.getElementById('surveyComplete');
     if (completion) {
         completion.style.display = 'block';
+        completion.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     // Clear saved data
     localStorage.removeItem('ljlqSurveyData');
     
     console.log('✅ Survey completed');
+}
+
+// Mobile-friendly alert system (no console required)
+function showMobileAlert(title, message, type = 'info') {
+    // Remove any existing alerts
+    const existingAlert = document.querySelector('.mobile-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    // Create alert container
+    const alert = document.createElement('div');
+    alert.className = `mobile-alert mobile-alert-${type}`;
+    alert.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10000;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        max-width: 90vw;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        animation: slideInDown 0.3s ease-out;
+    `;
+    
+    alert.innerHTML = `
+        <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">${title}</div>
+        <div style="font-size: 14px; line-height: 1.4;">${message}</div>
+        <button onclick="this.parentElement.remove()" style="
+            margin-top: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        ">OK</button>
+    `;
+    
+    // Add CSS animation
+    if (!document.querySelector('#mobile-alert-styles')) {
+        const style = document.createElement('style');
+        style.id = 'mobile-alert-styles';
+        style.textContent = `
+            @keyframes slideInDown {
+                from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(alert);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (alert.parentElement) {
+            alert.remove();
+        }
+    }, 5000);
 }
 
 // Reset survey
