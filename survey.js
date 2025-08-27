@@ -326,24 +326,7 @@ function hideSurveyPreview() {
     }
 }
 
-// Scroll to the survey content
-function scrollToSurvey() {
-    const surveyContent = document.getElementById('surveyContent');
-    if (surveyContent) {
-        surveyContent.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
-        
-        // Additional scroll to ensure we're at the very top of the form
-        setTimeout(() => {
-            window.scrollTo({
-                top: surveyContent.offsetTop - 20, // 20px offset for better positioning
-                behavior: 'smooth'
-            });
-        }, 100);
-    }
-}
+
 
 // Setup flight landing time validation
 function setupFlightLandingValidation() {
@@ -422,16 +405,12 @@ function setupCodeValidation() {
             validationMessage.innerHTML = '<div class="success">✅ Code validated! Survey submission enabled.</div>';
             validationMessage.className = 'validation-message success';
             
-            // Scroll to top after successful validation so user can start survey from beginning
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
             // Enable survey submission
             enableSurveySubmission();
             
-            // Hide preview section and scroll to survey for clean experience
+            // Hide preview section for clean experience
             setTimeout(() => {
                 hideSurveyPreview();
-                scrollToSurvey();
             }, 1500); // Show success message briefly, then clean up
             
         } else {
