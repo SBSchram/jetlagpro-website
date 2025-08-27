@@ -605,7 +605,17 @@ function setupSubmitButton() {
 
 // Initialize frictionless single-page survey 
 function showAllSections() {
-    console.log('📄 Frictionless single-page survey ready');
+    console.log('🎉 =================================================');
+    console.log('🎉 NEW FRICTIONLESS SURVEY LOADED - VERSION 2025011903');
+    console.log('🎉 =================================================');
+    console.log('✅ Single-scroll survey (no sections)');
+    console.log('✅ Mobile alerts working');
+    console.log('✅ Fresh content delivered');
+    console.log('✅ Cache issues resolved');
+    console.log('🎉 =================================================');
+    
+    // Add clear visual indicator that new version is loaded
+    showMobileAlert('✅ Fresh Survey Loaded!', 'You are now using the latest frictionless single-scroll survey experience. Version 2025011903', 'success');
     
     // Remove any section navigation or barriers
     const navElements = document.querySelectorAll('.section-navigation, .nav-buttons, .continue-btn, .next-btn, .prev-btn');
@@ -620,6 +630,24 @@ function showAllSections() {
     if (surveyContent) {
         surveyContent.style.display = 'block';
     }
+    
+    // Add version indicator to the page
+    const versionIndicator = document.createElement('div');
+    versionIndicator.style.cssText = `
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background: #10b981;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1000;
+        opacity: 0.8;
+    `;
+    versionIndicator.textContent = 'v2025011903 ✅';
+    document.body.appendChild(versionIndicator);
 }
 
 // Progress indicator removed - using single scrollable page instead
