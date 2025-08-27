@@ -213,18 +213,20 @@ function autoFillPointData() {
     if (pointsCompleted && totalPoints) {
         console.log(`✅ Found point data: ${pointsCompleted}/${totalPoints} points completed`);
         
-        // Auto-fill the flight points question
-        const flightPointsSelect = document.querySelector('select[name="points_flight"]');
-        if (flightPointsSelect) {
-            flightPointsSelect.value = pointsCompleted;
-            console.log(`📝 Auto-filled flight points: ${pointsCompleted}`);
-        }
-        
-        // Auto-fill the arrival points question (default to 0)
-        const arrivalPointsSelect = document.querySelector('select[name="points_arrival"]');
-        if (arrivalPointsSelect) {
-            arrivalPointsSelect.value = '0';
-            console.log('📝 Auto-filled arrival points: 0');
+        // Auto-fill the total points question
+        const totalPointsSelect = document.querySelector('select[name="points_total"]');
+        if (totalPointsSelect) {
+            // Convert number to range that matches the options
+            const pointsNum = parseInt(pointsCompleted);
+            let rangeValue;
+            if (pointsNum === 0) rangeValue = '0';
+            else if (pointsNum <= 3) rangeValue = '1-3';
+            else if (pointsNum <= 6) rangeValue = '4-6';
+            else if (pointsNum <= 9) rangeValue = '7-9';
+            else rangeValue = '10-12';
+            
+            totalPointsSelect.value = rangeValue;
+            console.log(`📝 Auto-filled total points: ${pointsCompleted} → ${rangeValue}`);
         }
         
         // Show a helpful message to the user
@@ -278,6 +280,16 @@ function autoFillTimezoneData() {
             directionSelect.value = direction;
             console.log(`✅ Auto-filled direction: ${direction}`);
             autoFilledData.push(`${direction}ward travel`);
+        }
+    }
+    
+    // Auto-fill destination (hidden field)
+    if (destination) {
+        const destinationInput = document.querySelector('input[name="destination"]');
+        if (destinationInput) {
+            destinationInput.value = destination;
+            console.log(`✅ Auto-filled destination: ${destination}`);
+            autoFilledData.push(`destination: ${destination}`);
         }
     }
     
