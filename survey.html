@@ -493,8 +493,20 @@
     
     <!-- Force cache refresh script -->
     <script>
-        // Force fresh content load
+        // Aggressive cache clearing and fresh content loading
         (function() {
+            console.log('🧹 Starting aggressive cache clearing...');
+            
+            // Clear all possible caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        console.log('🗑️ Deleting cache:', name);
+                        caches.delete(name);
+                    }
+                });
+            }
+            
             const expectedVersion = '2025011902';
             const currentVersion = new URLSearchParams(window.location.search).get('cv') || '';
             
@@ -505,6 +517,7 @@
                 url.searchParams.set('_t', Date.now());
                 
                 console.log('🔄 Force refreshing for latest content...');
+                // Use replace to avoid history issues
                 window.location.replace(url.toString());
                 return;
             }
@@ -512,7 +525,8 @@
             // Double check - if we don't see the expected mobile alert function, force reload
             setTimeout(() => {
                 if (typeof showMobileAlert === 'undefined') {
-                    console.log('🔄 Stale JS detected, forcing reload...');
+                    console.log('🔄 Stale JS detected, forcing hard reload...');
+                    // Force hard reload bypassing cache
                     window.location.reload(true);
                 }
             }, 1000);
