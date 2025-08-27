@@ -362,6 +362,9 @@ function setupCodeValidation() {
             validationMessage.innerHTML = '<div class="success">✅ Code validated! Survey submission enabled.</div>';
             validationMessage.className = 'validation-message success';
             
+            // Scroll to top after successful validation so user can start survey from beginning
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             // Enable survey submission
             enableSurveySubmission();
             
@@ -614,8 +617,12 @@ function showAllSections() {
     console.log('✅ Cache issues resolved');
     console.log('🎉 =================================================');
     
-    // Add clear visual indicator that new version is loaded
-    showMobileAlert('✅ Fresh Survey Loaded!', 'You are now using the latest frictionless single-scroll survey experience. Version 2025011903', 'success');
+    // Subtle indicator that new version is loaded (only show on desktop for debugging)
+    if (window.innerWidth > 768) {
+        setTimeout(() => {
+            showMobileAlert('✅ Fresh Survey Loaded!', 'Single-scroll experience active. v2025011904', 'success');
+        }, 2000);
+    }
     
     // Remove any section navigation or barriers
     const navElements = document.querySelectorAll('.section-navigation, .nav-buttons, .continue-btn, .next-btn, .prev-btn');
@@ -646,7 +653,7 @@ function showAllSections() {
         z-index: 1000;
         opacity: 0.8;
     `;
-    versionIndicator.textContent = 'v2025011903 ✅';
+    versionIndicator.textContent = 'v2025011904 ✅';
     document.body.appendChild(versionIndicator);
 }
 

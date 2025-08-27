@@ -11,8 +11,8 @@
     <meta http-equiv="Expires" content="0">
     <meta name="description" content="Help advance chronoacupuncture research by participating in our jet lag survey. Your feedback helps improve jet lag management for travelers worldwide.">
     <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
-    <link rel="stylesheet" href="styles.css?v=2025011903">
-    <link rel="stylesheet" href="survey.css?v=2025011903">
+    <link rel="stylesheet" href="styles.css?v=2025011904">
+    <link rel="stylesheet" href="survey.css?v=2025011904">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -320,18 +320,9 @@
                           </select>
                         </div>
                         <div class="context-row">
-                          <label>How many acupressure points did you stimulate during the flight?</label>
-                          <select name="points_flight">
-                            <option value="0">0</option>
-                            <option value="1-3">1–3</option>
-                            <option value="4-6">4–6</option>
-                            <option value="7-9">7–9</option>
-                            <option value="10-12">10–12</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>How many acupressure points did you stimulate after arrival?</label>
-                          <select name="points_arrival">
+                          <label>How many acupressure points did you stimulate (total)?</label>
+                          <select name="points_total" required>
+                            <option value="">Select number of points</option>
                             <option value="0">0</option>
                             <option value="1-3">1–3</option>
                             <option value="4-6">4–6</option>
@@ -425,6 +416,32 @@
                                 <small>💡 Your comments are anonymous and will be used for research purposes only.</small>
                             </div>
                         </div>
+                        
+                        <!-- Submit Button -->
+                        <div style="margin-top: 40px; padding: 30px; text-align: center; border-top: 2px solid #e5e7eb; background: #f9fafb;">
+                            <button 
+                                id="submitSurveyBtn"
+                                onclick="submitSurvey()" 
+                                style="
+                                    background: #10b981;
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 40px;
+                                    border-radius: 8px;
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                    cursor: pointer;
+                                    transition: background-color 0.3s ease;
+                                "
+                                onmouseover="this.style.background='#059669'"
+                                onmouseout="this.style.background='#10b981'"
+                            >
+                                🚀 Submit Survey
+                            </button>
+                            <p style="margin-top: 15px; color: #6b7280; font-size: 14px;">
+                                Make sure you've entered a valid survey code above before submitting.
+                            </p>
+                        </div>
                     </div> <!-- End survey-content -->
 
                     <div class="survey-complete survey-card" id="surveyComplete" style="display: none;">
@@ -489,44 +506,39 @@
 
         console.log('🔥 Firebase initialized successfully');
     </script>
-    <script src="survey.js?v=2025011903"></script>
+    <script src="survey.js?v=2025011904"></script>
     
-    <!-- Force cache refresh script -->
+    <!-- Silent automatic cache refresh script -->
     <script>
-        // Aggressive cache clearing and fresh content loading
+        // Silent cache clearing and fresh content loading
         (function() {
-            console.log('🧹 Starting aggressive cache clearing...');
-            
-            // Clear all possible caches
+            // Silently clear all possible caches
             if ('caches' in window) {
                 caches.keys().then(function(names) {
                     for (let name of names) {
-                        console.log('🗑️ Deleting cache:', name);
                         caches.delete(name);
                     }
                 });
             }
             
-            const expectedVersion = '2025011903';
+            const expectedVersion = '2025011904';
             const currentVersion = new URLSearchParams(window.location.search).get('cv') || '';
             
-            // If no cache version or wrong version, reload with cache bust
+            // If no cache version or wrong version, silently reload with cache bust
             if (!currentVersion || currentVersion !== expectedVersion) {
                 const url = new URL(window.location);
                 url.searchParams.set('cv', expectedVersion);
                 url.searchParams.set('_t', Date.now());
                 
-                console.log('🔄 Force refreshing for latest content...');
-                // Use replace to avoid history issues
+                // Silent reload
                 window.location.replace(url.toString());
                 return;
             }
             
-            // Double check - if we don't see the expected mobile alert function, force reload
+            // Silent check - if we don't see expected functions, force reload
             setTimeout(() => {
                 if (typeof showMobileAlert === 'undefined') {
-                    console.log('🔄 Stale JS detected, forcing hard reload...');
-                    // Force hard reload bypassing cache
+                    // Silent hard reload bypassing cache
                     window.location.reload(true);
                 }
             }, 1000);
