@@ -620,7 +620,7 @@ function showAllSections() {
     // Subtle indicator that new version is loaded (only show on desktop for debugging)
     if (window.innerWidth > 768) {
         setTimeout(() => {
-            showMobileAlert('✅ Fresh Survey Loaded!', 'Single-scroll experience active. v2025011904', 'success');
+            showMobileAlert('✅ Fresh Survey Loaded!', 'Single-scroll experience active. v2025011905', 'success');
         }, 2000);
     }
     
@@ -653,7 +653,7 @@ function showAllSections() {
         z-index: 1000;
         opacity: 0.8;
     `;
-    versionIndicator.textContent = 'v2025011904 ✅';
+    versionIndicator.textContent = 'v2025011905 ✅';
     document.body.appendChild(versionIndicator);
 }
 

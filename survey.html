@@ -11,8 +11,8 @@
     <meta http-equiv="Expires" content="0">
     <meta name="description" content="Help advance chronoacupuncture research by participating in our jet lag survey. Your feedback helps improve jet lag management for travelers worldwide.">
     <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
-    <link rel="stylesheet" href="styles.css?v=2025011904">
-    <link rel="stylesheet" href="survey.css?v=2025011904">
+    <link rel="stylesheet" href="styles.css?v=2025011905">
+    <link rel="stylesheet" href="survey.css?v=2025011905">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -149,130 +149,55 @@
                       </form>
 
                       <h3 style="margin-top: 40px;">Post-Travel Assessment</h3>
-                      <p>Please rate your symptoms after this trip and how long they lasted:</p>
+                      <p>Please rate your <strong>current</strong> symptoms since arriving at your destination:</p>
                       <form id="postForm">
                         <div class="symptom-row">
                           <label>Sleep disturbance</label>
-                          <div class="symptom-assessment">
-                            <div class="severity-section">
-                              <h4>Severity:</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_sleep_severity" min="1" max="5" value="1" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>1 - None</span>
-                                  <span>5 - Severe</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="duration-section">
-                              <h4>Duration (days):</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_sleep_duration" min="0" max="5" value="0" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>0</span>
-                                  <span>5+</span>
-                                </div>
-                              </div>
+                          <div class="scale-container" style="width: 100%;">
+                            <input type="range" name="post_sleep_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
+                            <div class="scale-labels">
+                              <span>None</span>
+                              <span>Severe</span>
                             </div>
                           </div>
                         </div>
                         <div class="symptom-row">
                           <label>Daytime fatigue</label>
-                          <div class="symptom-assessment">
-                            <div class="severity-section">
-                              <h4>Severity:</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_fatigue_severity" min="1" max="5" value="1" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>1 - None</span>
-                                  <span>5 - Severe</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="duration-section">
-                              <h4>Duration (days):</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_fatigue_duration" min="0" max="5" value="0" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>0</span>
-                                  <span>5+</span>
-                                </div>
-                              </div>
+                          <div class="scale-container" style="width: 100%;">
+                            <input type="range" name="post_fatigue_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
+                            <div class="scale-labels">
+                              <span>None</span>
+                              <span>Severe</span>
                             </div>
                           </div>
                         </div>
                         <div class="symptom-row">
                           <label>Difficulty concentrating</label>
-                          <div class="symptom-assessment">
-                            <div class="severity-section">
-                              <h4>Severity:</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_concentration_severity" min="1" max="5" value="1" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>1 - None</span>
-                                  <span>5 - Severe</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="duration-section">
-                              <h4>Duration (days):</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_concentration_duration" min="0" max="5" value="0" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>0</span>
-                                  <span>5+</span>
-                                </div>
-                              </div>
+                          <div class="scale-container" style="width: 100%;">
+                            <input type="range" name="post_concentration_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
+                            <div class="scale-labels">
+                              <span>None</span>
+                              <span>Severe</span>
                             </div>
                           </div>
                         </div>
                         <div class="symptom-row">
                           <label>Irritability</label>
-                          <div class="symptom-assessment">
-                            <div class="severity-section">
-                              <h4>Severity:</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_irritability_severity" min="1" max="5" value="1" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>1 - None</span>
-                                  <span>5 - Severe</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="duration-section">
-                              <h4>Duration (days):</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_irritability_duration" min="0" max="5" value="0" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>0</span>
-                                  <span>5+</span>
-                                </div>
-                              </div>
+                          <div class="scale-container" style="width: 100%;">
+                            <input type="range" name="post_irritability_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
+                            <div class="scale-labels">
+                              <span>None</span>
+                              <span>Severe</span>
                             </div>
                           </div>
                         </div>
                         <div class="symptom-row">
                           <label>Gastrointestinal issues</label>
-                          <div class="symptom-assessment">
-                            <div class="severity-section">
-                              <h4>Severity:</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_gi_severity" min="1" max="5" value="1" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>1 - None</span>
-                                  <span>5 - Severe</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="duration-section">
-                              <h4>Duration (days):</h4>
-                              <div class="scale-container">
-                                <input type="range" name="post_gi_duration" min="0" max="5" value="0" class="scale-slider">
-                                <div class="scale-labels">
-                                  <span>0</span>
-                                  <span>5+</span>
-                                </div>
-                              </div>
+                          <div class="scale-container" style="width: 100%;">
+                            <input type="range" name="post_gi_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
+                            <div class="scale-labels">
+                              <span>None</span>
+                              <span>Severe</span>
                             </div>
                           </div>
                         </div>
@@ -506,7 +431,7 @@
 
         console.log('🔥 Firebase initialized successfully');
     </script>
-    <script src="survey.js?v=2025011904"></script>
+    <script src="survey.js?v=2025011905"></script>
     
     <!-- Silent automatic cache refresh script -->
     <script>
@@ -521,7 +446,7 @@
                 });
             }
             
-            const expectedVersion = '2025011904';
+            const expectedVersion = '2025011905';
             const currentVersion = new URLSearchParams(window.location.search).get('cv') || '';
             
             // If no cache version or wrong version, silently reload with cache bust
