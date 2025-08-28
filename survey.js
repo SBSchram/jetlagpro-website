@@ -113,6 +113,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup scale sliders
     setupScaleSliders();
     
+    // Initialize enhanced sliders with tick marks
+    initializeEnhancedSliders();
+    
     // Always scroll to top on mobile
     if (window.innerWidth <= 768) {
         setTimeout(forceScrollToTop, 500);
@@ -1036,4 +1039,40 @@ function resetSurvey() {
     showSection('preBaseline');
     
     console.log('✅ Survey reset complete');
+}
+
+// Initialize enhanced sliders with visual tick marks and snap behavior
+function initializeEnhancedSliders() {
+    console.log('🎚️ Initializing enhanced sliders...');
+    
+    const sliders = document.querySelectorAll('.scale-slider');
+    
+    sliders.forEach(slider => {
+        // Add snap behavior for discrete values (1-5)
+        slider.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const min = parseFloat(this.min);
+            const max = parseFloat(this.max);
+            const step = (max - min) / 4; // 5 values: 1, 2, 3, 4, 5
+            
+            // Find closest step value
+            const closestStep = Math.round((value - min) / step) * step + min;
+            this.value = Math.max(min, Math.min(max, closestStep));
+        });
+        
+        // Add visual feedback on interaction
+        slider.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+        
+        slider.addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        slider.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    console.log(`✅ Enhanced ${sliders.length} sliders with tick marks and snap behavior`);
 } 
