@@ -431,6 +431,13 @@
         window.firebaseServerTimestamp = serverTimestamp;
 
         console.log('🔥 Firebase initialized successfully');
+        console.log('🔍 Firebase functions check:', {
+            firebaseDB: !!window.firebaseDB,
+            firebaseCollection: !!window.firebaseCollection,
+            firebaseDoc: !!window.firebaseDoc,
+            firebaseUpdateDoc: !!window.firebaseUpdateDoc,
+            firebaseServerTimestamp: !!window.firebaseServerTimestamp
+        });
     </script>
           <script>
           // Eternal cache busting for JavaScript - auto-generates timestamp

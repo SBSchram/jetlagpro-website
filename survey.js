@@ -876,6 +876,14 @@ async function exportSurveyData() {
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
     const tripId = window.currentTripId;
     
+    // Wait for Firebase functions to be available (timing issue fix)
+    let retryCount = 0;
+    while ((!window.firebaseDoc || !window.firebaseUpdateDoc) && retryCount < 10) {
+        console.log(`🔄 Waiting for Firebase functions... attempt ${retryCount + 1}`);
+        await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+        retryCount++;
+    }
+    
     // DEBUG: Show Firebase status on iPhone
     const firebaseStatus = {
         firebaseDB: !!window.firebaseDB,
@@ -884,7 +892,8 @@ async function exportSurveyData() {
         firebaseUpdateDoc: !!window.firebaseUpdateDoc,
         firebaseServerTimestamp: !!window.firebaseServerTimestamp,
         tripId: tripId,
-        surveyCode: surveyCode
+        surveyCode: surveyCode,
+        retryCount: retryCount
     };
     
     alert('🔍 DEBUG: Firebase Status\n' + JSON.stringify(firebaseStatus, null, 2));
