@@ -901,6 +901,7 @@ async function exportSurveyData() {
             
             // Prepare survey data to add to existing trip record
             const surveyUpdateData = {
+                surveyCompleted: true,
                 surveyCompletedAt: window.firebaseServerTimestamp(),
                 surveySubmittedAt: timestamp,
                 surveyResponses: surveyData,
