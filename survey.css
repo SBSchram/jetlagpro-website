@@ -999,9 +999,20 @@ form {
     border-left: 4px solid #28a745;
 }
 
+.completion-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.completion-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
 .survey-complete h2 {
     color: #28a745;
     margin-bottom: 20px;
+    font-size: 2rem;
 }
 
 .survey-complete p {
@@ -1009,6 +1020,47 @@ form {
     margin-bottom: 30px;
     font-size: 16px;
     line-height: 1.6;
+}
+
+.completion-benefits {
+    text-align: left;
+    margin: 30px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.completion-benefits h3 {
+    color: #374151;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.completion-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.completion-benefits li {
+    padding: 8px 0;
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.5;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.completion-benefits li:last-child {
+    border-bottom: none;
+}
+
+.completion-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 /* Responsive Design */
@@ -1049,6 +1101,42 @@ form {
     }
     
     .btn {
+        width: 100%;
+    }
+    
+    /* Mobile completion section adjustments */
+    .survey-complete {
+        padding: 30px 20px;
+    }
+    
+    .completion-icon {
+        font-size: 3rem;
+    }
+    
+    .survey-complete h2 {
+        font-size: 1.5rem;
+    }
+    
+    .completion-benefits {
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .completion-benefits h3 {
+        font-size: 1.1rem;
+    }
+    
+    .completion-benefits li {
+        font-size: 14px;
+        padding: 6px 0;
+    }
+    
+    .completion-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .completion-actions .btn {
         width: 100%;
     }
 }
