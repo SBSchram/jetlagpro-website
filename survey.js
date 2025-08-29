@@ -848,7 +848,6 @@ async function submitSurvey() {
 
 // Export survey data and save to Firestore
 async function exportSurveyData() {
-    alert('🔍 DEBUG: exportSurveyData() called!');
     console.log('📊 Exporting survey data...');
     
     const timestamp = new Date().toISOString();
@@ -862,20 +861,6 @@ async function exportSurveyData() {
         await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
         retryCount++;
     }
-    
-    // DEBUG: Show Firebase status on iPhone
-    const firebaseStatus = {
-        firebaseDB: !!window.firebaseDB,
-        firebaseCollection: !!window.firebaseCollection,
-        firebaseDoc: !!window.firebaseDoc,
-        firebaseUpdateDoc: !!window.firebaseUpdateDoc,
-        firebaseServerTimestamp: !!window.firebaseServerTimestamp,
-        tripId: tripId,
-        surveyCode: surveyCode,
-        retryCount: retryCount
-    };
-    
-    alert('🔍 DEBUG: Firebase Status\n' + JSON.stringify(firebaseStatus, null, 2));
     
     const exportData = {
         timestamp: timestamp,
