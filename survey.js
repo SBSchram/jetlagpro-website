@@ -167,15 +167,21 @@ function setupScaleSliders() {
     });
 }
 
-// Auto-fill survey code from URL parameter
+// Auto-fill survey code from URL parameter  
 function autoFillSurveyCode() {
     console.log('🔗 Checking for survey code in URL...');
     
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    const tripId = urlParams.get('tripId');
     
     if (code) {
         console.log('✅ Found survey code in URL:', code);
+        if (tripId) {
+            console.log('✅ Found tripId in URL:', tripId);
+            // Store tripId globally for later use in Firebase update
+            window.currentTripId = tripId;
+        }
         const surveyCodeInput = document.getElementById('surveyCode');
         if (surveyCodeInput) {
             surveyCodeInput.value = code.toUpperCase();
@@ -863,67 +869,90 @@ async function submitSurvey() {
 
 // Export survey data and save to Firestore
 async function exportSurveyData() {
+    alert('🔍 DEBUG: exportSurveyData() called!');
     console.log('📊 Exporting survey data...');
     
     const timestamp = new Date().toISOString();
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
+    const tripId = window.currentTripId;
+    
+    // DEBUG: Show Firebase status on iPhone
+    const firebaseStatus = {
+        firebaseDB: !!window.firebaseDB,
+        firebaseCollection: !!window.firebaseCollection,
+        firebaseDoc: !!window.firebaseDoc,
+        firebaseUpdateDoc: !!window.firebaseUpdateDoc,
+        firebaseServerTimestamp: !!window.firebaseServerTimestamp,
+        tripId: tripId,
+        surveyCode: surveyCode
+    };
+    
+    alert('🔍 DEBUG: Firebase Status\n' + JSON.stringify(firebaseStatus, null, 2));
     
     const exportData = {
         timestamp: timestamp,
         surveyCode: surveyCode,
+        tripId: tripId,
         surveyData: surveyData
     };
     
-    // Save to Firestore first
+    // Save to Firestore using unified collection approach
     try {
-        console.log('💾 Saving to Firestore...');
+        console.log('💾 Saving to unified tripCompletions collection...');
         console.log('🔍 Firebase availability check:', {
             firebaseDB: !!window.firebaseDB,
             firebaseCollection: !!window.firebaseCollection, 
-            firebaseAddDoc: !!window.firebaseAddDoc,
-            firebaseServerTimestamp: !!window.firebaseServerTimestamp
+            firebaseDoc: !!window.firebaseDoc,
+            firebaseUpdateDoc: !!window.firebaseUpdateDoc,
+            firebaseServerTimestamp: !!window.firebaseServerTimestamp,
+            tripId: tripId
         });
         
-        if (window.firebaseDB && window.firebaseCollection && window.firebaseAddDoc && window.firebaseServerTimestamp) {
-            console.log('🚀 Attempting Firestore save...');
+        if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
+            console.log('🚀 Attempting to update existing tripCompletions record...');
             
-            // Prepare data with sanitized comment
-            const firestoreData = {
-                surveyCode: surveyCode,
-                timestamp: window.firebaseServerTimestamp(),
-                submittedAt: timestamp,
-                responses: surveyData,
-                version: 'ljlq_v1'
+            // Prepare survey data to add to existing trip record
+            const surveyUpdateData = {
+                surveyCompletedAt: window.firebaseServerTimestamp(),
+                surveySubmittedAt: timestamp,
+                surveyResponses: surveyData,
+                surveyVersion: 'ljlq_v1'
             };
             
             // Add sanitized comment if present
             if (surveyData.userComment) {
                 const sanitizedComment = sanitizeComment(surveyData.userComment);
                 if (sanitizedComment) {
-                    firestoreData.comment = sanitizedComment;
+                    surveyUpdateData.surveyComment = sanitizedComment;
                 }
             }
             
-            const docRef = await window.firebaseAddDoc(
-                window.firebaseCollection(window.firebaseDB, 'survey_responses'), 
-                firestoreData
-            );
-            console.log('✅ Survey saved to Firestore with ID:', docRef.id);
+            // Update the existing tripCompletions document using tripId as document ID
+            const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+            await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
+            
+            console.log('✅ Survey data added to existing trip record:', tripId);
         } else {
-            console.warn('⚠️ Firebase not available, skipping cloud save');
-            console.warn('Missing Firebase functions:', {
+            console.warn('⚠️ Cannot update unified collection - missing requirements:', {
                 firebaseDB: !window.firebaseDB,
                 firebaseCollection: !window.firebaseCollection,
-                firebaseAddDoc: !window.firebaseAddDoc,
-                firebaseServerTimestamp: !window.firebaseServerTimestamp
+                firebaseDoc: !window.firebaseDoc,
+                firebaseUpdateDoc: !window.firebaseUpdateDoc,
+                firebaseServerTimestamp: !window.firebaseServerTimestamp,
+                tripId: !tripId
             });
+            
+            // Fallback: if tripId is missing, we can't update unified collection
+            if (!tripId) {
+                throw new Error('No tripId available - cannot link to existing trip record');
+            }
         }
     } catch (error) {
-        console.error('❌ Error saving to Firestore:', error);
-        // Don't fail the whole process if Firestore fails
+        console.error('❌ Error updating tripCompletions record:', error);
+        throw error; // Re-throw to show user the error
     }
     
-    console.log('✅ Survey data saved to research database');
+    console.log('✅ Survey data added to unified tripCompletions record');
 }
 
 // Show completion message with visual feedback
