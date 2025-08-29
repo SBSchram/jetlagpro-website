@@ -677,12 +677,7 @@ function showAllSections() {
     console.log('✅ Cache issues resolved');
     console.log('🎉 =================================================');
     
-    // Subtle indicator that new version is loaded (only show on desktop for debugging)
-    if (window.innerWidth > 768) {
-        setTimeout(() => {
-            showMobileAlert('✅ Fresh Survey Loaded!', 'Single-scroll experience active. v2025011905', 'success');
-        }, 2000);
-    }
+    // Version indicator removed - using eternal cache busting now
     
     // Remove any section navigation or barriers
     const navElements = document.querySelectorAll('.section-navigation, .nav-buttons, .continue-btn, .next-btn, .prev-btn');
@@ -698,23 +693,7 @@ function showAllSections() {
         surveyContent.style.display = 'block';
     }
     
-    // Add version indicator to the page
-    const versionIndicator = document.createElement('div');
-    versionIndicator.style.cssText = `
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        background: #10b981;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 1000;
-        opacity: 0.8;
-    `;
-    versionIndicator.textContent = 'v2025011905 ✅';
-    document.body.appendChild(versionIndicator);
+    // Version indicator removed - eternal cache busting handles this automatically
 }
 
 // Progress indicator removed - using single scrollable page instead
