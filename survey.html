@@ -445,42 +445,7 @@
           document.write('<script src="survey.js?v=' + jsVersion + '"><\/script>');
       </script>
     
-    <!-- Silent automatic cache refresh script -->
-    <script>
-        // Silent cache clearing and fresh content loading
-        (function() {
-            // Silently clear all possible caches
-            if ('caches' in window) {
-                caches.keys().then(function(names) {
-                    for (let name of names) {
-                        caches.delete(name);
-                    }
-                });
-            }
-            
-            const expectedVersion = '2025011905';
-            const currentVersion = new URLSearchParams(window.location.search).get('cv') || '';
-            
-            // If no cache version or wrong version, silently reload with cache bust
-            if (!currentVersion || currentVersion !== expectedVersion) {
-                const url = new URL(window.location);
-                url.searchParams.set('cv', expectedVersion);
-                url.searchParams.set('_t', Date.now());
-                
-                // Silent reload
-                window.location.replace(url.toString());
-                return;
-            }
-            
-            // Silent check - if we don't see expected functions, force reload
-            setTimeout(() => {
-                if (typeof showMobileAlert === 'undefined') {
-                    // Silent hard reload bypassing cache
-                    window.location.reload(true);
-                }
-            }, 1000);
-        })();
-    </script>
+    <!-- Legacy cache refresh script removed - eternal cache busting now handles this -->
     <script>
         // Mobile menu toggle
         function toggleMobileMenu() {
