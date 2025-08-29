@@ -222,20 +222,13 @@ function autoFillPointData() {
     if (pointsCompleted && totalPoints) {
         console.log(`✅ Found point data: ${pointsCompleted}/${totalPoints} points completed`);
         
-        // Auto-fill the total points question
+        // Auto-fill the total points question with exact number
         const totalPointsSelect = document.querySelector('select[name="points_total"]');
         if (totalPointsSelect) {
-            // Convert number to range that matches the options
+            // Use the exact number from the iOS app
             const pointsNum = parseInt(pointsCompleted);
-            let rangeValue;
-            if (pointsNum === 0) rangeValue = '0';
-            else if (pointsNum <= 3) rangeValue = '1-3';
-            else if (pointsNum <= 6) rangeValue = '4-6';
-            else if (pointsNum <= 9) rangeValue = '7-9';
-            else rangeValue = '10-12';
-            
-            totalPointsSelect.value = rangeValue;
-            console.log(`📝 Auto-filled total points: ${pointsCompleted} → ${rangeValue}`);
+            totalPointsSelect.value = pointsNum.toString();
+            console.log(`📝 Auto-filled total points: ${pointsCompleted} (exact number)`);
         }
         
         // Show a helpful message to the user
@@ -349,37 +342,37 @@ function hideSurveyPreview() {
 
 
 
-// Setup flight landing time validation
+// Setup flight landing date validation
 function setupFlightLandingValidation() {
-    console.log('✈️ Setting up flight landing time validation...');
+    console.log('✈️ Setting up flight landing date validation...');
     
-    const flightLandingInput = document.querySelector('input[name="flight_landing_time"]');
+    const flightLandingDateInput = document.querySelector('input[name="flight_landing_date"]');
     
-    if (!flightLandingInput) {
-        console.error('❌ Flight landing time input not found');
+    if (!flightLandingDateInput) {
+        console.error('❌ Flight landing date input not found');
         return;
     }
     
-    // Set max attribute to current date/time to prevent future dates
+    // Set max attribute to current date to prevent future dates
     const now = new Date();
-    const nowString = now.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
-    flightLandingInput.setAttribute('max', nowString);
+    const nowString = now.toISOString().slice(0, 10); // Format: YYYY-MM-DD
+    flightLandingDateInput.setAttribute('max', nowString);
     
     // Add real-time validation
-    flightLandingInput.addEventListener('input', function() {
-        validateFlightLandingTime(this);
+    flightLandingDateInput.addEventListener('input', function() {
+        validateFlightLandingDate(this);
     });
     
     // Add blur validation for immediate feedback
-    flightLandingInput.addEventListener('blur', function() {
-        validateFlightLandingTime(this);
+    flightLandingDateInput.addEventListener('blur', function() {
+        validateFlightLandingDate(this);
     });
     
-    console.log('✅ Flight landing time validation setup complete');
+    console.log('✅ Flight landing date validation setup complete');
 }
 
-// Validate flight landing time
-function validateFlightLandingTime(input) {
+// Validate flight landing date
+function validateFlightLandingDate(input) {
     const value = input.value;
     const now = new Date();
     
@@ -391,12 +384,13 @@ function validateFlightLandingTime(input) {
         return;
     }
     
-    const selectedDate = new Date(value);
+    const selectedDate = new Date(value + 'T00:00:00');
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    if (selectedDate > now) {
+    if (selectedDate > today) {
         // Future date selected
         input.classList.add('invalid');
-        input.title = 'Flight landing time cannot be in the future';
+        input.title = 'Flight landing date cannot be in the future';
     } else {
         // Valid date
         input.classList.add('valid');
@@ -884,13 +878,48 @@ async function exportSurveyData() {
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
             console.log('🚀 Attempting to update existing tripCompletions record...');
             
-            // Prepare survey data to add to existing trip record
+            // Prepare flat survey data to add to existing trip record
             const surveyUpdateData = {
+                // Survey completion status
                 surveyCompleted: true,
                 surveyCompletedAt: window.firebaseServerTimestamp(),
                 surveySubmittedAt: timestamp,
-                surveyResponses: surveyData,
-                surveyVersion: 'ljlq_v1'
+                surveyVersion: 'ljlq_v1',
+                
+                // Individual survey responses (flat, not nested)
+                surveyUserComment: surveyData.userComment || '',
+                surveyFlightLandingDate: surveyData.flight_landing_date || '',
+                surveyFlightLandingHour: surveyData.flight_landing_hour || '',
+                surveyDestination: surveyData.destination || '',
+                surveyJetlagSeverity: surveyData.jetlag_severity || '',
+                surveySleepQuality: surveyData.sleep_quality || '',
+                surveyPointsTotal: surveyData.points_total || '',
+                surveyTimezones: surveyData.timezones || '',
+                surveyDirection: surveyData.direction || '',
+                surveyAge: surveyData.age_range || '',
+                surveyGender: surveyData.gender || '',
+                surveyTravelFrequency: surveyData.travel_frequency || '',
+                surveyPreviousJetlag: surveyData.previous_jetlag || '',
+                surveyPreviousTreatments: surveyData.previous_treatments || '',
+                surveyExpectations: surveyData.expectations || '',
+                surveyEffectiveness: surveyData.effectiveness || '',
+                surveyRecommendation: surveyData.recommendation || '',
+                surveyImprovements: surveyData.improvements || '',
+                surveyPurpose: surveyData.purpose || '',
+                surveyRegion: surveyData.region || '',
+                surveyTravelExperience: surveyData.travel_experience || '',
+                surveyFlightDuration: surveyData.flight_duration || '',
+                surveySleepHours: surveyData.sleep_hours || '',
+                surveyBaselineSleep: surveyData.baseline_sleep || '',
+                surveyBaselineFatigue: surveyData.baseline_fatigue || '',
+                surveyBaselineConcentration: surveyData.baseline_concentration || '',
+                surveyBaselineIrritability: surveyData.baseline_irritability || '',
+                surveyBaselineGi: surveyData.baseline_gi || '',
+                surveyPostSleepSeverity: surveyData.post_sleep_severity || '',
+                surveyPostFatigueSeverity: surveyData.post_fatigue_severity || '',
+                surveyPostConcentrationSeverity: surveyData.post_concentration_severity || '',
+                surveyPostIrritabilitySeverity: surveyData.post_irritability_severity || '',
+                surveyPostGiSeverity: surveyData.post_gi_severity || ''
             };
             
             // Add sanitized comment if present
@@ -905,7 +934,7 @@ async function exportSurveyData() {
             const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
             await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
             
-            console.log('✅ Survey data added to existing trip record:', tripId);
+            console.log('✅ Flat survey data added to existing trip record:', tripId);
         } else {
             console.warn('⚠️ Cannot update unified collection - missing requirements:', {
                 firebaseDB: !window.firebaseDB,
@@ -926,7 +955,7 @@ async function exportSurveyData() {
         throw error; // Re-throw to show user the error
     }
     
-    console.log('✅ Survey data added to unified tripCompletions record');
+    console.log('✅ Flat survey data added to unified tripCompletions record');
 }
 
 // Show completion message with visual feedback

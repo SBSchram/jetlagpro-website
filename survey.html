@@ -201,8 +201,37 @@
                       <form id="contextForm">
                         <div class="context-row">
                           <label>When did your flight land? <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <input type="datetime-local" name="flight_landing_time" required>
-                          <small style="color: #666; font-size: 0.9em;">Select date and time when your flight arrived (required)</small>
+                          <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="date" name="flight_landing_date" required style="flex: 1;">
+                            <select name="flight_landing_hour" required style="flex: 1;">
+                              <option value="">Hour</option>
+                              <option value="0">00:00 (Midnight)</option>
+                              <option value="1">01:00</option>
+                              <option value="2">02:00</option>
+                              <option value="3">03:00</option>
+                              <option value="4">04:00</option>
+                              <option value="5">05:00</option>
+                              <option value="6">06:00</option>
+                              <option value="7">07:00</option>
+                              <option value="8">08:00</option>
+                              <option value="9">09:00</option>
+                              <option value="10">10:00</option>
+                              <option value="11">11:00</option>
+                              <option value="12">12:00 (Noon)</option>
+                              <option value="13">13:00</option>
+                              <option value="14">14:00</option>
+                              <option value="15">15:00</option>
+                              <option value="16">16:00</option>
+                              <option value="17">17:00</option>
+                              <option value="18">18:00</option>
+                              <option value="19">19:00</option>
+                              <option value="20">20:00</option>
+                              <option value="21">21:00</option>
+                              <option value="22">22:00</option>
+                              <option value="23">23:00</option>
+                            </select>
+                          </div>
+                          <small style="color: #666; font-size: 0.9em;">Select the date and approximate hour when your flight arrived (required)</small>
                         </div>
                         <div class="context-row">
                           <label>Destination airport code</label>
@@ -234,13 +263,33 @@
                           </select>
                         </div>
                         <div class="context-row">
-                          <label>Flight duration</label>
+                          <label>Flight duration (hours)</label>
                           <select name="flight_duration">
-                            <option value="lt6">&lt;6h</option>
-                            <option value="6-9">6–9h</option>
-                            <option value="9-12">9–12h</option>
-                            <option value="12-15">12–15h</option>
-                            <option value="15+">15h+</option>
+                            <option value="">Select flight duration</option>
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="4">4 hours</option>
+                            <option value="5">5 hours</option>
+                            <option value="6">6 hours</option>
+                            <option value="7">7 hours</option>
+                            <option value="8">8 hours</option>
+                            <option value="9">9 hours</option>
+                            <option value="10">10 hours</option>
+                            <option value="11">11 hours</option>
+                            <option value="12">12 hours</option>
+                            <option value="13">13 hours</option>
+                            <option value="14">14 hours</option>
+                            <option value="15">15 hours</option>
+                            <option value="16">16 hours</option>
+                            <option value="17">17 hours</option>
+                            <option value="18">18 hours</option>
+                            <option value="19">19 hours</option>
+                            <option value="20">20 hours</option>
+                            <option value="21">21 hours</option>
+                            <option value="22">22 hours</option>
+                            <option value="23">23 hours</option>
+                            <option value="24">24+ hours</option>
                           </select>
                         </div>
                         <div class="context-row">
@@ -248,20 +297,35 @@
                           <select name="points_total" required>
                             <option value="">Select number of points</option>
                             <option value="0">0</option>
-                            <option value="1-3">1–3</option>
-                            <option value="4-6">4–6</option>
-                            <option value="7-9">7–9</option>
-                            <option value="10-12">10–12</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
                           </select>
                         </div>
                         <div class="context-row">
                           <label>How many hours did you sleep during the flight?</label>
                           <select name="sleep_hours">
+                            <option value="">Select sleep hours</option>
                             <option value="0">0 hours</option>
-                            <option value="1-2">1–2 hours</option>
-                            <option value="3-4">3–4 hours</option>
-                            <option value="5-6">5–6 hours</option>
-                            <option value="7+">7+ hours</option>
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="4">4 hours</option>
+                            <option value="5">5 hours</option>
+                            <option value="6">6 hours</option>
+                            <option value="7">7 hours</option>
+                            <option value="8">8 hours</option>
+                            <option value="9">9 hours</option>
+                            <option value="10">10+ hours</option>
                           </select>
                         </div>
                       </form>
