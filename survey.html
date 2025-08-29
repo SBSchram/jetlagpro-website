@@ -200,8 +200,11 @@
                           <input type="datetime-local" name="flight_landing_time" required>
                           <small style="color: #666; font-size: 0.9em;">Select date and time when your flight arrived (required)</small>
                         </div>
-                        <!-- Hidden field for destination from app URL -->
-                        <input type="hidden" name="destination" value="">
+                        <div class="context-row">
+                          <label>Destination airport code</label>
+                          <input type="text" name="destination" placeholder="e.g., LHR, JFK, LAX" maxlength="3" style="text-transform: uppercase;">
+                          <small style="color: #666; font-size: 0.9em;">3-letter airport code (e.g., LHR for London Heathrow)</small>
+                        </div>
                         <div class="context-row">
                           <label>Direction of travel</label>
                           <select name="direction">
