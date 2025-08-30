@@ -1,5 +1,33 @@
 /* Liverpool Jet Lag Questionnaire (LJLQ) Survey Styles */
 
+/* Force light mode - override any system dark mode preferences */
+html {
+    color-scheme: light !important;
+}
+
+body {
+    color-scheme: light !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Override any dark mode media queries */
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: light !important;
+    }
+    
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    * {
+        background-color: inherit !important;
+        color: inherit !important;
+    }
+}
+
 /* Point data auto-fill message styling */
 .point-data-message {
     margin: 20px 0;

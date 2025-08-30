@@ -930,11 +930,32 @@ async function exportSurveyData() {
                 }
             }
             
-            // Update the existing tripCompletions document using tripId as document ID
-            const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
-            await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
-            
-            console.log('✅ Flat survey data added to existing trip record:', tripId);
+            try {
+                // Try to update the existing tripCompletions document using tripId as document ID
+                const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
+                console.log('✅ Flat survey data added to existing trip record:', tripId);
+            } catch (updateError) {
+                console.warn('⚠️ Failed to update existing document, trying to create new one:', updateError);
+                
+                // If update fails, try to create a new document with the tripId
+                try {
+                    const newDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                    await window.firebaseUpdateDoc(newDocRef, {
+                        ...surveyUpdateData,
+                        // Add basic trip info if we have it from URL
+                        tripId: tripId,
+                        surveyCode: surveyCode,
+                        platform: 'ReactNative',
+                        appVersion: '2025011905',
+                        created: window.firebaseServerTimestamp()
+                    });
+                    console.log('✅ Created new tripCompletions record with survey data:', tripId);
+                } catch (createError) {
+                    console.error('❌ Failed to create new document:', createError);
+                    throw createError;
+                }
+            }
         } else {
             console.warn('⚠️ Cannot update unified collection - missing requirements:', {
                 firebaseDB: !window.firebaseDB,
