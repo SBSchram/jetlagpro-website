@@ -378,6 +378,17 @@ body {
     height: 38px;
 }
 
+/* Ensure all form inputs have consistent height */
+.context-row input[type="text"],
+.context-row select {
+    height: 38px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
 /* Ensure post-travel sliders are full width like pre-travel */
 .symptom-assessment .scale-container {
     width: 100%;

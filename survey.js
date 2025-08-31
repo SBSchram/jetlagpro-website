@@ -823,6 +823,29 @@ async function submitSurvey() {
         return;
     }
     
+    // Check for duplicate trip ID
+    const tripId = window.currentTripId;
+    if (tripId) {
+        try {
+            // Check if trip already exists
+            const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+            const tripDoc = await window.firebaseGetDoc(tripDocRef);
+            
+            if (tripDoc.exists()) {
+                // Ask user if they want to overwrite
+                const overwrite = confirm('A survey for this trip already exists. Do you want to overwrite the existing data?');
+                if (!overwrite) {
+                    console.log('❌ User cancelled submission - duplicate trip detected');
+                    return;
+                }
+                console.log('✅ User chose to overwrite existing trip data');
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not check for duplicate trip:', error);
+            // Continue with submission even if check fails
+        }
+    }
+    
     // Save final data
     saveFormData();
     
