@@ -966,14 +966,140 @@ async function exportSurveyData() {
                 tripId: !tripId
             });
             
-            // Fallback: if tripId is missing, we can't update unified collection
+            // Fallback: if tripId is missing, create a standalone survey record
             if (!tripId) {
-                throw new Error('No tripId available - cannot link to existing trip record');
+                console.log('⚠️ No tripId available - creating standalone survey record');
+                
+                // Create a new document with just survey data (no trip link)
+                const standaloneSurveyData = {
+                    // Survey completion status
+                    surveyCompleted: true,
+                    surveyCompletedAt: window.firebaseServerTimestamp(),
+                    surveySubmittedAt: timestamp,
+                    surveyVersion: 'ljlq_v1',
+                    surveyCode: surveyCode,
+                    platform: 'LegacyUser',
+                    appVersion: 'Legacy',
+                    created: window.firebaseServerTimestamp(),
+                    
+                    // Individual survey responses (flat, not nested)
+                    userComment: surveyData.userComment || '',
+                    flightLandingDate: surveyData.flight_landing_date || '',
+                    flightLandingHour: surveyData.flight_landing_hour || '',
+                    destination: surveyData.destination || '',
+                    jetlagSeverity: surveyData.jetlag_severity || '',
+                    sleepQuality: surveyData.sleep_quality || '',
+                    pointsTotal: surveyData.points_total || '',
+                    timezones: surveyData.timezones || '',
+                    direction: surveyData.direction || '',
+                    age: surveyData.age_range || '',
+                    gender: surveyData.gender || '',
+                    travelFrequency: surveyData.travel_frequency || '',
+                    previousJetlag: surveyData.previous_jetlag || '',
+                    previousTreatments: surveyData.previous_treatments || '',
+                    expectations: surveyData.expectations || '',
+                    effectiveness: surveyData.effectiveness || '',
+                    recommendation: surveyData.recommendation || '',
+                    improvements: surveyData.improvements || '',
+                    purpose: surveyData.purpose || '',
+                    region: surveyData.region || '',
+                    travelExperience: surveyData.travel_experience || '',
+                    flightDuration: surveyData.flight_duration || '',
+                    sleepHours: surveyData.sleep_hours || '',
+                    baselineSleep: surveyData.baseline_sleep || '',
+                    baselineFatigue: surveyData.baseline_fatigue || '',
+                    baselineConcentration: surveyData.baseline_concentration || '',
+                    baselineIrritability: surveyData.baseline_irritability || '',
+                    baselineGi: surveyData.baseline_gi || '',
+                    postSleepSeverity: surveyData.post_sleep_severity || '',
+                    postFatigueSeverity: surveyData.post_fatigue_severity || '',
+                    postConcentrationSeverity: surveyData.post_concentration_severity || '',
+                    postIrritabilitySeverity: surveyData.post_irritability_severity || '',
+                    postGiSeverity: surveyData.post_gi_severity || ''
+                };
+                
+                // Add sanitized comment if present
+                if (surveyData.userComment) {
+                    const sanitizedComment = sanitizeComment(surveyData.userComment);
+                    if (sanitizedComment) {
+                        standaloneSurveyData.userComment = sanitizedComment;
+                    }
+                }
+                
+                try {
+                    // First, check if this survey code already exists
+                    const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
+                    const existingDoc = await window.firebaseGetDoc(nakedSurveyDocRef);
+                    
+                    if (existingDoc.exists()) {
+                        const existingData = existingDoc.data();
+                        const existingCodes = existingData.legacySurveyCodes || [];
+                        
+                        // Check if this survey code already exists
+                        if (existingCodes.includes(surveyCode)) {
+                            console.log('⚠️ Survey code already exists in naked survey record:', surveyCode);
+                            throw new Error('This survey code has already been used. Each survey code can only be used once.');
+                        }
+                    }
+                    
+                    // Create a single "naked survey code" document for all legacy users
+                    await window.firebaseUpdateDoc(nakedSurveyDocRef, {
+                        // Survey completion status
+                        surveyCompleted: true,
+                        surveyCompletedAt: window.firebaseServerTimestamp(),
+                        surveySubmittedAt: timestamp,
+                        surveyVersion: 'ljlq_v1',
+                        platform: 'LegacyUser',
+                        appVersion: 'Legacy',
+                        lastUpdated: window.firebaseServerTimestamp(),
+                        
+                        // Store all legacy survey codes in an array
+                        legacySurveyCodes: window.firebaseArrayUnion(surveyCode),
+                        
+                        // Store survey data with survey code as key
+                        [`surveyData_${surveyCode}`]: standaloneSurveyData
+                    });
+                    console.log('✅ Added legacy survey data to naked survey code record:', surveyCode);
+                } catch (updateError) {
+                    console.warn('⚠️ Failed to update naked survey record, trying to create it:', updateError);
+                    
+                    try {
+                        // Create the naked survey code document if it doesn't exist
+                        const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
+                        await window.firebaseSetDoc(nakedSurveyDocRef, {
+                            // Survey completion status
+                            surveyCompleted: true,
+                            surveyCompletedAt: window.firebaseServerTimestamp(),
+                            surveySubmittedAt: timestamp,
+                            surveyVersion: 'ljlq_v1',
+                            platform: 'LegacyUser',
+                            appVersion: 'Legacy',
+                            created: window.firebaseServerTimestamp(),
+                            lastUpdated: window.firebaseServerTimestamp(),
+                            
+                            // Store all legacy survey codes in an array (first entry)
+                            legacySurveyCodes: [surveyCode],
+                            
+                            // Store survey data with survey code as key
+                            [`surveyData_${surveyCode}`]: standaloneSurveyData
+                        });
+                        console.log('✅ Created naked survey code record with legacy data:', surveyCode);
+                    } catch (createError) {
+                        console.error('❌ Failed to create naked survey code record:', createError);
+                        throw createError;
+                    }
+                }
             }
         }
     } catch (error) {
         console.error('❌ Error updating tripCompletions record:', error);
-        throw error; // Re-throw to show user the error
+        
+        // Check if this is a duplicate survey code error
+        if (error.message && error.message.includes('already been used')) {
+            showMobileAlert('⚠️ Survey Already Completed', 'This survey code has already been used. Each survey code can only be used once. If you need to complete another survey, please use a different survey code from the app.', 'error');
+        } else {
+            throw error; // Re-throw other errors to show user the error
+        }
     }
     
     console.log('✅ Flat survey data added to unified tripCompletions record');
