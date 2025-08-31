@@ -222,26 +222,29 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* SurveyMonkey Style Scale Labels with Visual Stops */
+/* Compact Scale Labels with three labels */
 .scale-labels {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 8px;
     padding: 0;
-    font-size: 14px;
+    font-size: 11px;
     color: #374151;
     font-weight: 500;
     width: 100%;
+    position: relative;
 }
 
 .scale-labels span {
     text-align: center;
     flex: 1;
-    padding: 8px 4px;
+    padding: 4px 1px;
     position: relative;
     cursor: pointer;
     transition: color 0.2s ease;
+    z-index: 2;
+    font-size: 10px;
 }
 
 .scale-labels span:hover {
@@ -256,6 +259,13 @@ body {
 .scale-labels span:last-child {
     text-align: right;
     padding-right: 0;
+}
+
+/* Center label styling */
+.scale-labels span:nth-child(2) {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 11px;
 }
 
 /* Removed selected-value styling - no longer needed with visual bubbles */
@@ -299,27 +309,30 @@ body {
     border-bottom: 2px solid #e5e7eb;
 }
 
-/* Full-Width Scale Layout - Like SurveyMonkey */
+/* Compact Scale Layout - Labels inline with sliders */
 .symptom-row {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
 .symptom-row label {
-    display: block;
-    font-size: 16px;
+    display: inline-block;
+    font-size: 14px;
     font-weight: 500;
     color: #202124;
-    margin-bottom: 20px;
-    line-height: 1.4;
+    margin-bottom: 8px;
+    line-height: 1.3;
     width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 /* Ensure scale container takes full width */
 .scale-container {
-    margin: 20px 0;
+    margin: 12px 0;
     padding: 0;
     background: transparent;
     border: none;
