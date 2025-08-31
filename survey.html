@@ -90,111 +90,175 @@
 
                     <!-- LJLQ-based survey - Single scrollable form -->
                     <div class="survey-content">
-                      <h3>Pre-Travel Baseline</h3>
-                      <p>Please rate your typical symptoms before this trip:</p>
-                      <form id="baselineForm">
-                        <div class="symptom-row">
-                          <label>Sleep disturbance</label>
-                          <div class="scale-container">
-                            <input type="range" name="baseline_sleep" min="1" max="5" value="1" class="scale-slider">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+                      <h3>Travel Questions</h3>
+                      <p>Please rate your symptoms for each category:</p>
+                      <form id="travelForm">
+                        <div class="symptom-group">
+                          <h4>Sleep disturbance</h4>
+                          <div class="symptom-row">
+                            <label>Pre-travel (typical symptoms before this trip)</label>
+                            <div class="scale-container">
+                              <input type="range" name="sleep_pre" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Expectations (what you expected symptoms to be like)</label>
+                            <div class="scale-container">
+                              <input type="range" name="sleep_expectations" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Post-travel (current symptoms since arriving)</label>
+                            <div class="scale-container">
+                              <input type="range" name="sleep_post" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div class="symptom-row">
-                          <label>Daytime fatigue</label>
-                          <div class="scale-container">
-                            <input type="range" name="baseline_fatigue" min="1" max="5" value="1" class="scale-slider">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="symptom-row">
-                          <label>Difficulty concentrating</label>
-                          <div class="scale-container">
-                            <input type="range" name="baseline_concentration" min="1" max="5" value="1" class="scale-slider">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="symptom-row">
-                          <label>Irritability</label>
-                          <div class="scale-container">
-                            <input type="range" name="baseline_irritability" min="1" max="5" value="1" class="scale-slider">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="symptom-row">
-                          <label>Gastrointestinal issues</label>
-                          <div class="scale-container">
-                            <input type="range" name="baseline_gi" min="1" max="5" value="1" class="scale-slider">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
 
-                      <h3 style="margin-top: 40px;">Post-Travel Assessment</h3>
-                      <p>Please rate your <strong>current</strong> symptoms since arriving at your destination:</p>
-                      <form id="postForm">
-                        <div class="symptom-row">
-                          <label>Sleep disturbance</label>
-                          <div class="scale-container" style="width: 100%;">
-                            <input type="range" name="post_sleep_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+                        <div class="symptom-group">
+                          <h4>Daytime fatigue</h4>
+                          <div class="symptom-row">
+                            <label>Pre-travel (typical symptoms before this trip)</label>
+                            <div class="scale-container">
+                              <input type="range" name="fatigue_pre" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Expectations (what you expected symptoms to be like)</label>
+                            <div class="scale-container">
+                              <input type="range" name="fatigue_expectations" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Post-travel (current symptoms since arriving)</label>
+                            <div class="scale-container">
+                              <input type="range" name="fatigue_post" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div class="symptom-row">
-                          <label>Daytime fatigue</label>
-                          <div class="scale-container" style="width: 100%;">
-                            <input type="range" name="post_fatigue_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+
+                        <div class="symptom-group">
+                          <h4>Difficulty concentrating</h4>
+                          <div class="symptom-row">
+                            <label>Pre-travel (typical symptoms before this trip)</label>
+                            <div class="scale-container">
+                              <input type="range" name="concentration_pre" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Expectations (what you expected symptoms to be like)</label>
+                            <div class="scale-container">
+                              <input type="range" name="concentration_expectations" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Post-travel (current symptoms since arriving)</label>
+                            <div class="scale-container">
+                              <input type="range" name="concentration_post" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div class="symptom-row">
-                          <label>Difficulty concentrating</label>
-                          <div class="scale-container" style="width: 100%;">
-                            <input type="range" name="post_concentration_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+
+                        <div class="symptom-group">
+                          <h4>Irritability</h4>
+                          <div class="symptom-row">
+                            <label>Pre-travel (typical symptoms before this trip)</label>
+                            <div class="scale-container">
+                              <input type="range" name="irritability_pre" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Expectations (what you expected symptoms to be like)</label>
+                            <div class="scale-container">
+                              <input type="range" name="irritability_expectations" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Post-travel (current symptoms since arriving)</label>
+                            <div class="scale-container">
+                              <input type="range" name="irritability_post" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div class="symptom-row">
-                          <label>Irritability</label>
-                          <div class="scale-container" style="width: 100%;">
-                            <input type="range" name="post_irritability_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+
+                        <div class="symptom-group">
+                          <h4>Gastrointestinal issues</h4>
+                          <div class="symptom-row">
+                            <label>Pre-travel (typical symptoms before this trip)</label>
+                            <div class="scale-container">
+                              <input type="range" name="gi_pre" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="symptom-row">
-                          <label>Gastrointestinal issues</label>
-                          <div class="scale-container" style="width: 100%;">
-                            <input type="range" name="post_gi_severity" min="1" max="5" value="1" class="scale-slider" style="width: 100%;">
-                            <div class="scale-labels">
-                              <span>None</span>
-                              <span>Severe</span>
+                          <div class="symptom-row">
+                            <label>Expectations (what you expected symptoms to be like)</label>
+                            <div class="scale-container">
+                              <input type="range" name="gi_expectations" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="symptom-row">
+                            <label>Post-travel (current symptoms since arriving)</label>
+                            <div class="scale-container">
+                              <input type="range" name="gi_post" min="1" max="5" value="1" class="scale-slider">
+                              <div class="scale-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
