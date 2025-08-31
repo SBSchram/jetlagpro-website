@@ -217,7 +217,6 @@ body {
 
 .scale-slider::-moz-range-thumb:hover {
     background: #1d4ed8;
-    transform: scale(1.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -366,6 +365,16 @@ body {
     border: none;
     width: 100%;
     max-width: 100%;
+}
+
+/* Ensure date inputs match other form field sizes */
+.context-row input[type="date"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
 /* Ensure post-travel sliders are full width like pre-travel */
