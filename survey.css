@@ -261,9 +261,9 @@ body {
 
 /* Center label styling */
 .scale-labels span:nth-child(2) {
-    font-weight: 600;
+    font-weight: 700;
     color: #1f2937;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 /* Removed selected-value styling - no longer needed with visual bubbles */
