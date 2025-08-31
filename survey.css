@@ -311,7 +311,7 @@ body {
 
 /* Compact Scale Layout - Labels inline with sliders */
 .symptom-row {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -330,9 +330,18 @@ body {
     z-index: 1;
 }
 
+/* Center the symptom group headings */
+.symptom-group h4 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+}
+
 /* Ensure scale container takes full width */
 .scale-container {
-    margin: 12px 0;
+    margin: 8px 0;
     padding: 0;
     background: transparent;
     border: none;
