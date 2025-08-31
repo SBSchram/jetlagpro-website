@@ -267,11 +267,11 @@
                       <p>Please provide details about your travel experience and app usage:</p>
                       <form id="contextForm">
                         <div class="context-row">
-                          <label>Flight arrival date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                          <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
                           <input type="date" name="flight_landing_date" required>
                         </div>
                         <div class="context-row">
-                          <label>Approximate arrival hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                          <label>Arrival hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
                           <select name="flight_landing_hour" required>
                             <option value="">Select hour</option>
                             <option value="0">00:00 (Midnight)</option>
@@ -301,9 +301,8 @@
                           </select>
                         </div>
                         <div class="context-row">
-                          <label>Destination airport code</label>
+                          <label>Arrival airport</label>
                           <input type="text" name="destination" placeholder="e.g., LHR, JFK, LAX" maxlength="3" style="text-transform: uppercase;">
-                          <small style="color: #666; font-size: 0.9em;">3-letter airport code (e.g., LHR for London Heathrow)</small>
                         </div>
                         <div class="context-row">
                           <label>Direction of travel</label>
@@ -451,10 +450,9 @@
                         </div>
                       </form>
                         <h3 style="margin-top: 40px;">Comments</h3>
-                        <p>Please share any additional thoughts about your experience using our app</p>
+                        <p>Please tell us what you like or dislike. What should we do differently?</p>
                         
                         <div class="comment-container">
-                            <label for="userComment">Comments:</label>
                             <textarea 
                                 id="userComment" 
                                 name="userComment" 
