@@ -124,6 +124,29 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(forceScrollToTop, 500);
     }
     
+    // Platform detection for mobile vs desktop styling
+    function detectPlatform() {
+        const isMobile = window.innerWidth < 768;
+        
+        // Show/hide appropriate rating elements
+        const mobileElements = document.querySelectorAll('.rating-container-mobile, .rating-bubbles-mobile, .rating-bubble-mobile, .rating-labels-mobile, .symptom-group-mobile');
+        const desktopElements = document.querySelectorAll('.rating-container-desktop, .rating-bubbles-desktop, .rating-bubble-desktop, .rating-labels-desktop, .symptom-group-desktop');
+        
+        if (isMobile) {
+            // Show mobile, hide desktop
+            mobileElements.forEach(el => el.style.display = 'block');
+            desktopElements.forEach(el => el.style.display = 'none');
+        } else {
+            // Show desktop, hide mobile
+            mobileElements.forEach(el => el.style.display = 'none');
+            desktopElements.forEach(el => el.style.display = 'block');
+        }
+    }
+    
+    // Run on load and resize
+    detectPlatform();
+    window.addEventListener('resize', detectPlatform);
+    
     console.log('✅ LJLQ Survey initialized');
 });
 

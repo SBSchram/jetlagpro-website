@@ -1494,3 +1494,233 @@ form {
         flex: 0 0 52px;
     }
 } 
+
+/* ===== MOBILE RATING BUBBLES ===== */
+.rating-container-mobile {
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.rating-container-mobile label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.rating-bubbles-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 0 8px;
+    max-width: 100%;
+}
+
+.rating-bubble-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: 2px solid #d1d5db;
+    color: transparent;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+    flex-shrink: 0;
+    flex: 0 0 32px;
+}
+
+.rating-bubble-mobile:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.rating-input:checked + .rating-bubble-mobile {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
+}
+
+.rating-bubble-mobile.selected {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
+}
+
+.rating-labels-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding: 0 8px;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+    max-width: 100%;
+}
+
+.rating-labels-mobile span:first-child {
+    text-align: left;
+    color: #059669;
+    flex: 1;
+}
+
+.rating-labels-mobile span:nth-child(2) {
+    text-align: center;
+    color: #6b7280;
+    font-weight: 500;
+    flex: 2;
+}
+
+.rating-labels-mobile span:last-child {
+    text-align: right;
+    color: #dc2626;
+    flex: 1;
+}
+
+/* ===== DESKTOP RATING BUBBLES ===== */
+.rating-container-desktop {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.rating-container-desktop label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 16px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.rating-bubbles-desktop {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 16px;
+    padding: 0 60px;
+    min-width: 600px;
+    max-width: 100%;
+}
+
+.rating-bubble-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: 2px solid #d1d5db;
+    color: transparent;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+    flex-shrink: 0;
+    flex: 0 0 56px;
+}
+
+.rating-bubble-desktop:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.rating-input:checked + .rating-bubble-desktop {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
+}
+
+.rating-bubble-desktop.selected {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
+}
+
+.rating-labels-desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding: 0 60px;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+    min-width: 600px;
+    max-width: 100%;
+}
+
+.rating-labels-desktop span:first-child {
+    text-align: left;
+    color: #059669;
+    flex: 1;
+}
+
+.rating-labels-desktop span:nth-child(2) {
+    text-align: center;
+    color: #6b7280;
+    font-weight: 500;
+    flex: 2;
+}
+
+.rating-labels-desktop span:last-child {
+    text-align: right;
+    color: #dc2626;
+    flex: 1;
+}
+
+/* ===== SYMPTOM GROUP SPACING ===== */
+.symptom-group-mobile {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.symptom-group-desktop {
+    margin-bottom: 24px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.symptom-group-mobile h4,
+.symptom-group-desktop h4 {
+    margin: 0 0 12px 0;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+} 
