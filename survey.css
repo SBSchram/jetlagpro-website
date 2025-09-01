@@ -1457,7 +1457,7 @@ form {
 /* ===== DESKTOP RATING BUBBLES ===== */
 .rating-container-desktop {
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 16px;
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
@@ -1476,10 +1476,10 @@ form {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 80px;
+    gap: 60px;
     margin-bottom: 16px;
-    padding: 0 40px;
-    min-width: 600px;
+    padding: 0 20px;
+    width: 100%;
     max-width: 100%;
 }
 
@@ -1487,8 +1487,8 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
@@ -1500,7 +1500,7 @@ form {
     user-select: none;
     position: relative;
     flex-shrink: 0;
-    flex: 0 0 60px;
+    flex: 0 0 50px;
 }
 
 .rating-bubble-desktop:hover {
@@ -1529,11 +1529,11 @@ form {
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
-    padding: 0 40px;
+    padding: 0 20px;
     font-size: 14px;
     color: #6b7280;
     font-weight: 600;
-    min-width: 600px;
+    width: 100%;
     max-width: 100%;
 }
 
@@ -1557,8 +1557,8 @@ form {
 }
 
 .symptom-group-desktop {
-    margin-bottom: 24px;
-    padding: 24px;
+    margin-bottom: 20px;
+    padding: 20px;
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
