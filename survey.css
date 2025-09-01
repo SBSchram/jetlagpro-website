@@ -1287,27 +1287,30 @@ form {
 /* Modern Rating Bubble System - Replaces sliders with numbered buttons */
 
 .rating-container {
-    margin: 20px 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    position: relative;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
 }
 
 .rating-container label {
     display: block;
     font-weight: 600;
     color: #374151;
-    margin-bottom: 12px;
-    font-size: 14px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    text-align: center;
 }
 
 .rating-bubbles {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 20px; /* Increased gap for better spacing */
+    margin-bottom: 16px;
+    padding: 0 20px; /* Add padding for better visual balance */
+    max-width: 100%;
 }
 
 .rating-input {
@@ -1318,42 +1321,41 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 36px; /* Slightly larger, perfectly round bubbles */
+    height: 36px; /* Keep them perfectly circular */
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
-    color: #6b7280;
+    color: transparent; /* Hide the numbers */
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     position: relative;
+    flex-shrink: 0; /* Prevent bubbles from shrinking */
+    flex: 0 0 36px; /* Fixed size, no growing or shrinking */
 }
 
 .rating-bubble:hover {
     background: #e5e7eb;
     border-color: #9ca3af;
-    color: #374151;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .rating-input:checked + .rating-bubble {
     background: #2563eb;
     border-color: #2563eb;
-    color: white;
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
-    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
 }
 
 .rating-bubble.selected {
     background: #2563eb;
     border-color: #2563eb;
-    color: white;
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
-    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
 }
 
 /* Add subtle animation for selection */
@@ -1376,21 +1378,31 @@ form {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
-    padding: 0;
-    font-size: 12px;
+    margin-top: 16px;
+    padding: 0 20px;
+    font-size: 14px;
     color: #6b7280;
-    font-weight: 500;
+    font-weight: 600;
+    max-width: 100%;
 }
 
 .rating-labels span:first-child {
     text-align: left;
     color: #059669; /* Green for "None" */
+    flex: 1;
+}
+
+.rating-labels span:nth-child(2) {
+    text-align: center;
+    color: #6b7280; /* Neutral color for middle label */
+    font-weight: 500;
+    flex: 2;
 }
 
 .rating-labels span:last-child {
     text-align: right;
     color: #dc2626; /* Red for "Severe" */
+    flex: 1;
 }
 
 /* Responsive design for mobile */
