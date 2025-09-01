@@ -115,6 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize enhanced sliders with tick marks
     initializeEnhancedSliders();
+
+    // Setup rating bubbles
+    setupRatingBubbles();
     
     // Always scroll to top on mobile
     if (window.innerWidth <= 768) {
@@ -696,18 +699,15 @@ function showAllSections() {
 function saveFormData() {
     console.log('💾 Saving form data...');
     
-    // Collect all form data
-    const forms = ['baselineForm', 'postForm', 'contextForm', 'demographicsForm'];
+    // Collect rating data from the new bubble system
+    const ratings = getRatingValues();
+    Object.assign(surveyData, ratings);
     
-    forms.forEach(formId => {
-        const form = document.getElementById(formId);
-        if (form) {
-            const formData = new FormData(form);
-            for (let [key, value] of formData.entries()) {
-                if (value) {
-                    surveyData[key] = value;
-                }
-            }
+    // Collect other form data (context, demographics, etc.)
+    const contextInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="date"], select');
+    contextInputs.forEach(input => {
+        if (input.name && input.value) {
+            surveyData[input.name] = input.value;
         }
     });
     
@@ -722,6 +722,7 @@ function saveFormData() {
     
     // Save to localStorage
     localStorage.setItem('ljlqSurveyData', JSON.stringify(surveyData));
+    
     console.log('✅ Form data saved:', surveyData);
 }
 
@@ -807,7 +808,13 @@ async function submitSurvey() {
     // Validate all required fields in the single survey form
     let isValid = true;
     
-    // Get all required fields
+    // Validate ratings using the new bubble system
+    if (!validateRatings()) {
+        isValid = false;
+        showMobileAlert('⚠️ Incomplete Ratings', 'Please complete all symptom ratings before submitting.', 'error');
+    }
+    
+    // Get all other required fields
     const requiredFields = document.querySelectorAll('input[required], select[required]');
     requiredFields.forEach(field => {
         if (!field.value || field.value.trim() === '') {
@@ -1277,4 +1284,113 @@ function initializeEnhancedSliders() {
     });
     
     console.log(`✅ Enhanced ${sliders.length} sliders with tick marks and snap behavior`);
+} 
+
+// Rating Bubble System Functions
+function setupRatingBubbles() {
+    console.log('🎯 Setting up rating bubbles...');
+    
+    // Add click handlers to all rating bubbles
+    const ratingBubbles = document.querySelectorAll('.rating-bubble');
+    ratingBubbles.forEach(bubble => {
+        bubble.addEventListener('click', function() {
+            const radioInput = this.previousElementSibling;
+            if (radioInput && radioInput.type === 'radio') {
+                radioInput.checked = true;
+                
+                // Update visual state
+                updateRatingBubbleStates();
+                
+                // Log selection for debugging
+                const name = radioInput.name;
+                const value = radioInput.value;
+                console.log(`📊 Rating selected: ${name} = ${value}`);
+            }
+        });
+        
+        // Add keyboard support for accessibility
+        bubble.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+        
+        // Make bubbles focusable
+        bubble.setAttribute('tabindex', '0');
+        bubble.setAttribute('role', 'radio');
+        bubble.setAttribute('aria-label', `Rating ${bubble.textContent}`);
+    });
+    
+    // Initialize visual states
+    updateRatingBubbleStates();
+}
+
+function updateRatingBubbleStates() {
+    // Update all rating containers to show current selections
+    const ratingContainers = document.querySelectorAll('.rating-container');
+    
+    ratingContainers.forEach(container => {
+        const radioInputs = container.querySelectorAll('.rating-input');
+        const bubbles = container.querySelectorAll('.rating-bubble');
+        
+        radioInputs.forEach((input, index) => {
+            if (input.checked) {
+                // Add selected class to the bubble
+                bubbles[index].classList.add('selected');
+                
+                // Update aria attributes for accessibility
+                bubbles[index].setAttribute('aria-checked', 'true');
+                input.setAttribute('aria-checked', 'true');
+            } else {
+                // Remove selected class
+                bubbles[index].classList.remove('selected');
+                bubbles[index].setAttribute('aria-checked', 'false');
+                input.setAttribute('aria-checked', 'false');
+            }
+        });
+    });
+}
+
+function getRatingValues() {
+    const ratings = {};
+    const ratingInputs = document.querySelectorAll('.rating-input');
+    
+    ratingInputs.forEach(input => {
+        if (input.checked) {
+            ratings[input.name] = parseInt(input.value);
+        } else {
+            // Set default value of 1 if none selected
+            ratings[input.name] = 1;
+        }
+    });
+    
+    return ratings;
+}
+
+function validateRatings() {
+    const requiredFields = [
+        'sleep_pre', 'sleep_expectations', 'sleep_post',
+        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
+        'concentration_pre', 'concentration_expectations', 'concentration_post',
+        'irritability_pre', 'irritability_expectations', 'irritability_post',
+        'gi_pre', 'gi_expectations', 'gi_post'
+    ];
+    
+    const ratings = getRatingValues();
+    const missingFields = [];
+    
+    requiredFields.forEach(field => {
+        if (!ratings[field] || ratings[field] < 1 || ratings[field] > 5) {
+            missingFields.push(field);
+        }
+    });
+    
+    if (missingFields.length > 0) {
+        console.warn('⚠️ Missing or invalid ratings:', missingFields);
+        return false;
+    }
+    
+    console.log('✅ All ratings validated successfully');
+    return true;
 } 

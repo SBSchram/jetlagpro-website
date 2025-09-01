@@ -1283,3 +1283,154 @@ form {
     padding: 18px 6vw;
   }
 } 
+
+/* Modern Rating Bubble System - Replaces sliders with numbered buttons */
+
+.rating-container {
+    margin: 20px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    position: relative;
+}
+
+.rating-container label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.rating-bubbles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.rating-input {
+    display: none; /* Hide the actual radio inputs */
+}
+
+.rating-bubble {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: 2px solid #d1d5db;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+}
+
+.rating-bubble:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    color: #374151;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rating-input:checked + .rating-bubble {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
+}
+
+.rating-bubble.selected {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Add subtle animation for selection */
+.rating-bubble {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rating-bubble:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* Improve accessibility with focus indicators */
+.rating-bubble:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.rating-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding: 0;
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.rating-labels span:first-child {
+    text-align: left;
+    color: #059669; /* Green for "None" */
+}
+
+.rating-labels span:last-child {
+    text-align: right;
+    color: #dc2626; /* Red for "Severe" */
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .rating-bubbles {
+        gap: 6px;
+    }
+    
+    .rating-bubble {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .rating-container label {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    .rating-labels {
+        font-size: 11px;
+    }
+}
+
+/* Ensure proper spacing between symptom groups */
+.symptom-group {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.symptom-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.symptom-row {
+    margin-bottom: 20px;
+}
+
+.symptom-row:last-child {
+    margin-bottom: 0;
+} 
