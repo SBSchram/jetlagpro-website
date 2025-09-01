@@ -339,13 +339,20 @@ body {
 
 /* Box styling for symptom groups */
 .symptom-group {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    margin-bottom: 20px; /* Reduced from default to decrease vertical spacing between groups */
     padding: 20px;
-    margin-bottom: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+}
+
+.symptom-group h4 {
+    margin: 0 0 16px 0; /* Reduced bottom margin from default */
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
 }
 
 .symptom-group:hover {
@@ -1287,7 +1294,7 @@ form {
 /* Modern Rating Bubble System - Replaces sliders with numbered buttons */
 
 .rating-container {
-    margin-bottom: 24px;
+    margin-bottom: 16px; /* Reduced from 24px to decrease vertical spacing */
     padding: 16px;
     background: #ffffff;
     border-radius: 8px;
@@ -1307,9 +1314,9 @@ form {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px; /* Increased gap for better spacing */
+    gap: 24px; /* Increased from 20px to better align with text edges */
     margin-bottom: 16px;
-    padding: 0 20px; /* Add padding for better visual balance */
+    padding: 0 12px; /* Reduced from 20px to bring bubbles closer to text edges */
     max-width: 100%;
 }
 
@@ -1378,8 +1385,8 @@ form {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px;
-    padding: 0 20px;
+    margin-top: 12px;
+    padding: 0 12px; /* Reduced from 20px to match bubble padding */
     font-size: 14px;
     color: #6b7280;
     font-weight: 600;
