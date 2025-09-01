@@ -98,6 +98,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup code validation first
     setupCodeValidation();
     
+    // Check for existing submission and pre-fill if found
+    checkForExistingSubmission();
+    
     // Auto-fill survey code from URL parameter
     autoFillSurveyCode();
     
@@ -853,6 +856,30 @@ async function submitSurvey() {
         return;
     }
     
+    // Check for duplicate survey code
+    const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
+    try {
+        // Check if survey code already exists
+        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        
+        const surveyRef = collection(window.firebaseDB, 'surveys');
+        const q = query(surveyRef, where('surveyCode', '==', surveyCode));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            // Ask user if they want to overwrite
+            const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
+            if (!overwrite) {
+                console.log('❌ User cancelled submission - duplicate survey code detected');
+                return;
+            }
+            console.log('✅ User chose to overwrite existing survey data');
+        }
+    } catch (error) {
+        console.warn('⚠️ Could not check for duplicate survey code:', error);
+        // Continue with submission even if check fails
+    }
+    
     // Check for duplicate trip ID
     const tripId = window.currentTripId;
     if (tripId) {
@@ -1416,4 +1443,136 @@ function validateRatings() {
     
     console.log('✅ All ratings validated successfully');
     return true;
+} 
+
+// Check for existing submission and pre-fill survey if found
+async function checkForExistingSubmission() {
+    try {
+        console.log('🔍 Checking for existing submission...');
+        
+        // Get survey code from URL or form
+        const urlParams = new URLSearchParams(window.location.search);
+        const surveyCode = urlParams.get('code') || document.getElementById('surveyCode')?.value;
+        
+        if (!surveyCode) {
+            console.log('ℹ️ No survey code found - cannot check for existing submission');
+            return;
+        }
+        
+        // Check if we have existing data in localStorage
+        const existingData = localStorage.getItem(`survey_${surveyCode}`);
+        if (existingData) {
+            console.log('📋 Found existing submission data in localStorage');
+            const parsedData = JSON.parse(existingData);
+            prefillSurvey(parsedData);
+            return;
+        }
+        
+        // Check Firebase for existing submission
+        if (window.firebaseDB) {
+            console.log('🔥 Checking Firebase for existing submission...');
+            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            
+            const surveyRef = collection(window.firebaseDB, 'surveys');
+            const q = query(surveyRef, where('surveyCode', '==', surveyCode));
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+                console.log('✅ Found existing submission in Firebase');
+                const doc = querySnapshot.docs[0];
+                const data = doc.data();
+                
+                // Store in localStorage for future use
+                localStorage.setItem(`survey_${surveyCode}`, JSON.stringify(data));
+                
+                // Pre-fill the survey
+                prefillSurvey(data);
+                
+                // Show message that this is an existing submission
+                showExistingSubmissionMessage();
+            } else {
+                console.log('ℹ️ No existing submission found in Firebase');
+            }
+        }
+    } catch (error) {
+        console.error('❌ Error checking for existing submission:', error);
+    }
+}
+
+// Pre-fill survey with existing data
+function prefillSurvey(data) {
+    console.log('📝 Pre-filling survey with existing data...');
+    
+    // Pre-fill symptom ratings
+    const symptomFields = [
+        'sleep_pre', 'sleep_expectations', 'sleep_post',
+        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
+        'concentration_pre', 'concentration_expectations', 'concentration_post',
+        'irritability_pre', 'irritability_expectations', 'irritability_post',
+        'gi_pre', 'gi_expectations', 'gi_post'
+    ];
+    
+    symptomFields.forEach(field => {
+        if (data[field]) {
+            const radio = document.querySelector(`input[name="${field}"][value="${data[field]}"]`);
+            if (radio) {
+                radio.checked = true;
+                // Trigger the visual update
+                const event = new Event('change');
+                radio.dispatchEvent(event);
+            }
+        }
+    });
+    
+    // Pre-fill other form fields
+    const formFields = [
+        'total_points', 'points_completed', 'timezones_count', 'travel_direction',
+        'flight_landing_date', 'flight_landing_hour', 'travel_frequency', 'travel_experience'
+    ];
+    
+    formFields.forEach(field => {
+        if (data[field]) {
+            const element = document.querySelector(`[name="${field}"]`);
+            if (element) {
+                element.value = data[field];
+            }
+        }
+    });
+    
+    // Pre-fill comments
+    if (data.comments) {
+        const commentsField = document.querySelector('#comments');
+        if (commentsField) {
+            commentsField.value = data.comments;
+        }
+    }
+    
+    console.log('✅ Survey pre-filled with existing data');
+}
+
+// Show message that this is an existing submission
+function showExistingSubmissionMessage() {
+    const existingMessage = document.createElement('div');
+    existingMessage.className = 'existing-submission-message';
+    existingMessage.style.cssText = `
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+        color: #92400e;
+        font-weight: 500;
+    `;
+    existingMessage.innerHTML = `
+        <strong>📋 Existing Submission Found:</strong> 
+        We found a previous survey submission for this code. 
+        The form has been pre-filled with your previous answers. 
+        You can modify any answers before re-submitting.
+    `;
+    
+    // Insert at the top of the form
+    const form = document.getElementById('travelForm');
+    if (form) {
+        form.parentNode.insertBefore(existingMessage, form);
+    }
 } 
