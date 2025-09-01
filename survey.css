@@ -1318,6 +1318,7 @@ form {
     margin-bottom: 16px;
     padding: 0 12px; /* Reduced from 20px to bring bubbles closer to text edges */
     max-width: 100%;
+    min-width: 300px; /* Ensure minimum width on desktop */
 }
 
 .rating-input {
@@ -1328,8 +1329,8 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px; /* Slightly larger, perfectly round bubbles */
-    height: 36px; /* Keep them perfectly circular */
+    width: 40px; /* Larger bubbles for better experience */
+    height: 40px; /* Keep them perfectly circular */
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
@@ -1341,7 +1342,7 @@ form {
     user-select: none;
     position: relative;
     flex-shrink: 0; /* Prevent bubbles from shrinking */
-    flex: 0 0 36px; /* Fixed size, no growing or shrinking */
+    flex: 0 0 40px; /* Fixed size, no growing or shrinking */
 }
 
 .rating-bubble:hover {
@@ -1452,4 +1453,45 @@ form {
 
 .symptom-row:last-child {
     margin-bottom: 0;
+} 
+
+/* Desktop-specific improvements */
+@media (min-width: 768px) {
+    .rating-bubbles {
+        gap: 40px; /* Much wider spacing on desktop */
+        padding: 0 40px; /* More padding on desktop */
+        min-width: 500px; /* Wider minimum on desktop */
+        justify-content: space-evenly; /* Even distribution */
+    }
+    
+    .rating-bubble {
+        width: 48px; /* Larger bubbles on desktop */
+        height: 48px;
+        flex: 0 0 48px;
+    }
+    
+    .rating-container {
+        margin-bottom: 20px; /* Slightly more space on desktop */
+        padding: 20px;
+    }
+    
+    .symptom-group {
+        margin-bottom: 24px; /* More space between groups on desktop */
+        padding: 24px;
+    }
+}
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+    .rating-bubbles {
+        gap: 60px; /* Even wider spacing on large screens */
+        padding: 0 60px;
+        min-width: 600px;
+    }
+    
+    .rating-bubble {
+        width: 52px; /* Largest bubbles on large screens */
+        height: 52px;
+        flex: 0 0 52px;
+    }
 } 
