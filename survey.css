@@ -1454,7 +1454,6 @@ form {
 .symptom-row:last-child {
     margin-bottom: 0;
 } 
-
 /* Desktop-specific improvements */
 @media (min-width: 768px) {
     .rating-bubbles {
