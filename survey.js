@@ -326,22 +326,9 @@ function autoFillTimezoneData() {
     
     // Landing time is intentionally left for user input - they know exactly when they landed
     
-    // Show comprehensive auto-fill message if any data was populated
+    // Data is auto-filled silently without showing a message
     if (autoFilledData.length > 0) {
-        const travelDataMessage = document.createElement('div');
-        travelDataMessage.className = 'travel-data-message';
-        travelDataMessage.innerHTML = `
-            <div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                <strong>✈️ Travel Data Auto-filled:</strong> Your app data has automatically populated: ${autoFilledData.join(', ')}${destination ? `, destination: ${destination}` : ''}. 
-                You can modify any of these values if needed.
-            </div>
-        `;
-        
-        // Insert the message before the travel context section
-        const contextForm = document.querySelector('#contextForm');
-        if (contextForm) {
-            contextForm.parentNode.insertBefore(travelDataMessage, contextForm);
-        }
+        console.log(`✅ Auto-filled travel data: ${autoFilledData.join(', ')}`);
     } else {
         console.log('ℹ️ No timezone/travel data found in URL - user will need to enter manually');
     }
