@@ -310,8 +310,6 @@ body {
 /* Compact Scale Layout - Labels inline with sliders */
 .symptom-row {
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
     width: 100%;
 }
 
@@ -1339,7 +1337,8 @@ form {
 }
 
 .rating-bubbles {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     justify-content: space-between;
     align-items: center;
     gap: 24px; /* Increased from 20px to better align with text edges */
