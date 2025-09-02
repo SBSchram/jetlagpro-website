@@ -1317,6 +1317,7 @@ form {
     align-items: center;
     margin-bottom: 16px;
     max-width: 100%;
+    gap: 0; /* Remove default gap, let media queries control it */
 }
 
 .rating-bubble {
@@ -1351,6 +1352,15 @@ form {
         height: 36px;
         flex: 0 0 36px;
     }
+    
+    /* Mobile label colors */
+    .rating-labels span:first-child {
+        color: #059669; /* Green for "None" */
+    }
+    
+    .rating-labels span:last-child {
+        color: #dc2626; /* Red for "Severe" */
+    }
 }
 
 /* Desktop styles (≥ 768px) */
@@ -1358,11 +1368,13 @@ form {
     .rating-bubbles {
         gap: 60px;
         padding: 0 20px;
+        max-width: 600px; /* Limit width to prevent overflow */
+        margin: 0 auto; /* Center the bubbles */
     }
     .rating-bubble {
-        width: 50px;
-        height: 50px;
-        flex: 0 0 50px;
+        width: 60px;
+        height: 60px;
+        flex: 0 0 60px;
     }
 }
 
