@@ -1312,29 +1312,29 @@ form {
 
 /* Visibility classes for mobile vs desktop */
 .mobile-only {
-    display: block;
+    display: none; /* Default: hide mobile */
 }
 .desktop-only {
-    display: none;
+    display: block; /* Default: show desktop */
 }
 
 /* Mobile styles (< 768px) */
 @media (max-width: 767px) {
     .mobile-only {
-        display: block;
+        display: block; /* Show mobile on small screens */
     }
     .desktop-only {
-        display: none;
+        display: none; /* Hide desktop on small screens */
     }
 }
 
 /* Desktop styles (≥ 768px) */
 @media (min-width: 768px) {
     .mobile-only {
-        display: none;
+        display: none; /* Hide mobile on large screens */
     }
     .desktop-only {
-        display: block;
+        display: block; /* Show desktop on large screens */
     }
 }
 
