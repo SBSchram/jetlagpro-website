@@ -1310,38 +1310,60 @@ form {
     text-align: center;
 }
 
+/* Shared styles for both mobile and desktop */
 .rating-bubbles {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 24px; /* Increased from 20px to better align with text edges */
     margin-bottom: 16px;
-    padding: 0 12px; /* Reduced from 20px to bring bubbles closer to text edges */
     max-width: 100%;
-}
-
-.rating-input {
-    display: none; /* Hide the actual radio inputs */
 }
 
 .rating-bubble {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px; /* Slightly larger, perfectly round bubbles */
-    height: 36px; /* Keep them perfectly circular */
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
-    color: transparent; /* Hide the numbers */
+    color: transparent;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     position: relative;
-    flex-shrink: 0; /* Prevent bubbles from shrinking */
-    flex: 0 0 36px; /* Fixed size, no growing or shrinking */
+    flex-shrink: 0;
+}
+
+.rating-bubble input {
+    display: none; /* Hide radio inputs, style labels instead */
+}
+
+/* Mobile styles (< 768px) */
+@media (max-width: 767px) {
+    .rating-bubbles {
+        gap: 24px;
+        padding: 0 12px;
+    }
+    .rating-bubble {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+    }
+}
+
+/* Desktop styles (≥ 768px) */
+@media (min-width: 768px) {
+    .rating-bubbles {
+        gap: 60px;
+        padding: 0 20px;
+    }
+    .rating-bubble {
+        width: 50px;
+        height: 50px;
+        flex: 0 0 50px;
+    }
 }
 
 .rating-bubble:hover {
@@ -1472,57 +1494,7 @@ form {
     text-align: center;
 }
 
-.rating-bubbles-desktop {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 60px;
-    margin-bottom: 16px;
-    padding: 0 20px;
-    width: 100%;
-    max-width: 100%;
-}
-
-.rating-bubble-desktop {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #f3f4f6;
-    border: 2px solid #d1d5db;
-    color: transparent;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    position: relative;
-    flex-shrink: 0;
-    flex: 0 0 50px;
-}
-
-.rating-bubble-desktop:hover {
-    background: #e5e7eb;
-    border-color: #9ca3af;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.rating-input:checked + .rating-bubble-desktop {
-    background: #2563eb;
-    border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
-}
-
-.rating-bubble-desktop.selected {
-    background: #2563eb;
-    border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
-}
+/* Desktop styles now handled by media queries above */
 
 .rating-labels-desktop {
     display: flex;
