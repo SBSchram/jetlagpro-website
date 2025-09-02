@@ -310,6 +310,8 @@ body {
 /* Compact Scale Layout - Labels inline with sliders */
 .symptom-row {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
@@ -1308,37 +1310,8 @@ form {
     text-align: center;
 }
 
-/* Visibility classes for mobile vs desktop */
-.mobile-only {
-    display: none !important; /* Default: hide both */
-}
-.desktop-only {
-    display: none !important; /* Default: hide both */
-}
-
-/* Mobile styles (< 768px) */
-@media (max-width: 767px) {
-    .mobile-only {
-        display: block !important; /* Show mobile on small screens */
-    }
-    .desktop-only {
-        display: none !important; /* Hide desktop on small screens */
-    }
-}
-
-/* Desktop styles (≥ 768px) */
-@media (min-width: 768px) {
-    .mobile-only {
-        display: none !important; /* Hide mobile on large screens */
-    }
-    .desktop-only {
-        display: block !important; /* Show desktop on large screens */
-    }
-}
-
 .rating-bubbles {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px; /* Increased from 20px to better align with text edges */
@@ -1484,7 +1457,7 @@ form {
 /* ===== DESKTOP RATING BUBBLES ===== */
 .rating-container-desktop {
     margin-bottom: 20px;
-    padding: 16px;
+    padding: 20px;
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
@@ -1503,10 +1476,10 @@ form {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 60px;
+    gap: 80px;
     margin-bottom: 16px;
-    padding: 0 20px;
-    width: 100%;
+    padding: 0 40px;
+    min-width: 600px;
     max-width: 100%;
 }
 
@@ -1514,8 +1487,8 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
@@ -1527,7 +1500,7 @@ form {
     user-select: none;
     position: relative;
     flex-shrink: 0;
-    flex: 0 0 50px;
+    flex: 0 0 60px;
 }
 
 .rating-bubble-desktop:hover {
@@ -1556,11 +1529,11 @@ form {
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
-    padding: 0 20px;
+    padding: 0 40px;
     font-size: 14px;
     color: #6b7280;
     font-weight: 600;
-    width: 100%;
+    min-width: 600px;
     max-width: 100%;
 }
 
@@ -1584,8 +1557,8 @@ form {
 }
 
 .symptom-group-desktop {
-    margin-bottom: 20px;
-    padding: 20px;
+    margin-bottom: 24px;
+    padding: 24px;
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
