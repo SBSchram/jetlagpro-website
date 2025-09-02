@@ -1312,10 +1312,10 @@ form {
 
 /* Visibility classes for mobile vs desktop */
 .mobile-only {
-    display: none; /* Default: hide mobile */
+    display: none; /* Default: hide both */
 }
 .desktop-only {
-    display: block; /* Default: show desktop */
+    display: none; /* Default: hide both */
 }
 
 /* Mobile styles (< 768px) */
