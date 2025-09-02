@@ -1325,61 +1325,25 @@ form {
 }
 
 .rating-bubble {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px; /* Slightly larger, perfectly round bubbles */
-    height: 36px; /* Keep them perfectly circular */
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
-    color: transparent; /* Hide the numbers */
-    font-weight: 600;
-    font-size: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    position: relative;
-    flex-shrink: 0; /* Prevent bubbles from shrinking */
-    flex: 0 0 36px; /* Fixed size, no growing or shrinking */
 }
 
 .rating-bubble:hover {
     background: #e5e7eb;
     border-color: #9ca3af;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .rating-input:checked + .rating-bubble {
     background: #2563eb;
     border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
 }
 
-.rating-bubble.selected {
-    background: #2563eb;
-    border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
-}
 
-/* Add subtle animation for selection */
-.rating-bubble {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.rating-bubble:active {
-    transform: translateY(0) scale(0.95);
-}
-
-/* Improve accessibility with focus indicators */
-.rating-bubble:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
 
 .rating-labels {
     display: flex;
@@ -1394,22 +1358,15 @@ form {
 }
 
 .rating-labels span:first-child {
-    text-align: left;
-    color: #059669; /* Green for "None" */
-    flex: 1;
+    color: #059669;
 }
 
 .rating-labels span:nth-child(2) {
-    text-align: center;
-    color: #6b7280; /* Neutral color for middle label */
-    font-weight: 500;
-    flex: 2;
+    color: #6b7280;
 }
 
 .rating-labels span:last-child {
-    text-align: right;
-    color: #dc2626; /* Red for "Severe" */
-    flex: 1;
+    color: #dc2626;
 }
 
 /* Responsive design for mobile */
