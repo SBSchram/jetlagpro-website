@@ -84,7 +84,7 @@
                     try {
                         console.log(`🔍 Checking collection: ${colName}`);
                         const colRef = collection(db, colName);
-                        const snapshot = await getDocs(query(colRef, limit(1)));
+                        const snapshot = await getDocs(colRef);
                         
                         if (snapshot.size > 0) {
                             foundCollections.push({
@@ -131,11 +131,11 @@
             
             try {
                 const colRef = collection(db, 'tripCompletions');
-                const snapshot = await getDocs(query(colRef, orderBy('timestamp', 'desc'), limit(5)));
+                const snapshot = await getDocs(colRef);
                 
                 if (snapshot.size > 0) {
                     let html = `<h4>✅ tripCompletions Collection (${snapshot.size} total documents)</h4>`;
-                    html += '<p>Showing last 5 documents:</p>';
+                    html += '<p>Showing all documents:</p>';
                     
                     snapshot.docs.forEach((doc, index) => {
                         const data = doc.data();
