@@ -1333,12 +1333,13 @@ form {
     cursor: pointer;
 }
 
+/* Remove hover effect to keep it simple */
 .rating-bubble:hover {
     background: #e5e7eb;
-    border-color: #9ca3af;
 }
 
-.rating-input:checked + .rating-bubble {
+/* Use the JavaScript-managed selected class instead of CSS selector */
+.rating-bubble.selected {
     background: #2563eb;
     border-color: #2563eb;
 }
