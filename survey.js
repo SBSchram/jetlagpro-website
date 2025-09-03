@@ -877,6 +877,21 @@ async function submitSurvey() {
     try {
         await exportSurveyData();
         console.log('✅ Survey data export completed successfully');
+        
+        // Mark trip as surveyed in Firebase if tripId exists
+        const tripId = window.currentTripId;
+        if (tripId) {
+            try {
+                const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                await window.firebaseUpdateDoc(tripDocRef, {
+                    surveyCompleted: true
+                });
+                console.log('✅ Marked trip as surveyed in Firebase:', tripId);
+            } catch (error) {
+                console.warn('⚠️ Could not mark trip as surveyed:', error);
+                // Continue even if marking as surveyed fails
+            }
+        }
     } catch (error) {
         console.error('❌ Error during survey data export:', error);
         showMobileAlert('⚠️ Partial Save', 'Survey submitted locally, but there was an issue saving to the research database. Your responses are still recorded.', 'error');
@@ -1307,36 +1322,47 @@ function initializeEnhancedSliders() {
 function setupRatingBubbles() {
     console.log('🎯 Setting up rating bubbles...');
     
-    // Add click handlers to all rating bubbles
-    const ratingBubbles = document.querySelectorAll('.rating-bubble');
-    ratingBubbles.forEach(bubble => {
-        bubble.addEventListener('click', function() {
-            const radioInput = this.previousElementSibling;
-            if (radioInput && radioInput.type === 'radio') {
-                radioInput.checked = true;
-                
-                // Update visual state
-                updateRatingBubbleStates();
-                
-                // Log selection for debugging
-                const name = radioInput.name;
-                const value = radioInput.value;
-                console.log(`📊 Rating selected: ${name} = ${value}`);
-            }
-        });
+    // Set default state to "None" (value 1) for all rating fields
+    const ratingContainers = document.querySelectorAll('.rating-container');
+    ratingContainers.forEach(container => {
+        const radioInputs = container.querySelectorAll('.rating-input');
+        const bubbles = container.querySelectorAll('.rating-bubble');
         
-        // Add keyboard support for accessibility
-        bubble.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
-        });
+        // Set first radio (value 1 = "None") as default checked
+        if (radioInputs.length > 0) {
+            radioInputs[0].checked = true;
+        }
         
-        // Make bubbles focusable
-        bubble.setAttribute('tabindex', '0');
-        bubble.setAttribute('role', 'radio');
-        bubble.setAttribute('aria-label', `Rating ${bubble.textContent}`);
+        // Add click handlers to all rating bubbles
+        bubbles.forEach((bubble, index) => {
+            bubble.addEventListener('click', function() {
+                const radioInput = radioInputs[index];
+                if (radioInput && radioInput.type === 'radio') {
+                    radioInput.checked = true;
+                    
+                    // Update visual state
+                    updateRatingBubbleStates();
+                    
+                    // Log selection for debugging
+                    const name = radioInput.name;
+                    const value = radioInput.value;
+                    console.log(`📊 Rating selected: ${name} = ${value}`);
+                }
+            });
+            
+            // Add keyboard support for accessibility
+            bubble.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+            
+            // Make bubbles focusable
+            bubble.setAttribute('tabindex', '0');
+            bubble.setAttribute('role', 'radio');
+            bubble.setAttribute('aria-label', `Rating ${bubble.textContent}`);
+        });
     });
     
     // Initialize visual states
