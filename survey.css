@@ -1141,6 +1141,13 @@ form {
     }
 }
 
+/* Desktop centering for rating containers */
+@media (min-width: 769px) {
+    .rating-container {
+        text-align: center; /* Center the container content */
+    }
+}
+
 
 
 /* Ensure proper spacing between symptom groups */
