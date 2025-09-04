@@ -102,6 +102,9 @@ function forceScrollToTop() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 LJLQ Survey Initializing...');
     
+    // Prevent browser from restoring previous scroll position
+    window.history.scrollRestoration = 'manual';
+    
     // Check if coming from app and force refresh if needed
     checkAndRefreshFromApp();
     
@@ -132,10 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup rating bubbles
     setupRatingBubbles();
     
-    // Always scroll to top on mobile
-    if (window.innerWidth <= 768) {
-        setTimeout(forceScrollToTop, 500);
-    }
+    // Always scroll to top after all initialization is complete
+    setTimeout(forceScrollToTop, 1000);
     
     // CSS media queries now handle responsive design automatically
     // No JavaScript needed for show/hide logic
@@ -1504,8 +1505,9 @@ async function checkForExistingSubmission() {
             const parsedData = JSON.parse(existingData);
             prefillSurvey(parsedData);
             
-            // Scroll to the arrival form section (Let's Get Started!)
+            // Scroll to the arrival form section (Let's Get Started!) after pre-filling is complete
             setTimeout(() => {
+                // Force scroll to top after all pre-filling is done
                 const arrivalForm = document.querySelector('#arrivalForm');
                 if (arrivalForm) {
                     arrivalForm.scrollIntoView({ 
@@ -1513,7 +1515,7 @@ async function checkForExistingSubmission() {
                         block: 'start' 
                     });
                 }
-            }, 500);
+            }, 1000); // Longer delay to ensure pre-filling is complete
             return;
         }
         
@@ -1540,8 +1542,9 @@ async function checkForExistingSubmission() {
                 // Show message that this is an existing submission
                 showExistingSubmissionMessage();
                 
-                // Scroll to the arrival form section (Let's Get Started!)
+                // Scroll to the arrival form section (Let's Get Started!) after pre-filling is complete
                 setTimeout(() => {
+                    // Force scroll to top after all pre-filling is done
                     const arrivalForm = document.querySelector('#arrivalForm');
                     if (arrivalForm) {
                         arrivalForm.scrollIntoView({ 
@@ -1549,7 +1552,7 @@ async function checkForExistingSubmission() {
                             block: 'start' 
                         });
                     }
-                }, 500);
+                }, 1000); // Longer delay to ensure pre-filling is complete
             } else {
                 console.log('ℹ️ No existing submission found in Firebase');
             }
