@@ -898,12 +898,12 @@ form {
 /* Responsive Design */
 @media (max-width: 768px) {
     .survey-container {
-        padding: 15px;
-        margin: 10px;
+        padding: 0;
+        margin: 0;
     }
     
     .survey-section {
-        padding: 20px;
+        padding: 0;
     }
     
     .symptom-row,
@@ -938,8 +938,8 @@ form {
     
     /* Mobile completion section adjustments */
     .survey-complete {
-    padding: 24px 16px;
-    margin: 0 16px;
+    padding: 24px 0;
+    margin: 0;
 }
 
 .completion-icon {
@@ -1043,7 +1043,7 @@ form {
     gap: 20px;
   }
   .survey-card {
-    padding: 18px 6vw;
+    padding: 20px 16px;
   }
 } 
 
