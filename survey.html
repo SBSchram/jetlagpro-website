@@ -89,6 +89,49 @@
 
                     <!-- LJLQ-based survey - Single scrollable form -->
                     <div class="survey-content">
+                      
+                      <!-- Required Fields - Arrival Date and Time -->
+                      <div class="required-fields-section">
+                        <h3>Required Information</h3>
+                        <p>Please provide your arrival details to help with the research analysis.</p>
+                        <div class="required-fields-row">
+                          <div class="required-field">
+                            <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                            <input type="date" name="flight_landing_date" required>
+                          </div>
+                          <div class="required-field">
+                            <label>Arrival Hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                            <select name="flight_landing_hour" required>
+                              <option value="">Select hour</option>
+                              <option value="0">00:00 (Midnight)</option>
+                              <option value="1">01:00</option>
+                              <option value="2">02:00</option>
+                              <option value="3">03:00</option>
+                              <option value="4">04:00</option>
+                              <option value="5">05:00</option>
+                              <option value="6">06:00</option>
+                              <option value="7">07:00</option>
+                              <option value="8">08:00</option>
+                              <option value="9">09:00</option>
+                              <option value="10">10:00</option>
+                              <option value="11">11:00</option>
+                              <option value="12">12:00 (Noon)</option>
+                              <option value="13">13:00</option>
+                              <option value="14">14:00</option>
+                              <option value="15">15:00</option>
+                              <option value="16">16:00</option>
+                              <option value="17">17:00</option>
+                              <option value="18">18:00</option>
+                              <option value="19">19:00</option>
+                              <option value="20">20:00</option>
+                              <option value="21">21:00</option>
+                              <option value="22">22:00</option>
+                              <option value="23">23:00</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
                       <h3>Jet Lag Questions</h3>
                       <p>&nbsp;</p>
                       <form id="travelForm">
@@ -431,40 +474,6 @@
                       <h3 style="margin-top: 40px;">Flight Details</h3>
                                               <p>&nbsp;</p>
                       <form id="contextForm">
-                        <div class="context-row">
-                          <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <input type="date" name="flight_landing_date" required>
-                        </div>
-                        <div class="context-row">
-                          <label>Arrival hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <select name="flight_landing_hour" required>
-                            <option value="">Select hour</option>
-                            <option value="0">00:00 (Midnight)</option>
-                            <option value="1">01:00</option>
-                            <option value="2">02:00</option>
-                            <option value="3">03:00</option>
-                            <option value="4">04:00</option>
-                            <option value="5">05:00</option>
-                            <option value="6">06:00</option>
-                            <option value="7">07:00</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00 (Noon)</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                            <option value="23">23:00</option>
-                          </select>
-                        </div>
                         <div class="context-row">
                           <label>Arrival airport</label>
                           <input type="text" name="destination" placeholder="e.g., LHR, JFK, LAX" maxlength="3" style="text-transform: uppercase;">

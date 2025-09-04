@@ -1065,11 +1065,11 @@ form {
 
 .rating-bubbles {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 20px;
     margin-bottom: 12px;
-    /* Remove padding - let bubbles breathe naturally */
+    /* Center the bubbles with consistent spacing */
 }
 
 .rating-input {
@@ -1098,7 +1098,7 @@ form {
 
 .rating-labels {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: 12px;
     padding: 0 12px; /* Reduced from 20px to match bubble padding */
