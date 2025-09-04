@@ -805,6 +805,10 @@ async function submitSurvey() {
     if (!validateRatings()) {
         isValid = false;
         showMobileAlert('⚠️ Incomplete Ratings', 'Please complete all symptom ratings before submitting.', 'error');
+        // After alert is dismissed, scroll to first incomplete item
+        setTimeout(() => {
+            scrollToFirstIncomplete();
+        }, 100);
     }
     
     // Get all other required fields
@@ -953,35 +957,33 @@ async function exportSurveyData() {
                 flightLandingDate: surveyData.flight_landing_date || '',
                 flightLandingHour: surveyData.flight_landing_hour || '',
                 destination: surveyData.destination || '',
-                jetlagSeverity: surveyData.jetlag_severity || '',
-                sleepQuality: surveyData.sleep_quality || '',
-                pointsTotal: surveyData.points_total || '',
-                timezones: surveyData.timezones || '',
                 direction: surveyData.direction || '',
-                age: surveyData.age_range || '',
-                gender: surveyData.gender || '',
-                travelFrequency: surveyData.travel_frequency || '',
-                previousJetlag: surveyData.previous_jetlag || '',
-                previousTreatments: surveyData.previous_treatments || '',
-                expectations: surveyData.expectations || '',
-                effectiveness: surveyData.effectiveness || '',
-                recommendation: surveyData.recommendation || '',
-                improvements: surveyData.improvements || '',
-                purpose: surveyData.purpose || '',
-                region: surveyData.region || '',
-                travelExperience: surveyData.travel_experience || '',
+                timezones: surveyData.timezones || '',
                 flightDuration: surveyData.flight_duration || '',
+                pointsTotal: surveyData.points_total || '',
                 sleepHours: surveyData.sleep_hours || '',
-                baselineSleep: surveyData.baseline_sleep || '',
-                baselineFatigue: surveyData.baseline_fatigue || '',
-                baselineConcentration: surveyData.baseline_concentration || '',
-                baselineIrritability: surveyData.baseline_irritability || '',
-                baselineGi: surveyData.baseline_gi || '',
-                postSleepSeverity: surveyData.post_sleep_severity || '',
-                postFatigueSeverity: surveyData.post_fatigue_severity || '',
-                postConcentrationSeverity: surveyData.post_concentration_severity || '',
-                postIrritabilitySeverity: surveyData.post_irritability_severity || '',
-                postGiSeverity: surveyData.post_gi_severity || ''
+                ageRange: surveyData.age_range || '',
+                gender: surveyData.gender || '',
+                travelExperience: surveyData.travel_experience || '',
+                region: surveyData.region || '',
+                purpose: surveyData.purpose || '',
+                
+                // Rating responses (1-5 scale)
+                sleepPre: surveyData.sleep_pre || 1,
+                sleepExpectations: surveyData.sleep_expectations || 1,
+                sleepPost: surveyData.sleep_post || 1,
+                fatiguePre: surveyData.fatigue_pre || 1,
+                fatigueExpectations: surveyData.fatigue_expectations || 1,
+                fatiguePost: surveyData.fatigue_post || 1,
+                concentrationPre: surveyData.concentration_pre || 1,
+                concentrationExpectations: surveyData.concentration_expectations || 1,
+                concentrationPost: surveyData.concentration_post || 1,
+                irritabilityPre: surveyData.irritability_pre || 1,
+                irritabilityExpectations: surveyData.irritability_expectations || 1,
+                irritabilityPost: surveyData.irritability_post || 1,
+                giPre: surveyData.gi_pre || 1,
+                giExpectations: surveyData.gi_expectations || 1,
+                giPost: surveyData.gi_post || 1
             };
             
             // Add sanitized comment if present
@@ -1044,40 +1046,29 @@ async function exportSurveyData() {
                     appVersion: 'Legacy',
                     created: window.firebaseServerTimestamp(),
                     
-                    // Individual survey responses (flat, not nested)
-                    userComment: surveyData.userComment || '',
-                    flightLandingDate: surveyData.flight_landing_date || '',
-                    flightLandingHour: surveyData.flight_landing_hour || '',
-                    destination: surveyData.destination || '',
-                    jetlagSeverity: surveyData.jetlag_severity || '',
-                    sleepQuality: surveyData.sleep_quality || '',
-                    pointsTotal: surveyData.points_total || '',
-                    timezones: surveyData.timezones || '',
-                    direction: surveyData.direction || '',
-                    age: surveyData.age_range || '',
-                    gender: surveyData.gender || '',
-                    travelFrequency: surveyData.travel_frequency || '',
-                    previousJetlag: surveyData.previous_jetlag || '',
-                    previousTreatments: surveyData.previous_treatments || '',
-                    expectations: surveyData.expectations || '',
-                    effectiveness: surveyData.effectiveness || '',
-                    recommendation: surveyData.recommendation || '',
-                    improvements: surveyData.improvements || '',
-                    purpose: surveyData.purpose || '',
-                    region: surveyData.region || '',
-                    travelExperience: surveyData.travel_experience || '',
-                    flightDuration: surveyData.flight_duration || '',
-                    sleepHours: surveyData.sleep_hours || '',
-                    baselineSleep: surveyData.baseline_sleep || '',
-                    baselineFatigue: surveyData.baseline_fatigue || '',
-                    baselineConcentration: surveyData.baseline_concentration || '',
-                    baselineIrritability: surveyData.baseline_irritability || '',
-                    baselineGi: surveyData.baseline_gi || '',
-                    postSleepSeverity: surveyData.post_sleep_severity || '',
-                    postFatigueSeverity: surveyData.post_fatigue_severity || '',
-                    postConcentrationSeverity: surveyData.post_concentration_severity || '',
-                    postIrritabilitySeverity: surveyData.post_irritability_severity || '',
-                    postGiSeverity: surveyData.post_gi_severity || ''
+                                    // Individual survey responses (flat, not nested)
+                userComment: surveyData.userComment || '',
+                flightLandingDate: surveyData.flight_landing_date || '',
+                flightLandingHour: surveyData.flight_landing_hour || '',
+                destination: surveyData.destination || '',
+                direction: surveyData.direction || '',
+                
+                // Rating responses (1-5 scale)
+                sleepPre: surveyData.sleep_pre || 1,
+                sleepExpectations: surveyData.sleep_expectations || 1,
+                sleepPost: surveyData.sleep_post || 1,
+                fatiguePre: surveyData.fatigue_pre || 1,
+                fatigueExpectations: surveyData.fatigue_expectations || 1,
+                fatiguePost: surveyData.fatigue_post || 1,
+                concentrationPre: surveyData.concentration_pre || 1,
+                concentrationExpectations: surveyData.concentration_expectations || 1,
+                concentrationPost: surveyData.concentration_post || 1,
+                irritabilityPre: surveyData.irritability_pre || 1,
+                irritabilityExpectations: surveyData.irritability_expectations || 1,
+                irritabilityPost: surveyData.irritability_post || 1,
+                giPre: surveyData.gi_pre || 1,
+                giExpectations: surveyData.gi_expectations || 1,
+                giPost: surveyData.gi_post || 1
                 };
                 
                 // Add sanitized comment if present
@@ -1431,11 +1422,42 @@ function validateRatings() {
     
     if (missingFields.length > 0) {
         console.warn('⚠️ Missing or invalid ratings:', missingFields);
+        // Store missing fields for scrolling
+        window.missingFields = missingFields;
         return false;
     }
     
     console.log('✅ All ratings validated successfully');
     return true;
+}
+
+// Simple function to scroll to first incomplete item
+function scrollToFirstIncomplete() {
+    if (!window.missingFields || window.missingFields.length === 0) return;
+    
+    const firstMissingField = window.missingFields[0];
+    const fieldName = firstMissingField.replace('_', ' ').replace(/([A-Z])/g, ' $1').trim();
+    
+    // Find the container for this field
+    const fieldContainer = document.querySelector(`[name="${firstMissingField}"]`)?.closest('.rating-container');
+    
+    if (fieldContainer) {
+        // Scroll to the field with a small offset
+        fieldContainer.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+        
+        // Add a subtle highlight effect
+        fieldContainer.style.border = '2px solid #ef4444';
+        fieldContainer.style.borderRadius = '8px';
+        setTimeout(() => {
+            fieldContainer.style.border = '';
+            fieldContainer.style.borderRadius = '';
+        }, 3000);
+        
+        console.log(`📍 Scrolled to first incomplete field: ${fieldName}`);
+    }
 } 
 
 // Check for existing submission and pre-fill survey if found

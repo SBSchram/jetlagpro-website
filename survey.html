@@ -89,6 +89,49 @@
 
                     <!-- LJLQ-based survey - Single scrollable form -->
                     <div class="survey-content">
+                      
+                      <!-- Required Fields - Arrival Date and Time -->
+                      <div class="required-fields-section">
+                        <h3>Let's Get Started!</h3>
+                        <p>We need to know arrival info first</p>
+                        <div class="required-fields-row">
+                          <div class="required-field">
+                            <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                            <input type="date" name="flight_landing_date" required>
+                          </div>
+                          <div class="required-field">
+                            <label>Arrival Hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
+                            <select name="flight_landing_hour" required>
+                              <option value="">Select hour</option>
+                              <option value="0">00:00 (Midnight)</option>
+                              <option value="1">01:00</option>
+                              <option value="2">02:00</option>
+                              <option value="3">03:00</option>
+                              <option value="4">04:00</option>
+                              <option value="5">05:00</option>
+                              <option value="6">06:00</option>
+                              <option value="7">07:00</option>
+                              <option value="8">08:00</option>
+                              <option value="9">09:00</option>
+                              <option value="10">10:00</option>
+                              <option value="11">11:00</option>
+                              <option value="12">12:00 (Noon)</option>
+                              <option value="13">13:00</option>
+                              <option value="14">14:00</option>
+                              <option value="15">15:00</option>
+                              <option value="16">16:00</option>
+                              <option value="17">17:00</option>
+                              <option value="18">18:00</option>
+                              <option value="19">19:00</option>
+                              <option value="20">20:00</option>
+                              <option value="21">21:00</option>
+                              <option value="22">22:00</option>
+                              <option value="23">23:00</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
                       <h3>Jet Lag Questions</h3>
                       <p>&nbsp;</p>
                       <form id="travelForm">
@@ -196,6 +239,11 @@
                                 <input type="radio" name="fatigue_expectations" value="5" id="fatigue_expectations_5" class="rating-input">
                                 <label for="fatigue_expectations_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Anticipated</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -211,6 +259,11 @@
                                 <label for="fatigue_post_4" class="rating-bubble"></label>
                                 <input type="radio" name="fatigue_post" value="5" id="fatigue_post_5" class="rating-input">
                                 <label for="fatigue_post_5" class="rating-bubble"></label>
+                              </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Post-travel</span>
+                                <span>Severe</span>
                               </div>
                             </div>
                           </div>
@@ -232,6 +285,11 @@
                                 <input type="radio" name="concentration_pre" value="5" id="concentration_pre_5" class="rating-input">
                                 <label for="concentration_pre_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Typical</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -248,6 +306,11 @@
                                 <input type="radio" name="concentration_expectations" value="5" id="concentration_expectations_5" class="rating-input">
                                 <label for="concentration_expectations_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Anticipated</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -263,6 +326,11 @@
                                 <label for="concentration_post_4" class="rating-bubble"></label>
                                 <input type="radio" name="concentration_post" value="5" id="concentration_post_5" class="rating-input">
                                 <label for="concentration_post_5" class="rating-bubble"></label>
+                              </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Post-travel</span>
+                                <span>Severe</span>
                               </div>
                             </div>
                           </div>
@@ -284,6 +352,11 @@
                                 <input type="radio" name="irritability_pre" value="5" id="irritability_pre_5" class="rating-input">
                                 <label for="irritability_pre_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Typical</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -300,6 +373,11 @@
                                 <input type="radio" name="irritability_expectations" value="5" id="irritability_expectations_5" class="rating-input">
                                 <label for="irritability_expectations_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Anticipated</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -315,6 +393,11 @@
                                 <label for="irritability_post_4" class="rating-bubble"></label>
                                 <input type="radio" name="irritability_post" value="5" id="irritability_post_5" class="rating-input">
                                 <label for="irritability_post_5" class="rating-bubble"></label>
+                              </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Post-travel</span>
+                                <span>Severe</span>
                               </div>
                             </div>
                           </div>
@@ -336,6 +419,11 @@
                                 <input type="radio" name="gi_pre" value="5" id="gi_pre_5" class="rating-input">
                                 <label for="gi_pre_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Typical</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                           <div class="symptom-row">
@@ -351,6 +439,11 @@
                                 <label for="gi_expectations_4" class="rating-bubble"></label>
                                 <input type="radio" name="gi_expectations" value="5" id="gi_expectations_5" class="rating-input">
                                 <label for="gi_expectations_5" class="rating-bubble"></label>
+                              </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Anticipated</span>
+                                <span>Severe</span>
                               </div>
                             </div>
                           </div>
@@ -368,6 +461,11 @@
                                 <input type="radio" name="gi_post" value="5" id="gi_post_5" class="rating-input">
                                 <label for="gi_post_5" class="rating-bubble"></label>
                               </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Post-travel</span>
+                                <span>Severe</span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -376,40 +474,6 @@
                       <h3 style="margin-top: 40px;">Flight Details</h3>
                                               <p>&nbsp;</p>
                       <form id="contextForm">
-                        <div class="context-row">
-                          <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <input type="date" name="flight_landing_date" required>
-                        </div>
-                        <div class="context-row">
-                          <label>Arrival hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <select name="flight_landing_hour" required>
-                            <option value="">Select hour</option>
-                            <option value="0">00:00 (Midnight)</option>
-                            <option value="1">01:00</option>
-                            <option value="2">02:00</option>
-                            <option value="3">03:00</option>
-                            <option value="4">04:00</option>
-                            <option value="5">05:00</option>
-                            <option value="6">06:00</option>
-                            <option value="7">07:00</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00 (Noon)</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                            <option value="23">23:00</option>
-                          </select>
-                        </div>
                         <div class="context-row">
                           <label>Arrival airport</label>
                           <input type="text" name="destination" placeholder="e.g., LHR, JFK, LAX" maxlength="3" style="text-transform: uppercase;">
@@ -580,7 +644,7 @@
                         </div>
                         
                         <!-- Submit Button -->
-                        <div style="margin-top: 40px; padding: 30px; text-align: center; border-top: 2px solid #e5e7eb; background: #f9fafb;">
+                        <div class="submit-section">
                             <button 
                                 id="submitSurveyBtn"
                                 onclick="submitSurvey()" 
@@ -593,10 +657,7 @@
                                     font-size: 18px;
                                     font-weight: bold;
                                     cursor: pointer;
-                                    transition: background-color 0.3s ease;
                                 "
-                                onmouseover="this.style.background='#059669'"
-                                onmouseout="this.style.background='#10b981'"
                             >
                                 🚀 Submit Survey
                             </button>

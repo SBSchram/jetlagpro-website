@@ -254,7 +254,7 @@
                 <p class="hero-subtitle">The chronoacupuncture app that works with your body's natural rhythms</p>
                 <div class="hero-buttons">
                     <a href="demo/" class="btn btn-primary">Try Interactive Demo</a>
-                    <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-secondary" target="_blank">Join Beta</a>
+                    <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-secondary" target="_blank" onclick="storeBetaCode()">Join Beta</a>
                 </div>
             </div>
         </section>
@@ -354,6 +354,24 @@
             </div>
         </section>
     </main>
+
+    <!-- Beta Code Recovery Section -->
+    <div id="betaCodeRecovery" class="beta-recovery" style="display: none;">
+        <div class="container">
+            <div class="beta-recovery-content">
+                <h3>🔑 Lost Your Beta Code?</h3>
+                <p>No problem! We've saved it locally on your device:</p>
+                <div class="beta-code-display">
+                    <code id="recoveredBetaCode">YZc7jzJT</code>
+                    <button onclick="copyRecoveredCode()" class="copy-btn">📋 Copy</button>
+                </div>
+                <p class="beta-instructions">
+                    After installing TestFlight, use this code to join the beta program.
+                </p>
+                <button onclick="hideBetaRecovery()" class="btn btn-secondary">Got it!</button>
+            </div>
+        </div>
+    </div>
 
     <div id="main-footer"></div>
 
@@ -576,6 +594,54 @@
         // Initialize swipe navigation when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new SwipeNavigation();
+        });
+
+        // Option 1: Simple beta code storage and recovery
+        const BETA_CODE = 'YZc7jzJT';
+        
+        // Store beta code locally when page loads (persists through TestFlight installation)
+        localStorage.setItem('jetlagpro_beta_code', BETA_CODE);
+        
+        // Store beta code when user clicks "Join Beta"
+        function storeBetaCode() {
+            localStorage.setItem('jetlagpro_beta_code', BETA_CODE);
+            console.log('✅ Beta code stored locally:', BETA_CODE);
+        }
+        
+        // Show beta code recovery if user returns after TestFlight installation
+        function showBetaRecovery() {
+            const recovery = document.getElementById('betaCodeRecovery');
+            const code = localStorage.getItem('jetlagpro_beta_code') || BETA_CODE;
+            document.getElementById('recoveredBetaCode').textContent = code;
+            recovery.style.display = 'block';
+        }
+        
+        function hideBetaRecovery() {
+            document.getElementById('betaCodeRecovery').style.display = 'none';
+        }
+        
+        function copyRecoveredCode() {
+            const code = document.getElementById('recoveredBetaCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const copyBtn = event.target;
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+            });
+        }
+        
+        // Check if user might need beta code recovery (simple heuristic)
+        // If they have the code stored but are on the website, they might need it
+        window.addEventListener('load', function() {
+            const storedCode = localStorage.getItem('jetlagpro_beta_code');
+            if (storedCode && !window.location.href.includes('testflight')) {
+                // Show a subtle hint that the code is available
+                console.log('💡 Beta code available for recovery:', storedCode);
+            }
         });
     </script>
 </body>
