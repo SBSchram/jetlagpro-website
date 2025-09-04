@@ -115,6 +115,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup rating bubbles
     setupRatingBubbles();
     
+    // Set max date to today for arrival date field
+    const arrivalDateField = document.querySelector('input[name="flight_landing_date"]');
+    if (arrivalDateField) {
+        const today = new Date().toISOString().split('T')[0];
+        arrivalDateField.max = today;
+    }
+    
     // Always scroll to top after all initialization is complete
     setTimeout(scrollToTop, 1000);
     
@@ -784,6 +791,21 @@ async function submitSurvey() {
             field.style.borderColor = '';
         }
     });
+    
+    // Validate arrival date is not greater than today
+    const arrivalDateField = document.querySelector('input[name="flight_landing_date"]');
+    if (arrivalDateField && arrivalDateField.value) {
+        const arrivalDate = new Date(arrivalDateField.value);
+        const today = new Date();
+        today.setHours(23, 59, 59, 999); // End of today
+        
+        if (arrivalDate > today) {
+            isValid = false;
+            arrivalDateField.style.borderColor = '#ef4444';
+            showMobileAlert('⚠️ Invalid Arrival Date', 'Arrival date cannot be in the future. Please select today or an earlier date.', 'error');
+            return; // Stop validation here for date error
+        }
+    }
     
     if (!isValid) {
         // Show mobile alert for missing required fields
