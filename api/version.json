@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "version": "0.92",
+    "build": "2",
+    "testflight_url": "https://testflight.apple.com/join/YZc7jzJT",
+    "release_notes": "Current TestFlight version",
+    "last_updated": "2025-01-19"
+  }
+}
