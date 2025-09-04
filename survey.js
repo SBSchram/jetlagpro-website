@@ -72,11 +72,21 @@ function checkAndRefreshFromApp() {
     }
 }
 
-// Force scroll to very top (mobile-optimized)
+// Force scroll to required fields section (mobile-optimized)
 function forceScrollToTop() {
-    console.log('📍 Forcing scroll to top...');
+    console.log('📍 Forcing scroll to required fields section...');
     
-    // Multiple methods to ensure it works on all mobile browsers
+    // Try to scroll to the required fields section first
+    const requiredFieldsSection = document.querySelector('.required-fields-section');
+    if (requiredFieldsSection) {
+        requiredFieldsSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+        return;
+    }
+    
+    // Fallback: scroll to very top if required fields section not found
     document.body.scrollTop = 0; // Safari
     document.documentElement.scrollTop = 0; // Chrome/Firefox
     window.scrollTo(0, 0);
@@ -210,7 +220,14 @@ function autoFillSurveyCode() {
                     // After validation, hide the preview section and show clean survey
                     setTimeout(() => {
                         hideSurveyPreview();
-                        scrollToSurvey();
+                        // Scroll to the required fields section (Let's Get Started!)
+                        const requiredFieldsSection = document.querySelector('.required-fields-section');
+                        if (requiredFieldsSection) {
+                            requiredFieldsSection.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                        }
                     }, 1000); // Wait for validation to complete
                 }
             }, 500);
@@ -226,10 +243,9 @@ function autoFillPointData() {
     
     const urlParams = new URLSearchParams(window.location.search);
     const pointsCompleted = urlParams.get('points');
-    const totalPoints = urlParams.get('total');
     
-    if (pointsCompleted && totalPoints) {
-        console.log(`✅ Found point data: ${pointsCompleted}/${totalPoints} points completed`);
+    if (pointsCompleted) {
+        console.log(`✅ Found point data: ${pointsCompleted} points completed`);
         
         // Auto-fill the total points question with exact number
         const totalPointsSelect = document.querySelector('select[name="points_total"]');
@@ -245,8 +261,8 @@ function autoFillPointData() {
         pointDataMessage.className = 'point-data-message';
         pointDataMessage.innerHTML = `
             <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                <strong>📊 Point Data Auto-filled:</strong> Your app data shows you completed ${pointsCompleted} out of ${totalPoints} points during your journey. 
-                This data has been automatically filled in the survey below. You can modify these numbers if needed.
+                <strong>📊 Point Data Auto-filled:</strong> Your app data shows you completed ${pointsCompleted} points during your journey. 
+                This data has been automatically filled in the survey below. You can modify this number if needed.
             </div>
         `;
         
@@ -813,17 +829,46 @@ async function submitSurvey() {
     
     // Get all other required fields
     const requiredFields = document.querySelectorAll('input[required], select[required]');
+    const missingRequiredFields = [];
+    
     requiredFields.forEach(field => {
         if (!field.value || field.value.trim() === '') {
             isValid = false;
             field.style.borderColor = '#ef4444';
+            missingRequiredFields.push(field);
         } else {
             field.style.borderColor = '';
         }
     });
     
     if (!isValid) {
-        alert('Please complete all required fields before submitting.');
+        // Show mobile alert for missing required fields
+        showMobileAlert('⚠️ Missing Required Information', 'Please complete all required fields before submitting.', 'error');
+        
+        // Scroll to first missing required field
+        setTimeout(() => {
+            if (missingRequiredFields.length > 0) {
+                const firstMissingField = missingRequiredFields[0];
+                const fieldContainer = firstMissingField.closest('.required-fields-section') || firstMissingField.closest('.rating-container');
+                
+                if (fieldContainer) {
+                    fieldContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    
+                    // Add highlight effect
+                    fieldContainer.style.border = '2px solid #ef4444';
+                    fieldContainer.style.borderRadius = '8px';
+                    setTimeout(() => {
+                        fieldContainer.style.border = '';
+                        fieldContainer.style.borderRadius = '';
+                    }, 3000);
+                    
+                    console.log(`📍 Scrolled to missing required field: ${firstMissingField.name}`);
+                }
+            }
+        }, 100);
         return;
     }
     
@@ -916,7 +961,7 @@ async function exportSurveyData() {
     
     // Wait for Firebase functions to be available (timing issue fix)
     let retryCount = 0;
-    while ((!window.firebaseDoc || !window.firebaseUpdateDoc) && retryCount < 10) {
+    while ((!window.firebaseDoc || !window.firebaseUpdateDoc || !window.firebaseGetDoc || !window.firebaseSetDoc || !window.firebaseArrayUnion) && retryCount < 10) {
         console.log(`🔄 Waiting for Firebase functions... attempt ${retryCount + 1}`);
         await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
         retryCount++;
