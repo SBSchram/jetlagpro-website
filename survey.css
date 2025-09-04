@@ -1141,21 +1141,7 @@ form {
     }
 }
 
-/* Desktop rating bubble centering */
-@media (min-width: 769px) {
-    .rating-bubbles {
-        justify-content: center;
-        gap: 30px;
-        max-width: 400px;
-        margin: 0 auto 12px auto;
-    }
-    
-    .rating-labels {
-        justify-content: center;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-}
+
 
 /* Ensure proper spacing between symptom groups */
 .symptom-group {
