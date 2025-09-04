@@ -72,30 +72,10 @@ function checkAndRefreshFromApp() {
     }
 }
 
-// Force scroll to required fields section (mobile-optimized)
-function forceScrollToTop() {
-    console.log('📍 Forcing scroll to required fields section...');
-    
-    // Try to scroll to the arrival form section first
-    const arrivalForm = document.querySelector('#arrivalForm');
-    if (arrivalForm) {
-        arrivalForm.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
-        return;
-    }
-    
-    // Fallback: scroll to very top if required fields section not found
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Chrome/Firefox
+// Simple scroll to top of survey
+function scrollToTop() {
+    console.log('📍 Scrolling to top of survey...');
     window.scrollTo(0, 0);
-    
-    // Also scroll the survey container itself
-    const surveyContainer = document.querySelector('.survey-container');
-    if (surveyContainer) {
-        surveyContainer.scrollTop = 0;
-    }
 }
 
 // Initialize survey when page loads
@@ -136,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupRatingBubbles();
     
     // Always scroll to top after all initialization is complete
-    setTimeout(forceScrollToTop, 1000);
+    setTimeout(scrollToTop, 1000);
     
     // CSS media queries now handle responsive design automatically
     // No JavaScript needed for show/hide logic
@@ -221,14 +201,7 @@ function autoFillSurveyCode() {
                     // After validation, hide the preview section and show clean survey
                     setTimeout(() => {
                         hideSurveyPreview();
-                        // Scroll to the arrival form section (Let's Get Started!)
-                        const arrivalForm = document.querySelector('#arrivalForm');
-                        if (arrivalForm) {
-                            arrivalForm.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'start' 
-                            });
-                        }
+                        // Don't scroll here - let the main scroll function handle it
                     }, 1000); // Wait for validation to complete
                 }
             }, 500);
@@ -1505,17 +1478,7 @@ async function checkForExistingSubmission() {
             const parsedData = JSON.parse(existingData);
             prefillSurvey(parsedData);
             
-            // Scroll to the arrival form section (Let's Get Started!) after pre-filling is complete
-            setTimeout(() => {
-                // Force scroll to top after all pre-filling is done
-                const arrivalForm = document.querySelector('#arrivalForm');
-                if (arrivalForm) {
-                    arrivalForm.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                    });
-                }
-            }, 1000); // Longer delay to ensure pre-filling is complete
+            // Don't scroll here - let the main scroll function handle it
             return;
         }
         
@@ -1542,17 +1505,7 @@ async function checkForExistingSubmission() {
                 // Show message that this is an existing submission
                 showExistingSubmissionMessage();
                 
-                // Scroll to the arrival form section (Let's Get Started!) after pre-filling is complete
-                setTimeout(() => {
-                    // Force scroll to top after all pre-filling is done
-                    const arrivalForm = document.querySelector('#arrivalForm');
-                    if (arrivalForm) {
-                        arrivalForm.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'start' 
-                        });
-                    }
-                }, 1000); // Longer delay to ensure pre-filling is complete
+                // Don't scroll here - let the main scroll function handle it
             } else {
                 console.log('ℹ️ No existing submission found in Firebase');
             }
