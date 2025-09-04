@@ -193,8 +193,7 @@ function autoFillSurveyCode() {
         if (surveyCodeInput) {
             surveyCodeInput.value = code.toUpperCase();
             
-            // Auto-populate point data if available
-            autoFillPointData();
+            // Point data is already saved in Firebase from trip completion
             
             // Auto-populate timezone and direction data if available
             autoFillTimezoneData();
@@ -218,38 +217,6 @@ function autoFillSurveyCode() {
     }
 }
 
-// Auto-fill point completion data from URL parameters
-function autoFillPointData() {
-    console.log('📊 Checking for point data in URL...');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const pointsCompleted = urlParams.get('points');
-    
-    if (pointsCompleted) {
-        console.log(`✅ Found point data: ${pointsCompleted} points completed`);
-        
-        // Note: Points data is now handled by Firebase, no need to auto-fill in survey
-        console.log(`📝 Points data available: ${pointsCompleted} points completed (stored in Firebase)`);
-        
-        // Show a helpful message to the user
-        const pointDataMessage = document.createElement('div');
-        pointDataMessage.className = 'point-data-message';
-        pointDataMessage.innerHTML = `
-            <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                <strong>📊 Trip Data Loaded:</strong> Your app data shows you completed ${pointsCompleted} points during your journey. 
-                This information is automatically included in your survey data.
-            </div>
-        `;
-        
-        // Insert the message before the first survey section
-        const firstSection = document.querySelector('.symptom-group');
-        if (firstSection) {
-            firstSection.parentNode.insertBefore(pointDataMessage, firstSection);
-        }
-    } else {
-        console.log('ℹ️ No point data found in URL - user will need to enter manually');
-    }
-}
 
 // Auto-fill timezone, direction, and destination data from URL parameters
 function autoFillTimezoneData() {
