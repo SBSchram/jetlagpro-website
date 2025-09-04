@@ -769,15 +769,7 @@ async function submitSurvey() {
     // Validate all required fields in the single survey form
     let isValid = true;
     
-    // Validate ratings using the new bubble system
-    if (!validateRatings()) {
-        isValid = false;
-        showMobileAlert('⚠️ Incomplete Ratings', 'Please complete all symptom ratings before submitting.', 'error');
-        // After alert is dismissed, scroll to first incomplete item
-        setTimeout(() => {
-            scrollToFirstIncomplete();
-        }, 100);
-    }
+    // Ratings are pre-filled with default values, so no validation needed
     
     // Get all other required fields
     const requiredFields = document.querySelectorAll('input[required], select[required]');
@@ -1399,63 +1391,7 @@ function getRatingValues() {
     return ratings;
 }
 
-function validateRatings() {
-    const requiredFields = [
-        'sleep_pre', 'sleep_expectations', 'sleep_post',
-        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
-        'concentration_pre', 'concentration_expectations', 'concentration_post',
-        'irritability_pre', 'irritability_expectations', 'irritability_post',
-        'gi_pre', 'gi_expectations', 'gi_post'
-    ];
-    
-    const ratings = getRatingValues();
-    const missingFields = [];
-    
-    requiredFields.forEach(field => {
-        if (!ratings[field] || ratings[field] < 1 || ratings[field] > 5) {
-            missingFields.push(field);
-        }
-    });
-    
-    if (missingFields.length > 0) {
-        console.warn('⚠️ Missing or invalid ratings:', missingFields);
-        // Store missing fields for scrolling
-        window.missingFields = missingFields;
-        return false;
-    }
-    
-    console.log('✅ All ratings validated successfully');
-    return true;
-}
 
-// Simple function to scroll to first incomplete item
-function scrollToFirstIncomplete() {
-    if (!window.missingFields || window.missingFields.length === 0) return;
-    
-    const firstMissingField = window.missingFields[0];
-    const fieldName = firstMissingField.replace('_', ' ').replace(/([A-Z])/g, ' $1').trim();
-    
-    // Find the container for this field
-    const fieldContainer = document.querySelector(`[name="${firstMissingField}"]`)?.closest('.rating-container');
-    
-    if (fieldContainer) {
-        // Scroll to the field with a small offset
-        fieldContainer.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-        });
-        
-        // Add a subtle highlight effect
-        fieldContainer.style.border = '2px solid #ef4444';
-        fieldContainer.style.borderRadius = '8px';
-        setTimeout(() => {
-            fieldContainer.style.border = '';
-            fieldContainer.style.borderRadius = '';
-        }, 3000);
-        
-        console.log(`📍 Scrolled to first incomplete field: ${fieldName}`);
-    }
-} 
 
 // Check for existing submission and pre-fill survey if found
 async function checkForExistingSubmission() {
