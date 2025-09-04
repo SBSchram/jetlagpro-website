@@ -101,232 +101,31 @@ body {
     display: none;
 }
 
-/* Modern Scale Slider Design - Inspired by Google Forms & SurveyMonkey */
-.scale-container {
-    margin: 30px 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    position: relative;
-}
+/* Removed unnecessary slider code */
 
-/* Add bubbles along the slider track */
-.scale-container::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: repeating-linear-gradient(
-        to right,
-        #e5e7eb 0%,
-        #e5e7eb calc(20% - 3px),
-        #d1d5db calc(20% - 3px),
-        #d1d5db 20%,
-        #e5e7eb 20%,
-        #e5e7eb calc(40% - 3px),
-        #d1d5db calc(40% - 3px),
-        #d1d5db 40%,
-        #e5e7eb 40%,
-        #e5e7eb calc(60% - 3px),
-        #d1d5db calc(60% - 3px),
-        #d1d5db 60%,
-        #e5e7eb 60%,
-        #e5e7eb calc(80% - 3px),
-        #d1d5db calc(80% - 3px),
-        #d1d5db 80%,
-        #e5e7eb 80%,
-        #e5e7eb calc(100% - 3px),
-        #d1d5db calc(100% - 3px),
-        #d1d5db 100%
-    );
-    border-radius: 3px;
-    pointer-events: none;
-    z-index: 1;
-}
+/* Removed slider track bubbles */
 
-.scale-slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: transparent;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 2;
-}
+/* Removed scale-slider class */
 
-/* Tick marks container */
-.scale-slider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: 
-        radial-gradient(circle at 0% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 25% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 50% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 75% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 100% 50%, #666 2px, transparent 2px);
-    transform: translateY(-50%);
-    pointer-events: none;
-    z-index: 1;
-}
+/* Removed tick marks container */
 
-.scale-slider:focus {
-    /* Focus state handled by the pseudo-element */
-}
+/* Removed focus state */
 
-.scale-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #2563eb;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.3);
-    transition: all 0.2s ease;
-    position: relative;
-}
+/* Removed webkit slider thumb */
 
-.scale-slider::-webkit-slider-thumb:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+/* Removed webkit slider thumb hover */
 
-.scale-slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #2563eb;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.3);
-    transition: all 0.2s ease;
-    -moz-appearance: none;
-}
+/* Removed moz range thumb */
 
-.scale-slider::-moz-range-thumb:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+/* Removed moz range thumb hover */
 
-/* Compact Scale Labels with three labels */
-.scale-labels {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
-    padding: 0;
-    font-size: 11px;
-    color: #374151;
-    font-weight: 500;
-    width: 100%;
-    position: relative;
-}
-
-.scale-labels span {
-    text-align: center;
-    flex: 1;
-    padding: 4px 1px;
-    position: relative;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    z-index: 2;
-    font-size: 10px;
-}
-
-.scale-labels span:hover {
-    color: #1f2937;
-}
-
-.scale-labels span:first-child {
-    text-align: left;
-    padding-left: 0;
-}
-
-.scale-labels span:last-child {
-    text-align: right;
-    padding-right: 0;
-}
-
-/* Center label styling */
-.scale-labels span:nth-child(2) {
-    font-weight: 700;
-    color: #1f2937;
-    font-size: 13px;
-}
+/* Removed scale-labels - we only use rating bubbles */
 
 /* Removed selected-value styling - no longer needed with visual bubbles */
 
-/* Modern Symptom Assessment Layout - Horizontal */
-.symptom-assessment {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-top: 20px;
-    align-items: flex-start;
-    width: 100%; /* Ensure full width */
-}
+/* Removed symptom-assessment layout - we only use rating bubbles */
 
-.severity-section,
-.duration-section {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    flex: 1;
-    min-width: 0; /* Allow flex items to shrink */
-    width: 100%; /* Ensure full width */
-}
-
-.severity-section:hover,
-.duration-section:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-color: #d1d5db;
-}
-
-.severity-section h4,
-.duration-section h4 {
-    margin: 0 0 20px 0;
-    color: #111827;
-    font-size: 18px;
-    font-weight: 600;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-/* Compact Scale Layout - Labels inline with sliders */
-.symptom-row {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.symptom-row label {
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #202124;
-    margin-bottom: 8px;
-    line-height: 1.3;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
+/* Removed compact scale layout - we only use rating bubbles */
 
 /* Center the symptom group headings */
 .symptom-group h4 {
@@ -339,12 +138,10 @@ body {
 
 /* Box styling for symptom groups */
 .symptom-group {
-    margin-bottom: 20px; /* Reduced from default to decrease vertical spacing between groups */
+    margin-bottom: 20px;
     padding: 20px;
     background: #ffffff;
-    border-radius: 12px;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .symptom-group h4 {
@@ -355,24 +152,13 @@ body {
     text-align: center;
 }
 
-.symptom-group:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    border-color: #d1d5db;
-}
+/* Removed hover effects - keep it simple */
 
 .symptom-group:last-child {
     margin-bottom: 0;
 }
 
-/* Ensure scale container takes full width */
-.scale-container {
-    margin: 8px 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    width: 100%;
-    max-width: 100%;
-}
+/* Removed scale container - we only use rating bubbles */
 
 /* Ensure date inputs match other form field sizes */
 .context-row input[type="date"] {
@@ -407,54 +193,9 @@ body {
     max-width: 100%;
 }
 
-/* Full-width slider with visual stops */
-.scale-slider {
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background: linear-gradient(to right, #e5e7eb 0%, #e5e7eb 25%, #e5e7eb 50%, #e5e7eb 75%, #e5e7eb 100%);
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    box-sizing: border-box;
-}
+/* Removed full-width slider - we only use rating bubbles */
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .symptom-assessment {
-        flex-direction: column;
-        gap: 20px;
-    }
-    
-    .severity-section,
-    .duration-section {
-        padding: 20px;
-    }
-    
-    .scale-container {
-        margin: 25px 0;
-    }
-    
-    .selected-value {
-        font-size: 16px;
-        padding: 10px 16px;
-        min-width: 100px;
-    }
-    
-    .symptom-row label {
-        font-size: 16px;
-        margin-bottom: 12px;
-    }
-    
-    .scale-labels {
-        font-size: 13px;
-        padding: 0 5px;
-    }
-}
+/* Removed responsive design for sliders - we only use rating bubbles */
 
 /* Survey Layout System - Cohesive Design */
 .survey-layout-container {
@@ -897,12 +638,7 @@ form {
     border-bottom: none;
 }
 
-.symptom-row:hover {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 12px 8px;
-    margin: 0 -8px;
-}
+/* Removed hover effect that was adding unwanted gray background */
 
 .symptom-row label {
     flex: 1;
@@ -1327,12 +1063,9 @@ form {
     background: #ffffff;
     border: 2px solid #d1d5db;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.rating-bubble:hover {
-    border-color: #2563eb;
-}
+/* Removed hover effect - keep it simple */
 
 /* Simple selected state - just blue border, no background change */
 .rating-bubble.selected {
