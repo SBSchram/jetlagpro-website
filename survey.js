@@ -76,10 +76,10 @@ function checkAndRefreshFromApp() {
 function forceScrollToTop() {
     console.log('📍 Forcing scroll to required fields section...');
     
-    // Try to scroll to the required fields section first
-    const requiredFieldsSection = document.querySelector('.required-fields-section');
-    if (requiredFieldsSection) {
-        requiredFieldsSection.scrollIntoView({ 
+    // Try to scroll to the arrival form section first
+    const arrivalForm = document.querySelector('#arrivalForm');
+    if (arrivalForm) {
+        arrivalForm.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'start' 
         });
@@ -220,10 +220,10 @@ function autoFillSurveyCode() {
                     // After validation, hide the preview section and show clean survey
                     setTimeout(() => {
                         hideSurveyPreview();
-                        // Scroll to the required fields section (Let's Get Started!)
-                        const requiredFieldsSection = document.querySelector('.required-fields-section');
-                        if (requiredFieldsSection) {
-                            requiredFieldsSection.scrollIntoView({ 
+                        // Scroll to the arrival form section (Let's Get Started!)
+                        const arrivalForm = document.querySelector('#arrivalForm');
+                        if (arrivalForm) {
+                            arrivalForm.scrollIntoView({ 
                                 behavior: 'smooth', 
                                 block: 'start' 
                             });
@@ -247,27 +247,21 @@ function autoFillPointData() {
     if (pointsCompleted) {
         console.log(`✅ Found point data: ${pointsCompleted} points completed`);
         
-        // Auto-fill the total points question with exact number
-        const totalPointsSelect = document.querySelector('select[name="points_total"]');
-        if (totalPointsSelect) {
-            // Use the exact number from the iOS app
-            const pointsNum = parseInt(pointsCompleted);
-            totalPointsSelect.value = pointsNum.toString();
-            console.log(`📝 Auto-filled total points: ${pointsCompleted} (exact number)`);
-        }
+        // Note: Points data is now handled by Firebase, no need to auto-fill in survey
+        console.log(`📝 Points data available: ${pointsCompleted} points completed (stored in Firebase)`);
         
         // Show a helpful message to the user
         const pointDataMessage = document.createElement('div');
         pointDataMessage.className = 'point-data-message';
         pointDataMessage.innerHTML = `
             <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                <strong>📊 Point Data Auto-filled:</strong> Your app data shows you completed ${pointsCompleted} points during your journey. 
-                This data has been automatically filled in the survey below. You can modify this number if needed.
+                <strong>📊 Trip Data Loaded:</strong> Your app data shows you completed ${pointsCompleted} points during your journey. 
+                This information is automatically included in your survey data.
             </div>
         `;
         
         // Insert the message before the first survey section
-        const firstSection = document.querySelector('.survey-section');
+        const firstSection = document.querySelector('.symptom-group');
         if (firstSection) {
             firstSection.parentNode.insertBefore(pointDataMessage, firstSection);
         }
@@ -288,36 +282,20 @@ function autoFillTimezoneData() {
     
     let autoFilledData = [];
     
-    // Auto-fill timezone count
+    // Note: Timezone, direction, and destination data are now handled by Firebase
     if (timezones) {
-        const timezonesSelect = document.querySelector('select[name="timezones"]');
-        if (timezonesSelect) {
-            // Handle 12+ case
-            const value = parseInt(timezones) >= 12 ? '12+' : timezones;
-            timezonesSelect.value = value;
-            console.log(`✅ Auto-filled timezones: ${value}`);
-            autoFilledData.push(`${value} timezones`);
-        }
+        console.log(`✅ Timezone data available: ${timezones} timezones (stored in Firebase)`);
+        autoFilledData.push(`${timezones} timezones`);
     }
     
-    // Auto-fill travel direction
     if (direction) {
-        const directionSelect = document.querySelector('select[name="direction"]');
-        if (directionSelect) {
-            directionSelect.value = direction;
-            console.log(`✅ Auto-filled direction: ${direction}`);
-            autoFilledData.push(`${direction}ward travel`);
-        }
+        console.log(`✅ Direction data available: ${direction}ward travel (stored in Firebase)`);
+        autoFilledData.push(`${direction}ward travel`);
     }
     
-    // Auto-fill destination (hidden field)
     if (destination) {
-        const destinationInput = document.querySelector('input[name="destination"]');
-        if (destinationInput) {
-            destinationInput.value = destination;
-            console.log(`✅ Auto-filled destination: ${destination}`);
-            autoFilledData.push(`destination: ${destination}`);
-        }
+        console.log(`✅ Destination data available: ${destination} (stored in Firebase)`);
+        autoFilledData.push(`destination: ${destination}`);
     }
     
     // Landing time is intentionally left for user input - they know exactly when they landed
@@ -849,7 +827,7 @@ async function submitSurvey() {
         setTimeout(() => {
             if (missingRequiredFields.length > 0) {
                 const firstMissingField = missingRequiredFields[0];
-                const fieldContainer = firstMissingField.closest('.required-fields-section') || firstMissingField.closest('.rating-container');
+                const fieldContainer = firstMissingField.closest('#arrivalForm') || firstMissingField.closest('.rating-container');
                 
                 if (fieldContainer) {
                     fieldContainer.scrollIntoView({ 
@@ -1525,6 +1503,17 @@ async function checkForExistingSubmission() {
             console.log('📋 Found existing submission data in localStorage');
             const parsedData = JSON.parse(existingData);
             prefillSurvey(parsedData);
+            
+            // Scroll to the arrival form section (Let's Get Started!)
+            setTimeout(() => {
+                const arrivalForm = document.querySelector('#arrivalForm');
+                if (arrivalForm) {
+                    arrivalForm.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }
+            }, 500);
             return;
         }
         
@@ -1550,6 +1539,17 @@ async function checkForExistingSubmission() {
                 
                 // Show message that this is an existing submission
                 showExistingSubmissionMessage();
+                
+                // Scroll to the arrival form section (Let's Get Started!)
+                setTimeout(() => {
+                    const arrivalForm = document.querySelector('#arrivalForm');
+                    if (arrivalForm) {
+                        arrivalForm.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                    }
+                }, 500);
             } else {
                 console.log('ℹ️ No existing submission found in Firebase');
             }
