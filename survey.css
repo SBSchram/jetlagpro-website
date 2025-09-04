@@ -779,57 +779,54 @@ form {
     border-top: 1px solid #eee;
 }
 
-/* Buttons */
+/* Buttons - Simple and Clean */
 .btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-primary {
-    background: #007bff;
+    background: #2563eb;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #0056b3;
-    transform: translateY(-1px);
+    background: #1d4ed8;
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: #6b7280;
     color: white;
 }
 
 .btn-secondary:hover {
-    background: #545b62;
-    transform: translateY(-1px);
+    background: #4b5563;
 }
 
 .btn-success {
-    background: #28a745;
+    background: #10b981;
     color: white;
 }
 
 .btn-success:hover {
-    background: #1e7e34;
-    transform: translateY(-1px);
+    background: #059669;
 }
 
-/* Survey Completion */
+/* Survey Completion - Clean and Simple */
 .survey-complete {
     text-align: center;
-    padding: 40px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid #28a745;
+    padding: 40px 20px;
+    background: #ffffff;
+    border: 2px solid #10b981;
+    border-radius: 12px;
 }
 
 .completion-content {
@@ -839,35 +836,37 @@ form {
 
 .completion-icon {
     font-size: 4rem;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .survey-complete h2 {
-    color: #28a745;
+    color: #10b981;
     margin-bottom: 20px;
     font-size: 2rem;
+    font-weight: 700;
 }
 
 .survey-complete p {
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 16px;
+    color: #374151;
+    margin-bottom: 32px;
+    font-size: 18px;
     line-height: 1.6;
 }
 
 .completion-benefits {
     text-align: left;
-    margin: 30px 0;
-    padding: 20px;
-    background: white;
+    margin: 32px 0;
+    padding: 24px;
+    background: #f8fafc;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
 }
 
 .completion-benefits h3 {
-    color: #374151;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    color: #1f2937;
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 .completion-benefits ul {
@@ -939,39 +938,60 @@ form {
     
     /* Mobile completion section adjustments */
     .survey-complete {
-        padding: 30px 20px;
-    }
-    
-    .completion-icon {
-        font-size: 3rem;
-    }
-    
-    .survey-complete h2 {
-        font-size: 1.5rem;
-    }
-    
-    .completion-benefits {
-        padding: 15px;
-        margin: 20px 0;
-    }
-    
-    .completion-benefits h3 {
-        font-size: 1.1rem;
-    }
-    
-    .completion-benefits li {
-        font-size: 14px;
-        padding: 6px 0;
-    }
-    
-    .completion-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .completion-actions .btn {
-        width: 100%;
-    }
+    padding: 24px 16px;
+    margin: 0 16px;
+}
+
+.completion-icon {
+    font-size: 3.5rem;
+}
+
+.survey-complete h2 {
+    font-size: 1.75rem;
+}
+
+.completion-benefits {
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.completion-benefits h3 {
+    font-size: 1.2rem;
+}
+
+.completion-benefits li {
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.completion-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.completion-actions .btn {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 16px;
+}
+
+/* Mobile submit button styling */
+#submitSurveyBtn {
+    width: 100%;
+    padding: 20px 24px;
+    font-size: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.submit-section {
+    padding: 24px 16px;
+    margin: 24px 16px;
+    border-radius: 12px;
+    background: #f0fdf4;
+    border: 2px solid #10b981;
+}
 }
 
 /* Loading States */
@@ -1118,6 +1138,22 @@ form {
     
     .rating-labels {
         font-size: 12px;
+    }
+}
+
+/* Desktop rating bubble centering */
+@media (min-width: 769px) {
+    .rating-bubbles {
+        justify-content: center;
+        gap: 30px;
+        max-width: 400px;
+        margin: 0 auto 12px auto;
+    }
+    
+    .rating-labels {
+        justify-content: center;
+        max-width: 400px;
+        margin: 0 auto;
     }
 }
 
