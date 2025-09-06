@@ -2613,42 +2613,30 @@ body.swiping * {
     }
 } 
 
-/* Beta Steps - Clean and Simple */
+/* Beta Single Box - Clean and Simple */
 
-.beta-steps {
+.beta-single-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin: 40px 0;
-}
-
-.beta-step {
     background: white;
     border: 2px solid #e2e8f0;
     border-radius: 16px;
     padding: 32px 24px;
-    width: 300px;
-    text-align: center;
+    max-width: 600px;
+    margin: 40px auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.beta-step .step-number {
-    background: #3b82f6;
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    margin: 0 auto 16px;
+.beta-step-left,
+.beta-step-right {
+    flex: 1;
+    text-align: center;
+    padding: 0 16px;
 }
 
-.beta-step .step-logo {
+.beta-step-left .step-logo,
+.beta-step-right .step-logo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2657,44 +2645,32 @@ body.swiping * {
     height: 64px;
 }
 
-.beta-step h4 {
-    color: #1f2937;
-    font-size: 20px;
-    margin-bottom: 12px;
-    font-weight: 600;
+.beta-separator {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #e2e8f0, transparent);
+    margin: 0 16px;
 }
 
-.beta-step p {
-    color: #6b7280;
-    font-size: 15px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.beta-arrow {
-    font-size: 24px;
-    color: #60a5fa;
-    font-weight: bold;
-    margin: 0 8px;
-}
-
-/* Mobile responsive for beta steps */
+/* Mobile responsive for beta single box */
 @media (max-width: 768px) {
-    .beta-steps {
+    .beta-single-box {
         flex-direction: column;
-        gap: 16px;
-        margin: 32px 0;
+        gap: 24px;
+        margin: 32px auto;
+        padding: 24px 16px;
     }
     
-    .beta-arrow {
-        transform: rotate(90deg);
-        margin: 8px 0;
+    .beta-separator {
+        width: 80px;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        margin: 0;
     }
     
-    .beta-step {
-        min-width: auto;
-        max-width: none;
-        width: 100%;
+    .beta-step-left,
+    .beta-step-right {
+        padding: 0;
     }
 }
 
