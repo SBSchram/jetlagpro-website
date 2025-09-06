@@ -274,6 +274,32 @@
             </div>
         </section>
 
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">Why Use JetLagPro?</h2>
+                <p class="section-subtitle">For many decades acupuncturists have used the horary point technique to reduce jet lag. While never a secret, it was largely unused outside of the acupuncture community. This app makes this technique accessible for everyone.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🕐</div>
+                        <h3>Do What Acupuncturists Do</h3>
+                        <p>Acupuncturists know how to reduce the effects of jet lag. Use the same horary point technique they've relied on for decades.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📍</div>
+                        <h3>Made Simple for Everyone</h3>
+                        <p>Clear videos and diagrams show you exactly where and how to press. Just follow the simple instructions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⏰</div>
+                        <h3>Stay On Track</h3>
+                        <p>The app keeps you on track with timed reminders at exactly the right times based on your destination.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
         <section id="top" class="how-it-works">
             <div class="container">
                 <h2>Just 3 Simple Steps</h2>
@@ -293,32 +319,6 @@
                         <h3>Follow the pressure points</h3>
                         <img src="assets/screenshots/iPhone_6.5_Screenshot_4.png" alt="Acupressure Instructions" class="step-image">
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="section-title">Why Use JetLagPro?</h2>
-                <p class="section-subtitle">For many decades acupuncturists have used the horary point technique to reduce jet lag. While never a secret, it was largely unused outside of the acupuncture community. This app makes this technique accessible for everyone.</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🕐</div>
-                        <h3>Do What Acupuncturists Do</h3>
-                        <p>Use the same horary point technique that acupuncturists have used for decades to reduce jet lag when they travel. While never a secret, it was largely unused outside the acupuncture community.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📍</div>
-                        <h3>Made Simple for Everyone</h3>
-                        <p>High-quality diagrams and videos from a licensed acupuncturist show you exactly where each point is located and how to stimulate it properly. No acupuncture knowledge required.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⏰</div>
-                        <h3>Automated & Assisted</h3>
-                        <p>The app handles all the complexity for you - get reminders at exactly the right times based on your destination. No need to calculate complex schedules or visit an acupuncturist.</p>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -415,7 +415,6 @@
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
         <div class="indicator active" data-section="top"></div>
-        <div class="indicator" data-section="science"></div>
         <div class="indicator" data-section="features"></div>
         <div class="indicator" data-section="localization"></div>
         <div class="indicator" data-section="download"></div>
@@ -478,7 +477,7 @@
         // Swipe Navigation Implementation
         class SwipeNavigation {
             constructor() {
-                this.sections = ['top', 'science', 'features', 'localization', 'download'];
+                this.sections = ['top', 'features', 'localization', 'download'];
                 this.currentSection = 0;
                 this.touchStartX = 0;
                 this.touchEndX = 0;
