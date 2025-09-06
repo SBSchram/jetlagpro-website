@@ -2640,23 +2640,24 @@ body.swiping * {
 
 /* Two-Step Beta Process - Simple and Clear */
 .beta-process {
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     padding: 32px;
     margin: 40px 0;
     text-align: center;
+    backdrop-filter: blur(10px);
 }
 
 .beta-process h3 {
-    color: #1e293b;
+    color: white;
     font-size: 24px;
     margin-bottom: 8px;
     font-weight: 700;
 }
 
 .beta-subtitle {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 16px;
     margin-bottom: 32px;
 }
@@ -2694,14 +2695,14 @@ body.swiping * {
 }
 
 .beta-step h4 {
-    color: #1e293b;
+    color: white;
     font-size: 18px;
     margin-bottom: 8px;
     font-weight: 600;
 }
 
 .beta-step p {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 14px;
     margin-bottom: 16px;
     line-height: 1.4;
@@ -2709,7 +2710,7 @@ body.swiping * {
 
 .beta-arrow {
     font-size: 24px;
-    color: #3b82f6;
+    color: #60a5fa;
     font-weight: bold;
     margin: 0 8px;
 }
