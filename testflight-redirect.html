@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download TestFlight - JetLagPro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        .redirect-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .redirect-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .redirect-title {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .redirect-subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .redirect-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s;
+            min-width: 200px;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .countdown {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .redirect-container {
+                margin: 50px 20px;
+                padding: 30px 20px;
+            }
+            
+            .redirect-title {
+                font-size: 24px;
+            }
+            
+            .redirect-subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="redirect-icon">📱</div>
+        <h1 class="redirect-title">Download TestFlight</h1>
+        <p class="redirect-subtitle">
+            You're being redirected to the App Store to download TestFlight, Apple's free beta testing app.
+        </p>
+        <p class="redirect-subtitle">
+            Once TestFlight is installed, come back here to join our beta!
+        </p>
+        
+        <div class="redirect-buttons">
+            <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">
+                ✅ I Have TestFlight - Join Beta Now
+            </a>
+            <a href="https://apps.apple.com/app/testflight/id899247664" class="btn btn-secondary">
+                📥 Download TestFlight from App Store
+            </a>
+        </div>
+        
+        <div class="countdown">
+            <p>Auto-redirecting to App Store in <span id="countdown">5</span> seconds...</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect to App Store after 5 seconds
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = "https://apps.apple.com/app/testflight/id899247664";
+            }
+        }, 1000);
+        
+        // Stop auto-redirect if user clicks any button
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                clearInterval(timer);
+            });
+        });
+    </script>
+</body>
+</html>
