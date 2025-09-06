@@ -1,0 +1,169 @@
+[
+  {
+    "tripId": "5F5013BC-35D1-444C-87E2-602CE4E2A39A",
+    "surveyCompleted": true,
+    "surveyComment": "Helsinki",
+    "surveyResponses": {
+      "destination": "HEL",
+      "points_total": "1-3",
+      "baseline_sleep": "1",
+      "post_irritability_severity": "1",
+      "gender": "male",
+      "sleep_hours": "0",
+      "userComment": "Helsinki",
+      "flight_duration": "lt6",
+      "travel_experience": "novice",
+      "post_gi_severity": "2",
+      "post_fatigue_severity": "2",
+      "direction": "east",
+      "post_sleep_severity": "2",
+      "baseline_gi": "1",
+      "baseline_fatigue": "1",
+      "baseline_irritability": "1",
+      "flight_landing_time": "2025-08-29T12:47",
+      "post_concentration_severity": "1",
+      "timezones": "7",
+      "region": "na",
+      "purpose": "business",
+      "baseline_concentration": "1",
+      "age_range": "65+"
+    },
+    "surveyCode": "JLP-DFFF8971",
+    "surveySubmittedAt": "2025-08-29T16:48:13.123Z",
+    "surveyVersion": "ljlq_v1",
+    "surveyCompletedAt": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756486093,
+      "nanoseconds": 417000000
+    },
+    "tripData": {
+      "appVersion": "2025011905",
+      "timezonesCount": 7,
+      "pointsCompleted": 1,
+      "completionMethod": "manual",
+      "completionDate": "2025-08-29T16:47:22Z",
+      "completedPointIds": [
+        9
+      ],
+      "platform": "iOS",
+      "travelDirection": "east",
+      "destinationCode": "HEL",
+      "startDate": "2025-08-29T16:00:47Z"
+    },
+    "created": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756486042,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "tripId": "7DA39AB3-919C-447D-80A7-CFFF35B88920",
+    "tripData": {
+      "destinationCode": "LHR",
+      "startDate": "2025-08-29T03:57:45Z",
+      "completedPointIds": [
+        5,
+        1,
+        2,
+        3
+      ],
+      "pointsCompleted": 4,
+      "platform": "iOS",
+      "appVersion": "2025011905",
+      "travelDirection": "east",
+      "completionMethod": "manual",
+      "completionDate": "2025-08-29T11:42:05Z",
+      "timezonesCount": 5
+    },
+    "surveyCompleted": false,
+    "surveyCode": "JLP-DFFF8971",
+    "created": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756467725,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "tripId": "954AAA02-D816-456B-A410-D5D821D01FE3",
+    "tripData": {
+      "completedPointIds": [
+        1
+      ],
+      "platform": "iOS",
+      "appVersion": "2025011905",
+      "pointsCompleted": 1,
+      "completionDate": "2025-08-29T03:26:12Z",
+      "travelDirection": "east",
+      "timezonesCount": 5,
+      "startDate": "2025-08-29T03:26:07Z",
+      "destinationCode": "LHR",
+      "completionMethod": "manual"
+    },
+    "surveyCode": "JLP-DFFF8971",
+    "surveyCompleted": false,
+    "created": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756437972,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "tripId": "A0E845F3-C85E-4BED-AAF9-E9AE963D794B",
+    "surveyResponses": {
+      "age_range": "lt18",
+      "baseline_gi": "1",
+      "post_gi_severity": "1",
+      "baseline_concentration": "1",
+      "post_sleep_severity": "1",
+      "post_fatigue_severity": "1",
+      "baseline_irritability": "1",
+      "direction": "east",
+      "baseline_sleep": "1",
+      "post_irritability_severity": "1",
+      "timezones": "5",
+      "flight_duration": "lt6",
+      "points_total": "1-3",
+      "baseline_fatigue": "1",
+      "flight_landing_time": "2025-08-29T11:05",
+      "purpose": "business",
+      "destination": "LHR",
+      "region": "na",
+      "gender": "male",
+      "travel_experience": "novice",
+      "userComment": "None",
+      "sleep_hours": "0",
+      "post_concentration_severity": "1"
+    },
+    "surveyCompleted": false,
+    "created": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756467808,
+      "nanoseconds": 0
+    },
+    "surveyVersion": "ljlq_v1",
+    "surveyCompletedAt": {
+      "type": "firestore/timestamp/1.0",
+      "seconds": 1756479976,
+      "nanoseconds": 784000000
+    },
+    "surveyCode": "JLP-DFFF8971",
+    "surveyComment": "None",
+    "tripData": {
+      "destinationCode": "LHR",
+      "completedPointIds": [
+        3,
+        1,
+        2
+      ],
+      "platform": "iOS",
+      "travelDirection": "east",
+      "appVersion": "2025011905",
+      "completionMethod": "auto",
+      "timezonesCount": 5,
+      "pointsCompleted": 3,
+      "completionDate": "2025-08-29T11:43:28Z",
+      "startDate": "2025-08-29T11:43:28Z"
+    },
+    "surveySubmittedAt": "2025-08-29T15:06:05.524Z"
+  }
+]
