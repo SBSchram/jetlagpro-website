@@ -356,27 +356,6 @@
 
     </main>
 
-    <!-- Localization Section (moved above footer) -->
-    <section id="localization" class="localization">
-        <div class="container">
-            <div class="localization-note">
-                <h3>Perfect for International Travel</h3>
-                <p>Whether you're traveling from Tokyo to Paris, Seoul to New York, or anywhere in between, JetLagPro provides a seamless, localized experience that helps you overcome jet lag in your native language.</p>
-                <div class="languages-list">
-                    <ul>
-                        <li>🇺🇸 English</li>
-                        <li>🇪🇸 Español</li>
-                        <li>🇫🇷 Français</li>
-                        <li>🇩🇪 Deutsch</li>
-                        <li>🇯🇵 日本語</li>
-                        <li>🇰🇷 한국어</li>
-                        <li>🇨🇳 简体中文</li>
-                        <li>🇷🇺 Русский</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <div id="main-footer"></div>
 
@@ -384,7 +363,6 @@
     <div class="swipe-indicators" id="swipeIndicators">
         <div class="indicator active" data-section="top"></div>
          <div class="indicator" data-section="features"></div>
-        <div class="indicator" data-section="localization"></div>
         <div class="indicator" data-section="download"></div>
     </div>
 
@@ -445,7 +423,7 @@
         // Swipe Navigation Implementation
         class SwipeNavigation {
             constructor() {
-                this.sections = ['top', 'features', 'localization', 'download'];
+                this.sections = ['top', 'features', 'download'];
                 this.currentSection = 0;
                 this.touchStartX = 0;
                 this.touchEndX = 0;

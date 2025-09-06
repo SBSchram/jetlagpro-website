@@ -1774,6 +1774,17 @@ body.swiping * {
     color: #9ca3af;
 }
 
+.footer-languages {
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.footer-languages span {
+    margin: 0 0.5rem;
+    white-space: nowrap;
+}
+
 /* Mobile Navigation */
 .mobile-menu-toggle {
     display: none;
