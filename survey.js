@@ -805,50 +805,51 @@ async function submitSurvey() {
         return;
     }
     
-    // Check for duplicate survey code
+    // Check for duplicate survey (survey code + trip ID combination)
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
-    try {
-        // Check if survey code already exists
-        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-        
-        const surveyRef = collection(window.firebaseDB, 'surveys');
-        const q = query(surveyRef, where('surveyCode', '==', surveyCode));
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-            // Ask user if they want to overwrite
-            const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
-            if (!overwrite) {
-                console.log('❌ User cancelled submission - duplicate survey code detected');
-                return;
-            }
-            console.log('✅ User chose to overwrite existing survey data');
-        }
-    } catch (error) {
-        console.warn('⚠️ Could not check for duplicate survey code:', error);
-        // Continue with submission even if check fails
-    }
-    
-    // Check for duplicate trip ID
     const tripId = window.currentTripId;
+    
     if (tripId) {
         try {
-            // Check if trip already exists
-            const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
-            const tripDoc = await window.firebaseGetDoc(tripDocRef);
+            // Check if survey already exists for this specific trip ID
+            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
             
-            if (tripDoc.exists()) {
+            const surveyRef = collection(window.firebaseDB, 'surveys');
+            const q = query(surveyRef, where('tripId', '==', tripId));
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
                 // Ask user if they want to overwrite
                 const overwrite = confirm('A survey for this trip already exists. Do you want to overwrite the existing data?');
                 if (!overwrite) {
-                    console.log('❌ User cancelled submission - duplicate trip detected');
+                    console.log('❌ User cancelled submission - duplicate trip survey detected');
                     return;
                 }
-                console.log('✅ User chose to overwrite existing trip data');
+                console.log('✅ User chose to overwrite existing trip survey data');
             }
         } catch (error) {
-            console.warn('⚠️ Could not check for duplicate trip:', error);
+            console.warn('⚠️ Could not check for duplicate trip survey:', error);
             // Continue with submission even if check fails
+        }
+    } else {
+        // Fallback: Check for duplicate survey code only if no trip ID
+        try {
+            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            
+            const surveyRef = collection(window.firebaseDB, 'surveys');
+            const q = query(surveyRef, where('surveyCode', '==', surveyCode));
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+                const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
+                if (!overwrite) {
+                    console.log('❌ User cancelled submission - duplicate survey code detected');
+                    return;
+                }
+                console.log('✅ User chose to overwrite existing survey data');
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not check for duplicate survey code:', error);
         }
     }
     
