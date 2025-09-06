@@ -1517,33 +1517,8 @@ body.swiping * {
     text-align: center;
     padding: 2rem;
     border-radius: 16px;
-    transition: all 0.3s ease;
     border: 1px solid rgba(59, 130, 246, 0.1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-.feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: rgba(59, 130, 246, 0.2);
-}
-
-.feature-card:hover::before {
-    opacity: 1;
 }
 
 .feature-icon {
@@ -2692,6 +2667,15 @@ body.swiping * {
     font-weight: 700;
     font-size: 16px;
     margin: 0 auto 16px;
+}
+
+.beta-step .step-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    width: 48px;
+    height: 48px;
 }
 
 .beta-step h4 {
