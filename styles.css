@@ -2613,57 +2613,7 @@ body.swiping * {
     }
 } 
 
-/* Beta Instructions */
-.beta-instructions {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    margin: 32px 0;
-    text-align: left;
-}
-
-.beta-instructions h3 {
-    color: white;
-    font-size: 18px;
-    margin-bottom: 16px;
-    font-weight: 600;
-}
-
-.beta-instructions ol {
-    color: rgba(255, 255, 255, 0.9);
-    padding-left: 20px;
-    margin: 0;
-}
-
-.beta-instructions li {
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-/* Two-Step Beta Process - Simple and Clear */
-.beta-process {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 32px;
-    margin: 40px 0;
-    text-align: center;
-    backdrop-filter: blur(10px);
-}
-
-.beta-process h3 {
-    color: white;
-    font-size: 24px;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
-
-.beta-subtitle {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 16px;
-    margin-bottom: 32px;
-}
+/* Beta Steps - Clean and Simple */
 
 .beta-steps {
     display: flex;
@@ -2671,6 +2621,7 @@ body.swiping * {
     justify-content: center;
     gap: 24px;
     flex-wrap: wrap;
+    margin: 40px 0;
 }
 
 .beta-step {
@@ -2735,16 +2686,12 @@ body.swiping * {
     margin: 0 8px;
 }
 
-/* Mobile responsive for beta process */
+/* Mobile responsive for beta steps */
 @media (max-width: 768px) {
-    .beta-process {
-        padding: 24px 16px;
-        margin: 32px 0;
-    }
-    
     .beta-steps {
         flex-direction: column;
         gap: 16px;
+        margin: 32px 0;
     }
     
     .beta-arrow {
