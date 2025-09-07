@@ -932,30 +932,30 @@ async function exportSurveyData() {
                 
                 // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
-                flightLandingDate: surveyData.flight_landing_date || '',
-                flightLandingHour: surveyData.flight_landing_hour || '',
-                ageRange: surveyData.age_range || '',
+                flightLandingDate: surveyData.flightLandingDate || '',
+                flightLandingHour: surveyData.flightLandingHour || '',
+                ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
-                travelExperience: surveyData.travel_experience || '',
+                travelExperience: surveyData.travelExperience || '',
                 region: surveyData.region || '',
                 purpose: surveyData.purpose || '',
                 
                 // Rating responses (1-5 scale)
-                sleepPre: surveyData.sleep_pre || 1,
-                sleepExpectations: surveyData.sleep_expectations || 1,
-                sleepPost: surveyData.sleep_post || 1,
-                fatiguePre: surveyData.fatigue_pre || 1,
-                fatigueExpectations: surveyData.fatigue_expectations || 1,
-                fatiguePost: surveyData.fatigue_post || 1,
-                concentrationPre: surveyData.concentration_pre || 1,
-                concentrationExpectations: surveyData.concentration_expectations || 1,
-                concentrationPost: surveyData.concentration_post || 1,
-                irritabilityPre: surveyData.irritability_pre || 1,
-                irritabilityExpectations: surveyData.irritability_expectations || 1,
-                irritabilityPost: surveyData.irritability_post || 1,
-                giPre: surveyData.gi_pre || 1,
-                giExpectations: surveyData.gi_expectations || 1,
-                giPost: surveyData.gi_post || 1
+                sleepPre: surveyData.sleepPre || 1,
+                sleepExpectations: surveyData.sleepExpectations || 1,
+                sleepPost: surveyData.sleepPost || 1,
+                fatiguePre: surveyData.fatiguePre || 1,
+                fatigueExpectations: surveyData.fatigueExpectations || 1,
+                fatiguePost: surveyData.fatiguePost || 1,
+                concentrationPre: surveyData.concentrationPre || 1,
+                concentrationExpectations: surveyData.concentrationExpectations || 1,
+                concentrationPost: surveyData.concentrationPost || 1,
+                irritabilityPre: surveyData.irritabilityPre || 1,
+                irritabilityExpectations: surveyData.irritabilityExpectations || 1,
+                irritabilityPost: surveyData.irritabilityPost || 1,
+                giPre: surveyData.giPre || 1,
+                giExpectations: surveyData.giExpectations || 1,
+                giPost: surveyData.giPost || 1
             };
             
             // Add sanitized comment if present
@@ -969,8 +969,6 @@ async function exportSurveyData() {
             try {
                 // Try to update the existing tripCompletions document using tripId as document ID
                 const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
-                console.log('🚨 DEBUG: Web survey writing to Firebase for tripId:', tripId);
-                console.log('🚨 DEBUG: Web survey setting surveyCompleted:', surveyUpdateData.surveyCompleted);
                 await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
                 console.log('✅ Flat survey data added to existing trip record:', tripId);
             } catch (updateError) {
@@ -1018,30 +1016,30 @@ async function exportSurveyData() {
                     
                                     // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
-                flightLandingDate: surveyData.flight_landing_date || '',
-                flightLandingHour: surveyData.flight_landing_hour || '',
-                ageRange: surveyData.age_range || '',
+                flightLandingDate: surveyData.flightLandingDate || '',
+                flightLandingHour: surveyData.flightLandingHour || '',
+                ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
-                travelExperience: surveyData.travel_experience || '',
+                travelExperience: surveyData.travelExperience || '',
                 region: surveyData.region || '',
                 purpose: surveyData.purpose || '',
                 
                 // Rating responses (1-5 scale)
-                sleepPre: surveyData.sleep_pre || 1,
-                sleepExpectations: surveyData.sleep_expectations || 1,
-                sleepPost: surveyData.sleep_post || 1,
-                fatiguePre: surveyData.fatigue_pre || 1,
-                fatigueExpectations: surveyData.fatigue_expectations || 1,
-                fatiguePost: surveyData.fatigue_post || 1,
-                concentrationPre: surveyData.concentration_pre || 1,
-                concentrationExpectations: surveyData.concentration_expectations || 1,
-                concentrationPost: surveyData.concentration_post || 1,
-                irritabilityPre: surveyData.irritability_pre || 1,
-                irritabilityExpectations: surveyData.irritability_expectations || 1,
-                irritabilityPost: surveyData.irritability_post || 1,
-                giPre: surveyData.gi_pre || 1,
-                giExpectations: surveyData.gi_expectations || 1,
-                giPost: surveyData.gi_post || 1
+                sleepPre: surveyData.sleepPre || 1,
+                sleepExpectations: surveyData.sleepExpectations || 1,
+                sleepPost: surveyData.sleepPost || 1,
+                fatiguePre: surveyData.fatiguePre || 1,
+                fatigueExpectations: surveyData.fatigueExpectations || 1,
+                fatiguePost: surveyData.fatiguePost || 1,
+                concentrationPre: surveyData.concentrationPre || 1,
+                concentrationExpectations: surveyData.concentrationExpectations || 1,
+                concentrationPost: surveyData.concentrationPost || 1,
+                irritabilityPre: surveyData.irritabilityPre || 1,
+                irritabilityExpectations: surveyData.irritabilityExpectations || 1,
+                irritabilityPost: surveyData.irritabilityPost || 1,
+                giPre: surveyData.giPre || 1,
+                giExpectations: surveyData.giExpectations || 1,
+                giPost: surveyData.giPost || 1
                 };
                 
                 // Add sanitized comment if present
@@ -1380,24 +1378,20 @@ async function checkAndPreFillExistingSurvey() {
     
     if (!tripId) {
         console.log('ℹ️ No tripId in URL - new survey');
-        alert('DEBUG: No tripId in URL - treating as new survey');
         return;
     }
     
     currentTripId = tripId;
-    alert(`DEBUG: Found tripId: ${tripId} in URL`);
     
     try {
         // Check if Firebase is available
         if (!window.firebaseDB || !window.firebaseDoc || !window.firebaseGetDoc) {
             console.log('⚠️ Firebase not available yet - will retry');
-            alert('DEBUG: Firebase not available yet - will retry');
             setTimeout(checkAndPreFillExistingSurvey, 1000);
             return;
         }
         
         console.log('🔍 Checking for existing survey data for tripId:', tripId);
-        alert(`DEBUG: Querying Firebase for tripId: ${tripId}`);
         
         // Get the trip document from Firebase
         const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
@@ -1405,12 +1399,10 @@ async function checkAndPreFillExistingSurvey() {
         
         if (tripDoc.exists()) {
             const tripData = tripDoc.data();
-            alert(`DEBUG: Trip found in Firebase. Survey completed: ${tripData.surveyCompleted}`);
             
             // Check if survey data exists
             if (tripData.surveyCompleted) {
                 console.log('✅ Found existing survey data - pre-filling form');
-                alert('DEBUG: Pre-filling existing survey data');
                 isExistingSurvey = true;
                 
                 // Update the heading
@@ -1420,15 +1412,12 @@ async function checkAndPreFillExistingSurvey() {
                 prefillSurveyWithTripData(tripData);
             } else {
                 console.log('ℹ️ Trip exists but no survey data - new survey');
-                alert('DEBUG: Trip exists but surveyCompleted=false - treating as new survey');
             }
         } else {
             console.log('ℹ️ Trip not found - new survey');
-            alert('DEBUG: Trip not found in Firebase - treating as new survey');
         }
     } catch (error) {
         console.error('❌ Error checking for existing survey:', error);
-        alert(`DEBUG: Error checking for existing survey: ${error.message}`);
     }
 }
 
@@ -1446,7 +1435,7 @@ function prefillSurveyWithTripData(tripData) {
     
     // Pre-fill flight landing date
     if (tripData.flightLandingDate) {
-        const dateField = document.querySelector('input[name="flight_landing_date"]');
+        const dateField = document.querySelector('input[name="flightLandingDate"]');
         if (dateField) {
             dateField.value = tripData.flightLandingDate;
         }
@@ -1454,7 +1443,7 @@ function prefillSurveyWithTripData(tripData) {
     
     // Pre-fill flight landing hour
     if (tripData.flightLandingHour) {
-        const hourField = document.querySelector('select[name="flight_landing_hour"]');
+        const hourField = document.querySelector('select[name="flightLandingHour"]');
         if (hourField) {
             hourField.value = tripData.flightLandingHour;
         }
@@ -1467,6 +1456,9 @@ function prefillSurveyWithTripData(tripData) {
             const element = document.querySelector(`select[name="${field}"]`);
             if (element) {
                 element.value = tripData[field];
+                console.log(`✅ Pre-filled ${field} with value: ${tripData[field]}`);
+            } else {
+                console.log(`⚠️ Could not find element for ${field}`);
             }
         }
     });
@@ -1488,6 +1480,9 @@ function prefillSurveyWithTripData(tripData) {
                 // Trigger visual update
                 const event = new Event('change');
                 radio.dispatchEvent(event);
+                console.log(`✅ Pre-filled ${field} with value: ${tripData[field]}`);
+            } else {
+                console.log(`⚠️ Could not find radio button for ${field} with value: ${tripData[field]}`);
             }
         }
     });
