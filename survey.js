@@ -927,20 +927,12 @@ async function exportSurveyData() {
             const surveyUpdateData = {
                 // Survey completion status
                 surveyCompleted: true,
-                surveyCompletedAt: window.firebaseServerTimestamp(),
                 surveySubmittedAt: timestamp,
-                surveyVersion: 'ljlq_v1',
                 
                 // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
                 flightLandingDate: surveyData.flight_landing_date || '',
                 flightLandingHour: surveyData.flight_landing_hour || '',
-                destination: surveyData.destination || '',
-                direction: surveyData.direction || '',
-                timezones: surveyData.timezones || '',
-                flightDuration: surveyData.flight_duration || '',
-                pointsTotal: surveyData.points_total || '',
-                sleepHours: surveyData.sleep_hours || '',
                 ageRange: surveyData.age_range || '',
                 gender: surveyData.gender || '',
                 travelExperience: surveyData.travel_experience || '',
@@ -1017,20 +1009,19 @@ async function exportSurveyData() {
                 const standaloneSurveyData = {
                     // Survey completion status
                     surveyCompleted: true,
-                    surveyCompletedAt: window.firebaseServerTimestamp(),
                     surveySubmittedAt: timestamp,
-                    surveyVersion: 'ljlq_v1',
                     surveyCode: surveyCode,
                     platform: 'LegacyUser',
-                    appVersion: 'Legacy',
-                    created: window.firebaseServerTimestamp(),
                     
                                     // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
                 flightLandingDate: surveyData.flight_landing_date || '',
                 flightLandingHour: surveyData.flight_landing_hour || '',
-                destination: surveyData.destination || '',
-                direction: surveyData.direction || '',
+                ageRange: surveyData.age_range || '',
+                gender: surveyData.gender || '',
+                travelExperience: surveyData.travel_experience || '',
+                region: surveyData.region || '',
+                purpose: surveyData.purpose || '',
                 
                 // Rating responses (1-5 scale)
                 sleepPre: surveyData.sleep_pre || 1,
@@ -1078,9 +1069,7 @@ async function exportSurveyData() {
                     await window.firebaseUpdateDoc(nakedSurveyDocRef, {
                         // Survey completion status
                         surveyCompleted: true,
-                        surveyCompletedAt: window.firebaseServerTimestamp(),
                         surveySubmittedAt: timestamp,
-                        surveyVersion: 'ljlq_v1',
                         platform: 'LegacyUser',
                         appVersion: 'Legacy',
                         lastUpdated: window.firebaseServerTimestamp(),
@@ -1101,13 +1090,8 @@ async function exportSurveyData() {
                         await window.firebaseSetDoc(nakedSurveyDocRef, {
                             // Survey completion status
                             surveyCompleted: true,
-                            surveyCompletedAt: window.firebaseServerTimestamp(),
                             surveySubmittedAt: timestamp,
-                            surveyVersion: 'ljlq_v1',
                             platform: 'LegacyUser',
-                            appVersion: 'Legacy',
-                            created: window.firebaseServerTimestamp(),
-                            lastUpdated: window.firebaseServerTimestamp(),
                             
                             // Store all legacy survey codes in an array (first entry)
                             legacySurveyCodes: [surveyCode],
