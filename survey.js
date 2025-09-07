@@ -93,8 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup code validation first
     setupCodeValidation();
     
-    // Check for existing submission and pre-fill if found
-    checkForExistingSubmission();
     
     // Auto-fill survey code from URL parameter
     autoFillSurveyCode();
@@ -1369,114 +1367,7 @@ function getRatingValues() {
 
 
 
-// Check for existing submission and pre-fill survey if found
-async function checkForExistingSubmission() {
-    try {
-        console.log('🔍 Checking for existing submission...');
-        
-        // Get survey code from URL or form
-        const urlParams = new URLSearchParams(window.location.search);
-        const surveyCode = urlParams.get('code') || document.getElementById('surveyCode')?.value;
-        
-        if (!surveyCode) {
-            console.log('ℹ️ No survey code found - cannot check for existing submission');
-            return;
-        }
-        
-        // Check if we have existing data in localStorage
-        const existingData = localStorage.getItem(`survey_${surveyCode}`);
-        if (existingData) {
-            console.log('📋 Found existing submission data in localStorage');
-            const parsedData = JSON.parse(existingData);
-            prefillSurvey(parsedData);
-            
-            // Don't scroll here - let the main scroll function handle it
-            return;
-        }
-        
-        // Check Firebase for existing submission
-        if (window.firebaseDB) {
-            console.log('🔥 Checking Firebase for existing submission...');
-            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-            
-            const surveyRef = collection(window.firebaseDB, 'surveys');
-            const q = query(surveyRef, where('surveyCode', '==', surveyCode));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-                console.log('✅ Found existing submission in Firebase');
-                const doc = querySnapshot.docs[0];
-                const data = doc.data();
-                
-                // Store in localStorage for future use
-                localStorage.setItem(`survey_${surveyCode}`, JSON.stringify(data));
-                
-                // Pre-fill the survey
-                prefillSurvey(data);
-                
-                // Show message that this is an existing submission
-                showExistingSubmissionMessage();
-                
-                // Don't scroll here - let the main scroll function handle it
-            } else {
-                console.log('ℹ️ No existing submission found in Firebase');
-            }
-        }
-    } catch (error) {
-        console.error('❌ Error checking for existing submission:', error);
-    }
-}
 
-// Pre-fill survey with existing data
-function prefillSurvey(data) {
-    console.log('📝 Pre-filling survey with existing data...');
-    
-    // Pre-fill symptom ratings
-    const symptomFields = [
-        'sleep_pre', 'sleep_expectations', 'sleep_post',
-        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
-        'concentration_pre', 'concentration_expectations', 'concentration_post',
-        'irritability_pre', 'irritability_expectations', 'irritability_post',
-        'gi_pre', 'gi_expectations', 'gi_post'
-    ];
-    
-    symptomFields.forEach(field => {
-        if (data[field]) {
-            const radio = document.querySelector(`input[name="${field}"][value="${data[field]}"]`);
-            if (radio) {
-                radio.checked = true;
-                // Trigger the visual update
-                const event = new Event('change');
-                radio.dispatchEvent(event);
-            }
-        }
-    });
-    
-    // Pre-fill other form fields
-    const formFields = [
-        'total_points', 'points_completed', 'timezones_count', 'travel_direction',
-        'flight_landing_date', 'flight_landing_hour', 'travel_frequency', 'travel_experience'
-    ];
-    
-    formFields.forEach(field => {
-        if (data[field]) {
-            const element = document.querySelector(`[name="${field}"]`);
-            if (element) {
-                element.value = data[field];
-            }
-        }
-    });
-    
-    // Pre-fill comments
-    if (data.comments) {
-        const commentsField = document.querySelector('#comments');
-        if (commentsField) {
-            commentsField.value = data.comments;
-        }
-    }
-    
-    console.log('✅ Survey pre-filled with existing data');
-}
 
 // Check for existing survey data and pre-fill form
 async function checkAndPreFillExistingSurvey() {
@@ -1652,4 +1543,4 @@ function updateCommentCounter() {
             counter.style.color = '#6b7280';
         }
     }
-} 
+}

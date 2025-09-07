@@ -225,7 +225,7 @@ body {
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
-    resize: vertical;
+    resize: none;
     min-height: 100px;
     transition: border-color 0.3s ease;
 }
