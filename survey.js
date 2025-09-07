@@ -3,6 +3,8 @@
 // Global variables
 let surveyData = {};
 let isCodeValidated = false;
+let isExistingSurvey = false;
+let currentTripId = null;
 
 // Security functions for comment sanitization
 function sanitizeComment(input) {
@@ -1476,29 +1478,178 @@ function prefillSurvey(data) {
     console.log('✅ Survey pre-filled with existing data');
 }
 
-// Show message that this is an existing submission
-function showExistingSubmissionMessage() {
-    const existingMessage = document.createElement('div');
-    existingMessage.className = 'existing-submission-message';
-    existingMessage.style.cssText = `
-        background: #fef3c7;
-        border: 1px solid #f59e0b;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 16px 0;
-        color: #92400e;
-        font-weight: 500;
-    `;
-    existingMessage.innerHTML = `
-        <strong>📋 Existing Submission Found:</strong> 
-        We found a previous survey submission for this code. 
-        The form has been pre-filled with your previous answers. 
-        You can modify any answers before re-submitting.
-    `;
+// Check for existing survey data and pre-fill form
+async function checkAndPreFillExistingSurvey() {
+    // Get tripId from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tripId = urlParams.get('tripId');
     
-    // Insert at the top of the form
-    const form = document.getElementById('travelForm');
-    if (form) {
-        form.parentNode.insertBefore(existingMessage, form);
+    if (!tripId) {
+        console.log('ℹ️ No tripId in URL - new survey');
+        return;
+    }
+    
+    currentTripId = tripId;
+    
+    try {
+        // Check if Firebase is available
+        if (!window.firebaseDB || !window.firebaseDoc || !window.firebaseGetDoc) {
+            console.log('⚠️ Firebase not available yet - will retry');
+            setTimeout(checkAndPreFillExistingSurvey, 1000);
+            return;
+        }
+        
+        console.log('🔍 Checking for existing survey data for tripId:', tripId);
+        
+        // Get the trip document from Firebase
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDoc = await window.firebaseGetDoc(tripDocRef);
+        
+        if (tripDoc.exists()) {
+            const tripData = tripDoc.data();
+            
+            // Check if survey data exists
+            if (tripData.surveyCompleted) {
+                console.log('✅ Found existing survey data - pre-filling form');
+                isExistingSurvey = true;
+                
+                // Update the heading
+                updateSurveyHeading(tripId);
+                
+                // Pre-fill the form with existing data
+                prefillSurveyWithTripData(tripData);
+            } else {
+                console.log('ℹ️ Trip exists but no survey data - new survey');
+            }
+        } else {
+            console.log('ℹ️ Trip not found - new survey');
+        }
+    } catch (error) {
+        console.error('❌ Error checking for existing survey:', error);
+    }
+}
+
+// Update survey heading for existing surveys
+function updateSurveyHeading(tripId) {
+    const heading = document.querySelector('h3');
+    if (heading && heading.textContent.includes("Let's Get Started!")) {
+        heading.textContent = `Revising ${tripId}`;
+    }
+}
+
+// Pre-fill survey with trip data
+function prefillSurveyWithTripData(tripData) {
+    console.log('📝 Pre-filling survey with existing trip data...');
+    
+    // Pre-fill flight landing date
+    if (tripData.flightLandingDate) {
+        const dateField = document.querySelector('input[name="flight_landing_date"]');
+        if (dateField) {
+            dateField.value = tripData.flightLandingDate;
+        }
+    }
+    
+    // Pre-fill flight landing hour
+    if (tripData.flightLandingHour) {
+        const hourField = document.querySelector('select[name="flight_landing_hour"]');
+        if (hourField) {
+            hourField.value = tripData.flightLandingHour;
+        }
+    }
+    
+    // Pre-fill demographic fields
+    const demographicFields = ['ageRange', 'gender', 'travelExperience', 'region', 'purpose'];
+    demographicFields.forEach(field => {
+        if (tripData[field]) {
+            const element = document.querySelector(`select[name="${field}"]`);
+            if (element) {
+                element.value = tripData[field];
+            }
+        }
+    });
+    
+    // Pre-fill rating fields
+    const ratingFields = [
+        'sleepPre', 'sleepExpectations', 'sleepPost',
+        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
+        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
+        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
+        'giPre', 'giExpectations', 'giPost'
+    ];
+    
+    ratingFields.forEach(field => {
+        if (tripData[field]) {
+            const radio = document.querySelector(`input[name="${field}"][value="${tripData[field]}"]`);
+            if (radio) {
+                radio.checked = true;
+                // Trigger visual update
+                const event = new Event('change');
+                radio.dispatchEvent(event);
+            }
+        }
+    });
+    
+    // Pre-fill comments
+    if (tripData.userComment) {
+        const commentField = document.querySelector('#userComment');
+        if (commentField) {
+            commentField.value = tripData.userComment;
+            // Update character count
+            updateCommentCounter();
+        }
+    }
+    
+    console.log('✅ Survey pre-filled with existing trip data');
+}
+
+
+
+// Initialize survey when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📋 Survey page loaded - checking for existing data');
+    
+    // Check for existing survey data and pre-fill if found
+    checkAndPreFillExistingSurvey();
+    
+    // Initialize other survey functionality
+    initializeSurvey();
+});
+
+// Initialize survey functionality
+function initializeSurvey() {
+    // Add event listeners for form elements
+    setupFormEventListeners();
+    
+    // Initialize comment counter
+    const commentField = document.querySelector('#userComment');
+    if (commentField) {
+        commentField.addEventListener('input', updateCommentCounter);
+        updateCommentCounter();
+    }
+}
+
+// Setup form event listeners
+function setupFormEventListeners() {
+    // Add any other form event listeners here
+    console.log('📋 Form event listeners initialized');
+}
+
+// Update comment character counter
+function updateCommentCounter() {
+    const commentField = document.querySelector('#userComment');
+    const counter = document.querySelector('#commentCharCount');
+    
+    if (commentField && counter) {
+        const length = commentField.value.length;
+        counter.textContent = length;
+        
+        // Change color if approaching limit
+        if (length > 900) {
+            counter.style.color = '#dc2626';
+        } else if (length > 800) {
+            counter.style.color = '#f59e0b';
+        } else {
+            counter.style.color = '#6b7280';
+        }
     }
 } 
