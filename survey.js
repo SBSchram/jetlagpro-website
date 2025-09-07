@@ -55,13 +55,14 @@ function validateComment(input) {
     return { isValid: true, message: 'Comment is valid' };
 }
 
-// Check if coming from app and refresh if needed
+// Check if coming from app (has tripId) and refresh if needed
 function checkAndRefreshFromApp() {
     const urlParams = new URLSearchParams(window.location.search);
-    const fromApp = urlParams.get('from') === 'app';
+    const tripId = urlParams.get('tripId');
+    const fromApp = tripId !== null; // If tripId exists, we're coming from the app
     
     if (fromApp && !sessionStorage.getItem('appRefreshDone')) {
-        console.log('🔄 Coming from app - forcing fresh load...');
+        console.log('🔄 Coming from app (has tripId) - forcing fresh load...');
         sessionStorage.setItem('appRefreshDone', 'true');
         
         // Add timestamp to force refresh
@@ -1377,20 +1378,24 @@ async function checkAndPreFillExistingSurvey() {
     
     if (!tripId) {
         console.log('ℹ️ No tripId in URL - new survey');
+        alert('DEBUG: No tripId in URL - treating as new survey');
         return;
     }
     
     currentTripId = tripId;
+    alert(`DEBUG: Found tripId: ${tripId} in URL`);
     
     try {
         // Check if Firebase is available
         if (!window.firebaseDB || !window.firebaseDoc || !window.firebaseGetDoc) {
             console.log('⚠️ Firebase not available yet - will retry');
+            alert('DEBUG: Firebase not available yet - will retry');
             setTimeout(checkAndPreFillExistingSurvey, 1000);
             return;
         }
         
         console.log('🔍 Checking for existing survey data for tripId:', tripId);
+        alert(`DEBUG: Querying Firebase for tripId: ${tripId}`);
         
         // Get the trip document from Firebase
         const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
@@ -1398,10 +1403,12 @@ async function checkAndPreFillExistingSurvey() {
         
         if (tripDoc.exists()) {
             const tripData = tripDoc.data();
+            alert(`DEBUG: Trip found in Firebase. Survey completed: ${tripData.surveyCompleted}`);
             
             // Check if survey data exists
             if (tripData.surveyCompleted) {
                 console.log('✅ Found existing survey data - pre-filling form');
+                alert('DEBUG: Pre-filling existing survey data');
                 isExistingSurvey = true;
                 
                 // Update the heading
@@ -1411,12 +1418,15 @@ async function checkAndPreFillExistingSurvey() {
                 prefillSurveyWithTripData(tripData);
             } else {
                 console.log('ℹ️ Trip exists but no survey data - new survey');
+                alert('DEBUG: Trip exists but surveyCompleted=false - treating as new survey');
             }
         } else {
             console.log('ℹ️ Trip not found - new survey');
+            alert('DEBUG: Trip not found in Firebase - treating as new survey');
         }
     } catch (error) {
         console.error('❌ Error checking for existing survey:', error);
+        alert(`DEBUG: Error checking for existing survey: ${error.message}`);
     }
 }
 
