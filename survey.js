@@ -889,11 +889,7 @@ async function submitSurvey() {
 async function exportSurveyData() {
     console.log('📊 Exporting survey data...');
     
-    const timestamp = new Date().toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit', 
-        hour12: true 
-    });
+    const timestamp = new Date().toISOString();
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
     const tripId = window.currentTripId;
     
