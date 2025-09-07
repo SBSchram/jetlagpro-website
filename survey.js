@@ -969,6 +969,8 @@ async function exportSurveyData() {
             try {
                 // Try to update the existing tripCompletions document using tripId as document ID
                 const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                console.log('🚨 DEBUG: Web survey writing to Firebase for tripId:', tripId);
+                console.log('🚨 DEBUG: Web survey setting surveyCompleted:', surveyUpdateData.surveyCompleted);
                 await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
                 console.log('✅ Flat survey data added to existing trip record:', tripId);
             } catch (updateError) {
