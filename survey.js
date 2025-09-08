@@ -1425,13 +1425,14 @@ async function checkAndPreFillExistingSurvey() {
 function updateSurveyHeading(tripId) {
     const heading = document.querySelector('h3');
     if (heading && heading.textContent.includes("Let's Get Started!")) {
-        heading.textContent = `Revising ${tripId}`;
+        heading.textContent = `Editing ${tripId}`;
     }
 }
 
 // Pre-fill survey with trip data
 function prefillSurveyWithTripData(tripData) {
     console.log('📝 Pre-filling survey with existing trip data...');
+    console.log('🔍 Full tripData object:', tripData);
     
     // Pre-fill flight landing date
     if (tripData.flightLandingDate) {
@@ -1474,15 +1475,17 @@ function prefillSurveyWithTripData(tripData) {
     
     ratingFields.forEach(field => {
         if (tripData[field]) {
-            const radio = document.querySelector(`input[name="${field}"][value="${tripData[field]}"]`);
+            // Convert to string to match HTML radio button values
+            const value = String(tripData[field]);
+            const radio = document.querySelector(`input[name="${field}"][value="${value}"]`);
             if (radio) {
                 radio.checked = true;
                 // Trigger visual update
                 const event = new Event('change');
                 radio.dispatchEvent(event);
-                console.log(`✅ Pre-filled ${field} with value: ${tripData[field]}`);
+                console.log(`✅ Pre-filled ${field} with value: ${value}`);
             } else {
-                console.log(`⚠️ Could not find radio button for ${field} with value: ${tripData[field]}`);
+                console.log(`⚠️ Could not find radio button for ${field} with value: ${value}`);
             }
         }
     });
