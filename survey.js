@@ -1423,10 +1423,16 @@ async function checkAndPreFillExistingSurvey() {
 
 // Update survey heading for existing surveys
 function updateSurveyHeading(tripId) {
-    const heading = document.querySelector('h3');
-    if (heading && heading.textContent.includes("Let's Get Started!")) {
-        heading.textContent = `Editing ${tripId}`;
+    // Find the specific h3 with "Let's Get Started!" text
+    const headings = document.querySelectorAll('h3');
+    for (const heading of headings) {
+        if (heading.textContent.includes("Let's Get Started!")) {
+            heading.textContent = `Editing ${tripId}`;
+            console.log(`✅ Updated heading to: Editing ${tripId}`);
+            return;
+        }
     }
+    console.log('⚠️ Could not find "Let\'s Get Started!" heading to update');
 }
 
 // Pre-fill survey with trip data
@@ -1464,31 +1470,34 @@ function prefillSurveyWithTripData(tripData) {
         }
     });
     
-    // Pre-fill rating fields
-    const ratingFields = [
-        'sleepPre', 'sleepExpectations', 'sleepPost',
-        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
-        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
-        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
-        'giPre', 'giExpectations', 'giPost'
-    ];
-    
-    ratingFields.forEach(field => {
-        if (tripData[field]) {
-            // Convert to string to match HTML radio button values
-            const value = String(tripData[field]);
-            const radio = document.querySelector(`input[name="${field}"][value="${value}"]`);
-            if (radio) {
-                radio.checked = true;
-                // Trigger visual update
-                const event = new Event('change');
-                radio.dispatchEvent(event);
-                console.log(`✅ Pre-filled ${field} with value: ${value}`);
-            } else {
-                console.log(`⚠️ Could not find radio button for ${field} with value: ${value}`);
-            }
+    // TEST: Focus on just fatiguePre field first
+    if (tripData.fatiguePre !== undefined && tripData.fatiguePre !== null) {
+        const value = tripData.fatiguePre;
+        const selector = `input[name="fatiguePre"][value="${value}"]`;
+        
+        alert(`DEBUG: Testing fatiguePre\nFirebase value: ${value} (type: ${typeof value})\nSelector: ${selector}\n\nLooking for radio button...`);
+        
+        const radio = document.querySelector(selector);
+        if (radio) {
+            radio.checked = true;
+            // Trigger visual update
+            const event = new Event('change');
+            radio.dispatchEvent(event);
+            alert(`✅ SUCCESS: Found and checked fatiguePre radio button with value ${value}`);
+        } else {
+            alert(`❌ FAILED: Could not find radio button with selector: ${selector}\n\nLet me check what radio buttons exist...`);
+            
+            // Debug: Show all fatiguePre radio buttons
+            const allFatigueRadios = document.querySelectorAll('input[name="fatiguePre"]');
+            let radioInfo = `Found ${allFatigueRadios.length} fatiguePre radio buttons:\n`;
+            allFatigueRadios.forEach((radio, index) => {
+                radioInfo += `${index + 1}. value="${radio.value}" (type: ${typeof radio.value})\n`;
+            });
+            alert(radioInfo);
         }
-    });
+    } else {
+        alert(`❌ No fatiguePre data in Firebase: ${tripData.fatiguePre}`);
+    }
     
     // Pre-fill comments
     if (tripData.userComment) {
