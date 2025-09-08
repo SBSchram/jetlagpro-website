@@ -330,14 +330,14 @@
             <div class="container">
                 <div class="download-content">
                     <h2>Get JetLagPro</h2>
-                    <p>Two steps are needed to run JetLagPro. The first step is to install TestFlight from Apple. The second step is to get the app.</p>
+                    <p>Two steps are needed to run JetLagPro. First, install TestFlight from Apple. Then, get the app.</p>
                     
                     <div class="beta-single-box">
                         <div class="beta-step-left">
                             <div class="step-logo">
                                 <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
                             </div>
-                            <a href="testflight-redirect.html" class="btn btn-primary">Install TestFlight</a>
+                            <a href="testflight-redirect.html" class="btn btn-secondary">Install TestFlight</a>
                         </div>
                         
                         <div class="beta-separator"></div>
@@ -346,7 +346,7 @@
                             <div class="step-logo">
                                 <img src="/favicon.ico" alt="JetLagPro" style="width: 64px; height: 64px;">
                             </div>
-                            <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary" target="_blank">Get JetLagPro</a>
+                            <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary" target="_blank" onclick="copyRedeemCode(event)">Get JetLagPro</a>
                         </div>
                     </div>
                     
@@ -577,6 +577,134 @@
         document.addEventListener('DOMContentLoaded', () => {
             new SwipeNavigation();
         });
+
+        // TestFlight Auto-Copy Redeem Code Functionality
+        function copyRedeemCode(event) {
+            const redeemCode = 'YZc7jzJT';
+            
+            // Try to copy to clipboard
+            if (navigator.clipboard && window.isSecureContext) {
+                // Modern clipboard API
+                navigator.clipboard.writeText(redeemCode).then(() => {
+                    showCopySuccess();
+                }).catch(() => {
+                    // Fallback for clipboard API failure
+                    fallbackCopy(redeemCode);
+                });
+            } else {
+                // Fallback for older browsers or non-secure contexts
+                fallbackCopy(redeemCode);
+            }
+        }
+
+        function fallbackCopy(text) {
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess();
+                } else {
+                    showCopyError();
+                }
+            } catch (err) {
+                showCopyError();
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess() {
+            // Create and show success notification
+            const notification = document.createElement('div');
+            notification.id = 'copy-notification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: #10b981;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                    z-index: 10000;
+                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    max-width: 90vw;
+                    text-align: center;
+                    animation: slideInDown 0.3s ease-out;
+                ">
+                    ✅ Redeem code copied to your clipboard! Please paste it in TestFlight when prompted.
+                </div>
+            `;
+            
+            // Add CSS animation if not already present
+            if (!document.querySelector('#copy-notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'copy-notification-styles';
+                style.textContent = `
+                    @keyframes slideInDown {
+                        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function showCopyError() {
+            // Show error notification if copy fails
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: #ef4444;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                    z-index: 10000;
+                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    max-width: 90vw;
+                    text-align: center;
+                ">
+                    ⚠️ Could not copy automatically. Redeem code: YZc7jzJT
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
 
     </script>
 </body>

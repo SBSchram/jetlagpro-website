@@ -1620,6 +1620,35 @@ body.swiping * {
     text-align: center;
 }
 
+.download-single {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    color: white;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.download-logo {
+    margin-bottom: 20px;
+}
+
+.btn-large {
+    font-size: 1.2em;
+    padding: 15px 30px;
+    margin: 20px 0;
+    display: inline-block;
+}
+
+.download-note {
+    font-size: 0.9em;
+    opacity: 0.9;
+    margin-top: 15px;
+    font-style: italic;
+}
+
 .download-content h2 {
     font-size: 2.5rem;
     font-weight: 700;
