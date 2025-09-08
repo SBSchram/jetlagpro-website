@@ -1,0 +1,5 @@
+[33m687fe9d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Working on testflight instructions with copy redeem code to clipboard
+[33m7692688[m Fix survey field name consistency and remove debug messages
+[33mef19499[m Add comprehensive debugging for surveyCompleted overwrite issue
+[33mb3ec788[m Add debug alerts and change app detection to use tripId
+[33mc04f46f[m Remove unused survey functions and disable textarea resize
