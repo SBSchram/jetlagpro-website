@@ -1354,12 +1354,22 @@ function getRatingValues() {
     const ratings = {};
     const ratingInputs = document.querySelectorAll('.rating-input');
     
+    // Group radio buttons by name to avoid overwriting
+    const radioGroups = {};
     ratingInputs.forEach(input => {
-        if (input.checked) {
-            ratings[input.name] = parseInt(input.value);
+        if (!radioGroups[input.name]) {
+            radioGroups[input.name] = [];
+        }
+        radioGroups[input.name].push(input);
+    });
+    
+    // For each group, get the checked value or default to 1
+    Object.keys(radioGroups).forEach(groupName => {
+        const checkedInput = radioGroups[groupName].find(input => input.checked);
+        if (checkedInput) {
+            ratings[groupName] = parseInt(checkedInput.value);
         } else {
-            // Set default value of 1 if none selected
-            ratings[input.name] = 1;
+            ratings[groupName] = 1; // Default if none checked
         }
     });
     
@@ -1470,52 +1480,48 @@ function prefillSurveyWithTripData(tripData) {
         }
     });
     
-    // TEST: Focus on just fatiguePre field first
-    if (tripData.fatiguePre !== undefined && tripData.fatiguePre !== null) {
-        const value = tripData.fatiguePre;
-        const selector = `input[name="fatiguePre"][value="${value}"]`;
-        
-        alert(`DEBUG: Testing fatiguePre\nFirebase value: ${value} (type: ${typeof value})\nSelector: ${selector}\n\nLooking for radio button...`);
-        
-        const radio = document.querySelector(selector);
-        if (radio) {
-            // STEP 1: Remove 'selected' class from all fatiguePre radio buttons first
-            const allFatigueRadios = document.querySelectorAll('input[name="fatiguePre"]');
-            allFatigueRadios.forEach(r => {
-                const label = document.querySelector(`label[for="${r.id}"]`);
+    // Pre-fill rating fields using the working 4-step approach
+    const ratingFields = [
+        'sleepPre', 'sleepExpectations', 'sleepPost',
+        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
+        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
+        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
+        'giPre', 'giExpectations', 'giPost'
+    ];
+    
+    
+    ratingFields.forEach(field => {
+        if (tripData[field] !== undefined && tripData[field] !== null) {
+            const value = tripData[field];
+            const selector = `input[name="${field}"][value="${value}"]`;
+            
+            const radio = document.querySelector(selector);
+            if (radio) {
+                // STEP 1: Remove 'selected' class from all radio buttons in this group first
+                const allRadiosInGroup = document.querySelectorAll(`input[name="${field}"]`);
+                allRadiosInGroup.forEach(r => {
+                    const label = document.querySelector(`label[for="${r.id}"]`);
+                    if (label) {
+                        label.classList.remove('selected');
+                    }
+                });
+                
+                // STEP 2: Set the target radio button as checked
+                radio.checked = true;
+                
+                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
+                const label = document.querySelector(`label[for="${radio.id}"]`);
                 if (label) {
-                    label.classList.remove('selected');
+                    label.classList.add('selected');
                 }
-            });
-            
-            // STEP 2: Set the target radio button as checked
-            radio.checked = true;
-            
-            // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
-            const label = document.querySelector(`label[for="${radio.id}"]`);
-            if (label) {
-                label.classList.add('selected');
+                
+                // STEP 4: Trigger change event
+                const event = new Event('change', { bubbles: true });
+                radio.dispatchEvent(event);
             }
-            
-            // STEP 4: Trigger change event
-            const event = new Event('change', { bubbles: true });
-            radio.dispatchEvent(event);
-            
-            alert(`✅ SUCCESS: fatiguePre radio button with value ${value} selected\nLabel selected class added: ${label ? 'YES' : 'NO'}\nOther buttons deselected: YES`);
-        } else {
-            alert(`❌ FAILED: Could not find radio button with selector: ${selector}\n\nLet me check what radio buttons exist...`);
-            
-            // Debug: Show all fatiguePre radio buttons
-            const allFatigueRadios = document.querySelectorAll('input[name="fatiguePre"]');
-            let radioInfo = `Found ${allFatigueRadios.length} fatiguePre radio buttons:\n`;
-            allFatigueRadios.forEach((radio, index) => {
-                radioInfo += `${index + 1}. value="${radio.value}" (type: ${typeof radio.value})\n`;
-            });
-            alert(radioInfo);
         }
-    } else {
-        alert(`❌ No fatiguePre data in Firebase: ${tripData.fatiguePre}`);
-    }
+    });
+    
     
     // Pre-fill comments
     if (tripData.userComment) {
