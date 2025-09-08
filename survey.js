@@ -1489,12 +1489,9 @@ function prefillSurveyWithTripData(tripData) {
         'giPre', 'giExpectations', 'giPost'
     ];
     
-    let filledCount = 0;
-    let totalFields = 0;
     
     ratingFields.forEach(field => {
         if (tripData[field] !== undefined && tripData[field] !== null) {
-            totalFields++;
             const value = tripData[field];
             const selector = `input[name="${field}"][value="${value}"]`;
             
@@ -1521,17 +1518,10 @@ function prefillSurveyWithTripData(tripData) {
                 // STEP 4: Trigger change event
                 const event = new Event('change', { bubbles: true });
                 radio.dispatchEvent(event);
-                
-                filledCount++;
-                console.log(`✅ Pre-filled ${field} with value: ${value}`);
-            } else {
-                console.log(`⚠️ Could not find radio button for ${field} with value: ${value}`);
             }
         }
     });
     
-    // Debug alert for all rating fields
-    alert(`DEBUG: Rating fields pre-fill complete\nFound ${totalFields} fields with data\nSuccessfully filled ${filledCount} fields`);
     
     // Pre-fill comments
     if (tripData.userComment) {
