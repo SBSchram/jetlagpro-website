@@ -1354,12 +1354,22 @@ function getRatingValues() {
     const ratings = {};
     const ratingInputs = document.querySelectorAll('.rating-input');
     
+    // Group radio buttons by name to avoid overwriting
+    const radioGroups = {};
     ratingInputs.forEach(input => {
-        if (input.checked) {
-            ratings[input.name] = parseInt(input.value);
+        if (!radioGroups[input.name]) {
+            radioGroups[input.name] = [];
+        }
+        radioGroups[input.name].push(input);
+    });
+    
+    // For each group, get the checked value or default to 1
+    Object.keys(radioGroups).forEach(groupName => {
+        const checkedInput = radioGroups[groupName].find(input => input.checked);
+        if (checkedInput) {
+            ratings[groupName] = parseInt(checkedInput.value);
         } else {
-            // Set default value of 1 if none selected
-            ratings[input.name] = 1;
+            ratings[groupName] = 1; // Default if none checked
         }
     });
     
