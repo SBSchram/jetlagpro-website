@@ -1479,11 +1479,29 @@ function prefillSurveyWithTripData(tripData) {
         
         const radio = document.querySelector(selector);
         if (radio) {
+            // STEP 1: Remove 'selected' class from all fatiguePre radio buttons first
+            const allFatigueRadios = document.querySelectorAll('input[name="fatiguePre"]');
+            allFatigueRadios.forEach(r => {
+                const label = document.querySelector(`label[for="${r.id}"]`);
+                if (label) {
+                    label.classList.remove('selected');
+                }
+            });
+            
+            // STEP 2: Set the target radio button as checked
             radio.checked = true;
-            // Trigger visual update
-            const event = new Event('change');
+            
+            // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
+            const label = document.querySelector(`label[for="${radio.id}"]`);
+            if (label) {
+                label.classList.add('selected');
+            }
+            
+            // STEP 4: Trigger change event
+            const event = new Event('change', { bubbles: true });
             radio.dispatchEvent(event);
-            alert(`✅ SUCCESS: Found and checked fatiguePre radio button with value ${value}`);
+            
+            alert(`✅ SUCCESS: fatiguePre radio button with value ${value} selected\nLabel selected class added: ${label ? 'YES' : 'NO'}\nOther buttons deselected: YES`);
         } else {
             alert(`❌ FAILED: Could not find radio button with selector: ${selector}\n\nLet me check what radio buttons exist...`);
             
