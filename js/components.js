@@ -133,3 +133,44 @@ document.addEventListener('DOMContentLoaded', () => {
 // Backward compatibility: Expose simple functions for existing code
 window.loadHeader = () => window.componentLoader.loadComponent('header', 'main-header');
 window.loadFooter = () => window.componentLoader.loadComponent('footer', 'main-footer');
+
+// Global Mobile Menu Functionality
+window.toggleMobileMenu = function() {
+    const navLinks = document.getElementById('navLinks');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (navLinks && menuToggle) {
+        navLinks.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+    }
+};
+
+// Initialize mobile menu event listeners when header is loaded
+document.addEventListener('headerLoaded', () => {
+    // Close mobile menu when clicking on a link
+    const navLinks = document.getElementById('navLinks');
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navLinks = document.getElementById('navLinks');
+                const menuToggle = document.querySelector('.mobile-menu-toggle');
+                
+                if (navLinks && menuToggle) {
+                    navLinks.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                }
+            });
+        });
+    }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        const navLinks = document.getElementById('navLinks');
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        
+        if (navLinks && menuToggle && !e.target.closest('.nav-container')) {
+            navLinks.classList.remove('active');
+            menuToggle.classList.remove('active');
+        }
+    });
+});

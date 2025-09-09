@@ -563,6 +563,17 @@ function setupSubmitButton() {
     const existingNavs = document.querySelectorAll('.section-navigation');
     existingNavs.forEach(nav => nav.remove());
     
+    // Check if we have a valid tripID
+    const urlParams = new URLSearchParams(window.location.search);
+    const tripId = urlParams.get('tripId');
+    
+    if (!tripId) {
+        console.log('❌ No tripID found - hiding submit button');
+        return; // Don't create submit button if no tripID
+    }
+    
+    console.log('✅ Valid tripID found - creating submit button');
+    
     // Find the last section (comment section) to add submit button
     const commentSection = document.getElementById('commentSection');
     if (commentSection) {
@@ -579,9 +590,9 @@ function setupSubmitButton() {
         // Create submit button
         const submitBtn = document.createElement('button');
         submitBtn.className = 'btn btn-success btn-submit';
-        submitBtn.textContent = 'Enter Survey Code to Submit';
+        submitBtn.textContent = 'Submit Survey';
         submitBtn.onclick = submitSurvey;
-        submitBtn.disabled = true;
+        submitBtn.disabled = false; // Enable since we have tripID
         submitBtn.style.cssText = `
             padding: 15px 30px;
             font-size: 18px;
