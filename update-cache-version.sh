@@ -20,34 +20,34 @@ echo "Updating cache version to: $VERSION"
 
 # Update head-template.html (affects all pages via DRY approach)
 echo "Updating head-template.html..."
-sed -i '' "s/v=[0-9]\{14\}/v=$VERSION/g" head-template.html
+sed -i '' "s/v=[^\"&>]*/v=$VERSION/g" head-template.html
 
 # Update all HTML files in root directory
 echo "Updating root HTML files..."
-sed -i '' "s/\(styles\.css\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(js\/components\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(js\/translate\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(survey\.css\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(survey\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(notifications\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
-sed -i '' "s/\(load-common-head\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" *.html
+sed -i '' "s/\(styles\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(js\/components\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(js\/translate\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(survey\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(survey\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(notifications\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
+sed -i '' "s/\(load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" *.html
 
 # Update blog directory (with ../ paths)
 if [ -d "blog" ]; then
     echo "Updating blog HTML files..."
-    sed -i '' "s/\(\.\.\/styles\.css\?\)v=[0-9]\{14\}/\1v=$VERSION/g" blog/*.html
-    sed -i '' "s/\(\.\.\/js\/components\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" blog/*.html
-    sed -i '' "s/\(\.\.\/js\/translate\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" blog/*.html
-    sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" blog/*.html
+    sed -i '' "s/\(\.\.\/styles\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" blog/*.html
+    sed -i '' "s/\(\.\.\/js\/components\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" blog/*.html
+    sed -i '' "s/\(\.\.\/js\/translate\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" blog/*.html
+    sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" blog/*.html
 fi
 
 # Update demo directory (with ../ paths)
 if [ -d "demo" ]; then
     echo "Updating demo HTML files..."
-    sed -i '' "s/\(\.\.\/styles\.css\?\)v=[0-9]\{14\}/\1v=$VERSION/g" demo/*.html
-    sed -i '' "s/\(\.\.\/js\/components\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" demo/*.html
-    sed -i '' "s/\(\.\.\/js\/translate\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" demo/*.html
-    sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[0-9]\{14\}/\1v=$VERSION/g" demo/*.html
+    sed -i '' "s/\(\.\.\/styles\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" demo/*.html
+    sed -i '' "s/\(\.\.\/js\/components\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" demo/*.html
+    sed -i '' "s/\(\.\.\/js\/translate\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" demo/*.html
+    sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" demo/*.html
 fi
 
 # Clean up any double version parameters (safety check)
