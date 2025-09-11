@@ -20,7 +20,8 @@ echo "Updating cache version to: $VERSION"
 
 # Update head-template.html (affects all pages via DRY approach)
 echo "Updating head-template.html..."
-sed -i '' "s/v=[^\"&>]*/v=$VERSION/g" head-template.html
+sed -i '' "s/\(\.png\?\)v=[^\"&>]*/\1v=$VERSION/g" head-template.html
+sed -i '' "s/\(\.json\?\)v=[^\"&>]*/\1v=$VERSION/g" head-template.html
 
 # Update all HTML files in root directory
 echo "Updating root HTML files..."
