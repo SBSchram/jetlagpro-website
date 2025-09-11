@@ -14,10 +14,10 @@
     <script>
         // Eternal cache busting solution - auto-generates timestamp
         const cacheVersion = Math.floor(Date.now() / 1000);
-        document.write('<link rel="stylesheet" href="survey.css?v=20250910221020">');
+        document.write('<link rel="stylesheet" href="survey.css?v=20250911094117">');
     </script>
-    <script src="load-common-head.js?v=20250910221020"></script>
-    <link rel="stylesheet" href="styles.css?v=20250910221020">
+    <script src="load-common-head.js?v=20250911094117"></script>
+    <link rel="stylesheet" href="styles.css?v=20250911094117">
 </head>
 <body>
     <div id="main-header"></div>
@@ -620,7 +620,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Make Firebase available globally for survey.js?v=20250910221020
+        // Make Firebase available globally for survey.js?v=20250911094117
         window.firebaseApp = app;
         window.firebaseDB = db;
         window.firebaseCollection = collection;
@@ -637,7 +637,7 @@
           <script>
           // Eternal cache busting for JavaScript - auto-generates timestamp
           const jsVersion = Math.floor(Date.now() / 1000);
-          document.write('<script src="survey.js?v=20250910221020"><\/script>');
+          document.write('<script src="survey.js?v=20250911094117"><\/script>');
       </script>
     
     <!-- Legacy cache refresh script removed - eternal cache busting now handles this -->
@@ -652,9 +652,9 @@
     <div id="main-footer"></div>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20250910221020"></script>
+    <script src="js/components.js?v=20250911094117"></script>
     
     <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js?v=20250910221020"></script>
+    <script src="js/translate.js?v=20250911094117"></script>
 </body>
 </html> 
