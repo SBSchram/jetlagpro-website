@@ -189,20 +189,30 @@ function autoFillSurveyCode() {
             console.log('✅ Found tripId in URL:', tripId);
             // Store tripId globally for later use in Firebase update
             window.currentTripId = tripId;
-            // Enable survey submission since we have valid tripId
-            isCodeValidated = true;
-            // Enable all form elements
-            enableAllFormElements();
         }
-        // Point data is already saved in Firebase from trip completion
-        
-        // Auto-populate timezone and direction data if available
-        autoFillTimezoneData();
-        
-        // Hide the preview section and show clean survey (no validation needed)
-        setTimeout(() => {
-            hideSurveyPreview();
-        }, 500);
+        const surveyCodeInput = document.getElementById('surveyCode');
+        if (surveyCodeInput) {
+            surveyCodeInput.value = code.toUpperCase();
+            
+            // Point data is already saved in Firebase from trip completion
+            
+            // Auto-populate timezone and direction data if available
+            autoFillTimezoneData();
+            
+            // Auto-validate the code and hide the preview section
+            setTimeout(() => {
+                const validateBtn = document.getElementById('validateCode');
+                if (validateBtn) {
+                    validateBtn.click();
+                    
+                    // After validation, hide the preview section and show clean survey
+                    setTimeout(() => {
+                        hideSurveyPreview();
+                        // Don't scroll here - let the main scroll function handle it
+                    }, 1000); // Wait for validation to complete
+                }
+            }, 500);
+        }
     } else {
         console.log('ℹ️ No survey code found in URL');
     }
@@ -327,33 +337,50 @@ function validateFlightLandingDate(input) {
     }
 }
 
-// Setup survey code validation (simplified - no manual entry needed)
+// Setup survey code validation
 function setupCodeValidation() {
-    console.log('🔐 Code validation setup (tripId-based)');
-    // Code validation now handled automatically via tripId in URL
-    // No manual validation needed - survey enabled by default with valid tripId
-}
-
-// Enable all form elements for survey interaction
-function enableAllFormElements() {
-    console.log('🔓 Enabling all form elements');
+    console.log('🔐 Setting up code validation...');
     
-    // Enable all input fields
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        input.disabled = false;
-        input.style.pointerEvents = 'auto';
-        input.style.opacity = '1';
+    const validateBtn = document.getElementById('validateCode');
+    const surveyCode = document.getElementById('surveyCode');
+    const validationMessage = document.getElementById('validationMessage');
+    
+    if (!validateBtn || !surveyCode) {
+        console.error('❌ Code validation elements not found');
+        return;
+    }
+    
+    // Handle code validation
+    validateBtn.addEventListener('click', function() {
+        const code = surveyCode.value.trim().toUpperCase();
+        
+        if (validateSurveyCode(code)) {
+            isCodeValidated = true;
+            validationMessage.innerHTML = '<div class="success">✅ Code validated! Survey submission enabled.</div>';
+            validationMessage.className = 'validation-message success';
+            
+            // Enable survey submission
+            enableSurveySubmission();
+            
+            // Hide preview section for clean experience
+            setTimeout(() => {
+                hideSurveyPreview();
+            }, 1500); // Show success message briefly, then clean up
+            
+        } else {
+            validationMessage.innerHTML = '<div class="error">❌ Invalid code. Please check your survey code and try again.</div>';
+            validationMessage.className = 'validation-message error';
+        }
     });
     
-    // Enable all radio buttons and labels
-    const radioLabels = document.querySelectorAll('.rating-bubble');
-    radioLabels.forEach(label => {
-        label.style.pointerEvents = 'auto';
-        label.style.opacity = '1';
+    // Handle Enter key in code input
+    surveyCode.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            validateBtn.click();
+        }
     });
     
-    console.log('✅ All form elements enabled');
+    console.log('✅ Code validation setup complete');
 }
 
 // Initialize comment section with character counter and validation
@@ -536,17 +563,6 @@ function setupSubmitButton() {
     const existingNavs = document.querySelectorAll('.section-navigation');
     existingNavs.forEach(nav => nav.remove());
     
-    // Check if we have a valid tripID
-    const urlParams = new URLSearchParams(window.location.search);
-    const tripId = urlParams.get('tripId');
-    
-    if (!tripId) {
-        console.log('❌ No tripID found - hiding submit button');
-        return; // Don't create submit button if no tripID
-    }
-    
-    console.log('✅ Valid tripID found - creating submit button');
-    
     // Find the last section (comment section) to add submit button
     const commentSection = document.getElementById('commentSection');
     if (commentSection) {
@@ -563,9 +579,9 @@ function setupSubmitButton() {
         // Create submit button
         const submitBtn = document.createElement('button');
         submitBtn.className = 'btn btn-success btn-submit';
-        submitBtn.textContent = 'Submit Survey';
+        submitBtn.textContent = 'Enter Survey Code to Submit';
         submitBtn.onclick = submitSurvey;
-        submitBtn.disabled = false; // Enable since we have tripID
+        submitBtn.disabled = true;
         submitBtn.style.cssText = `
             padding: 15px 30px;
             font-size: 18px;
