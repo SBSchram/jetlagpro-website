@@ -191,6 +191,8 @@ function autoFillSurveyCode() {
             window.currentTripId = tripId;
             // Enable survey submission since we have valid tripId
             isCodeValidated = true;
+            // Enable all form elements
+            enableAllFormElements();
         }
         // Point data is already saved in Firebase from trip completion
         
@@ -330,6 +332,28 @@ function setupCodeValidation() {
     console.log('🔐 Code validation setup (tripId-based)');
     // Code validation now handled automatically via tripId in URL
     // No manual validation needed - survey enabled by default with valid tripId
+}
+
+// Enable all form elements for survey interaction
+function enableAllFormElements() {
+    console.log('🔓 Enabling all form elements');
+    
+    // Enable all input fields
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.disabled = false;
+        input.style.pointerEvents = 'auto';
+        input.style.opacity = '1';
+    });
+    
+    // Enable all radio buttons and labels
+    const radioLabels = document.querySelectorAll('.rating-bubble');
+    radioLabels.forEach(label => {
+        label.style.pointerEvents = 'auto';
+        label.style.opacity = '1';
+    });
+    
+    console.log('✅ All form elements enabled');
 }
 
 // Initialize comment section with character counter and validation
