@@ -14,7 +14,7 @@
     <script>
         // Eternal cache busting solution - auto-generates timestamp
         const cacheVersion = Math.floor(Date.now() / 1000);
-        document.write('<link rel="stylesheet" href="survey.css?v=20250912224615">');
+        document.write('<link rel="stylesheet" href="survey.css?v=20250913120000">');
     </script>
     <script src="load-common-head.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -129,7 +129,6 @@
                       <div class="rating-explanation" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #007bff;">
                         <p style="margin: 0 0 10px 0; font-weight: 600; color: #333;">Rating Categories:</p>
                         <ul style="margin: 0; padding-left: 20px; color: #555;">
-                          <li><strong>Typical:</strong> How you usually feel</li>
                           <li><strong>Anticipated:</strong> Based on prior experience, how you usually feel after a flight like this</li>
                           <li><strong>Post-travel:</strong> How you feel after the flight</li>
                         </ul>
@@ -137,27 +136,6 @@
                       <form id="travelForm">
                         <div class="symptom-group">
                           <h4>Sleep disturbance</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="sleepPre" value="1" id="sleep_pre_1" class="rating-input">
-                                <label for="sleep_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="sleepPre" value="2" id="sleep_pre_2" class="rating-input">
-                                <label for="sleep_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="sleepPre" value="3" id="sleep_pre_3" class="rating-input">
-                                <label for="sleep_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="sleepPre" value="4" id="sleep_pre_4" class="rating-input">
-                                <label for="sleep_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="sleepPre" value="5" id="sleep_pre_5" class="rating-input">
-                                <label for="sleep_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span class="emphasized-label">Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
@@ -210,27 +188,6 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <input type="radio" name="fatiguePre" value="1" id="fatigue_pre_1" class="rating-input">
-                                <label for="fatigue_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="fatiguePre" value="2" id="fatigue_pre_2" class="rating-input">
-                                <label for="fatigue_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="fatiguePre" value="3" id="fatigue_pre_3" class="rating-input">
-                                <label for="fatigue_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="fatiguePre" value="4" id="fatigue_pre_4" class="rating-input">
-                                <label for="fatigue_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="fatiguePre" value="5" id="fatigue_pre_5" class="rating-input">
-                                <label for="fatigue_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span class="emphasized-label">Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
                                 <input type="radio" name="fatigueExpectations" value="0" id="fatigue_expectations_0" class="rating-input" checked>
                                 <label for="fatigue_expectations_0" class="rating-bubble selected"></label>
                                 <input type="radio" name="fatigueExpectations" value="1" id="fatigue_expectations_1" class="rating-input">
@@ -277,27 +234,6 @@
 
                         <div class="symptom-group">
                           <h4>Difficulty concentrating</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="concentrationPre" value="1" id="concentration_pre_1" class="rating-input">
-                                <label for="concentration_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationPre" value="2" id="concentration_pre_2" class="rating-input">
-                                <label for="concentration_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationPre" value="3" id="concentration_pre_3" class="rating-input">
-                                <label for="concentration_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationPre" value="4" id="concentration_pre_4" class="rating-input">
-                                <label for="concentration_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationPre" value="5" id="concentration_pre_5" class="rating-input">
-                                <label for="concentration_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span class="emphasized-label">Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
@@ -350,27 +286,6 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <input type="radio" name="irritabilityPre" value="1" id="irritability_pre_1" class="rating-input">
-                                <label for="irritability_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityPre" value="2" id="irritability_pre_2" class="rating-input">
-                                <label for="irritability_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityPre" value="3" id="irritability_pre_3" class="rating-input">
-                                <label for="irritability_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityPre" value="4" id="irritability_pre_4" class="rating-input">
-                                <label for="irritability_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityPre" value="5" id="irritability_pre_5" class="rating-input">
-                                <label for="irritability_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span class="emphasized-label">Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
                                 <input type="radio" name="irritabilityExpectations" value="0" id="irritability_expectations_0" class="rating-input" checked>
                                 <label for="irritability_expectations_0" class="rating-bubble selected"></label>
                                 <input type="radio" name="irritabilityExpectations" value="1" id="irritability_expectations_1" class="rating-input">
@@ -417,27 +332,6 @@
 
                         <div class="symptom-group">
                           <h4>Gastrointestinal issues</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="giPre" value="1" id="gi_pre_1" class="rating-input">
-                                <label for="gi_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="giPre" value="2" id="gi_pre_2" class="rating-input">
-                                <label for="gi_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="giPre" value="3" id="gi_pre_3" class="rating-input">
-                                <label for="gi_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="giPre" value="4" id="gi_pre_4" class="rating-input">
-                                <label for="gi_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="giPre" value="5" id="gi_pre_5" class="rating-input">
-                                <label for="gi_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span class="emphasized-label">Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
@@ -654,7 +548,7 @@
           <script>
           // Eternal cache busting for JavaScript - auto-generates timestamp
           const jsVersion = Math.floor(Date.now() / 1000);
-          document.write('<script src="survey.js?v=20250912224615"><\/script>');
+          document.write('<script src="survey.js?v=20250913120000"><\/script>');
       </script>
     
     <!-- Legacy cache refresh script removed - eternal cache busting now handles this -->
