@@ -1,25 +1,23 @@
 // JetLagPro Analytics Charts JavaScript
 // Chart rendering functions extracted from analytics-secret.html
 
-// Helper function to calculate average improvement
-function calculateAverageImprovement(surveys, symptom) {
+// Helper function to calculate average post-travel severity
+function calculateAveragePostTravelSeverity(surveys, symptom) {
     if (surveys.length === 0) return 0;
     
     const validSurveys = surveys.filter(s => {
-        const baseline = s[`baseline${symptom.charAt(0).toUpperCase() + symptom.slice(1)}`];
         const post = s[`post${symptom.charAt(0).toUpperCase() + symptom.slice(1)}Severity`];
-        return baseline !== null && post !== null;
+        return post !== null;
     });
     
     if (validSurveys.length === 0) return 0;
     
-    const totalImprovement = validSurveys.reduce((sum, s) => {
-        const baseline = s[`baseline${symptom.charAt(0).toUpperCase() + symptom.slice(1)}`];
+    const totalSeverity = validSurveys.reduce((sum, s) => {
         const post = s[`post${symptom.charAt(0).toUpperCase() + symptom.slice(1)}Severity`];
-        return sum + (baseline - post);
+        return sum + post;
     }, 0);
     
-    return totalImprovement / validSurveys.length;
+    return totalSeverity / validSurveys.length;
 }
 
 // Render dose-response curve chart
@@ -32,9 +30,9 @@ function renderDoseResponseChart(surveys) {
         pointGroups[i] = surveys.filter(s => s.pointsCompleted === i);
     }
     
-    // Calculate average sleep improvement for each point group
+    // Calculate average post-travel severity for each point group
     const labels = [];
-    const improvementData = [];
+    const severityData = [];
     const timezoneData = [];
     
     for (let points = 0; points <= 12; points++) {
@@ -43,9 +41,9 @@ function renderDoseResponseChart(surveys) {
         
         labels.push(`${points} points`);
         
-        // Calculate overall improvement (all travel directions combined)
-        const improvement = calculateAverageImprovement(group, 'sleep');
-        improvementData.push(improvement);
+        // Calculate overall post-travel severity (all travel directions combined)
+        const severity = calculateAveragePostTravelSeverity(group, 'sleep');
+        severityData.push(severity);
         
         // Calculate average time zones crossed for this point group
         const avgTimezones = group.length > 0 ? 
@@ -58,10 +56,10 @@ function renderDoseResponseChart(surveys) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Sleep Improvement',
-                data: improvementData,
-                borderColor: '#16a34a',
-                backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                label: 'Post-Travel Sleep Severity',
+                data: severityData,
+                borderColor: '#dc2626',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
                 tension: 0.4,
                 fill: false,
                 yAxisID: 'y'
@@ -80,7 +78,7 @@ function renderDoseResponseChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Dose-Response: App Usage vs Sleep Improvement & Time Zones'
+                    text: 'Dose-Response: App Usage vs Post-Travel Sleep Severity & Time Zones'
                 },
                 legend: {
                     display: true
@@ -94,7 +92,7 @@ function renderDoseResponseChart(surveys) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Sleep Improvement (Baseline - Post-Travel)'
+                        text: 'Post-Travel Sleep Severity (1-5 scale)'
                     }
                 },
                 y1: {
@@ -142,8 +140,8 @@ function renderTimezoneEffectChart(surveys) {
         const highStim = group.filter(s => s.pointsCompleted >= 6);
         const lowStim = group.filter(s => s.pointsCompleted <= 5);
         
-        highStimulationData.push(calculateAverageImprovement(highStim, 'sleep'));
-        lowStimulationData.push(calculateAverageImprovement(lowStim, 'sleep'));
+        highStimulationData.push(calculateAveragePostTravelSeverity(highStim, 'sleep'));
+        lowStimulationData.push(calculateAveragePostTravelSeverity(lowStim, 'sleep'));
     });
     
     new Chart(ctx, {
@@ -169,7 +167,7 @@ function renderTimezoneEffectChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Time Zone Effect: Stimulation Level vs Sleep Improvement'
+                    text: 'Time Zone Effect: Stimulation Level vs Post-Travel Sleep Severity'
                 }
             },
             scales: {
@@ -177,7 +175,7 @@ function renderTimezoneEffectChart(surveys) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Average Sleep Improvement'
+                        text: 'Average Post-Travel Sleep Severity (1-5 scale)'
                     }
                 },
                 x: {
@@ -200,8 +198,8 @@ function renderSymptomEffectivenessChart(surveys) {
     const effectivenessData = [];
     
     symptoms.forEach(symptom => {
-        const improvement = calculateAverageImprovement(surveys, symptom.toLowerCase());
-        effectivenessData.push(improvement);
+        const severity = calculateAveragePostTravelSeverity(surveys, symptom.toLowerCase());
+        effectivenessData.push(severity);
     });
     
     new Chart(ctx, {
@@ -232,7 +230,7 @@ function renderSymptomEffectivenessChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Overall Symptom Improvement Distribution'
+                    text: 'Post-Travel Symptom Severity Distribution'
                 },
                 legend: {
                     position: 'bottom'
@@ -276,31 +274,31 @@ function render3DHeatmap(surveys) {
                 return tz >= tzMin && tz <= tzMax && pts >= ptMin && pts <= ptMax;
             });
             
-            const improvement = calculateAverageImprovement(group, 'sleep');
+            const severity = calculateAveragePostTravelSeverity(group, 'sleep');
             const sampleSize = group.length;
             
-            // Color coding based on improvement
+            // Color coding based on severity (lower is better)
             let bgColor = '#f8f9fa';
             let textColor = '#000';
             
             if (sampleSize > 0) {
-                if (improvement > 1.5) {
-                    bgColor = '#dcfce7'; // Light green
+                if (severity <= 2) {
+                    bgColor = '#dcfce7'; // Light green - good results
                     textColor = '#166534';
-                } else if (improvement > 0.5) {
-                    bgColor = '#fef3c7'; // Light yellow
+                } else if (severity <= 3) {
+                    bgColor = '#fef3c7'; // Light yellow - moderate
                     textColor = '#92400e';
-                } else if (improvement > 0) {
-                    bgColor = '#fef2f2'; // Light red
+                } else if (severity <= 4) {
+                    bgColor = '#fef2f2'; // Light red - poor
                     textColor = '#991b1b';
                 } else {
-                    bgColor = '#f3f4f6'; // Light gray
+                    bgColor = '#f3f4f6'; // Light gray - severe
                     textColor = '#6b7280';
                 }
             }
             
             html += `<td style="padding: 10px; border: 1px solid #ddd; background: ${bgColor}; color: ${textColor}; text-align: center;">`;
-            html += `<div style="font-weight: bold;">${improvement.toFixed(2)}</div>`;
+            html += `<div style="font-weight: bold;">${severity.toFixed(2)}</div>`;
             html += `<div style="font-size: 0.8em; opacity: 0.7;">n=${sampleSize}</div>`;
             html += '</td>';
         });
@@ -310,8 +308,8 @@ function render3DHeatmap(surveys) {
     
     html += '</tbody></table>';
     html += '<div style="margin-top: 15px; padding: 10px; background: #f0f9ff; border-radius: 5px; font-size: 0.9em;">';
-    html += '<strong>Legend:</strong> Values show comparison between anticipated and post-travel symptoms. ';
-    html += 'Green = High improvement (>1.5), Yellow = Moderate (0.5-1.5), Red = Low (0-0.5), Gray = No data.';
+    html += '<strong>Legend:</strong> Values show post-travel symptom severity (1-5 scale). ';
+    html += 'Green = Good results (≤2), Yellow = Moderate (3), Red = Poor (4), Gray = Severe (5).';
     html += '</div>';
     html += '</div>';
     

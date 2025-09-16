@@ -540,29 +540,26 @@ function renderStimulationEfficacy() {
         else tzGroups['10+ time zones'].push(survey);
     });
 
-    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Sleep Improvement</th><th>Avg Post-Travel Severity</th></tr></thead><tbody>';
+    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th></tr></thead><tbody>';
 
     Object.entries(tzGroups).forEach(([range, surveys]) => {
         if (surveys.length === 0) return;
 
         const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
         
-        // Calculate sleep improvements
-        const validSleepSurveys = surveys.filter(s => s.baselineSleep !== null && s.postSleepSeverity !== null);
-        let avgSleepImprovement = 'N/A';
+        // Calculate sleep post-travel severity only
+        const validSleepSurveys = surveys.filter(s => s.postSleepSeverity !== null);
         let avgPostSeverity = 'N/A';
 
         if (validSleepSurveys.length > 0) {
-            avgSleepImprovement = (validSleepSurveys.reduce((sum, s) => sum + (s.baselineSleep - s.postSleepSeverity), 0) / validSleepSurveys.length).toFixed(2);
             avgPostSeverity = (validSleepSurveys.reduce((sum, s) => sum + s.postSleepSeverity, 0) / validSleepSurveys.length).toFixed(2);
         }
 
         html += `<tr>
             <td><strong>${range}</strong></td>
-            <td>${surveys.length}</td>
+            <td>${validSleepSurveys.length}</td>
             <td>${avgPoints}</td>
-            <td style="color: ${avgSleepImprovement > 0 ? '#16a34a' : '#dc2626'}">${avgSleepImprovement}</td>
-            <td>${avgPostSeverity}</td>
+            <td style="color: ${avgPostSeverity < 3 ? '#16a34a' : avgPostSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostSeverity}</td>
         </tr>`;
     });
 
@@ -582,23 +579,19 @@ function renderStimulationEfficacy() {
 
     symptoms.forEach(symptom => {
         html += `<h4 style="margin-top: 30px; margin-bottom: 15px;">${symptom.name} Symptoms</h4>`;
-        html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th><th>Avg Baseline</th><th>Improvement</th></tr></thead><tbody>';
+        html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th></tr></thead><tbody>';
 
         Object.entries(tzGroups).forEach(([range, surveys]) => {
             if (surveys.length === 0) return;
 
             const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
             
-            // Calculate symptom-specific data
-            const validSymptomSurveys = surveys.filter(s => s[symptom.baseline] !== null && s[symptom.post] !== null);
+            // Calculate symptom-specific data - only post-travel severity
+            const validSymptomSurveys = surveys.filter(s => s[symptom.post] !== null);
             let avgPostSeverity = 'N/A';
-            let avgBaseline = 'N/A';
-            let avgImprovement = 'N/A';
 
             if (validSymptomSurveys.length > 0) {
                 avgPostSeverity = (validSymptomSurveys.reduce((sum, s) => sum + s[symptom.post], 0) / validSymptomSurveys.length).toFixed(2);
-                avgBaseline = (validSymptomSurveys.reduce((sum, s) => sum + s[symptom.baseline], 0) / validSymptomSurveys.length).toFixed(2);
-                avgImprovement = (validSymptomSurveys.reduce((sum, s) => sum + (s[symptom.baseline] - s[symptom.post]), 0) / validSymptomSurveys.length).toFixed(2);
             }
 
             html += `<tr>
@@ -606,8 +599,6 @@ function renderStimulationEfficacy() {
                 <td>${validSymptomSurveys.length}</td>
                 <td>${avgPoints}</td>
                 <td style="color: ${avgPostSeverity < 3 ? '#16a34a' : avgPostSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostSeverity}</td>
-                <td>${avgBaseline}</td>
-                <td style="color: ${avgImprovement > 0 ? '#16a34a' : '#dc2626'}">${avgImprovement}</td>
             </tr>`;
         });
 
@@ -617,23 +608,20 @@ function renderStimulationEfficacy() {
     // Add Aggregate Symptom Score Analysis
     html += '<h4 style="margin-top: 30px; margin-bottom: 15px;">Aggregate Symptom Score</h4>';
     html += '<p>Combined analysis of all symptoms to show overall jet lag severity</p>';
-    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Aggregate Post-Travel Severity</th><th>Avg Aggregate Baseline</th><th>Overall Improvement</th></tr></thead><tbody>';
+    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Aggregate Post-Travel Severity</th></tr></thead><tbody>';
 
     Object.entries(tzGroups).forEach(([range, surveys]) => {
         if (surveys.length === 0) return;
 
         const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
         
-        // Calculate aggregate scores (average of all available symptoms)
+        // Calculate aggregate scores (average of all available post-travel symptoms)
         const validAggregateSurveys = surveys.filter(s => {
             const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
-            const baselines = ['baselineSleep', 'baselineFatigue', 'baselineConcentration', 'baselineIrritability', 'baselineGI'];
-            return symptoms.some(symptom => s[symptom] !== null) && baselines.some(baseline => s[baseline] !== null);
+            return symptoms.some(symptom => s[symptom] !== null);
         });
 
         let avgAggregatePost = 'N/A';
-        let avgAggregateBaseline = 'N/A';
-        let avgAggregateImprovement = 'N/A';
 
         if (validAggregateSurveys.length > 0) {
             const aggregatePostScores = validAggregateSurveys.map(s => {
@@ -642,15 +630,7 @@ function renderStimulationEfficacy() {
                 return validSymptoms.length > 0 ? validSymptoms.reduce((sum, symptom) => sum + s[symptom], 0) / validSymptoms.length : 0;
             });
 
-            const aggregateBaselineScores = validAggregateSurveys.map(s => {
-                const baselines = ['baselineSleep', 'baselineFatigue', 'baselineConcentration', 'baselineIrritability', 'baselineGI'];
-                const validBaselines = baselines.filter(baseline => s[baseline] !== null);
-                return validBaselines.length > 0 ? validBaselines.reduce((sum, baseline) => sum + s[baseline], 0) / validBaselines.length : 0;
-            });
-
             avgAggregatePost = (aggregatePostScores.reduce((sum, score) => sum + score, 0) / aggregatePostScores.length).toFixed(2);
-            avgAggregateBaseline = (aggregateBaselineScores.reduce((sum, score) => sum + score, 0) / aggregateBaselineScores.length).toFixed(2);
-            avgAggregateImprovement = (aggregateBaselineScores.reduce((sum, score, i) => sum + (score - aggregatePostScores[i]), 0) / aggregateBaselineScores.length).toFixed(2);
         }
 
         html += `<tr>
@@ -658,8 +638,6 @@ function renderStimulationEfficacy() {
             <td>${validAggregateSurveys.length}</td>
             <td>${avgPoints}</td>
             <td style="color: ${avgAggregatePost < 3 ? '#16a34a' : avgAggregatePost < 4 ? '#eab308' : '#dc2626'}">${avgAggregatePost}</td>
-            <td>${avgAggregateBaseline}</td>
-            <td style="color: ${avgAggregateImprovement > 0 ? '#16a34a' : '#dc2626'}">${avgAggregateImprovement}</td>
         </tr>`;
     });
 
@@ -671,9 +649,9 @@ function renderStimulationEfficacy() {
     html += '<ul style="margin: 10px 0; padding-left: 20px;">';                                                                         
     html += '<li><strong>Post-Travel Severity:</strong> Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</li>';                  
     html += '<li><strong>Core Research Question:</strong> Does using the app result in less jet lag symptoms?</li>';                
-    html += '<li><strong>Three Key Variables:</strong> Symptom level (1-5), App use (points stimulated), Time zones crossed</li>';               
+    html += '<li><strong>Three Key Variables:</strong> Post-travel symptom severity (1-5), App use (points stimulated), Time zones crossed</li>';               
     html += '<li><strong>Expected Pattern:</strong> More time zones = worse symptoms, but more app use = reduced symptoms</li>';           
-    html += '<li><strong>Success Criteria:</strong> Symptom levels of 1-2 indicate good results from app usage</li>';           
+    html += '<li><strong>Success Criteria:</strong> Post-travel symptom levels of 1-2 indicate good results from app usage</li>';           
     html += '</ul>';
     html += '</div>';
 
