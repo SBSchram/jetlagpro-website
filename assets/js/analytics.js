@@ -16,17 +16,9 @@ const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpr
 // Initialize function (no Firebase SDK needed)
 async function initializeDashboard() {
     try {
-        console.log('🚀 Starting dashboard initialization...');
-        console.log('📡 Using Firebase REST API endpoint:', FIREBASE_REST_URL);
-        
-        // Start loading dashboard data
-        console.log('🚀 Analytics Dashboard initializing...');
         await loadDashboardData();
-        
-        console.log('✅ Dashboard initialized successfully');
-        
     } catch (error) {
-        console.error('❌ Dashboard initialization failed:', error);
+        console.error('Dashboard initialization failed:', error);
         showError('Failed to initialize dashboard: ' + error.message);
     }
 }
@@ -37,17 +29,12 @@ async function loadDashboardData() {
         isLoading = true;
         showLoadingState();
         
-        console.log('📊 Loading survey data from Firebase REST API...');
         await loadSurveyData();
-        
-        console.log('📊 Rendering dashboard...');
         renderDashboard();
         
         isLoading = false;
-        console.log('✅ Dashboard loaded successfully');
-        
     } catch (error) {
-        console.error('❌ Error loading dashboard:', error);
+        console.error('Error loading dashboard:', error);
         showError('Failed to load dashboard data: ' + error.message);
         isLoading = false;
     }
@@ -56,9 +43,6 @@ async function loadDashboardData() {
 // Load survey data from Firebase REST API (same approach as iOS app)
 async function loadSurveyData() {
     try {
-        console.log('🔍 Querying Firebase REST API...');
-        console.log('URL:', FIREBASE_REST_URL);
-        
         const response = await fetch(FIREBASE_REST_URL, {
             method: 'GET',
             headers: {
@@ -66,39 +50,30 @@ async function loadSurveyData() {
             }
         });
         
-        console.log('Response status:', response.status);
-        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('Raw response:', data);
         
         // Parse the response the same way the iOS app does
         if (data.documents && Array.isArray(data.documents)) {
-            console.log(`📝 Found ${data.documents.length} total documents`);
-            
             surveyData = [];
-            data.documents.forEach((document, index) => {
+            data.documents.forEach((document) => {
                 if (document.fields) {
                     // Convert Firestore document format to flat structure
                     const flatData = convertFirestoreDocument(document);
                     if (flatData) {
                         surveyData.push(flatData);
-                        console.log(`📝 Document ${index + 1}:`, flatData);
                     }
                 }
             });
-            
-            console.log(`📝 Loaded ${surveyData.length} survey records`);
         } else {
-            console.warn('⚠️ No documents found in response');
             surveyData = [];
         }
         
     } catch (error) {
-        console.error('❌ Error loading survey data:', error);
+        console.error('Error loading survey data:', error);
         throw new Error('Failed to load trip completion data from Firebase REST API: ' + error.message);
     }
 }
@@ -210,7 +185,7 @@ function convertFirestoreDocument(document) {
         return flatData;
         
     } catch (error) {
-        console.error('❌ Error converting document:', error);
+        console.error('Error converting document:', error);
         return null;
     }
 }
@@ -244,7 +219,6 @@ function showError(message) {
 
 // Refresh data function
 function refreshData() {
-    console.log('🔄 Refreshing dashboard data...');
     loadDashboardData();
 }
 
@@ -256,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // Auto-refresh every 5 minutes
 setInterval(() => {
     if (!isLoading) {
-        console.log('🔄 Auto-refreshing dashboard data...');
         loadDashboardData();
     }
 }, 5 * 60 * 1000);
@@ -470,12 +443,9 @@ function renderStimulationEfficacy() {
         return;
     }
     
-    console.log(`📊 Analyzing ${completedSurveys.length} completed surveys out of ${surveyData.length} total records`);
     
     // Debug: Log sample survey data to see actual values
     if (completedSurveys.length > 0) {
-        console.log('🔍 Sample completed survey data:', completedSurveys[0]);
-        console.log('🔍 Sleep data sample:', {
             baseline: completedSurveys[0].baselineSleep,
             anticipated: completedSurveys[0].anticipatedSleepSeverity,
             post: completedSurveys[0].postSleepSeverity
