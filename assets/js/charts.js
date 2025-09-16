@@ -34,8 +34,8 @@ function renderDoseResponseChart(surveys) {
     
     // Calculate average sleep improvement for each point group
     const labels = [];
-    const eastwardData = [];
-    const westwardData = [];
+    const improvementData = [];
+    const timezoneData = [];
     
     for (let points = 0; points <= 12; points++) {
         const group = pointGroups[points];
@@ -43,15 +43,14 @@ function renderDoseResponseChart(surveys) {
         
         labels.push(`${points} points`);
         
-        // Calculate for eastward travel
-        const eastwardGroup = group.filter(s => s.travelDirection === 'Eastward');
-        const eastwardImprovement = calculateAverageImprovement(eastwardGroup, 'sleep');
-        eastwardData.push(eastwardImprovement);
+        // Calculate overall improvement (all travel directions combined)
+        const improvement = calculateAverageImprovement(group, 'sleep');
+        improvementData.push(improvement);
         
-        // Calculate for westward travel
-        const westwardGroup = group.filter(s => s.travelDirection === 'Westward');
-        const westwardImprovement = calculateAverageImprovement(westwardGroup, 'sleep');
-        westwardData.push(westwardImprovement);
+        // Calculate average time zones crossed for this point group
+        const avgTimezones = group.length > 0 ? 
+            (group.reduce((sum, s) => sum + (s.timezonesCount || 0), 0) / group.length).toFixed(1) : 0;
+        timezoneData.push(parseFloat(avgTimezones));
     }
     
     new Chart(ctx, {
@@ -59,19 +58,21 @@ function renderDoseResponseChart(surveys) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Eastward Travel',
-                data: eastwardData,
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                label: 'Sleep Improvement',
+                data: improvementData,
+                borderColor: '#16a34a',
+                backgroundColor: 'rgba(22, 163, 74, 0.1)',
                 tension: 0.4,
-                fill: false
+                fill: false,
+                yAxisID: 'y'
             }, {
-                label: 'Westward Travel',
-                data: westwardData,
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                label: 'Avg Time Zones Crossed',
+                data: timezoneData,
+                borderColor: '#dc2626',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
                 tension: 0.4,
-                fill: false
+                fill: false,
+                yAxisID: 'y1'
             }]
         },
         options: {
@@ -79,7 +80,7 @@ function renderDoseResponseChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Dose-Response Curve: Points vs Sleep Improvement'
+                    text: 'Dose-Response: App Usage vs Sleep Improvement & Time Zones'
                 },
                 legend: {
                     display: true
@@ -87,11 +88,27 @@ function renderDoseResponseChart(surveys) {
             },
             scales: {
                 y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Sleep: Anticipated vs Post-Travel'
+                        text: 'Sleep Improvement (Baseline - Post-Travel)'
                     }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Time Zones Crossed'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                    },
                 },
                 x: {
                     title: {
@@ -174,69 +191,6 @@ function renderTimezoneEffectChart(surveys) {
     });
 }
 
-// Render direction comparison chart
-function renderDirectionComparisonChart(surveys) {
-    const ctx = document.getElementById('directionComparisonChart').getContext('2d');
-    
-    const eastwardSurveys = surveys.filter(s => s.travelDirection === 'Eastward');
-    const westwardSurveys = surveys.filter(s => s.travelDirection === 'Westward');
-    
-    const symptoms = ['Sleep', 'Fatigue', 'Concentration', 'Irritability', 'GI'];
-    const eastwardData = [];
-    const westwardData = [];
-    
-    symptoms.forEach(symptom => {
-        const eastwardImprovement = calculateAverageImprovement(eastwardSurveys, symptom.toLowerCase());
-        const westwardImprovement = calculateAverageImprovement(westwardSurveys, symptom.toLowerCase());
-        
-        eastwardData.push(eastwardImprovement);
-        westwardData.push(westwardImprovement);
-    });
-    
-    new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: symptoms,
-            datasets: [{
-                label: 'Eastward Travel',
-                data: eastwardData,
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                pointBackgroundColor: '#ef4444',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#ef4444'
-            }, {
-                label: 'Westward Travel',
-                data: westwardData,
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                pointBackgroundColor: '#3b82f6',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#3b82f6'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Symptom Improvement: Eastward vs Westward Travel'
-                }
-            },
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Improvement Score'
-                    }
-                }
-            }
-        }
-    });
-}
 
 // Render symptom effectiveness chart
 function renderSymptomEffectivenessChart(surveys) {

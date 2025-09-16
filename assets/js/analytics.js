@@ -568,69 +568,112 @@ function renderStimulationEfficacy() {
 
     html += '</tbody></table>';
 
-    // Add Travel Direction Analysis
-    html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">Travel Direction Analysis</h3>';
-    html += '<p>Eastward vs Westward travel effects on jet lag and stimulation effectiveness</p>';
+    // Add All Symptoms Analysis
+    html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
+    html += '<p>Analysis of all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
     
-    const eastwardSurveys = completedSurveys.filter(s => s.travelDirection === 'Eastward');
-    const westwardSurveys = completedSurveys.filter(s => s.travelDirection === 'Westward');
+    const symptoms = [
+        { name: 'Sleep', baseline: 'baselineSleep', post: 'postSleepSeverity' },
+        { name: 'Fatigue', baseline: 'baselineFatigue', post: 'postFatigueSeverity' },
+        { name: 'Concentration', baseline: 'baselineConcentration', post: 'postConcentrationSeverity' },
+        { name: 'Irritability', baseline: 'baselineIrritability', post: 'postIrritabilitySeverity' },
+        { name: 'GI', baseline: 'baselineGI', post: 'postGISeverity' }
+    ];
 
-    html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">';
-    
-    // Eastward analysis
-    html += '<div><h4>🌅 Eastward Travel (More Severe Jet Lag)</h4>';
-    if (eastwardSurveys.length > 0) {
-        const avgPointsEast = (eastwardSurveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / eastwardSurveys.length).toFixed(1);
-        const avgTzEast = (eastwardSurveys.reduce((sum, s) => sum + (s.timezonesCount || 0), 0) / eastwardSurveys.length).toFixed(1);
+    symptoms.forEach(symptom => {
+        html += `<h4 style="margin-top: 30px; margin-bottom: 15px;">${symptom.name} Symptoms</h4>`;
+        html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th><th>Avg Baseline</th><th>Improvement</th></tr></thead><tbody>';
+
+        Object.entries(tzGroups).forEach(([range, surveys]) => {
+            if (surveys.length === 0) return;
+
+            const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
+            
+            // Calculate symptom-specific data
+            const validSymptomSurveys = surveys.filter(s => s[symptom.baseline] !== null && s[symptom.post] !== null);
+            let avgPostSeverity = 'N/A';
+            let avgBaseline = 'N/A';
+            let avgImprovement = 'N/A';
+
+            if (validSymptomSurveys.length > 0) {
+                avgPostSeverity = (validSymptomSurveys.reduce((sum, s) => sum + s[symptom.post], 0) / validSymptomSurveys.length).toFixed(2);
+                avgBaseline = (validSymptomSurveys.reduce((sum, s) => sum + s[symptom.baseline], 0) / validSymptomSurveys.length).toFixed(2);
+                avgImprovement = (validSymptomSurveys.reduce((sum, s) => sum + (s[symptom.baseline] - s[symptom.post]), 0) / validSymptomSurveys.length).toFixed(2);
+            }
+
+            html += `<tr>
+                <td><strong>${range}</strong></td>
+                <td>${validSymptomSurveys.length}</td>
+                <td>${avgPoints}</td>
+                <td style="color: ${avgPostSeverity < 3 ? '#16a34a' : avgPostSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostSeverity}</td>
+                <td>${avgBaseline}</td>
+                <td style="color: ${avgImprovement > 0 ? '#16a34a' : '#dc2626'}">${avgImprovement}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+    });
+
+    // Add Aggregate Symptom Score Analysis
+    html += '<h4 style="margin-top: 30px; margin-bottom: 15px;">Aggregate Symptom Score</h4>';
+    html += '<p>Combined analysis of all symptoms to show overall jet lag severity</p>';
+    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Aggregate Post-Travel Severity</th><th>Avg Aggregate Baseline</th><th>Overall Improvement</th></tr></thead><tbody>';
+
+    Object.entries(tzGroups).forEach(([range, surveys]) => {
+        if (surveys.length === 0) return;
+
+        const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
         
-        const validEastSleep = eastwardSurveys.filter(s => s.baselineSleep !== null && s.postSleepSeverity !== null);
-        let avgImprovementEast = 'N/A';
-        if (validEastSleep.length > 0) {
-            avgImprovementEast = (validEastSleep.reduce((sum, s) => sum + (s.baselineSleep - s.postSleepSeverity), 0) / validEastSleep.length).toFixed(2);
+        // Calculate aggregate scores (average of all available symptoms)
+        const validAggregateSurveys = surveys.filter(s => {
+            const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
+            const baselines = ['baselineSleep', 'baselineFatigue', 'baselineConcentration', 'baselineIrritability', 'baselineGI'];
+            return symptoms.some(symptom => s[symptom] !== null) && baselines.some(baseline => s[baseline] !== null);
+        });
+
+        let avgAggregatePost = 'N/A';
+        let avgAggregateBaseline = 'N/A';
+        let avgAggregateImprovement = 'N/A';
+
+        if (validAggregateSurveys.length > 0) {
+            const aggregatePostScores = validAggregateSurveys.map(s => {
+                const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
+                const validSymptoms = symptoms.filter(symptom => s[symptom] !== null);
+                return validSymptoms.length > 0 ? validSymptoms.reduce((sum, symptom) => sum + s[symptom], 0) / validSymptoms.length : 0;
+            });
+
+            const aggregateBaselineScores = validAggregateSurveys.map(s => {
+                const baselines = ['baselineSleep', 'baselineFatigue', 'baselineConcentration', 'baselineIrritability', 'baselineGI'];
+                const validBaselines = baselines.filter(baseline => s[baseline] !== null);
+                return validBaselines.length > 0 ? validBaselines.reduce((sum, baseline) => sum + s[baseline], 0) / validBaselines.length : 0;
+            });
+
+            avgAggregatePost = (aggregatePostScores.reduce((sum, score) => sum + score, 0) / aggregatePostScores.length).toFixed(2);
+            avgAggregateBaseline = (aggregateBaselineScores.reduce((sum, score) => sum + score, 0) / aggregateBaselineScores.length).toFixed(2);
+            avgAggregateImprovement = (aggregateBaselineScores.reduce((sum, score, i) => sum + (score - aggregatePostScores[i]), 0) / aggregateBaselineScores.length).toFixed(2);
         }
 
-        html += `<table class="data-table"><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody>`;
-        html += `<tr><td>Sample Size</td><td>${eastwardSurveys.length}</td></tr>`;
-        html += `<tr><td>Avg Stimulation Points</td><td>${avgPointsEast}</td></tr>`;
-        html += `<tr><td>Avg Time Zones</td><td>${avgTzEast}</td></tr>`;
-        html += `<tr><td>Avg Sleep Improvement</td><td style="color: ${avgImprovementEast > 0 ? '#16a34a' : '#dc2626'}">${avgImprovementEast}</td></tr>`;
-        html += '</tbody></table></div>';
-    } else {
-        html += '<p>No eastward travel data available</p></div>';
-    }
+        html += `<tr>
+            <td><strong>${range}</strong></td>
+            <td>${validAggregateSurveys.length}</td>
+            <td>${avgPoints}</td>
+            <td style="color: ${avgAggregatePost < 3 ? '#16a34a' : avgAggregatePost < 4 ? '#eab308' : '#dc2626'}">${avgAggregatePost}</td>
+            <td>${avgAggregateBaseline}</td>
+            <td style="color: ${avgAggregateImprovement > 0 ? '#16a34a' : '#dc2626'}">${avgAggregateImprovement}</td>
+        </tr>`;
+    });
 
-    // Westward analysis
-    html += '<div><h4>🌇 Westward Travel (Less Severe Jet Lag)</h4>';
-    if (westwardSurveys.length > 0) {
-        const avgPointsWest = (westwardSurveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / westwardSurveys.length).toFixed(1);
-        const avgTzWest = (westwardSurveys.reduce((sum, s) => sum + (s.timezonesCount || 0), 0) / westwardSurveys.length).toFixed(1);
-        
-        const validWestSleep = westwardSurveys.filter(s => s.baselineSleep !== null && s.postSleepSeverity !== null);
-        let avgImprovementWest = 'N/A';
-        if (validWestSleep.length > 0) {
-            avgImprovementWest = (validWestSleep.reduce((sum, s) => sum + (s.baselineSleep - s.postSleepSeverity), 0) / validWestSleep.length).toFixed(2);
-        }
-
-        html += `<table class="data-table"><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody>`;
-        html += `<tr><td>Sample Size</td><td>${westwardSurveys.length}</td></tr>`;
-        html += `<tr><td>Avg Stimulation Points</td><td>${avgPointsWest}</td></tr>`;
-        html += `<tr><td>Avg Time Zones</td><td>${avgTzWest}</td></tr>`;
-        html += `<tr><td>Avg Sleep Improvement</td><td style="color: ${avgImprovementWest > 0 ? '#16a34a' : '#dc2626'}">${avgImprovementWest}</td></tr>`;
-        html += '</tbody></table></div>';
-    } else {
-        html += '<p>No westward travel data available</p></div>';
-    }
-
-    html += '</div>';
+    html += '</tbody></table>';
 
     // Add explanatory notes
     html += '<div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9;">';       
     html += '<h4>📊 Analysis Notes:</h4>';
     html += '<ul style="margin: 10px 0; padding-left: 20px;">';                                                                         
     html += '<li><strong>Post-Travel Severity:</strong> Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</li>';                  
-    html += '<li><strong>Protection Effect:</strong> Lower values = better protection (severity per time zone crossed)</li>';                
-    html += '<li><strong>Core Hypothesis:</strong> More time zones = higher symptoms, but more stimulation = reduced increase</li>';               
-    html += '<li><strong>Dose-Response:</strong> Higher stimulation levels should show lower protection effect values</li>';           
+    html += '<li><strong>Core Research Question:</strong> Does using the app result in less jet lag symptoms?</li>';                
+    html += '<li><strong>Three Key Variables:</strong> Symptom level (1-5), App use (points stimulated), Time zones crossed</li>';               
+    html += '<li><strong>Expected Pattern:</strong> More time zones = worse symptoms, but more app use = reduced symptoms</li>';           
+    html += '<li><strong>Success Criteria:</strong> Symptom levels of 1-2 indicate good results from app usage</li>';           
     html += '</ul>';
     html += '</div>';
 
@@ -656,7 +699,7 @@ function renderAdvancedAnalytics() {
     
     let html = '<div style="margin-bottom: 30px;">';
     html += '<h3>Advanced Research Analytics</h3>';
-    html += '<p>Comprehensive analysis of time zones, travel direction, and acupressure point effectiveness</p>';
+    html += '<p>Comprehensive analysis of time zones crossed, app usage, and symptom severity</p>';
     html += '</div>';
     
     // Create chart containers
@@ -665,8 +708,7 @@ function renderAdvancedAnalytics() {
     html += '<div><canvas id="timezoneEffectChart" width="400" height="300"></canvas></div>';
     html += '</div>';
     
-    html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">';
-    html += '<div><canvas id="directionComparisonChart" width="400" height="300"></canvas></div>';
+    html += '<div style="display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 30px;">';
     html += '<div><canvas id="symptomEffectivenessChart" width="400" height="300"></canvas></div>';
     html += '</div>';
     
@@ -680,7 +722,6 @@ function renderAdvancedAnalytics() {
     // Render all charts
     renderDoseResponseChart(completedSurveys);
     renderTimezoneEffectChart(completedSurveys);
-    renderDirectionComparisonChart(completedSurveys);
     renderSymptomEffectivenessChart(completedSurveys);
     render3DHeatmap(completedSurveys);
 }
