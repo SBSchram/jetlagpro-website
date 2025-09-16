@@ -3,6 +3,8 @@
 
 // Global variables for data
 let surveyData = [];
+let testData = [];
+let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
 
 // Pagination variables for recent submissions
@@ -12,6 +14,92 @@ let totalPages = 1;
 
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
+
+// Gaussian random number generator (Box-Muller transform)
+function gaussianRandom(mean = 0, stdDev = 1) {
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random(); // Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    return mean + stdDev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+// Generate synthetic test data with realistic patterns
+function generateTestData(numSurveys = 300) {
+    const data = [];
+    const destinations = ['JFK', 'LAX', 'LHR', 'NRT', 'SYD', 'CDG', 'FRA', 'ICN', 'SIN', 'DXB'];
+    const travelDirections = ['Eastward', 'Westward'];
+    
+    for (let i = 0; i < numSurveys; i++) {
+        // Generate realistic travel parameters
+        const timezonesCrossed = Math.max(1, Math.floor(Math.random() * 12) + 1); // 1-12 time zones
+        const pointsCompleted = Math.floor(Math.random() * 13); // 0-12 points
+        const travelDirection = travelDirections[Math.floor(Math.random() * travelDirections.length)];
+        const destination = destinations[Math.floor(Math.random() * destinations.length)];
+        
+        // Base anticipation (most people expect moderate jet lag)
+        const anticipation = 3;
+        
+        // Time zone effect (more time zones = worse symptoms)
+        const timeZoneEffect = (timezonesCrossed - 1) * 0.25;
+        
+        // App effect (more usage = better results, capped at -1.5 max benefit)
+        const appEffect = -(pointsCompleted / 12) * 1.5;
+        
+        // Generate post-travel severity for each symptom using Gaussian distribution
+        const generateSymptomSeverity = () => {
+            const baseSeverity = anticipation + timeZoneEffect + appEffect;
+            const randomVariation = gaussianRandom(0, 0.8);
+            return Math.max(1, Math.min(5, Math.round(baseSeverity + randomVariation)));
+        };
+        
+        const survey = {
+            surveyCode: `TEST${String(i + 1).padStart(3, '0')}`,
+            destinationCode: destination,
+            timezonesCount: timezonesCrossed,
+            travelDirection: travelDirection,
+            pointsCompleted: pointsCompleted,
+            surveyCompleted: true,
+            
+            // Post-travel symptom severities (1-5 scale)
+            postSleepSeverity: generateSymptomSeverity(),
+            postFatigueSeverity: generateSymptomSeverity(),
+            postConcentrationSeverity: generateSymptomSeverity(),
+            postIrritabilitySeverity: generateSymptomSeverity(),
+            postGISeverity: generateSymptomSeverity(),
+            
+            // Timestamp (spread over last 6 months)
+            timestamp: new Date(Date.now() - Math.random() * 180 * 24 * 60 * 60 * 1000).toISOString(),
+            
+            // Platform info
+            platform: Math.random() > 0.5 ? 'iOS' : 'Android',
+            appVersion: '1.0.0'
+        };
+        
+        data.push(survey);
+    }
+    
+    return data;
+}
+
+// Get current data source (real or test)
+function getCurrentData() {
+    return currentDataSource === 'real' ? surveyData : testData;
+}
+
+// Switch between real and test data
+function switchDataSource(source) {
+    currentDataSource = source;
+    
+    if (source === 'test' && testData.length === 0) {
+        testData = generateTestData();
+    }
+    
+    // Refresh dashboard with new data
+    renderDashboard();
+    renderStimulationEfficacy();
+    renderRecentSubmissions();
+    renderAdvancedAnalytics();
+}
 
 // Initialize function (no Firebase SDK needed)
 async function initializeDashboard() {
@@ -237,8 +325,9 @@ setInterval(() => {
 // Render symptom analysis (updated for new data structure)
 function renderSymptomAnalysis() {
     const container = document.getElementById('symptomAnalysis');
+    const data = getCurrentData();
     
-    if (surveyData.length === 0) {
+    if (data.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
@@ -247,14 +336,14 @@ function renderSymptomAnalysis() {
     let html = '<table class="data-table"><thead><tr><th>Metric</th><th>Value</th><th>Details</th></tr></thead><tbody>';
     
     // Core metrics (moved from top stat cards)
-    const totalTrips = surveyData.length;
-    const completedTrips = surveyData.filter(s => s.surveyCompleted).length;
+    const totalTrips = data.length;
+    const completedTrips = data.filter(s => s.surveyCompleted).length;
     const completionRate = Math.round((completedTrips/totalTrips)*100);
     
     // Recent surveys (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const recentCount = surveyData.filter(survey => {
+    const recentCount = data.filter(survey => {
         const surveyDate = survey.completionDate || survey.created || survey.timestamp;
         return surveyDate && surveyDate >= sevenDaysAgo;
     }).length;
@@ -264,8 +353,8 @@ function renderSymptomAnalysis() {
     html += `<tr><td><strong>✅ Completion Rate</strong></td><td>${completionRate}%</td><td>Percentage of completed surveys</td></tr>`;
     
     // Additional trip completion statistics
-    const iosTrips = surveyData.filter(s => s.platform === 'iOS').length;
-    const webTrips = surveyData.filter(s => s.platform !== 'iOS').length;
+    const iosTrips = data.filter(s => s.platform === 'iOS').length;
+    const webTrips = data.filter(s => s.platform !== 'iOS').length;
     
     html += `<tr><td><strong>Completed Surveys</strong></td><td>${completedTrips}</td><td>${completionRate}% completion rate</td></tr>`;
     html += `<tr><td><strong>Web Survey Trips</strong></td><td>${webTrips}</td><td>${Math.round((webTrips/totalTrips)*100)}% of total</td></tr>`;
@@ -279,7 +368,7 @@ function renderSymptomAnalysis() {
     const directions = {};
     const platforms = {};
     
-    surveyData.forEach(survey => {
+    data.forEach(survey => {
         if (survey.travelDirection) {
             directions[survey.travelDirection] = (directions[survey.travelDirection] || 0) + 1;
         }
@@ -314,14 +403,15 @@ function renderSymptomAnalysis() {
 // Render recent submissions with pagination
 function renderRecentSubmissions() {
     const container = document.getElementById('recentSubmissions');
+    const data = getCurrentData();
     
-    if (surveyData.length === 0) {
+    if (data.length === 0) {
         container.innerHTML = '<div class="error">No submission data available</div>';
         return;
     }
 
     // Sort by date (most recent first)
-    const sortedSurveys = surveyData.sort((a, b) => {
+    const sortedSurveys = data.sort((a, b) => {
         const dateA = a.completionDate || a.created || a.timestamp;
         const dateB = b.completionDate || b.created || b.timestamp;
         return new Date(dateB) - new Date(dateA); // Most recent first
@@ -429,14 +519,15 @@ function goToPage(page) {
 // Render stimulation efficacy analysis
 function renderStimulationEfficacy() {
     const container = document.getElementById('stimulationEfficacy');
+    const data = getCurrentData();
     
-    if (surveyData.length === 0) {
+    if (data.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
     
     // Filter to only include completed surveys (ignore app exploration/testing)
-    const completedSurveys = surveyData.filter(survey => survey.surveyCompleted === true);
+    const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
     
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for analysis</div>';
@@ -661,14 +752,15 @@ function renderStimulationEfficacy() {
 // Render advanced analytics with comprehensive graphs
 function renderAdvancedAnalytics() {
     const container = document.getElementById('advancedAnalytics');
+    const data = getCurrentData();
     
-    if (surveyData.length === 0) {
+    if (data.length === 0) {
         container.innerHTML = '<div class="error">No survey data available for advanced analytics</div>';
         return;
     }
     
     // Filter to only include completed surveys
-    const completedSurveys = surveyData.filter(survey => survey.surveyCompleted === true);
+    const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
     
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for advanced analytics</div>';
