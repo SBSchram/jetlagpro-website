@@ -342,6 +342,7 @@ function renderDoseResponseAnalysisChart(surveys) {
     
     Object.entries(usageGroups).forEach(([groupName, groupSurveys], index) => {
         const severityData = [];
+        const errorBars = [];
         
         timeZoneRanges.forEach(timeZones => {
             // Filter surveys for this specific time zone count
@@ -361,12 +362,23 @@ function renderDoseResponseAnalysisChart(surveys) {
                 
                 if (aggregateSeverities.length > 0) {
                     const avgSeverity = aggregateSeverities.reduce((sum, severity) => sum + severity, 0) / aggregateSeverities.length;
+                    
+                    // Calculate standard deviation
+                    const variance = aggregateSeverities.reduce((sum, severity) => sum + Math.pow(severity - avgSeverity, 2), 0) / aggregateSeverities.length;
+                    const stdDev = Math.sqrt(variance);
+                    
+                    // Calculate standard error (for error bars)
+                    const standardError = stdDev / Math.sqrt(aggregateSeverities.length);
+                    
                     severityData.push(avgSeverity);
+                    errorBars.push(standardError);
                 } else {
                     severityData.push(null);
+                    errorBars.push(null);
                 }
             } else {
                 severityData.push(null);
+                errorBars.push(null);
             }
         });
         
@@ -382,7 +394,9 @@ function renderDoseResponseAnalysisChart(surveys) {
             pointHoverRadius: 6,
             pointBackgroundColor: colors[index].border,
             pointBorderColor: '#fff',
-            pointBorderWidth: 2
+            pointBorderWidth: 2,
+            // Store error bars data for custom rendering
+            errorBars: errorBars
         });
     });
     
@@ -398,7 +412,7 @@ function renderDoseResponseAnalysisChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Dose-Response Analysis: App Usage vs Jet Lag Severity by Time Zones',
+                    text: 'Dose-Response Analysis: App Usage vs Jet Lag Severity by Time Zones (±1 SE)',
                     font: {
                         size: 16,
                         weight: 'bold'
@@ -421,9 +435,16 @@ function renderDoseResponseAnalysisChart(surveys) {
                         },
                         label: function(context) {
                             const value = context.parsed.y;
-                            return value !== null ? 
-                                `${context.dataset.label}: ${value.toFixed(2)} severity` : 
-                                `${context.dataset.label}: No data`;
+                            const dataset = context.dataset;
+                            const errorBar = dataset.errorBars[context.dataIndex];
+                            
+                            if (value !== null && errorBar !== null) {
+                                return `${dataset.label}: ${value.toFixed(2)} ± ${errorBar.toFixed(2)} severity`;
+                            } else if (value !== null) {
+                                return `${dataset.label}: ${value.toFixed(2)} severity`;
+                            } else {
+                                return `${dataset.label}: No data`;
+                            }
                         }
                     }
                 }
@@ -467,6 +488,51 @@ function renderDoseResponseAnalysisChart(surveys) {
                 mode: 'index',
                 intersect: false
             }
-        }
+        },
+        plugins: [{
+            id: 'errorBars',
+            afterDatasetsDraw: function(chart) {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(0);
+                const scale = chart.scales.y;
+                
+                chart.data.datasets.forEach((dataset, datasetIndex) => {
+                    const meta = chart.getDatasetMeta(datasetIndex);
+                    const points = meta.data;
+                    
+                    points.forEach((point, pointIndex) => {
+                        if (point && dataset.data[pointIndex] !== null && dataset.errorBars[pointIndex] !== null) {
+                            const x = point.x;
+                            const y = point.y;
+                            const errorBar = dataset.errorBars[pointIndex];
+                            
+                            // Convert error bar to pixel coordinates
+                            const errorPixels = scale.getPixelForValue(y + errorBar) - scale.getPixelForValue(y);
+                            
+                            // Draw error bar
+                            ctx.save();
+                            ctx.strokeStyle = dataset.borderColor;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            
+                            // Vertical line
+                            ctx.moveTo(x, y - errorPixels);
+                            ctx.lineTo(x, y + errorPixels);
+                            
+                            // Top cap
+                            ctx.moveTo(x - 4, y - errorPixels);
+                            ctx.lineTo(x + 4, y - errorPixels);
+                            
+                            // Bottom cap
+                            ctx.moveTo(x - 4, y + errorPixels);
+                            ctx.lineTo(x + 4, y + errorPixels);
+                            
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                });
+            }
+        }]
     });
 }
