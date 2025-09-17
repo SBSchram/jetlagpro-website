@@ -782,6 +782,15 @@ function renderAdvancedAnalytics() {
     html += '<div><canvas id="symptomEffectivenessChart" width="400" height="300"></canvas></div>';
     html += '</div>';
     
+    // Add the new dose-response analysis chart
+    html += '<div style="margin-bottom: 30px;">';
+    html += '<h4>Dose-Response Analysis: App Usage vs Jet Lag Severity</h4>';
+    html += '<p>Multiple lines showing how different levels of app usage affect symptom severity across time zones crossed</p>';
+    html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
+    html += '<canvas id="doseResponseAnalysisChart" width="800" height="400"></canvas>';
+    html += '</div>';
+    html += '</div>';
+    
     html += '<div style="margin-bottom: 30px;">';
     html += '<h4>3D Heatmap Matrix: Time Zones × Points × Symptom Improvement</h4>';
     html += '<div id="heatmapContainer" style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px;"></div>';
@@ -793,5 +802,6 @@ function renderAdvancedAnalytics() {
     renderDoseResponseChart(completedSurveys);
     renderTimezoneEffectChart(completedSurveys);
     renderSymptomEffectivenessChart(completedSurveys);
+    renderDoseResponseAnalysisChart(completedSurveys);
     render3DHeatmap(completedSurveys);
 }
