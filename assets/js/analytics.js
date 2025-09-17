@@ -772,36 +772,17 @@ function renderAdvancedAnalytics() {
     html += '<p>Comprehensive analysis of time zones crossed, app usage, and symptom severity</p>';
     html += '</div>';
     
-    // Create chart containers
-    html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">';
-    html += '<div><canvas id="doseResponseChart" width="400" height="300"></canvas></div>';
-    html += '<div><canvas id="timezoneEffectChart" width="400" height="300"></canvas></div>';
-    html += '</div>';
-    
-    html += '<div style="display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 30px;">';
-    html += '<div><canvas id="symptomEffectivenessChart" width="400" height="300"></canvas></div>';
-    html += '</div>';
-    
-    // Add the new dose-response analysis chart
+    // Create the comprehensive dose-response analysis chart
     html += '<div style="margin-bottom: 30px;">';
     html += '<h4>Dose-Response Analysis: App Usage vs Jet Lag Severity</h4>';
-    html += '<p>Multiple lines showing how different levels of app usage affect symptom severity across time zones crossed</p>';
+    html += '<p>Multiple lines showing how different levels of app usage affect symptom severity across time zones crossed. Error bars show ±1 standard error.</p>';
     html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
     html += '<canvas id="doseResponseAnalysisChart" width="800" height="400"></canvas>';
     html += '</div>';
     html += '</div>';
     
-    html += '<div style="margin-bottom: 30px;">';
-    html += '<h4>3D Heatmap Matrix: Time Zones × Points × Symptom Improvement</h4>';
-    html += '<div id="heatmapContainer" style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px;"></div>';
-    html += '</div>';
-    
     container.innerHTML = html;
     
-    // Render all charts
-    renderDoseResponseChart(completedSurveys);
-    renderTimezoneEffectChart(completedSurveys);
-    renderSymptomEffectivenessChart(completedSurveys);
+    // Render the comprehensive dose-response analysis chart
     renderDoseResponseAnalysisChart(completedSurveys);
-    render3DHeatmap(completedSurveys);
 }
