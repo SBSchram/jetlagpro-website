@@ -1063,35 +1063,39 @@ form {
     text-align: center;
 }
 
-.rating-bubbles {
+.rating-faces {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
     margin-bottom: 12px;
-    /* Remove padding - let bubbles breathe naturally */
+    /* Remove padding - let faces breathe naturally */
 }
 
 .rating-input {
     display: none; /* Hide the actual radio inputs */
 }
 
-.rating-bubble {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 2px solid #d1d5db;
+.rating-face {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
     cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
 }
 
 /* Removed hover effect - keep it simple */
 
-/* Simple selected state - just blue border, no background change */
-.rating-bubble.selected {
-    background: #ffffff;
+/* Simple selected state - just blue border */
+.rating-face.selected {
     border-color: #2563eb;
     border-width: 3px;
+    background-color: rgba(37, 99, 235, 0.1);
 }
 
 
@@ -1129,13 +1133,14 @@ form {
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-    .rating-bubbles {
+    .rating-faces {
         gap: 8px; /* Slightly more space on mobile */
     }
     
-    .rating-bubble {
-        width: 44px; /* Slightly larger for mobile touch */
-        height: 44px;
+    .rating-face {
+        width: 48px; /* Slightly larger for mobile touch */
+        height: 48px;
+        font-size: 28px;
     }
     
     .rating-container label {

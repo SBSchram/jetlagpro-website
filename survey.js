@@ -1114,7 +1114,7 @@ function setupRatingBubbles() {
     const ratingContainers = document.querySelectorAll('.rating-container');
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const bubbles = container.querySelectorAll('.rating-bubble');
+        const faces = container.querySelectorAll('.rating-face');
         
         // Set first radio (value 1 = "None") as default checked
         if (radioInputs.length > 0) {
@@ -1163,20 +1163,20 @@ function updateRatingBubbleStates() {
     
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const bubbles = container.querySelectorAll('.rating-bubble');
+        const faces = container.querySelectorAll('.rating-face');
         
         radioInputs.forEach((input, index) => {
             if (input.checked) {
-                // Add selected class to the bubble
-                bubbles[index].classList.add('selected');
+                // Add selected class to the face
+                faces[index].classList.add('selected');
                 
                 // Update aria attributes for accessibility
-                bubbles[index].setAttribute('aria-checked', 'true');
+                faces[index].setAttribute('aria-checked', 'true');
                 input.setAttribute('aria-checked', 'true');
             } else {
                 // Remove selected class
-                bubbles[index].classList.remove('selected');
-                bubbles[index].setAttribute('aria-checked', 'false');
+                faces[index].classList.remove('selected');
+                faces[index].setAttribute('aria-checked', 'false');
                 input.setAttribute('aria-checked', 'false');
             }
         });
@@ -1327,7 +1327,7 @@ function prefillSurveyWithTripData(tripData) {
                 // STEP 2: Set the target radio button as checked
                 radio.checked = true;
                 
-                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
+                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-face)
                 const label = document.querySelector(`label[for="${radio.id}"]`);
                 if (label) {
                     label.classList.add('selected');
