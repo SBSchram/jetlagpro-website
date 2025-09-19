@@ -104,8 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize comment section
     initializeCommentSection();
     
-    // Setup flight landing time validation
-    setupFlightLandingValidation();
     
     // Setup scale sliders
     setupScaleSliders();
@@ -116,12 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup rating bubbles
     setupRatingBubbles();
     
-    // Set max date to today for arrival date field
-    const arrivalDateField = document.querySelector('input[name="flight_landing_date"]');
-    if (arrivalDateField) {
-        const today = new Date().toISOString().split('T')[0];
-        arrivalDateField.max = today;
-    }
     
     // Always scroll to top after all initialization is complete
     setTimeout(scrollToTop, 1000);
@@ -281,61 +273,6 @@ function hideSurveyPreview() {
 
 
 
-// Setup flight landing date validation
-function setupFlightLandingValidation() {
-    console.log('✈️ Setting up flight landing date validation...');
-    
-    const flightLandingDateInput = document.querySelector('input[name="flight_landing_date"]');
-    
-    if (!flightLandingDateInput) {
-        console.error('❌ Flight landing date input not found');
-        return;
-    }
-    
-    // Set max attribute to current date to prevent future dates
-    const now = new Date();
-    const nowString = now.toISOString().slice(0, 10); // Format: YYYY-MM-DD
-    flightLandingDateInput.setAttribute('max', nowString);
-    
-    // Add real-time validation
-    flightLandingDateInput.addEventListener('input', function() {
-        validateFlightLandingDate(this);
-    });
-    
-    // Add blur validation for immediate feedback
-    flightLandingDateInput.addEventListener('blur', function() {
-        validateFlightLandingDate(this);
-    });
-    
-    console.log('✅ Flight landing date validation setup complete');
-}
-
-// Validate flight landing date
-function validateFlightLandingDate(input) {
-    const value = input.value;
-    const now = new Date();
-    
-    // Remove any existing validation styling
-    input.classList.remove('valid', 'invalid');
-    
-    if (!value) {
-        // Field is empty, no validation needed yet
-        return;
-    }
-    
-    const selectedDate = new Date(value + 'T00:00:00');
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    if (selectedDate > today) {
-        // Future date selected
-        input.classList.add('invalid');
-        input.title = 'Flight landing date cannot be in the future';
-    } else {
-        // Valid date
-        input.classList.add('valid');
-        input.title = '';
-    }
-}
 
 // Setup survey code validation
 function setupCodeValidation() {
@@ -760,20 +697,6 @@ async function submitSurvey() {
         }
     });
     
-    // Validate arrival date is not greater than today
-    const arrivalDateField = document.querySelector('input[name="flight_landing_date"]');
-    if (arrivalDateField && arrivalDateField.value) {
-        const arrivalDate = new Date(arrivalDateField.value);
-        const today = new Date();
-        today.setHours(23, 59, 59, 999); // End of today
-        
-        if (arrivalDate > today) {
-            isValid = false;
-            arrivalDateField.style.borderColor = '#ef4444';
-            showMobileAlert('⚠️ Invalid Arrival Date', 'Arrival date cannot be in the future. Please select today or an earlier date.', 'error');
-            return; // Stop validation here for date error
-        }
-    }
     
     if (!isValid) {
         // Show mobile alert for missing required fields
@@ -783,7 +706,7 @@ async function submitSurvey() {
         setTimeout(() => {
             if (missingRequiredFields.length > 0) {
                 const firstMissingField = missingRequiredFields[0];
-                const fieldContainer = firstMissingField.closest('#arrivalForm') || firstMissingField.closest('.rating-container');
+                const fieldContainer = firstMissingField.closest('.rating-container');
                 
                 if (fieldContainer) {
                     fieldContainer.scrollIntoView({ 
@@ -932,8 +855,6 @@ async function exportSurveyData() {
                 
                 // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
-                flightLandingDate: surveyData.flightLandingDate || '',
-                flightLandingHour: surveyData.flightLandingHour || '',
                 ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
                 travelExperience: surveyData.travelExperience || '',
@@ -1016,8 +937,6 @@ async function exportSurveyData() {
                     
                                     // Individual survey responses (flat, not nested)
                 userComment: surveyData.userComment || '',
-                flightLandingDate: surveyData.flightLandingDate || '',
-                flightLandingHour: surveyData.flightLandingHour || '',
                 ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
                 travelExperience: surveyData.travelExperience || '',
@@ -1450,21 +1369,6 @@ function prefillSurveyWithTripData(tripData) {
     console.log('📝 Pre-filling survey with existing trip data...');
     console.log('🔍 Full tripData object:', tripData);
     
-    // Pre-fill flight landing date
-    if (tripData.flightLandingDate) {
-        const dateField = document.querySelector('input[name="flightLandingDate"]');
-        if (dateField) {
-            dateField.value = tripData.flightLandingDate;
-        }
-    }
-    
-    // Pre-fill flight landing hour
-    if (tripData.flightLandingHour) {
-        const hourField = document.querySelector('select[name="flightLandingHour"]');
-        if (hourField) {
-            hourField.value = tripData.flightLandingHour;
-        }
-    }
     
     // Pre-fill demographic fields
     const demographicFields = ['ageRange', 'gender', 'travelExperience', 'region', 'purpose'];
