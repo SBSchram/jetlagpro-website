@@ -40,6 +40,22 @@ function renderDoseResponseAnalysisChart(surveys) {
     // Time zone ranges (X-axis)
     const timeZoneRanges = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     
+    // Baseline data from Waterhouse study (mapped to 1-5 scale)
+    const baselineData = [
+        { timeZones: 1, severity: 1.8 },
+        { timeZones: 2, severity: 1.8 },
+        { timeZones: 3, severity: 2.5 },
+        { timeZones: 4, severity: 2.5 },
+        { timeZones: 5, severity: 2.5 },
+        { timeZones: 6, severity: 3.1 },
+        { timeZones: 7, severity: 3.1 },
+        { timeZones: 8, severity: 3.1 },
+        { timeZones: 9, severity: 3.6 },
+        { timeZones: 10, severity: 3.6 },
+        { timeZones: 11, severity: 3.6 },
+        { timeZones: 12, severity: 3.6 }
+    ];
+    
     // Calculate aggregate severity for each usage group and time zone
     const datasets = [];
     const colors = [
@@ -109,6 +125,29 @@ function renderDoseResponseAnalysisChart(surveys) {
         });
     });
     
+    // Add baseline dataset (natural jet lag severity without intervention)
+    const baselineSeverityData = timeZoneRanges.map(tz => {
+        const baselinePoint = baselineData.find(b => b.timeZones === tz);
+        return baselinePoint ? baselinePoint.severity : null : null;
+    });
+    
+    datasets.push({
+        label: 'Baseline (No Intervention)',
+        data: baselineSeverityData,
+        borderColor: '#6b7280', // Gray
+        backgroundColor: 'rgba(107, 114, 128, 0.1)',
+        borderWidth: 2,
+        borderDash: [5, 5], // Dashed line
+        fill: false,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#6b7280',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        errorBars: new Array(timeZoneRanges.length).fill(null) // No error bars for baseline
+    });
+    
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -121,7 +160,7 @@ function renderDoseResponseAnalysisChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Dose-Response Analysis: App Usage vs Jet Lag Severity by Time Zones (±1 SE)',
+                    text: 'Dose-Response Analysis: App Usage vs Jet Lag Severity by Time Zones (±1 SE) - Including Baseline',
                     font: {
                         size: 16,
                         weight: 'bold'
