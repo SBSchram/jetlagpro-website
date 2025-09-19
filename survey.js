@@ -105,11 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCommentSection();
     
     
-    // Setup scale sliders
-    setupScaleSliders();
-    
-    // Initialize enhanced sliders with tick marks
-    initializeEnhancedSliders();
 
     // Setup rating bubbles
     setupRatingBubbles();
@@ -124,48 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ LJLQ Survey initialized');
 });
 
-// Setup scale sliders functionality
-function setupScaleSliders() {
-    const sliders = document.querySelectorAll('.scale-slider');
-    
-    sliders.forEach(slider => {
-        // Update display on change
-        slider.addEventListener('input', function() {
-            const selectedValue = this.value;
-            const selectedValueDiv = this.parentElement.querySelector('.selected-value');
-            if (selectedValueDiv) {
-                // Handle duration sliders (show "X days")
-                if (this.name.includes('duration')) {
-                    if (selectedValue === '0') {
-                        selectedValueDiv.textContent = 'Selected: 0 days';
-                    } else if (selectedValue === '5') {
-                        selectedValueDiv.textContent = 'Selected: 5+ days';
-                    } else {
-                        selectedValueDiv.textContent = `Selected: ${selectedValue} day${selectedValue === '1' ? '' : 's'}`;
-                    }
-                } else {
-                    selectedValueDiv.textContent = `Selected: ${selectedValue}`;
-                }
-            }
-        });
-        
-        // Initialize display
-        const selectedValueDiv = slider.parentElement.querySelector('.selected-value');
-        if (selectedValueDiv) {
-            if (slider.name.includes('duration')) {
-                if (slider.value === '0') {
-                    selectedValueDiv.textContent = 'Selected: 0 days';
-                } else if (slider.value === '5') {
-                    selectedValueDiv.textContent = 'Selected: 5+ days';
-                } else {
-                    selectedValueDiv.textContent = `Selected: ${slider.value} day${slider.value === '1' ? '' : 's'}`;
-                }
-            } else {
-                selectedValueDiv.textContent = `Selected: ${slider.value}`;
-            }
-        }
-    });
-}
 
 // Auto-fill survey code from URL parameter  
 function autoFillSurveyCode() {
@@ -858,8 +811,6 @@ async function exportSurveyData() {
                 ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
                 travelExperience: surveyData.travelExperience || '',
-                region: surveyData.region || '',
-                purpose: surveyData.purpose || '',
                 
                 // Rating responses (1-5 scale)
                 sleepPre: surveyData.sleepPre || 1,
@@ -940,8 +891,6 @@ async function exportSurveyData() {
                 ageRange: surveyData.ageRange || '',
                 gender: surveyData.gender || '',
                 travelExperience: surveyData.travelExperience || '',
-                region: surveyData.region || '',
-                purpose: surveyData.purpose || '',
                 
                 // Rating responses (1-5 scale)
                 sleepPre: surveyData.sleepPre || 1,
@@ -1156,41 +1105,6 @@ function resetSurvey() {
     console.log('✅ Survey reset complete');
 }
 
-// Initialize enhanced sliders with visual tick marks and snap behavior
-function initializeEnhancedSliders() {
-    console.log('🎚️ Initializing enhanced sliders...');
-    
-    const sliders = document.querySelectorAll('.scale-slider');
-    
-    sliders.forEach(slider => {
-        // Add snap behavior for discrete values (1-5)
-        slider.addEventListener('input', function() {
-            const value = parseFloat(this.value);
-            const min = parseFloat(this.min);
-            const max = parseFloat(this.max);
-            const step = (max - min) / 4; // 5 values: 1, 2, 3, 4, 5
-            
-            // Find closest step value
-            const closestStep = Math.round((value - min) / step) * step + min;
-            this.value = Math.max(min, Math.min(max, closestStep));
-        });
-        
-        // Add visual feedback on interaction
-        slider.addEventListener('mousedown', function() {
-            this.style.transform = 'scale(1.02)';
-        });
-        
-        slider.addEventListener('mouseup', function() {
-            this.style.transform = 'scale(1)';
-        });
-        
-        slider.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)';
-        });
-    });
-    
-    console.log(`✅ Enhanced ${sliders.length} sliders with tick marks and snap behavior`);
-} 
 
 // Rating Bubble System Functions
 function setupRatingBubbles() {
@@ -1371,7 +1285,7 @@ function prefillSurveyWithTripData(tripData) {
     
     
     // Pre-fill demographic fields
-    const demographicFields = ['ageRange', 'gender', 'travelExperience', 'region', 'purpose'];
+    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
     demographicFields.forEach(field => {
         if (tripData[field]) {
             const element = document.querySelector(`select[name="${field}"]`);
