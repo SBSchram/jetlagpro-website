@@ -1063,11 +1063,11 @@ form {
     text-align: center;
 }
 
-.rating-faces {
+.rating-emojis {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 32px;
+    gap: 16px;
     margin-bottom: 20px;
     padding: 16px 0;
 }
@@ -1076,34 +1076,23 @@ form {
     display: none; /* Hide the actual radio inputs */
 }
 
-.rating-symbol {
-    font-size: 24px;
+.rating-emoji {
+    font-size: 80px;
     cursor: pointer;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 8px;
     background: transparent;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: monospace;
-    letter-spacing: 2px;
-    min-width: 120px;
-    color: #374151;
+    transition: transform 0.2s ease;
+    display: inline-block;
 }
 
-.rating-symbol:hover {
-    transform: scale(1.05);
-    background: rgba(59, 130, 246, 0.1);
-    color: #1f2937;
+.rating-emoji:hover {
+    transform: scale(1.1);
 }
 
-/* Professional selected state */
-.rating-symbol.selected {
-    transform: scale(1.05);
-    background: rgba(59, 130, 246, 0.15);
-    color: #1e40af;
-    font-weight: bold;
+/* Selected emoji state */
+.rating-emoji.selected {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
 }
 
 
@@ -1141,16 +1130,14 @@ form {
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-    .rating-faces {
-        gap: 24px;
+    .rating-emojis {
+        gap: 12px;
         padding: 12px 0;
     }
     
-    .rating-symbol {
-        font-size: 20px;
-        min-width: 100px;
-        padding: 10px;
-        letter-spacing: 1px;
+    .rating-emoji {
+        font-size: 72px;
+        padding: 6px;
     }
     
     .rating-container label {
