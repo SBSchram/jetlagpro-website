@@ -1065,11 +1065,11 @@ form {
 
 .rating-faces {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 12px;
-    /* Remove padding - let faces breathe naturally */
+    gap: 32px;
+    margin-bottom: 20px;
+    padding: 16px 0;
 }
 
 .rating-input {
@@ -1077,19 +1077,29 @@ form {
 }
 
 .rating-face {
-    font-size: 48px;
+    font-size: 64px;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    border: 2px solid transparent;
+    padding: 12px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    min-height: 80px;
 }
 
-/* Removed hover effect - keep it simple */
+.rating-face:hover {
+    transform: scale(1.15);
+    background: rgba(59, 130, 246, 0.1);
+}
 
-/* Simple selected state - just blue border */
+/* Professional selected state */
 .rating-face.selected {
-    border-color: #2563eb;
-    border-width: 3px;
+    transform: scale(1.1);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 
@@ -1128,12 +1138,15 @@ form {
 /* Responsive design for mobile */
 @media (max-width: 768px) {
     .rating-faces {
-        gap: 8px; /* Slightly more space on mobile */
+        gap: 24px;
+        padding: 12px 0;
     }
     
     .rating-face {
-        font-size: 44px;
-        padding: 12px;
+        font-size: 56px;
+        min-width: 72px;
+        min-height: 72px;
+        padding: 10px;
     }
     
     .rating-container label {
