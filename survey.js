@@ -127,6 +127,7 @@ function autoFillSurveyCode() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const tripId = urlParams.get('tripId');
+    const testMode = urlParams.get('test') === 'true' || window.location.hostname === 'localhost';
     
     if (code) {
         console.log('✅ Found survey code in URL:', code);
@@ -158,6 +159,10 @@ function autoFillSurveyCode() {
                 }
             }, 500);
         }
+    } else if (testMode) {
+        console.log('🧪 Test mode enabled - allowing survey submission for development');
+        enableSurveySubmission();
+        hideSurveyPreview();
     } else {
         console.log('ℹ️ No survey code found in URL');
     }
@@ -1114,7 +1119,7 @@ function setupRatingBubbles() {
     const ratingContainers = document.querySelectorAll('.rating-container');
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const faces = container.querySelectorAll('.rating-face');
+        const symbols = container.querySelectorAll('.rating-symbol');
         
         // Set first radio (value 1 = "None") as default checked
         if (radioInputs.length > 0) {
@@ -1163,20 +1168,20 @@ function updateRatingBubbleStates() {
     
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const faces = container.querySelectorAll('.rating-face');
+        const symbols = container.querySelectorAll('.rating-symbol');
         
         radioInputs.forEach((input, index) => {
             if (input.checked) {
-                // Add selected class to the face
-                faces[index].classList.add('selected');
+                // Add selected class to the symbol
+                symbols[index].classList.add('selected');
                 
                 // Update aria attributes for accessibility
-                faces[index].setAttribute('aria-checked', 'true');
+                symbols[index].setAttribute('aria-checked', 'true');
                 input.setAttribute('aria-checked', 'true');
             } else {
                 // Remove selected class
-                faces[index].classList.remove('selected');
-                faces[index].setAttribute('aria-checked', 'false');
+                symbols[index].classList.remove('selected');
+                symbols[index].setAttribute('aria-checked', 'false');
                 input.setAttribute('aria-checked', 'false');
             }
         });
@@ -1327,7 +1332,7 @@ function prefillSurveyWithTripData(tripData) {
                 // STEP 2: Set the target radio button as checked
                 radio.checked = true;
                 
-                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-face)
+                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-symbol)
                 const label = document.querySelector(`label[for="${radio.id}"]`);
                 if (label) {
                     label.classList.add('selected');

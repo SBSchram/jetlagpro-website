@@ -1076,30 +1076,34 @@ form {
     display: none; /* Hide the actual radio inputs */
 }
 
-.rating-face {
-    font-size: 64px;
+.rating-symbol {
+    font-size: 24px;
     cursor: pointer;
     padding: 12px;
-    border-radius: 50%;
+    border-radius: 8px;
     background: transparent;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 80px;
-    min-height: 80px;
+    font-family: monospace;
+    letter-spacing: 2px;
+    min-width: 120px;
+    color: #374151;
 }
 
-.rating-face:hover {
-    transform: scale(1.15);
+.rating-symbol:hover {
+    transform: scale(1.05);
     background: rgba(59, 130, 246, 0.1);
+    color: #1f2937;
 }
 
 /* Professional selected state */
-.rating-face.selected {
-    transform: scale(1.1);
+.rating-symbol.selected {
+    transform: scale(1.05);
     background: rgba(59, 130, 246, 0.15);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    color: #1e40af;
+    font-weight: bold;
 }
 
 
@@ -1142,11 +1146,11 @@ form {
         padding: 12px 0;
     }
     
-    .rating-face {
-        font-size: 56px;
-        min-width: 72px;
-        min-height: 72px;
+    .rating-symbol {
+        font-size: 20px;
+        min-width: 100px;
         padding: 10px;
+        letter-spacing: 1px;
     }
     
     .rating-container label {
