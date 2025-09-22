@@ -1063,36 +1063,35 @@ form {
     text-align: center;
 }
 
-.rating-emojis {
+.rating-bubbles {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-    padding: 16px 0;
+    gap: 20px;
+    margin-bottom: 12px;
+    /* Remove padding - let bubbles breathe naturally */
 }
 
 .rating-input {
     display: none; /* Hide the actual radio inputs */
 }
 
-.rating-emoji {
-    font-size: 80px;
+.rating-bubble {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #d1d5db;
     cursor: pointer;
-    padding: 8px;
-    background: transparent;
-    transition: transform 0.2s ease;
-    display: inline-block;
 }
 
-.rating-emoji:hover {
-    transform: scale(1.1);
-}
+/* Removed hover effect - keep it simple */
 
-/* Selected emoji state */
-.rating-emoji.selected {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+/* Simple selected state - just blue border, no background change */
+.rating-bubble.selected {
+    background: #ffffff;
+    border-color: #2563eb;
+    border-width: 3px;
 }
 
 
@@ -1130,14 +1129,13 @@ form {
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-    .rating-emojis {
-        gap: 12px;
-        padding: 12px 0;
+    .rating-bubbles {
+        gap: 8px; /* Slightly more space on mobile */
     }
     
-    .rating-emoji {
-        font-size: 72px;
-        padding: 6px;
+    .rating-bubble {
+        width: 44px; /* Slightly larger for mobile touch */
+        height: 44px;
     }
     
     .rating-container label {

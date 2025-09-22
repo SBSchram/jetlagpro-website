@@ -1119,7 +1119,7 @@ function setupRatingBubbles() {
     const ratingContainers = document.querySelectorAll('.rating-container');
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const emojis = container.querySelectorAll('.rating-emoji');
+        const bubbles = container.querySelectorAll('.rating-bubble');
         
         // Set first radio (value 1 = "None") as default checked
         if (radioInputs.length > 0) {
@@ -1168,20 +1168,20 @@ function updateRatingBubbleStates() {
     
     ratingContainers.forEach(container => {
         const radioInputs = container.querySelectorAll('.rating-input');
-        const emojis = container.querySelectorAll('.rating-emoji');
+        const bubbles = container.querySelectorAll('.rating-bubble');
         
         radioInputs.forEach((input, index) => {
             if (input.checked) {
-                // Add selected class to the emoji
-                emojis[index].classList.add('selected');
+                // Add selected class to the bubble
+                bubbles[index].classList.add('selected');
                 
                 // Update aria attributes for accessibility
-                emojis[index].setAttribute('aria-checked', 'true');
+                bubbles[index].setAttribute('aria-checked', 'true');
                 input.setAttribute('aria-checked', 'true');
             } else {
                 // Remove selected class
-                emojis[index].classList.remove('selected');
-                emojis[index].setAttribute('aria-checked', 'false');
+                bubbles[index].classList.remove('selected');
+                bubbles[index].setAttribute('aria-checked', 'false');
                 input.setAttribute('aria-checked', 'false');
             }
         });
@@ -1332,7 +1332,7 @@ function prefillSurveyWithTripData(tripData) {
                 // STEP 2: Set the target radio button as checked
                 radio.checked = true;
                 
-                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-emoji)
+                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
                 const label = document.querySelector(`label[for="${radio.id}"]`);
                 if (label) {
                     label.classList.add('selected');
