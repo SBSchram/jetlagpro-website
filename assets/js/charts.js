@@ -128,7 +128,7 @@ function renderDoseResponseAnalysisChart(surveys) {
     // Add baseline dataset (natural jet lag severity without intervention)
     const baselineSeverityData = timeZoneRanges.map(tz => {
         const baselinePoint = baselineData.find(b => b.timeZones === tz);
-        return baselinePoint ? baselinePoint.severity : null : null;
+        return baselinePoint ? baselinePoint.severity : null;
     });
     
     datasets.push({

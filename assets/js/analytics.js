@@ -537,6 +537,7 @@ function renderStimulationEfficacy() {
     
     // Debug: Log sample survey data to see actual values
     if (completedSurveys.length > 0) {
+        console.log('Sample survey data:', {
             baseline: completedSurveys[0].baselineSleep,
             anticipated: completedSurveys[0].anticipatedSleepSeverity,
             post: completedSurveys[0].postSleepSeverity
