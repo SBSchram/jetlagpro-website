@@ -428,7 +428,7 @@ function renderRecentSubmissions() {
     html += `<span>Showing ${startIndex + 1}-${Math.min(endIndex, sortedSurveys.length)} of ${sortedSurveys.length} submissions</span>`;
     html += '</div>';
     
-    html += '<table class="data-table"><thead><tr><th>Date</th><th>Code</th><th>Destination</th><th>East/West</th><th>Timezones</th><th>Status</th></tr></thead><tbody>';
+    html += '<table class="data-table"><thead><tr><th>Date</th><th>Code</th><th>Trip Date</th><th>Destination</th><th>East/West</th><th>Timezones</th><th>Status</th></tr></thead><tbody>';
 
     pageSurveys.forEach(survey => {
         const date = survey.completionDate || survey.created || survey.timestamp;
@@ -436,6 +436,25 @@ function renderRecentSubmissions() {
         const isComplete = survey.surveyCompleted;
         const status = isComplete ? '✅ Complete' : '⚠️ Partial';
         const statusColor = isComplete ? '#16a34a' : '#f59e0b';
+        
+        // Process survey code: JLP-[device]-[dest][e/w]-[YYMMDD]-[time]
+        let displayCode = 'N/A';
+        let tripDate = 'N/A';
+        
+        if (survey.surveyCode) {
+            // Remove JLP- prefix
+            displayCode = survey.surveyCode.replace(/^JLP-/, '');
+            
+            // Extract trip date (YYMMDD) from survey code
+            const codeMatch = survey.surveyCode.match(/JLP-[^-]+-[^-]+-(\d{6})-/);
+            if (codeMatch) {
+                const yymmdd = codeMatch[1];
+                const year = '20' + yymmdd.substring(0, 2);
+                const month = yymmdd.substring(2, 4);
+                const day = yymmdd.substring(4, 6);
+                tripDate = `${month}/${day}/${yymmdd.substring(0, 2)}`;
+            }
+        }
         
         // Convert travel direction to East/West format
         // If timezones is 0, there's no travel, so direction should be N/A
@@ -445,7 +464,8 @@ function renderRecentSubmissions() {
 
         html += `<tr>
             <td>${dateStr}</td>
-            <td><code>${survey.surveyCode || 'N/A'}</code></td>
+            <td><code>${displayCode}</code></td>
+            <td>${tripDate}</td>
             <td>${survey.destinationCode || 'N/A'}</td>
             <td>${eastWest}</td>
             <td>${survey.timezonesCount || 0}</td>
