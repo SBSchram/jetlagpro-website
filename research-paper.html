@@ -516,8 +516,6 @@
                         <h4>Additional questions:</h4>
                         <ul style="margin-bottom: 20px;">
                             <li>Age range</li>
-                            <li>Gender</li>
-                            <li>Travel experience</li>
                         </ul>
                     </td>
                     
@@ -1331,7 +1329,10 @@ ${htmlContent.outerHTML}
                     postFatigueSeverity: extractValue('fatiguePost') || extractValue('surveyData', 'fatiguePost'),
                     postConcentrationSeverity: extractValue('concentrationPost') || extractValue('surveyData', 'concentrationPost'),
                     postIrritabilitySeverity: extractValue('irritabilityPost') || extractValue('surveyData', 'irritabilityPost'),
-                    postGISeverity: extractValue('giPost') || extractValue('surveyData', 'giPost')
+                    postGISeverity: extractValue('giPost') || extractValue('surveyData', 'giPost'),
+                    
+                    // Demographics - only age (gender and travel experience removed)
+                    age: extractValue('age') || extractValue('ageRange')
                 };
                 
             } catch (error) {

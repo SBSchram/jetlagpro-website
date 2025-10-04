@@ -263,6 +263,10 @@ function convertFirestoreDocument(document) {
             postIrritabilitySeverity: extractInteger('irritabilityPost') || extractInteger('surveyData', 'irritabilityPost'),
             postGISeverity: extractInteger('giPost') || extractInteger('surveyData', 'giPost'),
             
+            // Extract demographics - only age (gender and travel experience removed)
+            age: extractString('age') || extractString('ageRange'),
+            region: extractString('region'),
+            
             // For compatibility with existing dashboard logic - handles both formats
             timestamp: extractTimestamp('completionDate') || extractTimestamp('created') || extractTimestamp('tripData', 'completionDate'),
             timezones_count: extractInteger('timezonesCount') || extractInteger('tripData', 'timezonesCount'),
