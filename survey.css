@@ -593,12 +593,12 @@ body {
 }
 
 .preview-notice {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .notice-box {
     background: #f8f9fa;
-    padding: 24px;
+    padding: 16px;
     border-radius: 8px;
 }
 
@@ -623,7 +623,7 @@ body {
 }
 
 .notice-box li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 /* Form Elements */
