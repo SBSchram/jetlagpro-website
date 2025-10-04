@@ -602,15 +602,13 @@
 			</p>
 		</div>
 		
-		<p style="margin: 20px 0; text-align: center; font-style: italic; color: #666;">
-			Currently, we have <span id="dataPointCount">N</span> data points for our graph and analysis. Until we achieve sufficient statistical power (p < 0.05), the results should not be considered statistically significant for reaching conclusions regarding our primary research question.
-		</p>
-		
 		<div style="margin: 30px 0; text-align: center;">
 			<button onclick="refreshResearchData()" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; margin-bottom: 20px;">
 				🔄 Refresh Live Data
 			</button>
 		</div>
+		
+		<p>Currently, we have <span id="dataPointCount">N</span> data points for our graph and analysis. Until we achieve sufficient statistical power (p < 0.05), the results should not be considered statistically significant for reaching conclusions regarding our primary research question.</p>
 		<p></p>
 			
 		<h2>Discussion</h2>
@@ -1572,6 +1570,25 @@ ${htmlContent.outerHTML}
                         }
                     }]
                 });
+                
+                // Update the data point count in the disclaimer (count actual data points used in chart)
+                const dataPointElement = document.getElementById('dataPointCount');
+                if (dataPointElement) {
+                    // Count surveys that have valid data for the chart (filtered by timezone and valid symptoms)
+                    let validDataPoints = 0;
+                    Object.values(usageGroups).forEach(groupSurveys => {
+                        groupSurveys.forEach(survey => {
+                            if (timeZoneRanges.includes(survey.timezonesCount)) {
+                                const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
+                                const validSymptoms = symptoms.filter(symptom => survey[symptom] !== null);
+                                if (validSymptoms.length > 0) {
+                                    validDataPoints++;
+                                }
+                            }
+                        });
+                    });
+                    dataPointElement.textContent = validDataPoints;
+                }
                 
             } catch (error) {
                 console.error('Error rendering live research chart:', error);
