@@ -481,7 +481,6 @@
         </div>
 
             <p>After the trip ends, a notification is scheduled for 2 days later to remind the user to complete our website survey. After reviewing existing jet lag questionnaires, we developed a custom survey designed for the specific needs of this study. Participation is voluntary but encouraged by presenting a reward for free lifetime use of the app. This is limited to 1000 respondents. Access to the survey requires a direct link from the app to guarantee authenticity.</p>
-
         <div style="margin: 30px 0 15px 0; background-color: #f8f9fa; border-radius: 8px; padding: 20px;">
             <h2 style="text-align: left;">Data Collected</h2>
             
@@ -600,12 +599,6 @@
 			<p style="margin-top: 15px; font-size: 14px; color: #666;">
 				<strong>Chart Legend:</strong> Red (0-2 points) = minimal usage, Orange (3-5 points) = low usage, Blue (6-8 points) = moderate usage, Green (9-12 points) = high usage. Error bars show ±1 standard error.
 			</p>
-		</div>
-		
-		<div style="margin: 30px 0; text-align: center;">
-			<button onclick="refreshResearchData()" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; margin-bottom: 20px;">
-				🔄 Refresh Live Data
-			</button>
 		</div>
 		
 		<p>Currently, we have <span id="dataPointCount">N</span> data points for our graph and analysis. Until we achieve sufficient statistical power (p < 0.05), the results should not be considered statistically significant for reaching conclusions regarding our primary research question.</p>
@@ -1567,6 +1560,48 @@ ${htmlContent.outerHTML}
                                     }
                                 });
                             });
+                        }
+                    }, {
+                        id: 'refreshButton',
+                        afterDraw: function(chart) {
+                            // Create refresh button in top left corner
+                            const canvas = chart.canvas;
+                            const ctx = chart.ctx;
+                            const chartArea = chart.chartArea;
+                            
+                            // Button dimensions and position
+                            const buttonWidth = 80;
+                            const buttonHeight = 30;
+                            const buttonX = chartArea.left + 10;
+                            const buttonY = chartArea.top + 10;
+                            
+                            // Draw button background
+                            ctx.save();
+                            ctx.fillStyle = '#2563eb';
+                            ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+                            
+                            // Draw button text
+                            ctx.fillStyle = 'white';
+                            ctx.font = '12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('Refresh', buttonX + buttonWidth/2, buttonY + buttonHeight/2 + 4);
+                            ctx.restore();
+                            
+                            // Add click handler if not already added
+                            if (!canvas.refreshHandlerAdded) {
+                                canvas.addEventListener('click', function(event) {
+                                    const rect = canvas.getBoundingClientRect();
+                                    const x = event.clientX - rect.left;
+                                    const y = event.clientY - rect.top;
+                                    
+                                    // Check if click is within button area
+                                    if (x >= buttonX && x <= buttonX + buttonWidth && 
+                                        y >= buttonY && y <= buttonY + buttonHeight) {
+                                        refreshResearchData();
+                                    }
+                                });
+                                canvas.refreshHandlerAdded = true;
+                            }
                         }
                     }]
                 });
