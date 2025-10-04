@@ -152,6 +152,13 @@ body {
     text-align: center;
 }
 
+/* Desktop: left-align symptom headings */
+@media (min-width: 768px) {
+    .symptom-group h4 {
+        text-align: left;
+    }
+}
+
 /* Removed hover effects - keep it simple */
 
 .symptom-group:last-child {
