@@ -10,6 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Add html2canvas for capturing content -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Chart.js for live data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <!-- Note: Word export uses HTML format with embedded images for full compatibility -->
     <style>
         .research-paper {
@@ -622,7 +625,27 @@
         </ul>
                 
 		<h2>Results</h2>
-		Pending....
+		<p>The following live data visualization shows real-time results from our ongoing research study. Data is automatically updated from our Firebase research database and represents actual participant responses.</p>
+		
+		<div style="margin: 30px 0; text-align: center;">
+			<button onclick="refreshResearchData()" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; margin-bottom: 20px;">
+				🔄 Refresh Live Data
+			</button>
+			<p style="font-style: italic; color: #666; margin-bottom: 20px;">Click to update with the latest research data</p>
+		</div>
+		
+		<div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #e5e7eb;">
+			<h3 style="margin-top: 0; margin-bottom: 15px;">Live Dose-Response Analysis</h3>
+			<p style="margin-bottom: 20px; color: #666;">Real-time analysis showing how different levels of acupressure stimulation affect jet lag symptoms across time zones crossed. The baseline (dashed gray line) represents expected natural jet lag severity without intervention.</p>
+			<div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 15px; height: 500px; position: relative;">
+				<div id="researchChartContainer" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+					<div class="loading">Loading live research data...</div>
+				</div>
+			</div>
+			<p style="margin-top: 15px; font-size: 14px; color: #666;">
+				<strong>Chart Legend:</strong> Red (0-2 points) = minimal usage, Orange (3-5 points) = low usage, Blue (6-8 points) = moderate usage, Green (9-12 points) = high usage. Error bars show ±1 standard error.
+			</p>
+		</div>
 		<p></p>
 			
 		<h2>Discussion</h2>
@@ -1220,6 +1243,387 @@ ${htmlContent.outerHTML}
                 alert('Error generating HTML. Please try again. Error: ' + error.message);
             }
         }
+        
+        // Live Research Data Functions
+        let researchChart = null;
+        const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
+        
+        // Load live research data from Firebase
+        async function loadLiveResearchData() {
+            try {
+                const response = await fetch(FIREBASE_REST_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                let surveyData = [];
+                
+                if (data.documents && Array.isArray(data.documents)) {
+                    data.documents.forEach((document) => {
+                        if (document.fields) {
+                            const flatData = convertFirestoreDocument(document);
+                            if (flatData && flatData.surveyCompleted === true) {
+                                surveyData.push(flatData);
+                            }
+                        }
+                    });
+                }
+                
+                return surveyData;
+                
+            } catch (error) {
+                console.error('Error loading live research data:', error);
+                throw new Error('Failed to load live research data: ' + error.message);
+            }
+        }
+        
+        // Convert Firestore document format to flat structure
+        function convertFirestoreDocument(document) {
+            try {
+                const fields = document.fields;
+                if (!fields) return null;
+                
+                const extractValue = (fieldName, nestedPath = null) => {
+                    const field = fields[fieldName];
+                    if (!field) return null;
+                    
+                    if (nestedPath && field.mapValue && field.mapValue.fields) {
+                        const nestedField = field.mapValue.fields[nestedPath];
+                        if (nestedField) {
+                            if (nestedField.stringValue) return nestedField.stringValue;
+                            if (nestedField.integerValue) return parseInt(nestedField.integerValue);
+                            if (nestedField.booleanValue !== undefined) return nestedField.booleanValue;
+                            if (nestedField.timestampValue) return new Date(nestedField.timestampValue);
+                        }
+                        return null;
+                    }
+                    
+                    if (field.stringValue) return field.stringValue;
+                    if (field.integerValue) return parseInt(field.integerValue);
+                    if (field.booleanValue !== undefined) return field.booleanValue;
+                    if (field.timestampValue) return new Date(field.timestampValue);
+                    
+                    return null;
+                };
+                
+                return {
+                    id: document.name ? document.name.split('/').pop() : null,
+                    surveyCode: extractValue('surveyCode') || extractValue('tripData', 'surveyCode'),
+                    tripId: extractValue('tripId') || extractValue('tripData', 'tripId'),
+                    platform: extractValue('platform') || extractValue('tripData', 'platform'),
+                    destinationCode: extractValue('destinationCode') || extractValue('tripData', 'destinationCode'),
+                    timezonesCount: extractValue('timezonesCount') || extractValue('tripData', 'timezonesCount'),
+                    travelDirection: extractValue('travelDirection') || extractValue('tripData', 'travelDirection'),
+                    pointsCompleted: extractValue('pointsCompleted') || extractValue('tripData', 'pointsCompleted'),
+                    completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
+                    surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
+                    timestamp: extractValue('completionDate') || extractValue('created') || extractValue('tripData', 'completionDate'),
+                    
+                    // Post-travel symptoms
+                    postSleepSeverity: extractValue('sleepPost') || extractValue('surveyData', 'sleepPost'),
+                    postFatigueSeverity: extractValue('fatiguePost') || extractValue('surveyData', 'fatiguePost'),
+                    postConcentrationSeverity: extractValue('concentrationPost') || extractValue('surveyData', 'concentrationPost'),
+                    postIrritabilitySeverity: extractValue('irritabilityPost') || extractValue('surveyData', 'irritabilityPost'),
+                    postGISeverity: extractValue('giPost') || extractValue('surveyData', 'giPost')
+                };
+                
+            } catch (error) {
+                console.error('Error converting document:', error);
+                return null;
+            }
+        }
+        
+        // Render live research chart
+        async function renderLiveResearchChart() {
+            const container = document.getElementById('researchChartContainer');
+            
+            try {
+                // Show loading
+                container.innerHTML = '<div class="loading">Loading live research data...</div>';
+                
+                // Load data
+                const surveyData = await loadLiveResearchData();
+                
+                if (surveyData.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
+                    return;
+                }
+                
+                // Create chart canvas
+                container.innerHTML = '<canvas id="liveResearchChart" width="800" height="400"></canvas>';
+                
+                // Group surveys by app usage levels
+                const usageGroups = {
+                    '0-2 points': surveyData.filter(s => s.pointsCompleted >= 0 && s.pointsCompleted <= 2),
+                    '3-5 points': surveyData.filter(s => s.pointsCompleted >= 3 && s.pointsCompleted <= 5),
+                    '6-8 points': surveyData.filter(s => s.pointsCompleted >= 6 && s.pointsCompleted <= 8),
+                    '9-12 points': surveyData.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
+                };
+                
+                // Time zone ranges (starting at 2 time zones)
+                const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                
+                // Baseline data from Waterhouse study
+                const baselineData = [
+                    { timeZones: 2, severity: 1.8 },
+                    { timeZones: 3, severity: 2.5 },
+                    { timeZones: 4, severity: 2.5 },
+                    { timeZones: 5, severity: 2.5 },
+                    { timeZones: 6, severity: 3.1 },
+                    { timeZones: 7, severity: 3.1 },
+                    { timeZones: 8, severity: 3.1 },
+                    { timeZones: 9, severity: 3.6 },
+                    { timeZones: 10, severity: 3.6 },
+                    { timeZones: 11, severity: 3.6 },
+                    { timeZones: 12, severity: 3.6 }
+                ];
+                
+                // Calculate aggregate severity for each usage group and time zone
+                const datasets = [];
+                const colors = [
+                    { border: '#dc2626', background: 'rgba(220, 38, 38, 0.1)' },
+                    { border: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' },
+                    { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' },
+                    { border: '#16a34a', background: 'rgba(22, 163, 74, 0.1)' }
+                ];
+                
+                Object.entries(usageGroups).forEach(([groupName, groupSurveys], index) => {
+                    const severityData = [];
+                    const errorBars = [];
+                    
+                    timeZoneRanges.forEach(timeZones => {
+                        const tzSurveys = groupSurveys.filter(s => s.timezonesCount === timeZones);
+                        
+                        if (tzSurveys.length > 0) {
+                            const aggregateSeverities = tzSurveys.map(survey => {
+                                const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
+                                const validSymptoms = symptoms.filter(symptom => survey[symptom] !== null);
+                                
+                                if (validSymptoms.length > 0) {
+                                    return validSymptoms.reduce((sum, symptom) => sum + survey[symptom], 0) / validSymptoms.length;
+                                }
+                                return null;
+                            }).filter(severity => severity !== null);
+                            
+                            if (aggregateSeverities.length > 0) {
+                                const avgSeverity = aggregateSeverities.reduce((sum, severity) => sum + severity, 0) / aggregateSeverities.length;
+                                const variance = aggregateSeverities.reduce((sum, severity) => sum + Math.pow(severity - avgSeverity, 2), 0) / aggregateSeverities.length;
+                                const stdDev = Math.sqrt(variance);
+                                const standardError = stdDev / Math.sqrt(aggregateSeverities.length);
+                                
+                                severityData.push(avgSeverity);
+                                errorBars.push(standardError);
+                            } else {
+                                severityData.push(null);
+                                errorBars.push(null);
+                            }
+                        } else {
+                            severityData.push(null);
+                            errorBars.push(null);
+                        }
+                    });
+                    
+                    datasets.push({
+                        label: `${groupName} (n=${groupSurveys.length})`,
+                        data: severityData,
+                        borderColor: colors[index].border,
+                        backgroundColor: colors[index].background,
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: colors[index].border,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        errorBars: errorBars
+                    });
+                });
+                
+                // Add baseline dataset
+                const baselineSeverityData = timeZoneRanges.map(tz => {
+                    const baselinePoint = baselineData.find(b => b.timeZones === tz);
+                    return baselinePoint ? baselinePoint.severity : null;
+                });
+                
+                datasets.push({
+                    label: 'Baseline (No Intervention)',
+                    data: baselineSeverityData,
+                    borderColor: '#6b7280',
+                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#6b7280',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    errorBars: new Array(timeZoneRanges.length).fill(null)
+                });
+                
+                // Create chart
+                const ctx = document.getElementById('liveResearchChart').getContext('2d');
+                researchChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: timeZoneRanges.map(tz => `${tz} TZ`),
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Live Dose-Response Analysis: App Usage vs Jet Lag Severity (n=${surveyData.length} completed surveys)`,
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    title: function(context) {
+                                        return `Time Zones Crossed: ${context[0].label}`;
+                                    },
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        const dataset = context.dataset;
+                                        const errorBar = dataset.errorBars[context.dataIndex];
+                                        
+                                        if (value !== null && errorBar !== null) {
+                                            return `${dataset.label}: ${value.toFixed(2)} ± ${errorBar.toFixed(2)} severity`;
+                                        } else if (value !== null) {
+                                            return `${dataset.label}: ${value.toFixed(2)} severity`;
+                                        } else {
+                                            return `${dataset.label}: No data`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Time Zones Crossed',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Aggregate Symptom Severity (1-5 scale)',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                min: 1,
+                                max: 5,
+                                ticks: {
+                                    stepSize: 0.5
+                                },
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    plugins: [{
+                        id: 'errorBars',
+                        afterDatasetsDraw: function(chart) {
+                            const ctx = chart.ctx;
+                            const scale = chart.scales.y;
+                            
+                            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                                const meta = chart.getDatasetMeta(datasetIndex);
+                                const points = meta.data;
+                                
+                                points.forEach((point, pointIndex) => {
+                                    if (point && dataset.data[pointIndex] !== null && dataset.errorBars[pointIndex] !== null) {
+                                        const x = point.x;
+                                        const y = point.y;
+                                        const errorBar = dataset.errorBars[pointIndex];
+                                        
+                                        const errorPixels = scale.getPixelForValue(y + errorBar) - scale.getPixelForValue(y);
+                                        
+                                        ctx.save();
+                                        ctx.strokeStyle = dataset.borderColor;
+                                        ctx.lineWidth = 2;
+                                        ctx.beginPath();
+                                        
+                                        ctx.moveTo(x, y - errorPixels);
+                                        ctx.lineTo(x, y + errorPixels);
+                                        
+                                        ctx.moveTo(x - 4, y - errorPixels);
+                                        ctx.lineTo(x + 4, y - errorPixels);
+                                        
+                                        ctx.moveTo(x - 4, y + errorPixels);
+                                        ctx.lineTo(x + 4, y + errorPixels);
+                                        
+                                        ctx.stroke();
+                                        ctx.restore();
+                                    }
+                                });
+                            });
+                        }
+                    }]
+                });
+                
+            } catch (error) {
+                console.error('Error rendering live research chart:', error);
+                container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
+            }
+        }
+        
+        // Refresh research data function
+        async function refreshResearchData() {
+            if (researchChart) {
+                researchChart.destroy();
+            }
+            await renderLiveResearchChart();
+        }
+        
+        // Load chart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure page is fully loaded
+            setTimeout(renderLiveResearchChart, 1000);
+        });
     </script>
 </body>
 </html>

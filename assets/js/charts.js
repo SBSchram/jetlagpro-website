@@ -37,12 +37,11 @@ function renderDoseResponseAnalysisChart(surveys) {
         '9-12 points': surveys.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
     };
     
-    // Time zone ranges (X-axis)
-    const timeZoneRanges = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    // Time zone ranges (X-axis) - starting at 2 time zones
+    const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     
-    // Baseline data from Waterhouse study (mapped to 1-5 scale)
+    // Baseline data from Waterhouse study (mapped to 1-5 scale) - starting at 2 time zones
     const baselineData = [
-        { timeZones: 1, severity: 1.8 },
         { timeZones: 2, severity: 1.8 },
         { timeZones: 3, severity: 2.5 },
         { timeZones: 4, severity: 2.5 },

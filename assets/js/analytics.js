@@ -286,16 +286,17 @@ function calculateStatistics() {
 
 // Render dashboard sections
 function renderDashboard() {
-    renderSymptomAnalysis();
-    renderStimulationEfficacy();
     renderAdvancedAnalytics();
+    renderStimulationEfficacy();
+    renderSymptomAnalysis();
     renderRecentSubmissions();
 }
 
 // Show loading state
 function showLoadingState() {
-    document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
+    document.getElementById('advancedAnalytics').innerHTML = '<div class="loading">Loading advanced analytics...</div>';
     document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
+    document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
 }
 
