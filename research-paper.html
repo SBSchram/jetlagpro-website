@@ -7,7 +7,7 @@
     <script src="load-common-head.js?v=20250912224615"></script>
     <link rel="stylesheet" href="styles.css?v=20250912224615">
     <!-- Add jsPDF library for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'"></script>
     <!-- Add html2canvas for capturing content -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Chart.js for live data visualization -->
@@ -315,7 +315,6 @@
     <main style="padding-top: 120px;">
         <div class="research-paper">
         <h1>Jet Lag Pro: A Mobile Platform for Evaluating Chronoacupuncture as a Tool for Jet Lag Management</h1>
-        <p style="text-align: center; font-style: italic; margin-bottom: 20px; color: #666;">A Pilot Study Proposal</p>
         
         <p style="text-align: center; margin-bottom: 2px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
         <p style="text-align: center; margin-bottom: 30px;">© 2025 Steven Schram. All rights reserved.</p>
@@ -666,6 +665,19 @@
         // PDF Export Function - Hybrid approach with proper layout handling
         async function exportToPDF() {
             try {
+                // Wait for jsPDF to be available (with timeout)
+                let attempts = 0;
+                const maxAttempts = 10;
+                while (!window.jspdf && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                // Check if jsPDF is available after waiting
+                if (!window.jspdf) {
+                    throw new Error('jsPDF library failed to load. Please refresh the page and try again.');
+                }
+                
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 const paperContent = document.querySelector('.research-paper');
