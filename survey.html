@@ -72,28 +72,27 @@
                       <div class="rating-explanation" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #007bff;">
                         <p style="margin: 0 0 10px 0; font-weight: 600; color: #333;">Rating Categories:</p>
                         <ul style="margin: 0; padding-left: 20px; color: #555;">
-                          <li><strong>Anticipated:</strong> Based on prior experience, how you usually feel after a flight like this</li>
-                          <li><strong>Post-travel:</strong> How you feel after the flight</li>
+                          <li><strong>Anticipated:</strong> Overall expected jet lag severity based on past experience</li>
+                          <li><strong>Post-travel:</strong> Actual jet lag severity experienced after the flight</li>
                         </ul>
                       </div>
                       <form id="travelForm">
+                        <!-- General Anticipated Jet Lag Question -->
                         <div class="symptom-group">
-                          <h4>Sleep disturbance</h4>
+                          <h4>Overall anticipated jet lag severity</h4>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <input type="radio" name="sleepExpectations" value="0" id="sleep_expectations_0" class="rating-input" checked>
-                                <label for="sleep_expectations_0" class="rating-bubble selected"></label>
-                                <input type="radio" name="sleepExpectations" value="1" id="sleep_expectations_1" class="rating-input">
-                                <label for="sleep_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="sleepExpectations" value="2" id="sleep_expectations_2" class="rating-input">
-                                <label for="sleep_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="sleepExpectations" value="3" id="sleep_expectations_3" class="rating-input">
-                                <label for="sleep_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="sleepExpectations" value="4" id="sleep_expectations_4" class="rating-input">
-                                <label for="sleep_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="sleepExpectations" value="5" id="sleep_expectations_5" class="rating-input">
-                                <label for="sleep_expectations_5" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="1" id="general_anticipated_1" class="rating-input">
+                                <label for="general_anticipated_1" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="2" id="general_anticipated_2" class="rating-input">
+                                <label for="general_anticipated_2" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="3" id="general_anticipated_3" class="rating-input">
+                                <label for="general_anticipated_3" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="4" id="general_anticipated_4" class="rating-input">
+                                <label for="general_anticipated_4" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="5" id="general_anticipated_5" class="rating-input">
+                                <label for="general_anticipated_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
@@ -101,6 +100,9 @@
                               </div>
                             </div>
                           </div>
+                        </div>
+                        <div class="symptom-group">
+                          <h4>Sleep disturbance</h4>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
@@ -128,28 +130,6 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <input type="radio" name="fatigueExpectations" value="0" id="fatigue_expectations_0" class="rating-input" checked>
-                                <label for="fatigue_expectations_0" class="rating-bubble selected"></label>
-                                <input type="radio" name="fatigueExpectations" value="1" id="fatigue_expectations_1" class="rating-input">
-                                <label for="fatigue_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="fatigueExpectations" value="2" id="fatigue_expectations_2" class="rating-input">
-                                <label for="fatigue_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="fatigueExpectations" value="3" id="fatigue_expectations_3" class="rating-input">
-                                <label for="fatigue_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="fatigueExpectations" value="4" id="fatigue_expectations_4" class="rating-input">
-                                <label for="fatigue_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="fatigueExpectations" value="5" id="fatigue_expectations_5" class="rating-input">
-                                <label for="fatigue_expectations_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
                                 <input type="radio" name="fatiguePost" value="1" id="fatigue_post_1" class="rating-input">
                                 <label for="fatigue_post_1" class="rating-bubble"></label>
                                 <input type="radio" name="fatiguePost" value="2" id="fatigue_post_2" class="rating-input">
@@ -171,28 +151,6 @@
 
                         <div class="symptom-group">
                           <h4>Difficulty concentrating</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="concentrationExpectations" value="0" id="concentration_expectations_0" class="rating-input" checked>
-                                <label for="concentration_expectations_0" class="rating-bubble selected"></label>
-                                <input type="radio" name="concentrationExpectations" value="1" id="concentration_expectations_1" class="rating-input">
-                                <label for="concentration_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationExpectations" value="2" id="concentration_expectations_2" class="rating-input">
-                                <label for="concentration_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationExpectations" value="3" id="concentration_expectations_3" class="rating-input">
-                                <label for="concentration_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationExpectations" value="4" id="concentration_expectations_4" class="rating-input">
-                                <label for="concentration_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="concentrationExpectations" value="5" id="concentration_expectations_5" class="rating-input">
-                                <label for="concentration_expectations_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
@@ -220,28 +178,6 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <input type="radio" name="irritabilityExpectations" value="0" id="irritability_expectations_0" class="rating-input" checked>
-                                <label for="irritability_expectations_0" class="rating-bubble selected"></label>
-                                <input type="radio" name="irritabilityExpectations" value="1" id="irritability_expectations_1" class="rating-input">
-                                <label for="irritability_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityExpectations" value="2" id="irritability_expectations_2" class="rating-input">
-                                <label for="irritability_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityExpectations" value="3" id="irritability_expectations_3" class="rating-input">
-                                <label for="irritability_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityExpectations" value="4" id="irritability_expectations_4" class="rating-input">
-                                <label for="irritability_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="irritabilityExpectations" value="5" id="irritability_expectations_5" class="rating-input">
-                                <label for="irritability_expectations_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
                                 <input type="radio" name="irritabilityPost" value="1" id="irritability_post_1" class="rating-input">
                                 <label for="irritability_post_1" class="rating-bubble"></label>
                                 <input type="radio" name="irritabilityPost" value="2" id="irritability_post_2" class="rating-input">
@@ -263,28 +199,6 @@
 
                         <div class="symptom-group">
                           <h4>Gastrointestinal issues</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="giExpectations" value="0" id="gi_expectations_0" class="rating-input" checked>
-                                <label for="gi_expectations_0" class="rating-bubble selected"></label>
-                                <input type="radio" name="giExpectations" value="1" id="gi_expectations_1" class="rating-input">
-                                <label for="gi_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="giExpectations" value="2" id="gi_expectations_2" class="rating-input">
-                                <label for="gi_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="giExpectations" value="3" id="gi_expectations_3" class="rating-input">
-                                <label for="gi_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="giExpectations" value="4" id="gi_expectations_4" class="rating-input">
-                                <label for="gi_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="giExpectations" value="5" id="gi_expectations_5" class="rating-input">
-                                <label for="gi_expectations_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
