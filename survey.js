@@ -899,6 +899,7 @@ async function exportSurveyData() {
                 travelExperience: surveyData.travelExperience || '',
                 
                 // Rating responses (1-5 scale)
+                generalAnticipated: surveyData.generalAnticipated || 1,
                 sleepPre: surveyData.sleepPre || 1,
                 sleepExpectations: surveyData.sleepExpectations || 1,
                 sleepPost: surveyData.sleepPost || 1,
