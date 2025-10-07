@@ -6,15 +6,9 @@
     <title>Horary Points - JetLagPro</title>
     <script src="load-common-head.js?v=20250912224615"></script>
     <style>
-        .horary-points-container {
+        /* Custom styles for Horary Points page */
+        .content-wrapper {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .hero-section {
-            text-align: center;
-            margin-bottom: 40px;
         }
         
         .wheel-section {
@@ -84,19 +78,7 @@
             background: #e3f2fd;
             padding: 30px;
             border-radius: 10px;
-            margin: 40px 0;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin: 20px 0;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .back-link:hover {
-            text-decoration: underline;
+            margin: 0 0 40px 0;
         }
         
         .research-link {
@@ -117,15 +99,18 @@
 <body>
     <div id="main-header"></div>
 
-    <div class="horary-points-container">
-        <a href="index.html" class="back-link">← Back to JetLagPro</a>
-        
-        <div class="hero-section">
-            <h1>The 12 Horary Points</h1>
-            <p class="lead">Understanding the Chinese Organ Clock and Traditional Chinese Medicine's Time-Based Acupressure System</p>
-        </div>
+    <main>
+        <section class="hero-simple">
+            <div class="container">
+                <h1>The 12 Horary Points</h1>
+                <p class="hero-subtitle">Understanding the Chinese Organ Clock and Time-Based Acupressure System</p>
+            </div>
+        </section>
 
-        <div class="theory-section">
+        <section class="content-section">
+            <div class="container">
+                <div class="content-wrapper">
+                    <div class="theory-section">
             <h2>The Chinese Organ Clock</h2>
             <p>According to Traditional Chinese Medicine (TCM), each of the twelve meridians has a daily two-hour window when it is most active, known as "Horary Time." This creates a 24-hour cycle where different organ systems are energetically dominant at specific times.</p>
             
@@ -320,10 +305,13 @@
             <p>This technique helps your body begin the process of adjusting to the new time zone before you even arrive, potentially reducing the severity and duration of jet lag symptoms.</p>
         </div>
 
-        <div style="text-align: center; margin: 40px 0;">
-            <a href="research-paper.html" class="research-link">Read the Full Research Paper →</a>
-        </div>
-    </div>
+                    <div style="text-align: center; margin: 40px 0;">
+                        <a href="research-paper.html" class="research-link">Read the Full Research Paper →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <div id="main-footer"></div>
 
