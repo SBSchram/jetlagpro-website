@@ -831,6 +831,7 @@ async function exportSurveyData() {
                 irritabilityPre: surveyData.irritabilityPre || 1,
                 irritabilityExpectations: surveyData.irritabilityExpectations || 1,
                 irritabilityPost: surveyData.irritabilityPost || 1,
+                motivationPost: surveyData.motivationPost || 1,
                 giPre: surveyData.giPre || 1,
                 giExpectations: surveyData.giExpectations || 1,
                 giPost: surveyData.giPost || 1
@@ -912,6 +913,7 @@ async function exportSurveyData() {
                 irritabilityPre: surveyData.irritabilityPre || 1,
                 irritabilityExpectations: surveyData.irritabilityExpectations || 1,
                 irritabilityPost: surveyData.irritabilityPost || 1,
+                motivationPost: surveyData.motivationPost || 1,
                 giPre: surveyData.giPre || 1,
                 giExpectations: surveyData.giExpectations || 1,
                 giPost: surveyData.giPost || 1
