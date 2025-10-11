@@ -75,7 +75,7 @@ function renderDoseResponseAnalysisChart(surveys) {
             if (tzSurveys.length > 0) {
                 // Calculate aggregate severity (average of all available symptoms)
                 const aggregateSeverities = tzSurveys.map(survey => {
-                    const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
+                    const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postMotivationSeverity', 'postGISeverity'];
                     const validSymptoms = symptoms.filter(symptom => survey[symptom] !== null);
                     
                     if (validSymptoms.length > 0) {

@@ -65,6 +65,7 @@ function generateTestData(numSurveys = 300) {
             postFatigueSeverity: generateSymptomSeverity(),
             postConcentrationSeverity: generateSymptomSeverity(),
             postIrritabilitySeverity: generateSymptomSeverity(),
+            postMotivationSeverity: generateSymptomSeverity(),
             postGISeverity: generateSymptomSeverity(),
             
             // Timestamp (spread over last 6 months)
