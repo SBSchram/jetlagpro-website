@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Flyer</title>
+    <style>
+        @page {
+            size: 8.5in 11in;
+            margin: 0.25in; /* uniform margins */
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0.25in; /* uniform padding */
+            background: white;
+            width: 8.5in;
+            height: 11in;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 0.3in;
+        }
+        
+        .headline {
+            font-size: 54px;
+            font-weight: bold;
+            color: #2563EB;
+            margin-bottom: 0.2in;
+        }
+        
+        .subhead {
+            font-size: 28px;
+            color: #374151;
+        }
+        
+        .wheel-section {
+            text-align: center;
+            margin: 0.25in 0;
+        }
+        
+        .wheel-image {
+            max-width: 4in;
+            max-height: 4in;
+        }
+        
+        .body-text {
+            margin: 0.25in 0;
+            font-size: 22px;
+            line-height: 1.5;
+            color: #374151;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #2563EB;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 0.25in;
+        }
+        
+        .qr-section {
+            text-align: center;
+        }
+        
+        .qr-code {
+            width: 1.75in;
+            height: 1.75in;
+            border: 3px solid #2563EB;
+            margin: 0 auto 0.2in auto;
+        }
+        
+        .qr-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2563EB;
+        }
+        
+        .credits {
+            text-align: center;
+            margin-top: 0.3in;
+        }
+        
+        .doctor-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #374151;
+        }
+        
+        .beta-offer {
+            font-size: 16px;
+            color: #6B7280;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="headline">Beat Jet Lag with Ancient Wisdom</h1>
+        <p class="subhead">It's simple: 12 pressure points, 2 minutes each</p>
+    </div>
+    
+    <div class="wheel-section">
+        <img src="../Wheel Images/Wheel-Simple.jpg" alt="JetLagPro Color Wheel" class="wheel-image" />
+    </div>
+    
+    <div class="body-text">
+        <p>Tired of having jet lag after a long flight? Do what acupuncturists do to beat Jet Lag naturally. <span class="highlight">Dr. Steven Schram has created the perfect app so you can apply the Ancient Wisdom to your next journey.</span></p>
+        
+        <p>Scan the QR code below to join our beta test. After your journey, complete our survey to qualify for <span class="highlight">free lifetime access!</span>.</p>
+    </div>
+    
+    <div class="footer">
+        <div class="qr-section">
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://jetlagpro.com/?source=flyer" alt="QR Code for JetLagPro" style="width: 100%; height: 100%;" />
+            </div>
+            <div class="qr-text">Scan to join beta test</div>
+        </div>
+        
+    </div>
+</body>
+</html>
