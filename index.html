@@ -412,6 +412,24 @@
             }
         });
 
+        // Auto-scroll to download section if coming from flyer
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('source') === 'flyer') {
+            // Wait for page to load, then scroll to download
+            window.addEventListener('load', () => {
+                const downloadSection = document.getElementById('download');
+                if (downloadSection) {
+                    const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+                    const targetPosition = downloadSection.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
