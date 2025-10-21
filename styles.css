@@ -2824,6 +2824,66 @@ body.swiping * {
     }
 }
 
+/* Beta Steps Layout - New 3-step visual guide */
+.beta-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.beta-step {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.beta-step h3 {
+    font-size: 1.3rem;
+    color: #1e40af;
+    margin-bottom: 12px;
+}
+
+.beta-step p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.beta-warning {
+    background: #fef2f2;
+    border: 3px solid #dc2626;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.15);
+}
+
+.beta-warning h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+/* Mobile responsive for beta steps */
+@media (max-width: 768px) {
+    .beta-steps {
+        gap: 24px;
+        margin: 24px auto;
+    }
+    
+    .beta-step,
+    .beta-warning {
+        padding: 24px 16px;
+    }
+    
+    .beta-warning h3 {
+        font-size: 1.2rem;
+    }
+}
+
 
 
 
