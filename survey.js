@@ -849,8 +849,6 @@ async function exportSurveyData() {
                         // Add basic trip info if we have it from URL
                         tripId: tripId,
                         surveyCode: surveyCode,
-                        platform: 'ReactNative',
-                        appVersion: '2025011905',
                         created: window.firebaseServerTimestamp()
                     });
                     console.log('✅ Created new tripCompletions record with survey data:', tripId);
@@ -879,7 +877,6 @@ async function exportSurveyData() {
                     surveyCompleted: true,
                     surveySubmittedAt: timestamp,
                     surveyCode: surveyCode,
-                    platform: 'LegacyUser',
                     
                     // Individual survey responses (only fields actually asked)
                     userComment: surveyData.userComment || '',
@@ -924,8 +921,6 @@ async function exportSurveyData() {
                         // Survey completion status
                         surveyCompleted: true,
                         surveySubmittedAt: timestamp,
-                        platform: 'LegacyUser',
-                        appVersion: 'Legacy',
                         lastUpdated: window.firebaseServerTimestamp(),
                         
                         // Store all legacy survey codes in an array
@@ -945,7 +940,6 @@ async function exportSurveyData() {
                             // Survey completion status
                             surveyCompleted: true,
                             surveySubmittedAt: timestamp,
-                            platform: 'LegacyUser',
                             
                             // Store all legacy survey codes in an array (first entry)
                             legacySurveyCodes: [surveyCode],
