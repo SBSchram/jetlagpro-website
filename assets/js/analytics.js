@@ -295,6 +295,7 @@ function convertFirestoreDocument(document) {
             postFatigueSeverity: extractInteger('fatiguePost') || extractInteger('surveyData', 'fatiguePost'),
             postConcentrationSeverity: extractInteger('concentrationPost') || extractInteger('surveyData', 'concentrationPost'),
             postIrritabilitySeverity: extractInteger('irritabilityPost') || extractInteger('surveyData', 'irritabilityPost'),
+            postMotivationSeverity: extractInteger('motivationPost') || extractInteger('surveyData', 'motivationPost'),
             postGISeverity: extractInteger('giPost') || extractInteger('surveyData', 'giPost'),
             
             // Extract demographics - only age (gender and travel experience removed)

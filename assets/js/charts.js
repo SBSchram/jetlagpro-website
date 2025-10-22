@@ -37,10 +37,11 @@ function renderDoseResponseAnalysisChart(surveys) {
         '9-12 points': surveys.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
     };
     
-    // Time zone ranges (X-axis) - starting at 2 time zones
-    const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    // Time zone ranges (X-axis) - starting at 2 time zones, ending at 12+ for all flights with 12 or more timezone crossings
+    const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, '12+'];
     
     // Baseline data from Waterhouse study (mapped to 1-5 scale) - starting at 2 time zones
+    // Note: Waterhouse et al. (2007) data extends to 12 timezones; 12+ aggregates all flights ≥12 timezones
     const baselineData = [
         { timeZones: 2, severity: 1.8 },
         { timeZones: 3, severity: 2.5 },
@@ -52,7 +53,7 @@ function renderDoseResponseAnalysisChart(surveys) {
         { timeZones: 9, severity: 3.6 },
         { timeZones: 10, severity: 3.6 },
         { timeZones: 11, severity: 3.6 },
-        { timeZones: 12, severity: 3.6 }
+        { timeZones: '12+', severity: 3.6 }
     ];
     
     // Calculate aggregate severity for each usage group and time zone
@@ -70,7 +71,10 @@ function renderDoseResponseAnalysisChart(surveys) {
         
         timeZoneRanges.forEach(timeZones => {
             // Filter surveys for this specific time zone count
-            const tzSurveys = groupSurveys.filter(s => s.timezonesCount === timeZones);
+            // For '12+', aggregate all surveys with 12 or more timezone crossings
+            const tzSurveys = timeZones === '12+' 
+                ? groupSurveys.filter(s => s.timezonesCount >= 12)
+                : groupSurveys.filter(s => s.timezonesCount === timeZones);
             
             if (tzSurveys.length > 0) {
                 // Calculate aggregate severity (average of all available symptoms)
