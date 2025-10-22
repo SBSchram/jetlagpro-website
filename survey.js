@@ -811,29 +811,17 @@ async function exportSurveyData() {
                 surveyCompleted: true,
                 surveySubmittedAt: timestamp,
                 
-                // Individual survey responses (flat, not nested)
+                // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',
                 ageRange: surveyData.ageRange || '',
-                gender: surveyData.gender || '',
-                travelExperience: surveyData.travelExperience || '',
                 
-                // Rating responses (1-5 scale)
+                // Rating responses (only fields actually asked - 1-5 scale)
                 generalAnticipated: surveyData.generalAnticipated || 1,
-                sleepPre: surveyData.sleepPre || 1,
-                sleepExpectations: surveyData.sleepExpectations || 1,
                 sleepPost: surveyData.sleepPost || 1,
-                fatiguePre: surveyData.fatiguePre || 1,
-                fatigueExpectations: surveyData.fatigueExpectations || 1,
                 fatiguePost: surveyData.fatiguePost || 1,
-                concentrationPre: surveyData.concentrationPre || 1,
-                concentrationExpectations: surveyData.concentrationExpectations || 1,
                 concentrationPost: surveyData.concentrationPost || 1,
-                irritabilityPre: surveyData.irritabilityPre || 1,
-                irritabilityExpectations: surveyData.irritabilityExpectations || 1,
                 irritabilityPost: surveyData.irritabilityPost || 1,
                 motivationPost: surveyData.motivationPost || 1,
-                giPre: surveyData.giPre || 1,
-                giExpectations: surveyData.giExpectations || 1,
                 giPost: surveyData.giPost || 1
             };
             
@@ -893,30 +881,18 @@ async function exportSurveyData() {
                     surveyCode: surveyCode,
                     platform: 'LegacyUser',
                     
-                                    // Individual survey responses (flat, not nested)
-                userComment: surveyData.userComment || '',
-                ageRange: surveyData.ageRange || '',
-                gender: surveyData.gender || '',
-                travelExperience: surveyData.travelExperience || '',
-                
-                // Rating responses (1-5 scale)
-                generalAnticipated: surveyData.generalAnticipated || 1,
-                sleepPre: surveyData.sleepPre || 1,
-                sleepExpectations: surveyData.sleepExpectations || 1,
-                sleepPost: surveyData.sleepPost || 1,
-                fatiguePre: surveyData.fatiguePre || 1,
-                fatigueExpectations: surveyData.fatigueExpectations || 1,
-                fatiguePost: surveyData.fatiguePost || 1,
-                concentrationPre: surveyData.concentrationPre || 1,
-                concentrationExpectations: surveyData.concentrationExpectations || 1,
-                concentrationPost: surveyData.concentrationPost || 1,
-                irritabilityPre: surveyData.irritabilityPre || 1,
-                irritabilityExpectations: surveyData.irritabilityExpectations || 1,
-                irritabilityPost: surveyData.irritabilityPost || 1,
-                motivationPost: surveyData.motivationPost || 1,
-                giPre: surveyData.giPre || 1,
-                giExpectations: surveyData.giExpectations || 1,
-                giPost: surveyData.giPost || 1
+                    // Individual survey responses (only fields actually asked)
+                    userComment: surveyData.userComment || '',
+                    ageRange: surveyData.ageRange || '',
+                    
+                    // Rating responses (only fields actually asked - 1-5 scale)
+                    generalAnticipated: surveyData.generalAnticipated || 1,
+                    sleepPost: surveyData.sleepPost || 1,
+                    fatiguePost: surveyData.fatiguePost || 1,
+                    concentrationPost: surveyData.concentrationPost || 1,
+                    irritabilityPost: surveyData.irritabilityPost || 1,
+                    motivationPost: surveyData.motivationPost || 1,
+                    giPost: surveyData.giPost || 1
                 };
                 
                 // Add sanitized comment if present
