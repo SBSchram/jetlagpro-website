@@ -542,3 +542,136 @@ body {
         font-size: 0.8rem;
     }
 }
+
+/* Point Mapping Reference Styles */
+.point-mapping-reference {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.point-mapping-reference h3 {
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.point-mapping-reference p {
+    color: #6b7280;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.mapping-table {
+    overflow-x: auto;
+    margin-bottom: 25px;
+}
+
+.mapping-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mapping-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.mapping-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+    vertical-align: top;
+}
+
+.mapping-table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.mapping-table tr:hover {
+    background-color: #f0f9ff;
+    transition: background-color 0.2s ease;
+}
+
+.mapping-table code {
+    background: #f3f4f6;
+    color: #dc2626;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+}
+
+.mapping-table strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.mapping-notes {
+    background: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.mapping-notes h4 {
+    color: #0369a1;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.mapping-notes ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mapping-notes li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.mapping-notes li::before {
+    content: "•";
+    color: #0ea5e9;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.mapping-notes strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .mapping-table {
+        font-size: 0.8rem;
+    }
+    
+    .mapping-table th,
+    .mapping-table td {
+        padding: 8px 6px;
+    }
+    
+    .point-mapping-reference {
+        padding: 20px 15px;
+    }
+}

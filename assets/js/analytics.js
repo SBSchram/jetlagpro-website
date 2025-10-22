@@ -7,6 +7,39 @@ let testData = [];
 let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
 
+// Acupuncture Point ID to Name Mapping
+const POINT_MAPPING = {
+    1: 'LU-8',
+    2: 'LI-1', 
+    3: 'ST-36',
+    4: 'SP-3',
+    5: 'HT-8',
+    6: 'SI-5',
+    7: 'BL-66',
+    8: 'KI-3',
+    9: 'PC-8',
+    10: 'SJ-6',
+    11: 'GB-34',
+    12: 'LIV-3'
+};
+
+// Helper function to get acupuncture point name from point ID
+function getPointName(pointId) {
+    return POINT_MAPPING[pointId] || `Point-${pointId}`;
+}
+
+// Helper function to get all completed acupuncture points for a survey
+function getCompletedPoints(survey) {
+    const completedPoints = [];
+    for (let i = 1; i <= 12; i++) {
+        const pointField = `point${i}Completed`;
+        if (survey[pointField]) {
+            completedPoints.push(getPointName(i));
+        }
+    }
+    return completedPoints;
+}
+
 // Pagination variables for recent submissions
 let currentPage = 1;
 let itemsPerPage = 100;
