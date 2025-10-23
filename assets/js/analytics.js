@@ -793,84 +793,15 @@ function renderStimulationEfficacy() {
 
     html += '</tbody></table>';
 
-    // Add All Symptoms Analysis
+    // Add All Symptoms Analysis - Multi-Series Chart
     html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
-    html += '<p>Analysis of all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
+    html += '<p>Interactive chart showing all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
     
-    const symptoms = [
-        { name: 'Sleep', baseline: 'baselineSleep', post: 'postSleepSeverity' },
-        { name: 'Fatigue', baseline: 'baselineFatigue', post: 'postFatigueSeverity' },
-        { name: 'Concentration', baseline: 'baselineConcentration', post: 'postConcentrationSeverity' },
-        { name: 'Irritability', baseline: 'baselineIrritability', post: 'postIrritabilitySeverity' },
-        { name: 'GI', baseline: 'baselineGI', post: 'postGISeverity' }
-    ];
-
-    symptoms.forEach(symptom => {
-        html += `<h4 style="margin-top: 30px; margin-bottom: 15px;">${symptom.name} Symptoms</h4>`;
-        html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th></tr></thead><tbody>';
-
-        Object.entries(tzGroups).forEach(([range, surveys]) => {
-            if (surveys.length === 0) return;
-
-            const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
-            
-            // Calculate symptom-specific data - only post-travel severity
-            const validSymptomSurveys = surveys.filter(s => s[symptom.post] !== null);
-            let avgPostSeverity = 'N/A';
-
-            if (validSymptomSurveys.length > 0) {
-                avgPostSeverity = (validSymptomSurveys.reduce((sum, s) => sum + s[symptom.post], 0) / validSymptomSurveys.length).toFixed(2);
-            }
-
-            html += `<tr>
-                <td><strong>${range}</strong></td>
-                <td>${validSymptomSurveys.length}</td>
-                <td>${avgPoints}</td>
-                <td style="color: ${avgPostSeverity < 3 ? '#16a34a' : avgPostSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostSeverity}</td>
-            </tr>`;
-        });
-
-        html += '</tbody></table>';
-    });
-
-    // Add Aggregate Symptom Score Analysis
-    html += '<h4 style="margin-top: 30px; margin-bottom: 15px;">Aggregate Symptom Score</h4>';
-    html += '<p>Combined analysis of all symptoms to show overall jet lag severity</p>';
-    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Aggregate Post-Travel Severity</th></tr></thead><tbody>';
-
-    Object.entries(tzGroups).forEach(([range, surveys]) => {
-        if (surveys.length === 0) return;
-
-        const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
-        
-        // Calculate aggregate scores (average of all available post-travel symptoms)
-        const validAggregateSurveys = surveys.filter(s => {
-            const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
-            return symptoms.some(symptom => s[symptom] !== null);
-        });
-
-        let avgAggregatePost = 'N/A';
-
-        if (validAggregateSurveys.length > 0) {
-            const aggregatePostScores = validAggregateSurveys.map(s => {
-                const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
-                const validSymptoms = symptoms.filter(symptom => s[symptom] !== null);
-                return validSymptoms.length > 0 ? validSymptoms.reduce((sum, symptom) => sum + s[symptom], 0) / validSymptoms.length : 0;
-            });
-
-            avgAggregatePost = (aggregatePostScores.reduce((sum, score) => sum + score, 0) / aggregatePostScores.length).toFixed(2);
-        }
-
-        html += `<tr>
-            <td><strong>${range}</strong></td>
-            <td>${validAggregateSurveys.length}</td>
-            <td>${avgPoints}</td>
-            <td style="color: ${avgAggregatePost < 3 ? '#16a34a' : avgAggregatePost < 4 ? '#eab308' : '#dc2626'}">${avgAggregatePost}</td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
-
+    // Chart container
+    html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
+    html += '<canvas id="symptomAnalysisChart" width="800" height="400"></canvas>';
+    html += '</div>';
+    
     // Add explanatory notes
     html += '<div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9;">';       
     html += '<h4>📊 Analysis Notes:</h4>';
@@ -884,6 +815,9 @@ function renderStimulationEfficacy() {
     html += '</div>';
 
     container.innerHTML = html;
+    
+    // Render the symptom analysis chart
+    renderSymptomAnalysisChart(data, tzGroups);
 }
 
 // Render advanced analytics with comprehensive graphs
