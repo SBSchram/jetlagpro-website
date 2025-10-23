@@ -1251,7 +1251,7 @@ ${htmlContent.outerHTML}
                     data.documents.forEach((document) => {
                         if (document.fields) {
                             const flatData = convertFirestoreDocument(document);
-                            if (flatData && flatData.surveyCompleted === true) {
+                            if (flatData) {
                                 surveyData.push(flatData);
                             }
                         }
