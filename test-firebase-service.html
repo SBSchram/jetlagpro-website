@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Service Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            color: #059669;
+            background: #f0fdf4;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .data-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase Service Test</h1>
+    <p>Testing the new Firebase service independently to ensure it works before integration.</p>
+
+    <div class="test-section">
+        <h2>Service Initialization Test</h2>
+        <button onclick="testServiceInit()">Test Service Creation</button>
+        <div id="initResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Data Loading Test</h2>
+        <button onclick="testDataLoading()" id="loadBtn">Load Trip Data</button>
+        <div id="loadResult"></div>
+        <div id="dataDisplay" class="data-display" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Error Handling Test</h2>
+        <button onclick="testErrorHandling()">Test Error Handling</button>
+        <div id="errorResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Loading State Test</h2>
+        <button onclick="testLoadingStates()">Test Loading States</button>
+        <div id="loadingResult"></div>
+    </div>
+
+    <script src="assets/js/firebase-service.js"></script>
+    <script>
+        let firebaseService = null;
+
+        function testServiceInit() {
+            try {
+                firebaseService = new FirebaseService();
+                document.getElementById('initResult').innerHTML = 
+                    '<div class="success">✅ Firebase service created successfully</div>';
+                console.log('✅ Firebase service initialized:', firebaseService);
+            } catch (error) {
+                document.getElementById('initResult').innerHTML = 
+                    '<div class="error">❌ Failed to create service: ' + error.message + '</div>';
+                console.error('❌ Service initialization failed:', error);
+            }
+        }
+
+        async function testDataLoading() {
+            if (!firebaseService) {
+                document.getElementById('loadResult').innerHTML = 
+                    '<div class="error">❌ Service not initialized. Click "Test Service Creation" first.</div>';
+                return;
+            }
+
+            const loadBtn = document.getElementById('loadBtn');
+            const loadResult = document.getElementById('loadResult');
+            const dataDisplay = document.getElementById('dataDisplay');
+
+            try {
+                loadBtn.disabled = true;
+                loadBtn.textContent = 'Loading...';
+                loadResult.innerHTML = '<div class="loading">Loading trip completion data...</div>';
+
+                const data = await firebaseService.getTripCompletions();
+                
+                loadResult.innerHTML = 
+                    `<div class="success">✅ Successfully loaded ${data.length} trip completion records</div>`;
+                
+                dataDisplay.style.display = 'block';
+                dataDisplay.innerHTML = `
+                    <h3>Data Preview (first 3 records):</h3>
+                    <pre>${JSON.stringify(data.slice(0, 3), null, 2)}</pre>
+                    <p><strong>Total records:</strong> ${data.length}</p>
+                `;
+
+                console.log('✅ Data loaded successfully:', data);
+                
+            } catch (error) {
+                loadResult.innerHTML = 
+                    '<div class="error">❌ Failed to load data: ' + error.message + '</div>';
+                console.error('❌ Data loading failed:', error);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = 'Load Trip Data';
+            }
+        }
+
+        function testErrorHandling() {
+            if (!firebaseService) {
+                document.getElementById('errorResult').innerHTML = 
+                    '<div class="error">❌ Service not initialized. Click "Test Service Creation" first.</div>';
+                return;
+            }
+
+            try {
+                // Test error handling with invalid container ID
+                firebaseService.showError('nonexistentContainer', 'Test error message');
+                firebaseService.showLoadingState('nonexistentContainer', 'Test loading message');
+                
+                document.getElementById('errorResult').innerHTML = 
+                    '<div class="success">✅ Error handling methods work (no exceptions thrown)</div>';
+                console.log('✅ Error handling test passed');
+            } catch (error) {
+                document.getElementById('errorResult').innerHTML = 
+                    '<div class="error">❌ Error handling test failed: ' + error.message + '</div>';
+                console.error('❌ Error handling test failed:', error);
+            }
+        }
+
+        function testLoadingStates() {
+            if (!firebaseService) {
+                document.getElementById('loadingResult').innerHTML = 
+                    '<div class="error">❌ Service not initialized. Click "Test Service Creation" first.</div>';
+                return;
+            }
+
+            try {
+                // Test loading state methods
+                firebaseService.showLoadingState('loadingResult', 'Test loading state...');
+                
+                setTimeout(() => {
+                    firebaseService.showError('loadingResult', 'Test error state...');
+                }, 1000);
+                
+                console.log('✅ Loading state test initiated');
+            } catch (error) {
+                document.getElementById('loadingResult').innerHTML = 
+                    '<div class="error">❌ Loading state test failed: ' + error.message + '</div>';
+                console.error('❌ Loading state test failed:', error);
+            }
+        }
+
+        // Auto-initialize service on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Firebase Service Test Page Loaded');
+            testServiceInit();
+        });
+    </script>
+</body>
+</html>
