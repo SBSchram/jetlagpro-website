@@ -919,7 +919,6 @@ function renderPointStimulationAnalysis() {
     html += '<th>Acupuncture Point</th>';
     html += '<th>Stimulation Count</th>';
     html += '<th>Usage Rate</th>';
-    html += '<th>Firebase Field</th>';
     html += '</tr></thead><tbody>';
 
     pointStats.forEach(point => {
@@ -930,7 +929,6 @@ function renderPointStimulationAnalysis() {
         html += `<td><strong>${point.name}</strong></td>`;
         html += `<td><span class="highlight">${countDisplay}</span></td>`;
         html += `<td>${usageRate}</td>`;
-        html += `<td><code>${point.field}</code></td>`;
         html += '</tr>';
     });
 
