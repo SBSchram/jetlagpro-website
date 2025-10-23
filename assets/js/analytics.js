@@ -470,8 +470,9 @@ function renderSymptomAnalysis() {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const recentCount = data.filter(survey => {
-        const surveyDate = survey.completionDate || survey.created || survey.timestamp;
-        return surveyDate && surveyDate >= sevenDaysAgo;
+        const surveyDate = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
+        const surveyDateObj = surveyDate ? new Date(surveyDate) : null;
+        return surveyDateObj && surveyDateObj >= sevenDaysAgo;
     }).length;
     
     html += `<tr><td><strong>📝 Total Surveys</strong></td><td>${totalTrips}</td><td>Total research submissions collected</td></tr>`;
@@ -538,8 +539,8 @@ function renderRecentSubmissions() {
 
     // Sort by date (most recent first)
     const sortedSurveys = data.sort((a, b) => {
-        const dateA = a.completionDate || a.created || a.timestamp;
-        const dateB = b.completionDate || b.created || b.timestamp;
+        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
+        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
@@ -557,7 +558,7 @@ function renderRecentSubmissions() {
     html += '<table class="data-table"><thead><tr><th>Date</th><th>Code</th><th>Destination</th><th>East/West</th><th>Points</th><th>Timezones</th><th>Status</th></tr></thead><tbody>';
 
     pageSurveys.forEach(survey => {
-        const date = survey.completionDate || survey.created || survey.timestamp;
+        const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
         const dateStr = date ? new Date(date).toLocaleDateString() : 'N/A';
         const isComplete = survey.surveyCompleted;
         const status = isComplete ? '✅ Complete' : '⚠️ Partial';
