@@ -331,6 +331,7 @@ function renderDashboard() {
     renderAdvancedAnalytics();
     renderStimulationEfficacy();
     renderSymptomAnalysis();
+    renderPointStimulationAnalysis();
     renderRecentSubmissions();
 }
 
@@ -339,6 +340,7 @@ function showLoadingState() {
     document.getElementById('advancedAnalytics').innerHTML = '<div class="loading">Loading advanced analytics...</div>';
     document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
     document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
+    document.getElementById('pointMappingTable').innerHTML = '<div class="loading">Loading point stimulation data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
 }
 
@@ -856,4 +858,98 @@ function renderAdvancedAnalytics() {
     
     // Render the comprehensive dose-response analysis chart
     renderDoseResponseAnalysisChart(completedSurveys);
+}
+
+// Render point stimulation analysis table
+function renderPointStimulationAnalysis() {
+    const container = document.getElementById('pointMappingTable');
+    const data = getCurrentData();
+    
+    if (data.length === 0) {
+        container.innerHTML = '<div class="error">No survey data available</div>';
+        return;
+    }
+
+    // Point mapping data
+    const pointMapping = [
+        { id: 1, name: 'LU-8', field: 'point1Completed' },
+        { id: 2, name: 'LI-1', field: 'point2Completed' },
+        { id: 3, name: 'ST-36', field: 'point3Completed' },
+        { id: 4, name: 'SP-3', field: 'point4Completed' },
+        { id: 5, name: 'HT-8', field: 'point5Completed' },
+        { id: 6, name: 'SI-5', field: 'point6Completed' },
+        { id: 7, name: 'BL-66', field: 'point7Completed' },
+        { id: 8, name: 'KI-3', field: 'point8Completed' },
+        { id: 9, name: 'PC-8', field: 'point9Completed' },
+        { id: 10, name: 'SJ-6', field: 'point10Completed' },
+        { id: 11, name: 'GB-34', field: 'point11Completed' },
+        { id: 12, name: 'LIV-3', field: 'point12Completed' }
+    ];
+
+    // Calculate stimulation counts for each point
+    const pointStats = pointMapping.map(point => {
+        let stimulationCount = 0;
+        let totalSurveys = 0;
+        
+        data.forEach(survey => {
+            if (survey.surveyCompleted && survey[point.field] !== undefined) {
+                totalSurveys++;
+                if (survey[point.field] === true) {
+                    stimulationCount++;
+                }
+            }
+        });
+        
+        const stimulationRate = totalSurveys > 0 ? Math.round((stimulationCount / totalSurveys) * 100) : 0;
+        
+        return {
+            ...point,
+            stimulationCount,
+            totalSurveys,
+            stimulationRate
+        };
+    });
+
+    // Sort by stimulation count (most used first)
+    pointStats.sort((a, b) => b.stimulationCount - a.stimulationCount);
+
+    // Generate HTML table
+    let html = '<table class="data-table">';
+    html += '<thead><tr>';
+    html += '<th>Acupuncture Point</th>';
+    html += '<th>Stimulation Count</th>';
+    html += '<th>Usage Rate</th>';
+    html += '<th>Firebase Field</th>';
+    html += '</tr></thead><tbody>';
+
+    pointStats.forEach(point => {
+        const usageRate = point.totalSurveys > 0 ? `${point.stimulationRate}%` : 'N/A';
+        const countDisplay = point.stimulationCount > 0 ? point.stimulationCount : '0';
+        
+        html += '<tr>';
+        html += `<td><strong>${point.name}</strong></td>`;
+        html += `<td><span class="highlight">${countDisplay}</span></td>`;
+        html += `<td>${usageRate}</td>`;
+        html += `<td><code>${point.field}</code></td>`;
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    // Add summary statistics
+    const totalStimulations = pointStats.reduce((sum, point) => sum + point.stimulationCount, 0);
+    const avgUsageRate = pointStats.length > 0 ? 
+        Math.round(pointStats.reduce((sum, point) => sum + point.stimulationRate, 0) / pointStats.length) : 0;
+    
+    html += '<div class="mapping-notes" style="margin-top: 20px;">';
+    html += '<h4>📊 Point Usage Summary:</h4>';
+    html += `<ul>`;
+    html += `<li><strong>Total Stimulations:</strong> ${totalStimulations} across all points</li>`;
+    html += `<li><strong>Average Usage Rate:</strong> ${avgUsageRate}% across all points</li>`;
+    html += `<li><strong>Most Used Point:</strong> ${pointStats[0]?.name} (${pointStats[0]?.stimulationCount} times)</li>`;
+    html += `<li><strong>Least Used Point:</strong> ${pointStats[pointStats.length - 1]?.name} (${pointStats[pointStats.length - 1]?.stimulationCount} times)</li>`;
+    html += '</ul>';
+    html += '</div>';
+
+    container.innerHTML = html;
 }
