@@ -911,8 +911,8 @@ function renderPointStimulationAnalysis() {
         };
     });
 
-    // Sort by stimulation count (most used first)
-    pointStats.sort((a, b) => b.stimulationCount - a.stimulationCount);
+    // Sort by point ID (LU-8 first, then LI-1, ST-36, etc.)
+    pointStats.sort((a, b) => a.id - b.id);
 
     // Generate HTML table
     let html = '<table class="data-table">';
@@ -940,13 +940,18 @@ function renderPointStimulationAnalysis() {
     const avgUsageRate = pointStats.length > 0 ? 
         Math.round(pointStats.reduce((sum, point) => sum + point.stimulationRate, 0) / pointStats.length) : 0;
     
+    // Find most and least used points
+    const sortedByUsage = [...pointStats].sort((a, b) => b.stimulationCount - a.stimulationCount);
+    const mostUsed = sortedByUsage[0];
+    const leastUsed = sortedByUsage[sortedByUsage.length - 1];
+    
     html += '<div class="mapping-notes" style="margin-top: 20px;">';
     html += '<h4>📊 Point Usage Summary:</h4>';
     html += `<ul>`;
     html += `<li><strong>Total Stimulations:</strong> ${totalStimulations} across all points</li>`;
     html += `<li><strong>Average Usage Rate:</strong> ${avgUsageRate}% across all points</li>`;
-    html += `<li><strong>Most Used Point:</strong> ${pointStats[0]?.name} (${pointStats[0]?.stimulationCount} times)</li>`;
-    html += `<li><strong>Least Used Point:</strong> ${pointStats[pointStats.length - 1]?.name} (${pointStats[pointStats.length - 1]?.stimulationCount} times)</li>`;
+    html += `<li><strong>Most Used Point:</strong> ${mostUsed?.name} (${mostUsed?.stimulationCount} times)</li>`;
+    html += `<li><strong>Least Used Point:</strong> ${leastUsed?.name} (${leastUsed?.stimulationCount} times)</li>`;
     html += '</ul>';
     html += '</div>';
 
