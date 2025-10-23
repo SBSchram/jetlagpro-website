@@ -1305,8 +1305,8 @@ ${htmlContent.outerHTML}
                 // Show loading
                 container.innerHTML = '<div class="loading">Loading live research data...</div>';
                 
-                // Load data
-                const surveyData = await loadLiveResearchData();
+                // Use global researchData (already loaded by refreshResearchData or page load)
+                const surveyData = researchData;
                 
                 if (surveyData.length === 0) {
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
@@ -1689,12 +1689,14 @@ ${htmlContent.outerHTML}
                     researchChart.destroy();
                 }
                 
+                // Force reload fresh data from Firebase
+                researchData = []; // Clear existing data
                 await loadResearchData();
                 await renderLiveResearchChart();
                 
             } catch (error) {
                 console.error('Error refreshing research data:', error);
-                const container = document.getElementById('liveResearchChart');
+                const container = document.getElementById('researchChartContainer');
                 if (container) {
                     container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
                 }
