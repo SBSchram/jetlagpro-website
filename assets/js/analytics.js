@@ -7,6 +7,9 @@ let testData = [];
 let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
 
+// Firebase service instance (new integration)
+let firebaseService = null;
+
 // Acupuncture Point ID to Name Mapping
 const POINT_MAPPING = {
     1: 'LU-8',
@@ -350,9 +353,90 @@ function refreshData() {
     loadDashboardData();
 }
 
+// ============================================================================
+// NEW FIREBASE SERVICE INTEGRATION (Step 2)
+// ============================================================================
+
+// Initialize Firebase service
+function initializeFirebaseService() {
+    try {
+        if (window.FirebaseService) {
+            firebaseService = new window.FirebaseService();
+            console.log('✅ Firebase service initialized for analytics');
+            return true;
+        } else {
+            console.warn('⚠️ FirebaseService not available, falling back to existing methods');
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Failed to initialize Firebase service:', error);
+        return false;
+    }
+}
+
+// NEW: Load data using Firebase service (alternative to loadSurveyData)
+async function loadSurveyDataWithService() {
+    if (!firebaseService) {
+        console.warn('⚠️ Firebase service not available, falling back to existing method');
+        return await loadSurveyData(); // Fallback to existing method
+    }
+    
+    try {
+        console.log('🔄 Loading data with Firebase service...');
+        const data = await firebaseService.getTripCompletions();
+        surveyData = data;
+        console.log(`✅ Loaded ${data.length} records using Firebase service`);
+        return data;
+    } catch (error) {
+        console.error('❌ Firebase service failed, falling back to existing method:', error);
+        return await loadSurveyData(); // Fallback to existing method
+    }
+}
+
+// NEW: Load dashboard data using Firebase service
+async function loadDashboardDataWithService() {
+    try {
+        isLoading = true;
+        showLoadingState();
+        
+        await loadSurveyDataWithService();
+        renderDashboard();
+        
+        isLoading = false;
+    } catch (error) {
+        console.error('Error loading dashboard with service:', error);
+        showError('Failed to load dashboard data: ' + error.message);
+        isLoading = false;
+    }
+}
+
+// NEW: Refresh data using Firebase service
+function refreshDataWithService() {
+    if (firebaseService) {
+        console.log('🔄 Refreshing data with Firebase service...');
+        loadDashboardDataWithService();
+    } else {
+        console.log('🔄 Firebase service not available, using existing refresh method...');
+        refreshData(); // Fallback to existing method
+    }
+}
+
+// ============================================================================
+// END NEW FIREBASE SERVICE INTEGRATION
+// ============================================================================
+
 // Initialize dashboard when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    initializeDashboard();
+    // Try to initialize Firebase service first
+    const serviceAvailable = initializeFirebaseService();
+    
+    if (serviceAvailable) {
+        console.log('🚀 Initializing dashboard with Firebase service...');
+        loadDashboardDataWithService();
+    } else {
+        console.log('🚀 Initializing dashboard with existing methods...');
+        initializeDashboard();
+    }
 });
 
 // Auto-refresh every 5 minutes
