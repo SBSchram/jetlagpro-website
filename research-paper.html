@@ -13,6 +13,8 @@
     <!-- Chart.js for live data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <!-- Firebase service for shared data fetching -->
+    <script src="assets/js/firebase-service.js"></script>
     <!-- Note: Word export uses HTML format with embedded images for full compatibility -->
     <style>
         .research-paper {
@@ -1595,7 +1597,7 @@ ${htmlContent.outerHTML}
                                     // Check if click is within button area
                                     if (x >= buttonX && x <= buttonX + buttonWidth && 
                                         y >= buttonY && y <= buttonY + buttonHeight) {
-                                        refreshResearchData();
+                                        refreshResearchDataWithService();
                                     }
                                 });
                                 canvas.refreshHandlerAdded = true;
@@ -1632,6 +1634,9 @@ ${htmlContent.outerHTML}
         // Global variables for research data
         let researchData = [];
         let isLoadingResearch = false;
+        
+        // Firebase service instance (new integration)
+        let firebaseService = null;
         
         // Load research data from Firebase (DRY from analytics.js)
         async function loadResearchData() {
@@ -1703,18 +1708,106 @@ ${htmlContent.outerHTML}
             }
         }
         
+        // ============================================================================
+        // NEW FIREBASE SERVICE INTEGRATION (Step 3)
+        // ============================================================================
+        
+        // Initialize Firebase service
+        function initializeFirebaseService() {
+            try {
+                if (window.FirebaseService) {
+                    firebaseService = new window.FirebaseService();
+                    console.log('✅ Firebase service initialized for research paper');
+                    return true;
+                } else {
+                    console.warn('⚠️ FirebaseService not available, falling back to existing methods');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Failed to initialize Firebase service:', error);
+                return false;
+            }
+        }
+        
+        // NEW: Load research data using Firebase service (alternative to loadResearchData)
+        async function loadResearchDataWithService() {
+            if (!firebaseService) {
+                console.warn('⚠️ Firebase service not available, falling back to existing method');
+                return await loadResearchData(); // Fallback to existing method
+            }
+            
+            try {
+                console.log('🔄 Loading research data with Firebase service...');
+                const data = await firebaseService.getTripCompletions();
+                researchData = data;
+                console.log(`✅ Loaded ${data.length} research records using Firebase service`);
+                return data;
+            } catch (error) {
+                console.error('❌ Firebase service failed, falling back to existing method:', error);
+                return await loadResearchData(); // Fallback to existing method
+            }
+        }
+        
+        // NEW: Refresh research data using Firebase service
+        async function refreshResearchDataWithService() {
+            if (firebaseService) {
+                console.log('🔄 Refreshing research data with Firebase service...');
+                try {
+                    if (researchChart) {
+                        researchChart.destroy();
+                    }
+                    researchData = []; // Force reload fresh data
+                    await loadResearchDataWithService();
+                    await renderLiveResearchChart();
+                } catch (error) {
+                    console.error('❌ Firebase service refresh failed, falling back to existing method:', error);
+                    refreshResearchData(); // Fallback to existing method
+                }
+            } else {
+                console.log('🔄 Firebase service not available, using existing refresh method...');
+                refreshResearchData(); // Fallback to existing method
+            }
+        }
+        
+        // ============================================================================
+        // END NEW FIREBASE SERVICE INTEGRATION
+        // ============================================================================
+        
         // Load chart when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Load data first, then render chart
-            loadResearchData().then(() => {
-                renderLiveResearchChart();
-            }).catch(error => {
-                console.error('Error loading research data on page load:', error);
-                const container = document.getElementById('liveResearchChart');
-                if (container) {
-                    container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
-                }
-            });
+            // Try to initialize Firebase service first
+            const serviceAvailable = initializeFirebaseService();
+            
+            if (serviceAvailable) {
+                console.log('🚀 Loading research data with Firebase service...');
+                loadResearchDataWithService().then(() => {
+                    renderLiveResearchChart();
+                }).catch(error => {
+                    console.error('❌ Firebase service failed, falling back to existing method:', error);
+                    // Fallback to existing method
+                    loadResearchData().then(() => {
+                        renderLiveResearchChart();
+                    }).catch(fallbackError => {
+                        console.error('Error loading research data on page load:', fallbackError);
+                        const container = document.getElementById('researchChartContainer');
+                        if (container) {
+                            container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + fallbackError.message + '</p><p>Please try refreshing the data.</p></div>';
+                        }
+                    });
+                });
+            } else {
+                console.log('🚀 Loading research data with existing methods...');
+                // Load data first, then render chart
+                loadResearchData().then(() => {
+                    renderLiveResearchChart();
+                }).catch(error => {
+                    console.error('Error loading research data on page load:', error);
+                    const container = document.getElementById('researchChartContainer');
+                    if (container) {
+                        container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
+                    }
+                });
+            }
         });
     </script>
 
