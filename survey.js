@@ -6,6 +6,9 @@ let isCodeValidated = false;
 let isExistingSurvey = false;
 let currentTripId = null;
 
+// Survey Read Service instance (new integration)
+let surveyReadService = null;
+
 // Security functions for comment sanitization
 function sanitizeComment(input) {
     if (!input || typeof input !== 'string') {
@@ -55,6 +58,167 @@ function validateComment(input) {
     return { isValid: true, message: 'Comment is valid' };
 }
 
+// ============================================================================
+// NEW SURVEY READ SERVICE INTEGRATION (Step 4)
+// ============================================================================
+
+// Initialize Survey Read Service
+function initializeSurveyReadService() {
+    try {
+        if (window.SurveyReadService) {
+            surveyReadService = new window.SurveyReadService();
+            console.log('✅ Survey Read Service initialized');
+            return true;
+        } else {
+            console.warn('⚠️ SurveyReadService not available, falling back to existing methods');
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Failed to initialize Survey Read Service:', error);
+        return false;
+    }
+}
+
+// NEW: Check existing survey by trip ID using SurveyReadService
+async function checkExistingSurveyByTripIdWithService(tripId) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await checkExistingSurveyByTripIdLegacy(tripId);
+    }
+    
+    try {
+        console.log('🔍 Checking existing survey by trip ID with service...');
+        const result = await surveyReadService.checkExistingSurveyByTripId(tripId);
+        console.log(`✅ Survey Read Service: Found ${result.count} existing surveys for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await checkExistingSurveyByTripIdLegacy(tripId);
+    }
+}
+
+// NEW: Check existing survey by code using SurveyReadService
+async function checkExistingSurveyByCodeWithService(surveyCode) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await checkExistingSurveyByCodeLegacy(surveyCode);
+    }
+    
+    try {
+        console.log('🔍 Checking existing survey by code with service...');
+        const result = await surveyReadService.checkExistingSurveyByCode(surveyCode);
+        console.log(`✅ Survey Read Service: Found ${result.count} existing surveys for code: ${surveyCode}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await checkExistingSurveyByCodeLegacy(surveyCode);
+    }
+}
+
+// NEW: Get trip data using SurveyReadService
+async function getTripDataWithService(tripId) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await getTripDataLegacy(tripId);
+    }
+    
+    try {
+        console.log('🔍 Getting trip data with service...');
+        const result = await surveyReadService.getTripData(tripId);
+        console.log(`✅ Survey Read Service: Trip data ${result.exists ? 'found' : 'not found'} for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await getTripDataLegacy(tripId);
+    }
+}
+
+// LEGACY: Check existing survey by trip ID (fallback method)
+async function checkExistingSurveyByTripIdLegacy(tripId) {
+    try {
+        console.log('🔍 Checking existing survey by trip ID (legacy method)...');
+        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        const surveyRef = collection(window.firebaseDB, 'surveys');
+        const q = query(surveyRef, where('tripId', '==', tripId));
+        const querySnapshot = await getDocs(q);
+        
+        const result = {
+            exists: !querySnapshot.empty,
+            data: null,
+            count: querySnapshot.size
+        };
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            result.data = doc.data();
+            result.docId = doc.id;
+        }
+
+        console.log(`✅ Legacy method: Found ${result.count} existing surveys for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// LEGACY: Check existing survey by code (fallback method)
+async function checkExistingSurveyByCodeLegacy(surveyCode) {
+    try {
+        console.log('🔍 Checking existing survey by code (legacy method)...');
+        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        const surveyRef = collection(window.firebaseDB, 'surveys');
+        const q = query(surveyRef, where('surveyCode', '==', surveyCode));
+        const querySnapshot = await getDocs(q);
+        
+        const result = {
+            exists: !querySnapshot.empty,
+            data: null,
+            count: querySnapshot.size
+        };
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            result.data = doc.data();
+            result.docId = doc.id;
+        }
+
+        console.log(`✅ Legacy method: Found ${result.count} existing surveys for code: ${surveyCode}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// LEGACY: Get trip data (fallback method)
+async function getTripDataLegacy(tripId) {
+    try {
+        console.log('🔍 Getting trip data (legacy method)...');
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDoc = await window.firebaseGetDoc(tripDocRef);
+        
+        const result = {
+            exists: tripDoc.exists(),
+            data: null
+        };
+
+        if (tripDoc.exists()) {
+            result.data = tripDoc.data();
+        }
+
+        console.log(`✅ Legacy method: Trip data ${result.exists ? 'found' : 'not found'} for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// ============================================================================
+// END NEW SURVEY READ SERVICE INTEGRATION
+// ============================================================================
+
 // Check if coming from app (has tripId) and refresh if needed
 function checkAndRefreshFromApp() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -87,6 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Prevent browser from restoring previous scroll position
     window.history.scrollRestoration = 'manual';
+    
+    // Initialize Survey Read Service for DRY read operations
+    const serviceAvailable = initializeSurveyReadService();
+    if (serviceAvailable) {
+        console.log('✅ Survey Read Service initialized successfully');
+    } else {
+        console.log('⚠️ Survey Read Service not available, using legacy methods');
+    }
     
     // Check if coming from app and force refresh if needed
     checkAndRefreshFromApp();
@@ -693,14 +865,10 @@ async function submitSurvey() {
     
     if (tripId) {
         try {
-            // Check if survey already exists for this specific trip ID
-            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            // Check if survey already exists for this specific trip ID using new service
+            const result = await checkExistingSurveyByTripIdWithService(tripId);
             
-            const surveyRef = collection(window.firebaseDB, 'surveys');
-            const q = query(surveyRef, where('tripId', '==', tripId));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
+            if (result.exists) {
                 // Ask user if they want to overwrite
                 const overwrite = confirm('A survey for this trip already exists. Do you want to overwrite the existing data?');
                 if (!overwrite) {
@@ -714,15 +882,11 @@ async function submitSurvey() {
             // Continue with submission even if check fails
         }
     } else {
-        // Fallback: Check for duplicate survey code only if no trip ID
+        // Fallback: Check for duplicate survey code only if no trip ID using new service
         try {
-            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            const result = await checkExistingSurveyByCodeWithService(surveyCode);
             
-            const surveyRef = collection(window.firebaseDB, 'surveys');
-            const q = query(surveyRef, where('surveyCode', '==', surveyCode));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
+            if (result.exists) {
                 const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
                 if (!overwrite) {
                     console.log('❌ User cancelled submission - duplicate survey code detected');
