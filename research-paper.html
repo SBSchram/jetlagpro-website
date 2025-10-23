@@ -1230,40 +1230,12 @@ ${htmlContent.outerHTML}
         let researchChart = null;
         const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
         
-        // Load live research data from Firebase
+        // Load live research data from Firebase (legacy function - now uses global researchData)
         async function loadLiveResearchData() {
-            try {
-                const response = await fetch(FIREBASE_REST_URL, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                let surveyData = [];
-                
-                if (data.documents && Array.isArray(data.documents)) {
-                    data.documents.forEach((document) => {
-                        if (document.fields) {
-                            const flatData = convertFirestoreDocument(document);
-                            if (flatData) {
-                                surveyData.push(flatData);
-                            }
-                        }
-                    });
-                }
-                
-                return surveyData;
-                
-            } catch (error) {
-                console.error('Error loading live research data:', error);
-                throw new Error('Failed to load live research data: ' + error.message);
+            if (researchData.length === 0) {
+                await loadResearchData();
             }
+            return researchData;
         }
         
         // Convert Firestore document format to flat structure
@@ -1657,18 +1629,90 @@ ${htmlContent.outerHTML}
             }
         }
         
-        // Refresh research data function
-        async function refreshResearchData() {
-            if (researchChart) {
-                researchChart.destroy();
+        // Global variables for research data
+        let researchData = [];
+        let isLoadingResearch = false;
+        
+        // Load research data from Firebase (DRY from analytics.js)
+        async function loadResearchData() {
+            try {
+                isLoadingResearch = true;
+                showResearchLoadingState();
+                
+                const response = await fetch(FIREBASE_REST_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                researchData = [];
+                
+                if (data.documents && Array.isArray(data.documents)) {
+                    data.documents.forEach((document) => {
+                        if (document.fields) {
+                            const flatData = convertFirestoreDocument(document);
+                            if (flatData) {
+                                researchData.push(flatData);
+                            }
+                        }
+                    });
+                }
+                
+                isLoadingResearch = false;
+                return researchData;
+                
+            } catch (error) {
+                console.error('Error loading research data:', error);
+                isLoadingResearch = false;
+                throw new Error('Failed to load research data: ' + error.message);
             }
-            await renderLiveResearchChart();
+        }
+        
+        // Show loading state for research data
+        function showResearchLoadingState() {
+            const container = document.getElementById('liveResearchChart');
+            if (container) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Loading live research data...</div>';
+            }
+        }
+        
+        // Refresh research data function (proper implementation)
+        async function refreshResearchData() {
+            try {
+                if (researchChart) {
+                    researchChart.destroy();
+                }
+                
+                await loadResearchData();
+                await renderLiveResearchChart();
+                
+            } catch (error) {
+                console.error('Error refreshing research data:', error);
+                const container = document.getElementById('liveResearchChart');
+                if (container) {
+                    container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
+                }
+            }
         }
         
         // Load chart when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Small delay to ensure page is fully loaded
-            setTimeout(renderLiveResearchChart, 1000);
+            // Load data first, then render chart
+            loadResearchData().then(() => {
+                renderLiveResearchChart();
+            }).catch(error => {
+                console.error('Error loading research data on page load:', error);
+                const container = document.getElementById('liveResearchChart');
+                if (container) {
+                    container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
+                }
+            });
         });
     </script>
 
