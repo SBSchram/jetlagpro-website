@@ -487,11 +487,10 @@
             </table>
         </div>
 
-            <p>After the trip ends, a notification is scheduled for 2 days later to remind the user to complete our website survey. This streamlined assessment was based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p> 
+
+            <p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. Then a notification is scheduled for 2 days later to remind the user to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p> 
 			
-			<p>Participation was voluntary and anonymous. By completing and submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. </p>
-				
-			<p>To encourage participation, survey completion unlocked free lifetime use of the application. Access to the survey required a direct link from the app to guarantee authenticity.</p>
+			<p>Participation in the survey was voluntary and anonymous. By submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. To encourage participation, survey completion unlocked free lifetime use of the application. Access to the survey required a direct link from the app to guarantee authenticity.</p>
 			
              <h2 style="text-align: left;">Data Collected</h2>
             
@@ -515,6 +514,7 @@
                 <li>Direction of travel</li>
                 <li>Number of time zones crossed</li>
                 <li>Number of points marked as stimulated</li>
+				<li>Local timezone to validate location</li>
             </ul>
   	
 		
@@ -619,9 +619,13 @@
 		<h4>Points or Meridians</h4>
 		
 		<p>This study evaluates chronoacupuncture's effectiveness for jet lag by stimulating horary points, which are acupuncture points aligned with the Chinese Organ Clock's 24-hour qi cycle. For practicality, we substituted the Kidney horary point KI-10 (behind the knee, hard to locate) with the Kidney Source point KI-3 (medial ankle, more accessible). TCM theory suggests that the entire meridian is active during its peak window (5–7 p.m. for Kidney), so stimulating KI-3 should still engage the meridian's therapeutic potential.</p>
-		<p>This substitution raises a key question: does the specific point matter, or is meridian stimulation during the correct time the primary driver of circadian realignment? And if a horary point is difficult for a lay-person to stimulate effectively, would it be better if a more accessible point with similar stimulation value replaced it? And on the contrary side, what would happen if we had a user stimulate points that were 12 hours out of phase with the ideal point. Would the jet lag be worse?</p>
 		
-		<p>This study does not attempt to answer these questions, but they remain valid questions for future research. Future studies should compare point types (e.g., horary vs. Source) and test stimulation parameters to optimize protocols. By balancing TCM tradition with practical considerations, we may be able to hone an ideal set of points to use for travelers confined to cramped airline seats.</P>
+		<p>This substitution raises a key question: does the specific point matter, or is meridian stimulation during the correct time the primary driver of circadian realignment? And if a horary point is difficult for a lay-person to stimulate effectively, would it be better if a more accessible point with similar stimulation value replaced it? </p>
+		
+		<h4>Could we test the opposite?</h4>
+		<p>When we think of the implications and applications of this therpeutic approach, an interesting question arises. What would happen if we had a user stimulate points that were 12 hours out of phase with the ideal point. Would the jet lag be worse?</p>
+		
+		<p>This study does not attempt to answer any of the supposition questions, but they remain interesting questions for future research where we could compare point types (e.g., horary vs. Source, etc.) and test stimulation parameters to optimize a protocol. By balancing TCM tradition with practical considerations, we may be able to hone an ideal set of points to use for travelers confined to cramped airline seats.</P>
 
 		
         <p>The interdisciplinary framework merging ancient temporal concepts with circadian biology creates a testable hypothesis from traditionally anecdotal practices. If validated, chronoacupuncture could provide a non-invasive, cost-effective intervention accessible to travelers without medical supervision. Negative findings would redirect research toward alternative non-photic zeitgebers and inform the scientific evaluation of other TCM temporal therapies.</p>
