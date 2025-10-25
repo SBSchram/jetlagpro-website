@@ -949,7 +949,7 @@ function renderAdvancedAnalytics() {
     }
     
     // Get validation statistics (based on all data, not just surveys)
-    const validationStats = getValidationStats(currentDataSource === 'real' ? surveyData : testData);
+    const validationStats = getValidationStats(data);
     
     // Filter to only include completed surveys for this specific analysis
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
