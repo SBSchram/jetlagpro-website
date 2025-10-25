@@ -514,6 +514,22 @@ async function loadSurveyDataWithService() {
         const data = await firebaseService.getTripCompletions();
         surveyData = data;
         console.log(`✅ Loaded ${data.length} records using Firebase service`);
+        
+        // DEBUG: Check if timezone fields are in the data
+        if (surveyData.length > 0) {
+            console.log('🔍 DEBUG: First record after conversion:', surveyData[0]);
+            console.log('🔍 DEBUG: First record has arrivalTimeZone?', 'arrivalTimeZone' in surveyData[0]);
+            console.log('🔍 DEBUG: First record has originTimezone?', 'originTimezone' in surveyData[0]);
+            
+            // Check the test trip specifically
+            const testTrip = surveyData.find(trip => trip.tripId === '2330B376-WLGE-251024-2348');
+            if (testTrip) {
+                console.log('🔍 DEBUG: Test trip found:', testTrip);
+                console.log('🔍 DEBUG: Test trip arrivalTimeZone:', testTrip.arrivalTimeZone);
+                console.log('🔍 DEBUG: Test trip originTimezone:', testTrip.originTimezone);
+            }
+        }
+        
         return data;
     } catch (error) {
         console.error('❌ Firebase service failed, falling back to existing method:', error);
