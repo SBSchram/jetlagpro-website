@@ -202,8 +202,13 @@ async function loadSurveyData() {
         // Parse the response the same way the iOS app does
         if (data.documents && Array.isArray(data.documents)) {
             surveyData = [];
-            data.documents.forEach((document) => {
+            data.documents.forEach((document, index) => {
                 if (document.fields) {
+                    // Debug: Log first document to see structure
+                    if (index === 0) {
+                        console.log('🔍 DEBUG: First Firebase document structure:', document);
+                        console.log('🔍 DEBUG: Document fields keys:', Object.keys(document.fields));
+                    }
                     // Convert Firestore document format to flat structure
                     const flatData = convertFirestoreDocument(document);
                     if (flatData) {
