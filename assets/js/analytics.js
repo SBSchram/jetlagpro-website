@@ -963,11 +963,7 @@ function renderAdvancedAnalytics() {
     html += `<p><strong>Valid Trips:</strong> ${validationStats.valid} (${validationStats.validPercentage}%)</p>`;
     html += `<p><strong>Test Data:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%)</p>`;
     html += `<p><strong>Completed Surveys:</strong> ${completedSurveys.length}</p>`;
-    if (showValidTripsOnly) {
-        html += '<p><em>✅ Showing valid trips only (filtered)</em></p>';
-    } else {
-        html += '<p><em>⚠️ Showing all data (including test data)</em></p>';
-    }
+    html += '<p><em>📊 Analyzing all data (valid and test trips)</em></p>';
     html += '</div>';
     html += '</div>';
     
