@@ -952,6 +952,7 @@ function renderAdvancedAnalytics() {
     data.forEach((trip, index) => {
         const isValid = TripValidator.isValidTrip(trip);
         console.log(`${index + 1}. ${trip.tripId} - ${trip.destinationCode} - Valid: ${isValid}`);
+        console.log(`   Has arrivalTimeZone: ${!!trip.arrivalTimeZone}, Has originTimezone: ${!!trip.originTimezone}`);
         if (!isValid) {
             console.log(`   Arrival: ${trip.arrivalTimeZone}, Origin: ${trip.originTimezone}, Method: ${trip.completionMethod}`);
         }
