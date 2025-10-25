@@ -942,7 +942,10 @@ function renderAdvancedAnalytics() {
     }
     
     // Get validation statistics (based on all data, not just surveys)
+    console.log('🔍 DEBUG: Data length:', data.length);
+    console.log('🔍 DEBUG: Sample trip:', data[0]);
     const validationStats = getValidationStats(data);
+    console.log('🔍 DEBUG: Validation stats:', validationStats);
     
     // Filter to only include completed surveys for this specific analysis
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
