@@ -6,6 +6,11 @@ let surveyData = [];
 let testData = [];
 let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
+let showValidTripsOnly = true; // Toggle for trip validation
+
+// Timezone validation data (DRY)
+let tripValidations = [];
+let surveyValidations = [];
 
 // Firebase service instance (new integration)
 let firebaseService = null;
@@ -41,6 +46,25 @@ function getCompletedPoints(survey) {
         }
     }
     return completedPoints;
+}
+
+// Helper function to filter trips based on validation
+function getFilteredTrips(trips) {
+    if (showValidTripsOnly) {
+        return TripValidator.filterValidTrips(trips);
+    }
+    return trips;
+}
+
+// Helper function to get validation statistics
+function getValidationStats(trips) {
+    return TripValidator.getValidationStats(trips);
+}
+
+// Toggle function for valid trips only
+function toggleValidTripsOnly() {
+    showValidTripsOnly = document.getElementById('validTripsOnly').checked;
+    refreshDataWithService();
 }
 
 // Pagination variables for recent submissions
@@ -120,7 +144,8 @@ function generateTestData(numSurveys = 300) {
 
 // Get current data source (real or test)
 function getCurrentData() {
-    return currentDataSource === 'real' ? surveyData : testData;
+    const data = currentDataSource === 'real' ? surveyData : testData;
+    return getFilteredTrips(data);
 }
 
 // Switch between real and test data
@@ -201,6 +226,96 @@ async function loadSurveyData() {
         console.error('Error loading survey data:', error);
         throw new Error('Failed to load trip completion data from Firebase REST API: ' + error.message);
     }
+}
+
+// Load timezone validation data (DRY)
+async function loadTimezoneValidationData() {
+    try {
+        console.log('Loading timezone validation data...');
+        
+        // Load trip validations
+        const tripValidationResponse = await fetch('https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripValidations');
+        const tripValidationData = await tripValidationResponse.json();
+        tripValidations = tripValidationData.documents?.map(doc => convertFirestoreDocument(doc)).filter(Boolean) || [];
+        
+        // Load survey validations
+        const surveyValidationResponse = await fetch('https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/surveyValidations');
+        const surveyValidationData = await surveyValidationResponse.json();
+        surveyValidations = surveyValidationData.documents?.map(doc => convertFirestoreDocument(doc)).filter(Boolean) || [];
+        
+        console.log(`Loaded ${tripValidations.length} trip validations and ${surveyValidations.length} survey validations`);
+    } catch (error) {
+        console.error('Error loading timezone validation data:', error);
+        // Don't throw - validation data is optional
+    }
+}
+
+// Render timezone validation statistics (DRY)
+function renderTimezoneValidationStats() {
+    const container = document.getElementById('timezoneValidationStats');
+    if (!container) return;
+    
+    // Calculate trip validation stats
+    const validTrips = tripValidations.filter(v => v.validationResult === 'valid').length;
+    const invalidTrips = tripValidations.filter(v => v.validationResult === 'mismatch').length;
+    const airplaneModeTrips = tripValidations.filter(v => v.isAirplaneMode).length;
+    
+    // Calculate survey validation stats
+    const validSurveys = surveyValidations.filter(v => v.validationResult === 'valid').length;
+    const invalidSurveys = surveyValidations.filter(v => v.validationResult === 'mismatch').length;
+    const airplaneModeSurveys = surveyValidations.filter(v => v.isAirplaneMode).length;
+    
+    // Calculate data quality percentage
+    const totalTrips = tripValidations.length;
+    const totalSurveys = surveyValidations.length;
+    const tripQuality = totalTrips > 0 ? Math.round((validTrips / totalTrips) * 100) : 0;
+    const surveyQuality = totalSurveys > 0 ? Math.round((validSurveys / totalSurveys) * 100) : 0;
+    
+    container.innerHTML = `
+        <div class="validation-stats">
+            <h3>🌍 Timezone Validation Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Trip Completion Validation</h4>
+                    <div class="stat-item">
+                        <span class="stat-label">Valid Trips:</span>
+                        <span class="stat-value valid">${validTrips}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Invalid Trips:</span>
+                        <span class="stat-value invalid">${invalidTrips}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Airplane Mode:</span>
+                        <span class="stat-value airplane">${airplaneModeTrips}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Data Quality:</span>
+                        <span class="stat-value quality">${tripQuality}%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>Survey Access Validation</h4>
+                    <div class="stat-item">
+                        <span class="stat-label">Valid Surveys:</span>
+                        <span class="stat-value valid">${validSurveys}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Invalid Surveys:</span>
+                        <span class="stat-value invalid">${invalidSurveys}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Airplane Mode:</span>
+                        <span class="stat-value airplane">${airplaneModeSurveys}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Data Quality:</span>
+                        <span class="stat-value quality">${surveyQuality}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Convert Firestore document format to flat structure (handles both old nested and new flattened formats)
@@ -833,6 +948,9 @@ function renderAdvancedAnalytics() {
         return;
     }
     
+    // Get validation statistics
+    const validationStats = getValidationStats(currentDataSource === 'real' ? surveyData : testData);
+    
     // Filter to only include completed surveys
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
     
@@ -844,6 +962,19 @@ function renderAdvancedAnalytics() {
     let html = '<div style="margin-bottom: 30px;">';
     html += '<h3>Advanced Research Analytics</h3>';
     html += '<p>Comprehensive analysis of time zones crossed, app usage, and symptom severity</p>';
+    
+    // Add validation statistics
+    html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
+    html += '<h4>📊 Data Quality Validation</h4>';
+    html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
+    html += `<p><strong>Valid Trips:</strong> ${validationStats.valid} (${validationStats.validPercentage}%)</p>`;
+    html += `<p><strong>Test Data:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%)</p>`;
+    if (showValidTripsOnly) {
+        html += '<p><em>✅ Showing valid trips only (filtered)</em></p>';
+    } else {
+        html += '<p><em>⚠️ Showing all data (including test data)</em></p>';
+    }
+    html += '</div>';
     html += '</div>';
     
     // Create the comprehensive dose-response analysis chart
