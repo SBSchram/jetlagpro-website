@@ -375,6 +375,8 @@ function convertFirestoreDocument(document) {
             startDate: extractTimestamp('startDate') || extractTimestamp('tripData', 'startDate'),
             completionDate: extractTimestamp('completionDate') || extractTimestamp('tripData', 'completionDate'),
             completionMethod: extractString('completionMethod') || extractString('tripData', 'completionMethod'),
+            arrivalTimeZone: extractString('arrivalTimeZone') || extractString('tripData', 'arrivalTimeZone'),
+            originTimezone: extractString('originTimezone') || extractString('tripData', 'originTimezone'),
             surveyCompleted: extractBoolean('surveyCompleted') || extractBoolean('surveyData', 'surveyCompleted'),
             created: extractTimestamp('created') || extractTimestamp('tripData', 'created'),
             
