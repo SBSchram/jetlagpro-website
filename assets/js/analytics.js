@@ -6,7 +6,7 @@ let surveyData = [];
 let testData = [];
 let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
-let showValidTripsOnly = true; // Toggle for trip validation
+// Validation toggle removed - we analyze all data
 
 // Timezone validation data (DRY)
 let tripValidations = [];
@@ -48,12 +48,9 @@ function getCompletedPoints(survey) {
     return completedPoints;
 }
 
-// Helper function to filter trips based on validation
+// Helper function to get all trips (no filtering)
 function getFilteredTrips(trips) {
-    if (showValidTripsOnly) {
-        return TripValidator.filterValidTrips(trips);
-    }
-    return trips;
+    return trips; // Analyze all data
 }
 
 // Helper function to get validation statistics
@@ -61,11 +58,7 @@ function getValidationStats(trips) {
     return TripValidator.getValidationStats(trips);
 }
 
-// Toggle function for valid trips only
-function toggleValidTripsOnly() {
-    showValidTripsOnly = document.getElementById('validTripsOnly').checked;
-    refreshDataWithService();
-}
+// Toggle function removed - we analyze all data
 
 // Pagination variables for recent submissions
 let currentPage = 1;
