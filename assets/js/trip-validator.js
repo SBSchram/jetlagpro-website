@@ -148,6 +148,27 @@ class TripValidator {
         
         return breakdown;
     }
+    
+    /**
+     * Filters trips to only include those with completed surveys
+     * 
+     * @param {Array} trips - Array of trip objects
+     * @returns {Array} - Array of trips with completed surveys
+     */
+    static filterSurveyData(trips) {
+        return trips.filter(trip => trip.surveyCompleted === true);
+    }
+    
+    /**
+     * Gets validation statistics for survey data only
+     * 
+     * @param {Array} trips - Array of trip objects
+     * @returns {Object} - Validation statistics for survey data
+     */
+    static getSurveyValidationStats(trips) {
+        const surveyData = this.filterSurveyData(trips);
+        return this.getValidationStats(surveyData);
+    }
 }
 
 // Export for use in other modules

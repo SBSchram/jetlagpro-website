@@ -29,7 +29,8 @@
                 description: 'Legacy data (no arrivalTimeZone)',
                 data: {
                     originTimezone: 'America/New_York',
-                    completionMethod: 'app'
+                    completionMethod: 'app',
+                    surveyCompleted: true
                     // No arrivalTimeZone field
                 }
             },
@@ -39,7 +40,8 @@
                 data: {
                     originTimezone: 'America/New_York',
                     arrivalTimeZone: 'Europe/London',
-                    completionMethod: 'app'
+                    completionMethod: 'app',
+                    surveyCompleted: true
                 }
             },
             {
@@ -48,7 +50,8 @@
                 data: {
                     originTimezone: 'America/New_York',
                     arrivalTimeZone: 'America/New_York',
-                    completionMethod: 'app_survey'
+                    completionMethod: 'app_survey',
+                    surveyCompleted: true
                 }
             },
             {
@@ -57,7 +60,8 @@
                 data: {
                     originTimezone: 'America/New_York',
                     arrivalTimeZone: 'America/New_York',
-                    completionMethod: 'app'
+                    completionMethod: 'app',
+                    surveyCompleted: true
                 }
             },
             {
@@ -66,7 +70,18 @@
                 data: {
                     originTimezone: 'America/New_York',
                     arrivalTimeZone: 'America/New_York',
-                    completionMethod: 'manual'
+                    completionMethod: 'manual',
+                    surveyCompleted: true
+                }
+            },
+            {
+                id: 'incomplete-survey',
+                description: 'Incomplete survey (should be filtered out)',
+                data: {
+                    originTimezone: 'America/New_York',
+                    arrivalTimeZone: 'Europe/London',
+                    completionMethod: 'app',
+                    surveyCompleted: false
                 }
             }
         ];

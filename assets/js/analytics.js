@@ -948,10 +948,10 @@ function renderAdvancedAnalytics() {
         return;
     }
     
-    // Get validation statistics
+    // Get validation statistics (based on all data, not just surveys)
     const validationStats = getValidationStats(currentDataSource === 'real' ? surveyData : testData);
     
-    // Filter to only include completed surveys
+    // Filter to only include completed surveys for this specific analysis
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
     
     if (completedSurveys.length === 0) {
@@ -969,6 +969,7 @@ function renderAdvancedAnalytics() {
     html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
     html += `<p><strong>Valid Trips:</strong> ${validationStats.valid} (${validationStats.validPercentage}%)</p>`;
     html += `<p><strong>Test Data:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%)</p>`;
+    html += `<p><strong>Completed Surveys:</strong> ${completedSurveys.length}</p>`;
     if (showValidTripsOnly) {
         html += '<p><em>✅ Showing valid trips only (filtered)</em></p>';
     } else {
