@@ -943,9 +943,20 @@ function renderAdvancedAnalytics() {
     
     // Get validation statistics (based on all data, not just surveys)
     console.log('🔍 DEBUG: Data length:', data.length);
-    console.log('🔍 DEBUG: Sample trip:', data[0]);
+    console.log('🔍 DEBUG: Sample trip:', JSON.stringify(data[0], null, 2));
+    
+    // Test validation on each trip
+    console.log('🔍 DEBUG: Testing validation on each trip:');
+    data.forEach((trip, index) => {
+        const isValid = TripValidator.isValidTrip(trip);
+        console.log(`${index + 1}. ${trip.tripId} - ${trip.destinationCode} - Valid: ${isValid}`);
+        if (!isValid) {
+            console.log(`   Arrival: ${trip.arrivalTimeZone}, Origin: ${trip.originTimezone}, Method: ${trip.completionMethod}`);
+        }
+    });
+    
     const validationStats = getValidationStats(data);
-    console.log('🔍 DEBUG: Validation stats:', validationStats);
+    console.log('🔍 DEBUG: Validation stats:', JSON.stringify(validationStats, null, 2));
     
     // Filter to only include completed surveys for this specific analysis
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
