@@ -360,6 +360,11 @@ function convertFirestoreDocument(document) {
             return extractNestedValue(fieldName, nestedPath);
         };
         
+        // Debug: Log the raw Firebase document structure
+        console.log('🔍 DEBUG: Raw Firebase document fields:', Object.keys(fields));
+        if (fields.arrivalTimeZone) console.log('🔍 DEBUG: Found arrivalTimeZone in Firebase:', fields.arrivalTimeZone);
+        if (fields.originTimezone) console.log('🔍 DEBUG: Found originTimezone in Firebase:', fields.originTimezone);
+        
         // Convert to flat structure matching the iOS app data format
         // Try new format first, then fall back to old nested format
         const flatData = {
