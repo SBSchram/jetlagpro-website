@@ -365,6 +365,12 @@ function convertFirestoreDocument(document) {
         if (fields.arrivalTimeZone) console.log('🔍 DEBUG: Found arrivalTimeZone in Firebase:', fields.arrivalTimeZone);
         if (fields.originTimezone) console.log('🔍 DEBUG: Found originTimezone in Firebase:', fields.originTimezone);
         
+        // Check for timezone fields in the extracted data
+        const extractedArrival = extractString('arrivalTimeZone') || extractString('tripData', 'arrivalTimeZone');
+        const extractedOrigin = extractString('originTimezone') || extractString('tripData', 'originTimezone');
+        console.log('🔍 DEBUG: Extracted arrivalTimeZone:', extractedArrival);
+        console.log('🔍 DEBUG: Extracted originTimezone:', extractedOrigin);
+        
         // Convert to flat structure matching the iOS app data format
         // Try new format first, then fall back to old nested format
         const flatData = {
