@@ -585,7 +585,7 @@ function renderSymptomAnalysis() {
         return surveyDateObj && surveyDateObj >= sevenDaysAgo;
     }).length;
     
-    html += `<tr><td><strong>📝 Total Surveys</strong></td><td>${totalTrips}</td><td>Total research submissions collected</td></tr>`;
+    html += `<tr><td><strong>✈️ Total Trips</strong></td><td>${totalTrips}</td><td>Total trip completions collected</td></tr>`;
     html += `<tr><td><strong>📅 Recent Submissions</strong></td><td>${recentCount}</td><td>Surveys in the last 7 days</td></tr>`;
     html += `<tr><td><strong>✅ Completion Rate</strong></td><td>${completionRate}%</td><td>Percentage of completed surveys</td></tr>`;
     
