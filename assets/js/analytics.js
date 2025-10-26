@@ -799,15 +799,18 @@ function goToPage(page) {
 // Render stimulation efficacy analysis
 function renderStimulationEfficacy() {
     const container = document.getElementById('stimulationEfficacy');
-    const data = getCurrentData();
+    const allData = getCurrentData();
     
-    if (data.length === 0) {
+    if (allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
     
+    // Filter to only valid trips (exclude test data)
+    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
+    
     // Filter to only include completed surveys (ignore app exploration/testing)
-    const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
+    const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
     
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for analysis</div>';
@@ -967,18 +970,21 @@ function renderStimulationEfficacy() {
 // Render advanced analytics with comprehensive graphs
 function renderAdvancedAnalytics() {
     const container = document.getElementById('advancedAnalytics');
-    const data = getCurrentData();
+    const allData = getCurrentData();
     
-    if (data.length === 0) {
+    if (allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available for advanced analytics</div>';
         return;
     }
     
-    // Get validation statistics (based on all data, not just surveys)
-    const validationStats = getValidationStats(data);
+    // Get validation statistics (based on all data, including test trips)
+    const validationStats = getValidationStats(allData);
+    
+    // Filter to only valid trips for analysis (exclude test data)
+    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
     
     // Filter to only include completed surveys for this specific analysis
-    const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
+    const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
     
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for advanced analytics</div>';
@@ -1018,10 +1024,18 @@ function renderAdvancedAnalytics() {
 // Render point stimulation analysis table
 function renderPointStimulationAnalysis() {
     const container = document.getElementById('pointMappingTable');
-    const data = getCurrentData();
+    const allData = getCurrentData();
+    
+    if (allData.length === 0) {
+        container.innerHTML = '<div class="error">No survey data available</div>';
+        return;
+    }
+
+    // Filter to only valid trips (exclude test data)
+    const data = allData.filter(trip => TripValidator.isValidTrip(trip));
     
     if (data.length === 0) {
-        container.innerHTML = '<div class="error">No survey data available</div>';
+        container.innerHTML = '<div class="error">No valid trip data available for analysis</div>';
         return;
     }
 
