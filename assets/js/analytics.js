@@ -173,7 +173,18 @@ async function loadDashboardData() {
         showLoadingState();
         
         await loadSurveyData();
-        renderDashboard();
+        
+        // Ensure data is fully loaded before rendering
+        if (surveyData && surveyData.length > 0) {
+            console.log(`📊 Data loaded successfully: ${surveyData.length} records`);
+            // Small delay to ensure DOM and TripValidator are ready
+            setTimeout(() => {
+                renderDashboard();
+            }, 100);
+        } else {
+            console.warn('⚠️ No data loaded, showing empty state');
+            showError('No data available');
+        }
         
         isLoading = false;
     } catch (error) {
@@ -516,8 +527,19 @@ async function loadDashboardDataWithService() {
         isLoading = true;
         showLoadingState();
         
-        await loadSurveyDataWithService();
-        renderDashboard();
+        const data = await loadSurveyDataWithService();
+        
+        // Ensure data is fully loaded and processed before rendering
+        if (data && data.length > 0) {
+            console.log(`📊 Data loaded successfully: ${data.length} records`);
+            // Small delay to ensure DOM and TripValidator are ready
+            setTimeout(() => {
+                renderDashboard();
+            }, 100);
+        } else {
+            console.warn('⚠️ No data loaded, showing empty state');
+            showError('No data available');
+        }
         
         isLoading = false;
     } catch (error) {
