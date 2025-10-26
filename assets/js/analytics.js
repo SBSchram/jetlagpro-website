@@ -1035,6 +1035,12 @@ function renderPointStimulationAnalysis() {
         return;
     }
 
+    // Update the heading with valid trip count
+    const headingElement = document.getElementById('pointAnalysisHeading');
+    if (headingElement) {
+        headingElement.textContent = `Acupuncture Point Stimulation Analysis across ${data.length} valid trips`;
+    }
+
     // Point mapping data
     const pointMapping = [
         { id: 1, name: 'LU-8', field: 'point1Completed' },
