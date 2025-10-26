@@ -654,58 +654,84 @@ function renderRecentSubmissions() {
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
-    // Calculate pagination
-    totalPages = Math.ceil(sortedSurveys.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageSurveys = sortedSurveys.slice(startIndex, endIndex);
+    // Separate into valid trips and test data
+    const validTrips = sortedSurveys.filter(trip => TripValidator.isValidTrip(trip));
+    const testData = sortedSurveys.filter(trip => !TripValidator.isValidTrip(trip));
+    
+    // Within valid trips, separate by survey completion status
+    const validCompleted = validTrips.filter(trip => trip.surveyCompleted === true);
+    const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
-    // Build table HTML
-    let html = '<div class="pagination-info">';
-    html += `<span>Showing ${startIndex + 1}-${Math.min(endIndex, sortedSurveys.length)} of ${sortedSurveys.length} submissions</span>`;
+    // Build HTML
+    let html = '';
+    
+    // Helper function to render a trip table
+    const renderTripTable = (trips, showStatus = true) => {
+        if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
+        
+        let tableHtml = '<table class="data-table"><thead><tr>';
+        tableHtml += '<th>Date</th><th>Code</th><th>Destination</th><th>East/West</th><th>Points</th><th>Timezones</th>';
+        if (showStatus) tableHtml += '<th>Status</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        trips.forEach(survey => {
+            const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
+            const dateStr = date ? new Date(date).toLocaleDateString() : 'N/A';
+            const isComplete = survey.surveyCompleted;
+            const status = isComplete ? '✅ Complete' : '⚠️ Partial';
+            const statusColor = isComplete ? '#16a34a' : '#f59e0b';
+            
+            // Process survey code
+            let displayCode = survey.surveyCode ? survey.surveyCode.replace(/^JLP-/, '') : 'N/A';
+            
+            // Convert travel direction to East/West format
+            const timezones = survey.timezonesCount || 0;
+            const direction = (timezones === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
+            const eastWest = direction === 'east' ? '🌅 East' : direction === 'west' ? '🌇 West' : 'N/A';
+
+            // Points stimulated
+            const pointsStimulated = survey.pointsCompleted || 0;
+
+            tableHtml += `<tr>
+                <td>${dateStr}</td>
+                <td><code>${displayCode}</code></td>
+                <td>${survey.destinationCode || 'N/A'}</td>
+                <td>${eastWest}</td>
+                <td>${pointsStimulated}</td>
+                <td>${timezones}</td>`;
+            if (showStatus) tableHtml += `<td style="color: ${statusColor}">${status}</td>`;
+            tableHtml += `</tr>`;
+        });
+
+        tableHtml += '</tbody></table>';
+        return tableHtml;
+    };
+    
+    // Valid Trips Section
+    html += '<div style="margin-bottom: 30px;">';
+    html += `<h3>📊 VALID TRIPS (${validTrips.length})</h3>`;
+    
+    // Survey Completed
+    html += '<div style="margin: 20px 0;">';
+    html += `<h4 style="color: #16a34a;">✅ Survey Completed (${validCompleted.length} trips)</h4>`;
+    html += renderTripTable(validCompleted, false);
     html += '</div>';
     
-    html += '<table class="data-table"><thead><tr><th>Date</th><th>Code</th><th>Destination</th><th>East/West</th><th>Points</th><th>Timezones</th><th>Status</th></tr></thead><tbody>';
-
-    pageSurveys.forEach(survey => {
-        const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
-        const dateStr = date ? new Date(date).toLocaleDateString() : 'N/A';
-        const isComplete = survey.surveyCompleted;
-        const status = isComplete ? '✅ Complete' : '⚠️ Partial';
-        const statusColor = isComplete ? '#16a34a' : '#f59e0b';
-        
-        // Process survey code: JLP-[device]-[dest][e/w]-[YYMMDD]-[time]
-        let displayCode = 'N/A';
-        
-        if (survey.surveyCode) {
-            // Remove JLP- prefix
-            displayCode = survey.surveyCode.replace(/^JLP-/, '');
-        }
-        
-        // Convert travel direction to East/West format
-        // If timezones is 0, there's no travel, so direction should be N/A
-        const timezones = survey.timezonesCount || 0;
-        const direction = (timezones === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
-        const eastWest = direction === 'east' ? '🌅 East' : direction === 'west' ? '🌇 West' : 'N/A';
-
-        // Points stimulated
-        const pointsStimulated = survey.pointsCompleted || 0;
-
-        html += `<tr>
-            <td>${dateStr}</td>
-            <td><code>${displayCode}</code></td>
-            <td>${survey.destinationCode || 'N/A'}</td>
-            <td>${eastWest}</td>
-            <td>${pointsStimulated}</td>
-            <td>${survey.timezonesCount || 0}</td>
-            <td style="color: ${statusColor}">${status}</td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
+    // Survey Not Completed
+    html += '<div style="margin: 20px 0;">';
+    html += `<h4 style="color: #f59e0b;">⚠️ Survey Not Completed (${validNotCompleted.length} trips)</h4>`;
+    html += renderTripTable(validNotCompleted, false);
+    html += '</div>';
     
-    // Add pagination controls
-    html += renderPaginationControls();
+    html += '</div>';
+    
+    // Test Data Section
+    if (testData.length > 0) {
+        html += '<div style="margin-bottom: 30px;">';
+        html += `<h3>🧪 TEST DATA (${testData.length})</h3>`;
+        html += renderTripTable(testData);
+        html += '</div>';
+    }
     
     container.innerHTML = html;
 }
