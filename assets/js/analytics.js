@@ -992,7 +992,7 @@ function renderStimulationEfficacy() {
     container.innerHTML = html;
     
     // Render the symptom analysis chart
-    renderSymptomAnalysisChart(data, tzGroups);
+    renderSymptomAnalysisChart(completedSurveys, tzGroups);
 }
 
 // Render advanced analytics with comprehensive graphs
