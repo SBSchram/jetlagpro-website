@@ -246,13 +246,6 @@ function renderTimezoneValidationStats() {
     const validationStats = TripValidator.getValidationStats(allData);
     const breakdown = TripValidator.getValidationBreakdown(allData);
     
-    // Debug logging
-    console.log('Timezone validation debug:', {
-        dataLength: allData.length,
-        validationStats,
-        breakdown
-    });
-    
     // Calculate data quality percentage
     const tripQuality = validationStats.validPercentage;
     
@@ -446,6 +439,7 @@ function renderDashboard() {
     renderSymptomAnalysis();
     renderPointStimulationAnalysis();
     renderRecentSubmissions();
+    renderTimezoneValidationStats();
 }
 
 // Show loading state
@@ -455,6 +449,7 @@ function showLoadingState() {
     document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
     document.getElementById('pointMappingTable').innerHTML = '<div class="loading">Loading point stimulation data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
+    document.getElementById('timezoneValidationStats').innerHTML = '<div class="loading">Loading timezone validation data...</div>';
 }
 
 // Show error message
