@@ -6,11 +6,7 @@ let surveyData = [];
 let testData = [];
 let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
-// Validation toggle removed - we analyze all data
 
-// Timezone validation data (DRY)
-let tripValidations = [];
-let surveyValidations = [];
 
 // Firebase service instance (new integration)
 let firebaseService = null;
@@ -232,27 +228,6 @@ async function loadSurveyData() {
     }
 }
 
-// Load timezone validation data (DRY)
-async function loadTimezoneValidationData() {
-    try {
-        console.log('Loading timezone validation data...');
-        
-        // Load trip validations
-        const tripValidationResponse = await fetch('https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripValidations');
-        const tripValidationData = await tripValidationResponse.json();
-        tripValidations = tripValidationData.documents?.map(doc => convertFirestoreDocument(doc)).filter(Boolean) || [];
-        
-        // Load survey validations
-        const surveyValidationResponse = await fetch('https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/surveyValidations');
-        const surveyValidationData = await surveyValidationResponse.json();
-        surveyValidations = surveyValidationData.documents?.map(doc => convertFirestoreDocument(doc)).filter(Boolean) || [];
-        
-        console.log(`Loaded ${tripValidations.length} trip validations and ${surveyValidations.length} survey validations`);
-    } catch (error) {
-        console.error('Error loading timezone validation data:', error);
-        // Don't throw - validation data is optional
-    }
-}
 
 // Render timezone validation statistics (DRY)
 function renderTimezoneValidationStats() {
