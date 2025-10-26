@@ -647,9 +647,11 @@ function renderSymptomAnalysis() {
 // Render recent submissions with pagination
 function renderRecentSubmissions() {
     const container = document.getElementById('recentSubmissions');
+    if (!container) return;
+    
     const data = getCurrentData();
     
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
         container.innerHTML = '<div class="error">No submission data available</div>';
         return;
     }
@@ -801,15 +803,17 @@ function goToPage(page) {
 // Render stimulation efficacy analysis
 function renderStimulationEfficacy() {
     const container = document.getElementById('stimulationEfficacy');
+    if (!container) return;
+    
     const allData = getCurrentData();
     
-    if (allData.length === 0) {
+    if (!allData || allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
     
     // Filter to only valid trips (exclude test data)
-    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const validData = allData.filter(trip => TripValidator && TripValidator.isValidTrip ? TripValidator.isValidTrip(trip) : true);
     
     // Filter to only include completed surveys (ignore app exploration/testing)
     const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
@@ -972,9 +976,11 @@ function renderStimulationEfficacy() {
 // Render advanced analytics with comprehensive graphs
 function renderAdvancedAnalytics() {
     const container = document.getElementById('advancedAnalytics');
+    if (!container) return;
+    
     const allData = getCurrentData();
     
-    if (allData.length === 0) {
+    if (!allData || allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available for advanced analytics</div>';
         return;
     }
@@ -1026,15 +1032,17 @@ function renderAdvancedAnalytics() {
 // Render point stimulation analysis table
 function renderPointStimulationAnalysis() {
     const container = document.getElementById('pointMappingTable');
+    if (!container) return;
+    
     const allData = getCurrentData();
     
-    if (allData.length === 0) {
+    if (!allData || allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
 
     // Filter to only valid trips (exclude test data)
-    const data = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const data = allData.filter(trip => TripValidator && TripValidator.isValidTrip ? TripValidator.isValidTrip(trip) : true);
     
     if (data.length === 0) {
         container.innerHTML = '<div class="error">No valid trip data available for analysis</div>';
