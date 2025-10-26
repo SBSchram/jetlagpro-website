@@ -234,12 +234,24 @@ function renderTimezoneValidationStats() {
     const container = document.getElementById('timezoneValidationStats');
     if (!container) return;
     
-    // Get current data
-    const allData = currentDataSource === 'real' ? surveyData : testData;
+    // Get current data using the same method as other functions
+    const allData = getCurrentData();
+    
+    if (!allData || allData.length === 0) {
+        container.innerHTML = '<div class="error">No data available for timezone validation analysis</div>';
+        return;
+    }
     
     // Use TripValidator to get validation stats
     const validationStats = TripValidator.getValidationStats(allData);
     const breakdown = TripValidator.getValidationBreakdown(allData);
+    
+    // Debug logging
+    console.log('Timezone validation debug:', {
+        dataLength: allData.length,
+        validationStats,
+        breakdown
+    });
     
     // Calculate data quality percentage
     const tripQuality = validationStats.validPercentage;
