@@ -1312,7 +1312,12 @@ ${htmlContent.outerHTML}
                 container.innerHTML = '<div class="loading">Loading live research data...</div>';
                 
                 // Use global researchData (already loaded by refreshResearchData or page load)
-                const surveyData = researchData;
+                const allData = researchData;
+                
+                // Filter to only valid trips (exclude test data) and completed surveys
+                const surveyData = allData
+                    .filter(trip => TripValidator.isValidTrip(trip))
+                    .filter(trip => trip.surveyCompleted === true);
                 
                 if (surveyData.length === 0) {
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
