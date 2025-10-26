@@ -248,64 +248,69 @@ function renderTimezoneValidationStats() {
     const container = document.getElementById('timezoneValidationStats');
     if (!container) return;
     
-    // Calculate trip validation stats
-    const validTrips = tripValidations.filter(v => v.validationResult === 'valid').length;
-    const invalidTrips = tripValidations.filter(v => v.validationResult === 'mismatch').length;
-    const airplaneModeTrips = tripValidations.filter(v => v.isAirplaneMode).length;
+    // Get current data
+    const allData = currentDataSource === 'real' ? surveyData : testData;
     
-    // Calculate survey validation stats
-    const validSurveys = surveyValidations.filter(v => v.validationResult === 'valid').length;
-    const invalidSurveys = surveyValidations.filter(v => v.validationResult === 'mismatch').length;
-    const airplaneModeSurveys = surveyValidations.filter(v => v.isAirplaneMode).length;
+    // Use TripValidator to get validation stats
+    const validationStats = TripValidator.getValidationStats(allData);
+    const breakdown = TripValidator.getValidationBreakdown(allData);
     
     // Calculate data quality percentage
-    const totalTrips = tripValidations.length;
-    const totalSurveys = surveyValidations.length;
-    const tripQuality = totalTrips > 0 ? Math.round((validTrips / totalTrips) * 100) : 0;
-    const surveyQuality = totalSurveys > 0 ? Math.round((validSurveys / totalSurveys) * 100) : 0;
+    const tripQuality = validationStats.validPercentage;
     
     container.innerHTML = `
         <div class="validation-stats">
-            <h3>🌍 Timezone Validation Statistics</h3>
+            <h3>🌍 Trip Validation Statistics</h3>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>Trip Completion Validation</h4>
+                    <h4>Trip Data Quality</h4>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Trips:</span>
+                        <span class="stat-value">${validationStats.total}</span>
+                    </div>
                     <div class="stat-item">
                         <span class="stat-label">Valid Trips:</span>
-                        <span class="stat-value valid">${validTrips}</span>
+                        <span class="stat-value valid">${validationStats.valid} (${validationStats.validPercentage}%)</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Invalid Trips:</span>
-                        <span class="stat-value invalid">${invalidTrips}</span>
+                        <span class="stat-label">Test Data:</span>
+                        <span class="stat-value invalid">${validationStats.invalid} (${validationStats.invalidPercentage}%)</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Airplane Mode:</span>
-                        <span class="stat-value airplane">${airplaneModeTrips}</span>
+                    <div class="quality-bar">
+                        <div class="quality-fill" style="width: ${tripQuality}%; background: ${tripQuality >= 80 ? '#16a34a' : tripQuality >= 60 ? '#f59e0b' : '#dc2626'}"></div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Data Quality:</span>
-                        <span class="stat-value quality">${tripQuality}%</span>
-                    </div>
+                    <p class="quality-text">Data Quality: ${tripQuality}%</p>
                 </div>
+                
                 <div class="stat-card">
-                    <h4>Survey Access Validation</h4>
+                    <h4>Validation Breakdown</h4>
                     <div class="stat-item">
-                        <span class="stat-label">Valid Surveys:</span>
-                        <span class="stat-value valid">${validSurveys}</span>
+                        <span class="stat-label">Legacy Data:</span>
+                        <span class="stat-value">${breakdown.legacy}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Invalid Surveys:</span>
-                        <span class="stat-value invalid">${invalidSurveys}</span>
+                        <span class="stat-label">Real Travel:</span>
+                        <span class="stat-value">${breakdown.real_travel}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Airplane Mode:</span>
-                        <span class="stat-value airplane">${airplaneModeSurveys}</span>
+                        <span class="stat-label">Survey Fallback:</span>
+                        <span class="stat-value">${breakdown.survey_fallback}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Data Quality:</span>
-                        <span class="stat-value quality">${surveyQuality}%</span>
+                        <span class="stat-label">Test Data:</span>
+                        <span class="stat-value invalid">${breakdown.test_data}</span>
                     </div>
                 </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px;">
+                <h4>📊 Validation Rules</h4>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li><strong>Legacy Data:</strong> No timezone fields (older data format) - Always valid</li>
+                    <li><strong>Real Travel:</strong> Different arrival and origin timezones - Valid</li>
+                    <li><strong>Survey Fallback:</strong> Same timezone but survey completed offline - Valid</li>
+                    <li><strong>Test Data:</strong> Same timezone without survey fallback - Invalid</li>
+                </ul>
             </div>
         </div>
     `;
