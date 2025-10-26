@@ -202,13 +202,8 @@ async function loadSurveyData() {
         // Parse the response the same way the iOS app does
         if (data.documents && Array.isArray(data.documents)) {
             surveyData = [];
-            data.documents.forEach((document, index) => {
+            data.documents.forEach((document) => {
                 if (document.fields) {
-                    // Debug: Log first document to see structure
-                    if (index === 0) {
-                        console.log('🔍 DEBUG: First Firebase document structure:', document);
-                        console.log('🔍 DEBUG: Document fields keys:', Object.keys(document.fields));
-                    }
                     // Convert Firestore document format to flat structure
                     const flatData = convertFirestoreDocument(document);
                     if (flatData) {
@@ -365,17 +360,6 @@ function convertFirestoreDocument(document) {
             return extractNestedValue(fieldName, nestedPath);
         };
         
-        // Debug: Log the raw Firebase document structure
-        console.log('🔍 DEBUG: Raw Firebase document fields:', Object.keys(fields));
-        if (fields.arrivalTimeZone) console.log('🔍 DEBUG: Found arrivalTimeZone in Firebase:', fields.arrivalTimeZone);
-        if (fields.originTimezone) console.log('🔍 DEBUG: Found originTimezone in Firebase:', fields.originTimezone);
-        
-        // Check for timezone fields in the extracted data
-        const extractedArrival = extractString('arrivalTimeZone') || extractString('tripData', 'arrivalTimeZone');
-        const extractedOrigin = extractString('originTimezone') || extractString('tripData', 'originTimezone');
-        console.log('🔍 DEBUG: Extracted arrivalTimeZone:', extractedArrival);
-        console.log('🔍 DEBUG: Extracted originTimezone:', extractedOrigin);
-        
         // Convert to flat structure matching the iOS app data format
         // Try new format first, then fall back to old nested format
         const flatData = {
@@ -514,22 +498,6 @@ async function loadSurveyDataWithService() {
         const data = await firebaseService.getTripCompletions();
         surveyData = data;
         console.log(`✅ Loaded ${data.length} records using Firebase service`);
-        
-        // DEBUG: Check if timezone fields are in the data
-        if (surveyData.length > 0) {
-            console.log('🔍 DEBUG: First record after conversion:', surveyData[0]);
-            console.log('🔍 DEBUG: First record has arrivalTimeZone?', 'arrivalTimeZone' in surveyData[0]);
-            console.log('🔍 DEBUG: First record has originTimezone?', 'originTimezone' in surveyData[0]);
-            
-            // Check the test trip specifically
-            const testTrip = surveyData.find(trip => trip.tripId === '2330B376-WLGE-251024-2348');
-            if (testTrip) {
-                console.log('🔍 DEBUG: Test trip found:', testTrip);
-                console.log('🔍 DEBUG: Test trip arrivalTimeZone:', testTrip.arrivalTimeZone);
-                console.log('🔍 DEBUG: Test trip originTimezone:', testTrip.originTimezone);
-            }
-        }
-        
         return data;
     } catch (error) {
         console.error('❌ Firebase service failed, falling back to existing method:', error);
@@ -976,22 +944,7 @@ function renderAdvancedAnalytics() {
     }
     
     // Get validation statistics (based on all data, not just surveys)
-    console.log('🔍 DEBUG: Data length:', data.length);
-    console.log('🔍 DEBUG: Sample trip:', JSON.stringify(data[0], null, 2));
-    
-    // Test validation on each trip
-    console.log('🔍 DEBUG: Testing validation on each trip:');
-    data.forEach((trip, index) => {
-        const isValid = TripValidator.isValidTrip(trip);
-        console.log(`${index + 1}. ${trip.tripId} - ${trip.destinationCode} - Valid: ${isValid}`);
-        console.log(`   Has arrivalTimeZone: ${!!trip.arrivalTimeZone}, Has originTimezone: ${!!trip.originTimezone}`);
-        if (!isValid) {
-            console.log(`   Arrival: ${trip.arrivalTimeZone}, Origin: ${trip.originTimezone}, Method: ${trip.completionMethod}`);
-        }
-    });
-    
     const validationStats = getValidationStats(data);
-    console.log('🔍 DEBUG: Validation stats:', JSON.stringify(validationStats, null, 2));
     
     // Filter to only include completed surveys for this specific analysis
     const completedSurveys = data.filter(survey => survey.surveyCompleted === true);
