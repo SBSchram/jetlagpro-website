@@ -27,7 +27,13 @@ function calculateAveragePostTravelSeverity(surveys, symptom) {
 
 // Render dose-response analysis chart (multiple lines for different app usage levels)
 function renderDoseResponseAnalysisChart(surveys) {
-    const ctx = document.getElementById('doseResponseAnalysisChart').getContext('2d');
+    try {
+        const chartElement = document.getElementById('doseResponseAnalysisChart');
+        if (!chartElement) {
+            console.warn('Chart element not found: doseResponseAnalysisChart');
+            return;
+        }
+        const ctx = chartElement.getContext('2d');
     
     // Group surveys by app usage levels
     const usageGroups = {
@@ -286,11 +292,20 @@ function renderDoseResponseAnalysisChart(surveys) {
             }
         }]
     });
+    } catch (error) {
+        console.error('Error rendering dose response analysis chart:', error);
+    }
 }
 
 // Render multi-series symptom analysis chart
 function renderSymptomAnalysisChart(surveys, tzGroups) {
-    const ctx = document.getElementById('symptomAnalysisChart').getContext('2d');
+    try {
+        const chartElement = document.getElementById('symptomAnalysisChart');
+        if (!chartElement) {
+            console.warn('Chart element not found: symptomAnalysisChart');
+            return;
+        }
+        const ctx = chartElement.getContext('2d');
     
     // Define symptoms with their field names and colors
     const symptoms = [
@@ -455,4 +470,7 @@ function renderSymptomAnalysisChart(surveys, tzGroups) {
             }
         }
     });
+    } catch (error) {
+        console.error('Error rendering symptom analysis chart:', error);
+    }
 }
