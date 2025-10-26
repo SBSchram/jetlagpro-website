@@ -138,7 +138,7 @@ function generateTestData(numSurveys = 300) {
 // Get current data source (real or test)
 function getCurrentData() {
     const data = currentDataSource === 'real' ? surveyData : testData;
-    return getFilteredTrips(data);
+    return getFilteredTrips(data || []);
 }
 
 // Switch between real and test data
@@ -566,9 +566,11 @@ setInterval(() => {
 // Render symptom analysis (updated for new data structure)
 function renderSymptomAnalysis() {
     const container = document.getElementById('symptomAnalysis');
+    if (!container) return;
+    
     const data = getCurrentData();
     
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
