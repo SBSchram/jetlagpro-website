@@ -997,9 +997,6 @@ function renderAdvancedAnalytics() {
     }
     
     let html = '<div style="margin-bottom: 30px;">';
-    html += '<h3>Advanced Research Analytics</h3>';
-    html += '<p>Comprehensive analysis of time zones crossed, app usage, and symptom severity</p>';
-    
     // Add validation statistics
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
     html += '<h4>📊 Data Quality Validation</h4>';
