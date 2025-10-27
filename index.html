@@ -344,7 +344,6 @@
                             <h3 style="color: #dc2626; margin-bottom: 20px;">Step 2: Close TestFlight when you see this.</h3>
                             <div style="position: relative; display: inline-block; max-width: 300px;">
                                 <img src="assets/images/TestFlightRedeem.JPG?v=2" alt="TestFlight Redeem Code Screen - Close This" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                                <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; color: #dc2626; font-weight: bold; text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white; opacity: 0.9;">✕</div>
                             </div>
                         </div>
                         
@@ -373,10 +372,6 @@
         <div class="indicator" data-section="download"></div>
     </div>
 
-    <!-- Swipe Instructions (shows briefly on mobile) -->
-    <div class="swipe-hint" id="swipeHint">
-        <span>← Swipe to navigate →</span>
-    </div>
 
     <script>
         // Mobile menu functionality
@@ -464,164 +459,6 @@
                     });
                 }
             });
-        });
-
-        // Swipe Navigation Implementation
-        class SwipeNavigation {
-            constructor() {
-                this.sections = ['top', 'features', 'download'];
-                this.currentSection = 0;
-                this.touchStartX = 0;
-                this.touchEndX = 0;
-                this.minSwipeDistance = 50;
-                this.isScrolling = false;
-                
-                this.init();
-            }
-
-            init() {
-                // Only enable on mobile devices
-                if (window.innerWidth <= 768) {
-                    this.setupEventListeners();
-                    this.showSwipeHint();
-                    this.updateIndicators();
-                }
-
-                // Re-initialize on window resize
-                window.addEventListener('resize', () => {
-                    if (window.innerWidth <= 768) {
-                        this.setupEventListeners();
-                    } else {
-                        this.removeEventListeners();
-                    }
-                });
-            }
-
-            setupEventListeners() {
-                document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-                document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-                document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
-                
-                // Intersection Observer to track current section
-                this.setupSectionObserver();
-            }
-
-            removeEventListeners() {
-                document.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-                document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-                document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-            }
-
-            handleTouchStart(e) {
-                this.touchStartX = e.touches[0].clientX;
-                this.isScrolling = false;
-            }
-
-            handleTouchMove(e) {
-                // Detect if user is scrolling vertically
-                const deltaY = Math.abs(e.touches[0].clientY - e.touches[0].clientY);
-                const deltaX = Math.abs(e.touches[0].clientX - this.touchStartX);
-                
-                if (deltaY > deltaX) {
-                    this.isScrolling = true;
-                }
-                
-                // Prevent horizontal scrolling during swipe
-                if (!this.isScrolling && deltaX > 10) {
-                    e.preventDefault();
-                }
-            }
-
-            handleTouchEnd(e) {
-                if (this.isScrolling) return;
-                
-                this.touchEndX = e.changedTouches[0].clientX;
-                const swipeDistance = this.touchStartX - this.touchEndX;
-                
-                if (Math.abs(swipeDistance) > this.minSwipeDistance) {
-                    if (swipeDistance > 0) {
-                        // Swipe left - next section
-                        this.navigateToSection(1);
-                    } else {
-                        // Swipe right - previous section
-                        this.navigateToSection(-1);
-                    }
-                }
-            }
-
-            navigateToSection(direction) {
-                const newSection = this.currentSection + direction;
-                
-                if (newSection >= 0 && newSection < this.sections.length) {
-                    this.currentSection = newSection;
-                    const targetSection = document.getElementById(this.sections[this.currentSection]);
-                    
-                    if (targetSection) {
-                        targetSection.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        this.updateIndicators();
-                        this.addSwipeAnimation();
-                    }
-                }
-            }
-
-            setupSectionObserver() {
-                const options = {
-                    threshold: 0.5,
-                    rootMargin: '-20% 0px -20% 0px'
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const sectionId = entry.target.id;
-                            const sectionIndex = this.sections.indexOf(sectionId);
-                            if (sectionIndex !== -1) {
-                                this.currentSection = sectionIndex;
-                                this.updateIndicators();
-                            }
-                        }
-                    });
-                }, options);
-
-                this.sections.forEach(sectionId => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        observer.observe(section);
-                    }
-                });
-            }
-
-            updateIndicators() {
-                const indicators = document.querySelectorAll('.indicator');
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === this.currentSection);
-                });
-            }
-
-            addSwipeAnimation() {
-                document.body.classList.add('swiping');
-                setTimeout(() => {
-                    document.body.classList.remove('swiping');
-                }, 300);
-            }
-
-            showSwipeHint() {
-                const hint = document.getElementById('swipeHint');
-                hint.classList.add('show');
-                
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    hint.classList.remove('show');
-                }, 3000);
-            }
-        }
-
-        // Initialize swipe navigation when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new SwipeNavigation();
         });
 
         // Clean two-step process - no auto-copy needed
