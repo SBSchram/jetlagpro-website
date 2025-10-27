@@ -415,8 +415,8 @@
         // Auto-scroll to download section if coming from flyer
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('source') === 'flyer') {
-            // Wait for page to load, then scroll to download
-            window.addEventListener('load', () => {
+            // Function to perform scroll
+            const scrollToDownload = () => {
                 const downloadSection = document.getElementById('download');
                 if (downloadSection) {
                     const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
@@ -427,6 +427,27 @@
                         behavior: 'smooth'
                     });
                 }
+            };
+            
+            // Wait for both page load AND header to be loaded
+            let pageLoaded = false;
+            let headerLoaded = false;
+            
+            const checkAndScroll = () => {
+                if (pageLoaded && headerLoaded) {
+                    // Add small delay to ensure layout is complete
+                    setTimeout(scrollToDownload, 100);
+                }
+            };
+            
+            window.addEventListener('load', () => {
+                pageLoaded = true;
+                checkAndScroll();
+            });
+            
+            document.addEventListener('headerLoaded', () => {
+                headerLoaded = true;
+                checkAndScroll();
             });
         }
 
