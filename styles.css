@@ -1614,7 +1614,7 @@ body.swiping * {
 
 /* Download Section */
 .download {
-    padding: 80px 0;
+    padding: 20px 0 80px 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     text-align: center;
