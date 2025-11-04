@@ -996,17 +996,34 @@ function renderAdvancedAnalytics() {
     }
     
     let html = '<div style="margin-bottom: 30px;">';
-    // Add validation statistics
+    // Add validation statistics with better breakdown
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
     html += '<h4>📊 Data Quality Validation</h4>';
+    
+    // Calculate detailed breakdown
+    const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const testTrips = allData.filter(trip => !TripValidator.isValidTrip(trip));
+    const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
+    const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
+    
     html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
+    html += `<p><strong>Test Trips:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%) - <em>Excluded from analysis</em></p>`;
     html += `<p><strong>Valid Trips:</strong> ${validationStats.valid} (${validationStats.validPercentage}%)</p>`;
-    html += `<p><strong>Test Data:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%)</p>`;
-    html += `<p><strong>Completed Surveys:</strong> ${completedSurveys.length}</p>`;
-    html += '<p><em>📊 Analyzing all data (valid and test trips)</em></p>';
-    html += '</div>';
+    html += `<p style="margin-left: 20px;">• Valid trips with surveys: ${validWithSurveys.length}</p>`;
+    html += `<p style="margin-left: 20px;">• Valid trips without surveys: ${validWithoutSurveys.length}</p>`;
+    
+    html += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">';
+    html += '<p><strong>Validation Rules:</strong></p>';
+    html += '<ul style="margin: 10px 0; padding-left: 20px; font-size: 0.9em;">';
+    html += '<li><strong>Valid:</strong> Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion)</li>';
+    html += '<li><strong>Invalid:</strong> Same origin/destination timezone without survey completion (test data)</li>';
+    html += '</ul>';
+    html += '<p style="margin-top: 10px; font-size: 0.9em;"><em>Note: Test trips are excluded from all analysis, even if they have completed surveys.</em></p>';
     html += '</div>';
     
+    html += '</div>';
+    html += '</div>';
+
     // Create the comprehensive dose-response analysis chart
     html += '<div style="margin-bottom: 30px;">';
     html += '<h4>Dose-Response Analysis: App Usage vs Jet Lag Severity</h4>';
