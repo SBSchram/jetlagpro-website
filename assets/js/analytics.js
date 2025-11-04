@@ -434,6 +434,7 @@ function calculateStatistics() {
 
 // Render dashboard sections
 function renderDashboard() {
+    renderTripStats();
     renderAdvancedAnalytics();
     renderStimulationEfficacy();
     renderSymptomAnalysis();
@@ -444,6 +445,7 @@ function renderDashboard() {
 
 // Show loading state
 function showLoadingState() {
+    document.getElementById('tripStats').innerHTML = '<div class="loading">Loading trip stats...</div>';
     document.getElementById('advancedAnalytics').innerHTML = '<div class="loading">Loading advanced analytics...</div>';
     document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
     document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
@@ -969,6 +971,52 @@ function renderStimulationEfficacy() {
     renderSymptomAnalysisChart(completedSurveys, tzGroups);
 }
 
+
+// Render trip stats (Trip Counts section)
+function renderTripStats() {
+    const container = document.getElementById('tripStats');
+    if (!container) return;
+    
+    const allData = getCurrentData();
+    
+    if (!allData || allData.length === 0) {
+        container.innerHTML = '<div class="error">No survey data available</div>';
+        return;
+    }
+    
+    // Get validation statistics (based on all data, including test trips)
+    const validationStats = getValidationStats(allData);
+    
+    // Calculate detailed breakdown
+    const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
+    const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
+    
+    let html = '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
+    html += '<h4>📊 Trip Counts</h4>';
+    
+    html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
+    html += `<p><strong>Test Trips:</strong> ${validationStats.invalid} - <em>(Excluded)</em></p>`;
+    html += `<p><strong>Valid Trips:</strong> ${validationStats.valid}</p>`;
+    const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
+    const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
+    html += `<p style="margin-left: 20px;">• Valid trips with surveys: ${validWithSurveys.length} (${validWithSurveysPercent}%)</p>`;
+    html += `<p style="margin-left: 20px;">• Valid trips without surveys: ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</p>`;
+    
+    html += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">';
+    html += '<p><strong>Validation Rules:</strong></p>';
+    html += '<ul style="margin: 10px 0; padding-left: 20px; font-size: 0.9em;">';
+    html += '<li><strong>Valid:</strong> Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion)</li>';
+    html += '<li><strong>Invalid:</strong> Same origin/destination timezone without survey completion (test data)</li>';
+    html += '</ul>';
+    html += '</div>';
+    
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+
 // Render advanced analytics with comprehensive graphs
 function renderAdvancedAnalytics() {
     const container = document.getElementById('advancedAnalytics');
@@ -997,34 +1045,6 @@ function renderAdvancedAnalytics() {
     
     let html = '<div style="margin-bottom: 30px;">';
     
-    // Trip Counts Section
-    html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += '<h4>📊 Trip Counts</h4>';
-    
-    // Calculate detailed breakdown
-    const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
-    const testTrips = allData.filter(trip => !TripValidator.isValidTrip(trip));
-    const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
-    const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
-    
-    html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
-    html += `<p><strong>Test Trips:</strong> ${validationStats.invalid} - <em>(Excluded)</em></p>`;
-    html += `<p><strong>Valid Trips:</strong> ${validationStats.valid}</p>`;
-    const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
-    const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
-    html += `<p style="margin-left: 20px;">• Valid trips with surveys: ${validWithSurveys.length} (${validWithSurveysPercent}%)</p>`;
-    html += `<p style="margin-left: 20px;">• Valid trips without surveys: ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</p>`;
-    
-    html += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">';
-    html += '<p><strong>Validation Rules:</strong></p>';
-    html += '<ul style="margin: 10px 0; padding-left: 20px; font-size: 0.9em;">';
-    html += '<li><strong>Valid:</strong> Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion)</li>';
-    html += '<li><strong>Invalid:</strong> Same origin/destination timezone without survey completion (test data)</li>';
-    html += '</ul>';
-    html += '</div>';
-    
-    html += '</div>';
-
     // Dose-Response Analysis Section
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
     html += '<h4>📊 Dose-Response Analysis</h4>';
