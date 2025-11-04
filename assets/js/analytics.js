@@ -1007,10 +1007,12 @@ function renderAdvancedAnalytics() {
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
     
     html += `<p><strong>Total Trips:</strong> ${validationStats.total}</p>`;
-    html += `<p><strong>Test Trips:</strong> ${validationStats.invalid} (${validationStats.invalidPercentage}%) - <em>Excluded from analysis</em></p>`;
-    html += `<p><strong>Valid Trips:</strong> ${validationStats.valid} (${validationStats.validPercentage}%)</p>`;
-    html += `<p style="margin-left: 20px;">• Valid trips with surveys: ${validWithSurveys.length}</p>`;
-    html += `<p style="margin-left: 20px;">• Valid trips without surveys: ${validWithoutSurveys.length}</p>`;
+    html += `<p><strong>Test Trips:</strong> ${validationStats.invalid} - <em>(Excluded)</em></p>`;
+    html += `<p><strong>Valid Trips:</strong> ${validationStats.valid}</p>`;
+    const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
+    const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
+    html += `<p style="margin-left: 20px;">• Valid trips with surveys: ${validWithSurveys.length} (${validWithSurveysPercent}%)</p>`;
+    html += `<p style="margin-left: 20px;">• Valid trips without surveys: ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</p>`;
     
     html += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">';
     html += '<p><strong>Validation Rules:</strong></p>';
