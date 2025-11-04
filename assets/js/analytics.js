@@ -996,9 +996,10 @@ function renderAdvancedAnalytics() {
     }
     
     let html = '<div style="margin-bottom: 30px;">';
-    // Add validation statistics with better breakdown
+    
+    // Trip Counts Section
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += '<h4>📊 Data Quality Validation</h4>';
+    html += '<h4>📊 Trip Counts</h4>';
     
     // Calculate detailed breakdown
     const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
@@ -1020,10 +1021,17 @@ function renderAdvancedAnalytics() {
     html += '<li><strong>Valid:</strong> Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion)</li>';
     html += '<li><strong>Invalid:</strong> Same origin/destination timezone without survey completion (test data)</li>';
     html += '</ul>';
-    html += '<p style="margin-top: 10px; font-size: 0.9em;"><em>Note: Test trips are excluded from all analysis, even if they have completed surveys.</em></p>';
     html += '</div>';
     
     html += '</div>';
+    
+    // Blue spacing between sections
+    html += '<div style="height: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 20px 0; border-radius: 4px;"></div>';
+    
+    // Dose-Response Analysis Section
+    html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
+    html += '<h4>📊 Dose-Response Analysis</h4>';
+    
     html += '</div>';
 
     // Create the comprehensive dose-response analysis chart
