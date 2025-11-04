@@ -142,157 +142,184 @@
         }
 
         @media print {
-            /* Hide all webpage elements */
-            body * {
-                visibility: hidden;
+            /* Hide non-essential elements using display:none for proper layout */
+            #main-header,
+            .export-button-container,
+            .export-dropdown,
+            script,
+            noscript {
+                display: none !important;
             }
             
-            /* Show only the research paper content */
-            .research-paper, .research-paper * {
-                visibility: visible;
+            /* Reset body and main for print */
+            body, html {
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 12pt;
+                line-height: 1.6;
+                background: #fff;
             }
             
-            /* Position the research paper at the top */
-            .research-paper {
-                position: absolute;
-                left: 0;
-                top: 0;
-                max-width: none;
-                padding: 0;
-                margin: 0;
-                width: 100%;
-            }
-            
-            @page {
-                margin: 0.75in 0.75in;
-                size: letter;
-            }
-            
-            /* Remove top padding for print to respect 1-inch margin */
+            /* Remove top padding for print */
             main {
                 padding-top: 0 !important;
             }
             
-            /* Target the specific inline style */
-            main[style*="padding-top: 120px"] {
+            main[style*="padding-top"] {
                 padding-top: 0 !important;
             }
             
-            /* Reset all margins and padding for print */
-            body, html {
-                margin: 0 !important;
-                padding: 0 !important;
+            @page {
+                margin: 1in;
+                size: letter;
             }
             
-
+            /* Research paper container for print - use normal document flow */
+            .research-paper {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 12pt;
+                line-height: 1.6;
+                color: #000;
+                background: #fff;
+            }
             
-            /* Force title to start at 1-inch margin */
+            /* Typography for print - professional academic formatting */
             .research-paper h1 {
+                font-size: 18pt;
+                font-weight: bold;
+                text-align: center;
                 margin-top: 0 !important;
-                padding-top: 0 !important;
-                position: relative;
-                top: 0 !important;
+                margin-bottom: 20pt;
+                page-break-after: avoid;
+                color: #000;
             }
             
-
-            
-            /* Hide header and print button when printing */
-            #main-header,
-            .export-button-container {
-                display: none !important;
+            .research-paper h2 {
+                font-size: 14pt;
+                font-weight: bold;
+                margin-top: 24pt;
+                margin-bottom: 12pt;
+                page-break-after: avoid;
+                color: #000;
             }
             
-            /* Keep headings with content but allow natural flow */
-            .research-paper h1,
-            .research-paper h2,
             .research-paper h3 {
-                page-break-inside: avoid;
+                font-size: 13pt;
+                font-weight: bold;
+                margin-top: 18pt;
+                margin-bottom: 10pt;
+                page-break-after: avoid;
             }
             
-            /* Allow paragraphs to break naturally */
+            .research-paper h4 {
+                font-size: 12pt;
+                font-weight: bold;
+                margin-top: 12pt;
+                margin-bottom: 6pt;
+                page-break-after: avoid;
+            }
+            
             .research-paper p {
+                margin-bottom: 12pt;
+                text-align: justify;
                 orphans: 2;
                 widows: 2;
             }
             
-            /* Keep special sections together */
-            .research-paper .abstract,
-            .research-paper ol,
-            .research-paper ul {
-                page-break-inside: avoid;
-            }
-            
-            /* Keep survey section headings with their content */
-            .research-paper h4 {
-                page-break-after: avoid;
-                page-break-inside: avoid;
-                font-size: 0.75rem !important;
-                margin-bottom: 6px !important;
-                font-weight: bold;
-            }
-            
-            /* Keep survey sections together */
-            .research-paper div[style*="display: grid"] {
-                page-break-inside: avoid;
-            }
-            
-            /* Keep headings with following content */
-            .research-paper h2,
-            .research-paper h3 {
-                page-break-after: avoid;
-                margin-top: 20px;
-                margin-bottom: 10px;
-            }
-            
-            /* Ensure proper spacing for print */
-            .research-paper h1 {
-                margin-top: 0 !important;
-                margin-bottom: 10px;
-            }
-            
-            /* Keep lists together when possible */
-            .research-paper ol,
-            .research-paper ul {
-                page-break-inside: avoid;
-            }
-            
-            /* Ensure adequate space for double-digit list numbers */
+            /* Lists for print */
+            .research-paper ul,
             .research-paper ol {
-                padding-left: 30px;
+                margin-bottom: 12pt;
+                padding-left: 24pt;
+                page-break-inside: avoid;
+            }
+            
+            .research-paper li {
+                margin-bottom: 4pt;
+            }
+            
+            .research-paper ol {
+                padding-left: 30pt;
             }
             
             /* Abstract styling for print */
-            .abstract {
+            .research-paper .abstract {
                 background: none !important;
                 border: 1px solid #ccc;
+                padding: 15pt;
+                margin-bottom: 20pt;
                 page-break-inside: avoid;
             }
             
-            /* Methods section print styling - force images to stay with Methods text */
+            /* Tables for print - proper formatting */
+            .research-paper table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15pt 0;
+                page-break-inside: avoid;
+                font-size: 11pt;
+            }
+            
+            .research-paper table th,
+            .research-paper table td {
+                border: 1px solid #333;
+                padding: 8pt;
+                text-align: left;
+                vertical-align: top;
+            }
+            
+            .research-paper table th {
+                background-color: #f0f0f0;
+                font-weight: bold;
+            }
+            
+            /* Images for print */
+            .research-paper img {
+                max-width: 100%;
+                height: auto;
+                page-break-inside: avoid;
+                display: block;
+                margin: 15pt auto;
+            }
+            
+            .research-paper .methods-screenshots {
+                text-align: center;
+                margin: 20pt 0;
+                page-break-inside: avoid;
+            }
+            
+            .research-paper .methods-screenshots img {
+                max-width: 200px;
+                margin: 5pt;
+                display: inline-block;
+            }
+            
+            /* Keep headings with following content */
+            .research-paper h2 + p,
+            .research-paper h3 + p,
+            .research-paper h4 + p {
+                page-break-before: avoid;
+            }
+            
+            /* Grid layouts - convert to print-friendly block format */
+            .research-paper div[style*="display: grid"] {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Ensure proper spacing */
+            .research-paper p[style*="text-align: center"] {
+                margin-bottom: 12pt;
+            }
+            
+            /* Keep methods section together when possible */
+            h2:has(+ p + .methods-screenshots),
             .methods-screenshots {
                 page-break-inside: avoid;
-                page-break-before: auto;
-                page-break-after: auto;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            /* Ensure Methods section doesn't start a new page */
-            h2:has(+ p + .methods-screenshots) {
-                page-break-before: auto;
-            }
-            
-            /* Force Methods section and images to stay together */
-            h2:contains("Methods") + p + .methods-screenshots {
-                page-break-inside: avoid;
-                page-break-before: auto;
-                page-break-after: auto;
-            }
-            
-            /* Allow content to extend into margins if needed */
-            .methods-screenshots img {
-                max-width: 100% !important;
-                height: auto !important;
             }
         }
     </style>
@@ -1048,6 +1075,25 @@
             display: block;
             margin: 20px auto;
             border: none;
+        }
+        /* Tables for Word - proper formatting for journal submission */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 11pt;
+            page-break-inside: avoid;
+        }
+        table th,
+        table td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
         }
         /* Preserve 2x2 survey table layout */
         div[style*="grid-template-columns: 1fr 1fr"] {
