@@ -1378,9 +1378,16 @@ ${htmlContent.outerHTML}
                 const allData = researchData;
                 
                 // Filter to only valid trips (exclude test data) and completed surveys
+                // Also exclude developer's trip ID (2330B376)
+                const developerTripId = '2330B376';
                 const surveyData = allData
                     .filter(trip => TripValidator.isValidTrip(trip))
-                    .filter(trip => trip.surveyCompleted === true);
+                    .filter(trip => trip.surveyCompleted === true)
+                    .filter(trip => {
+                        const tripId = trip.tripId || '';
+                        // Exclude developer's trips (handles both exact match and extended IDs like "2330B376-...")
+                        return !tripId.startsWith(developerTripId);
+                    });
                 
                 if (surveyData.length === 0) {
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';

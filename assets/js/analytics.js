@@ -970,9 +970,9 @@ function renderTripStats() {
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Trips (Total / Real / Test):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${realTripsText}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Legacy Data:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.legacy}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Early Data:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.legacy}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Travel:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.real_travel + breakdown.survey_fallback}</td></tr>`;
-    html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Real = Legacy data (no TZ fields) or real travel (Arrival # Departure TZ).</td></tr>';
+    html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Real = Early data (no TZ fields) or travel where Arrival TZ # Departure TZ</td></tr>';
     html += '</table>';
     
     html += '</div>';
@@ -1048,7 +1048,7 @@ function renderPointStimulationAnalysis() {
     // Update the heading with valid trip count
     const headingElement = document.getElementById('pointAnalysisHeading');
     if (headingElement) {
-        headingElement.textContent = `Acupuncture Point Stimulation Analysis across ${data.length} valid trips`;
+        headingElement.textContent = `Acupuncture Point Stimulation Analysis (${data.length} trips)`;
     }
 
     // Point mapping data
