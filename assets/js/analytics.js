@@ -963,13 +963,14 @@ function renderTripStats() {
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
     const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
     
+    // Format valid trips with survey status
+    const validTripsText = `with surveys ${validWithSurveys.length} (${validWithSurveysPercent}%)<br>without surveys ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)`;
+    
     html += '<table style="width: auto; border-collapse: collapse; border: 1px solid #ddd;">';
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Total Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Test Trips (excluded):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.invalid}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.valid}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validTripsText}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips with surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips without surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Legacy Data:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.legacy}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Travel:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.real_travel + breakdown.survey_fallback}</td></tr>`;
     html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).</td></tr>';
