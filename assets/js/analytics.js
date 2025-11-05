@@ -416,7 +416,6 @@ function renderDashboard() {
     renderStimulationEfficacy();
     renderPointStimulationAnalysis();
     renderRecentSubmissions();
-    renderTimezoneValidationStats();
 }
 
 // Show loading state
@@ -426,7 +425,6 @@ function showLoadingState() {
     document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
     document.getElementById('pointMappingTable').innerHTML = '<div class="loading">Loading point stimulation data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
-    document.getElementById('timezoneValidationStats').innerHTML = '<div class="loading">Loading timezone validation data...</div>';
 }
 
 // Show error message
@@ -934,6 +932,7 @@ function renderTripStats() {
     
     // Get validation statistics (based on all data, including test trips)
     const validationStats = getValidationStats(allData);
+    const breakdown = TripValidator.getValidationBreakdown(allData);
     
     // Calculate detailed breakdown
     const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
@@ -971,6 +970,9 @@ function renderTripStats() {
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips with surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips without surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Legacy Data:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.legacy}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Travel:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.real_travel}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Survey Fallback:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.survey_fallback}</td></tr>`;
     html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).</td></tr>';
     html += '</table>';
     
