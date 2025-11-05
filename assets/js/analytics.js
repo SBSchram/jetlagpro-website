@@ -997,13 +997,13 @@ function renderTripStats() {
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
     const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
     
-    html += '<table style="width: auto; border-collapse: collapse;">';
-    html += `<tr><td style="text-align: left; padding: 8px 0;">Total Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.total}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0;">Test Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.invalid} - <em>(Excluded)</em></td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0;">Valid Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.valid}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0;">Valid trips with surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0;">Valid trips without surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
-    html += '<tr><td colspan="2" style="padding-top: 15px; border-top: 1px solid #ddd; font-size: 0.9em;">Validation Rules: Valid - Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion). Invalid - Same origin/destination timezone without survey completion (test data)</td></tr>';
+    html += '<table style="width: auto; border-collapse: collapse; border: 1px solid #ddd;">';
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Total Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Test Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.invalid} - <em>(Excluded)</em></td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.valid}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips with surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips without surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
+    html += '<tr><td colspan="2" style="padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).<br>Invalid = Same origin/destination timezone</td></tr>';
     html += '</table>';
     
     html += '</div>';
