@@ -414,7 +414,6 @@ function renderDashboard() {
     renderTripStats();
     renderAdvancedAnalytics();
     renderStimulationEfficacy();
-    renderSymptomAnalysis();
     renderPointStimulationAnalysis();
     renderRecentSubmissions();
     renderTimezoneValidationStats();
