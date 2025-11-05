@@ -246,33 +246,10 @@ function renderTimezoneValidationStats() {
     const validationStats = TripValidator.getValidationStats(allData);
     const breakdown = TripValidator.getValidationBreakdown(allData);
     
-    // Calculate data quality percentage
-    const tripQuality = validationStats.validPercentage;
-    
     container.innerHTML = `
         <div class="validation-stats">
             <h3>🌍 Trip Validation Statistics</h3>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Trip Data Quality</h4>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Trips:</span>
-                        <span class="stat-value">${validationStats.total}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Valid Trips:</span>
-                        <span class="stat-value valid">${validationStats.valid} (${validationStats.validPercentage}%)</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Test Data:</span>
-                        <span class="stat-value invalid">${validationStats.invalid} (${validationStats.invalidPercentage}%)</span>
-                    </div>
-                    <div class="quality-bar">
-                        <div class="quality-fill" style="width: ${tripQuality}%; background: ${tripQuality >= 80 ? '#16a34a' : tripQuality >= 60 ? '#f59e0b' : '#dc2626'}"></div>
-                    </div>
-                    <p class="quality-text">Data Quality: ${tripQuality}%</p>
-                </div>
-                
                 <div class="stat-card">
                     <h4>Validation Breakdown</h4>
                     <div class="stat-item">
@@ -611,42 +588,6 @@ function renderSymptomAnalysis() {
 
     html += '</tbody></table>';
     
-    // Add travel patterns data
-    html += '<h3 style="margin-top: 30px; margin-bottom: 15px;">Travel Patterns</h3>';
-    
-    // Travel direction analysis
-    const directions = {};
-    const platforms = {};
-    
-    data.forEach(survey => {
-        if (survey.travelDirection) {
-            directions[survey.travelDirection] = (directions[survey.travelDirection] || 0) + 1;
-        }
-        if (survey.platform) {
-            platforms[survey.platform] = (platforms[survey.platform] || 0) + 1;
-        }
-    });
-
-    html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">';
-    
-    // Travel direction chart
-    html += '<div><h4>Travel Direction</h4><table class="data-table"><thead><tr><th>Direction</th><th>Count</th><th>%</th></tr></thead><tbody>';
-    Object.entries(directions).forEach(([direction, count]) => {
-        const percentage = ((count / surveyData.length) * 100).toFixed(1);
-        html += `<tr><td>${direction}</td><td>${count}</td><td>${percentage}%</td></tr>`;
-    });
-    html += '</tbody></table></div>';
-
-    // Platform usage chart
-    html += '<div><h4>Platform Usage</h4><table class="data-table"><thead><tr><th>Platform</th><th>Count</th><th>%</th></tr></thead><tbody>';
-    Object.entries(platforms).forEach(([platform, count]) => {
-        const percentage = ((count / surveyData.length) * 100).toFixed(1);
-        html += `<tr><td>${platform}</td><td>${count}</td><td>${percentage}%</td></tr>`;
-    });
-    html += '</tbody></table></div>';
-
-    html += '</div>';
-    
     container.innerHTML = html;
 }
 
@@ -696,8 +637,13 @@ function renderRecentSubmissions() {
             const status = isComplete ? '✅ Complete' : '⚠️ Partial';
             const statusColor = isComplete ? '#16a34a' : '#f59e0b';
             
-            // Process survey code
-            let displayCode = survey.surveyCode ? survey.surveyCode.replace(/^JLP-/, '') : 'N/A';
+            // Process survey code - always extract first section of tripId
+            let displayCode = 'N/A';
+            if (survey.tripId) {
+                // Extract first section of tripId (before any separator like hyphen)
+                const tripIdParts = survey.tripId.split(/[-_]/);
+                displayCode = tripIdParts[0] || 'N/A';
+            }
             
             // Convert travel direction to East/West format
             const timezones = survey.timezonesCount || 0;
@@ -992,6 +938,25 @@ function renderTripStats() {
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
     
+    // Calculate travel direction for valid trips
+    const directions = {};
+    validTrips.forEach(trip => {
+        if (trip.travelDirection) {
+            directions[trip.travelDirection] = (directions[trip.travelDirection] || 0) + 1;
+        }
+    });
+    
+    // Format travel direction as separate lines
+    let travelDirectionText = '';
+    const totalValidTrips = validTrips.length;
+    const directionEntries = Object.entries(directions).sort((a, b) => b[1] - a[1]); // Sort by count descending
+    if (directionEntries.length > 0) {
+        travelDirectionText = directionEntries.map(([direction, count]) => {
+            const percentage = totalValidTrips > 0 ? ((count / totalValidTrips) * 100).toFixed(1) : '0.0';
+            return `${direction} ${count} (${percentage}%)`;
+        }).join('<br>');
+    }
+    
     let html = '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 0 0 15px 0;">';
     
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
@@ -1001,6 +966,7 @@ function renderTripStats() {
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Total Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Test Trips (excluded):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.invalid}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.valid}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips with surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips without surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
     html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).</td></tr>';
