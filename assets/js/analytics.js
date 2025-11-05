@@ -3,8 +3,6 @@
 
 // Global variables for data
 let surveyData = [];
-let testData = [];
-let currentDataSource = 'real'; // 'real' or 'test'
 let isLoading = true;
 
 
@@ -44,120 +42,25 @@ function getCompletedPoints(survey) {
     return completedPoints;
 }
 
-// Helper function to get all trips (no filtering)
-function getFilteredTrips(trips) {
-    return trips; // Analyze all data
-}
-
 // Helper function to get validation statistics
 function getValidationStats(trips) {
     return TripValidator.getValidationStats(trips);
 }
 
-// Toggle function removed - we analyze all data
-
-// Pagination variables for recent submissions
-let currentPage = 1;
-let itemsPerPage = 100;
-let totalPages = 1;
-
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
 
-// Gaussian random number generator (Box-Muller transform)
-function gaussianRandom(mean = 0, stdDev = 1) {
-    let u = 0, v = 0;
-    while(u === 0) u = Math.random(); // Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return mean + stdDev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-}
-
-// Generate synthetic test data with realistic patterns
-function generateTestData(numSurveys = 300) {
-    const data = [];
-    const destinations = ['JFK', 'LAX', 'LHR', 'NRT', 'SYD', 'CDG', 'FRA', 'ICN', 'SIN', 'DXB'];
-    const travelDirections = ['Eastward', 'Westward'];
-    
-    for (let i = 0; i < numSurveys; i++) {
-        // Generate realistic travel parameters
-        const timezonesCrossed = Math.max(1, Math.floor(Math.random() * 12) + 1); // 1-12 time zones
-        const pointsCompleted = Math.floor(Math.random() * 13); // 0-12 points
-        const travelDirection = travelDirections[Math.floor(Math.random() * travelDirections.length)];
-        const destination = destinations[Math.floor(Math.random() * destinations.length)];
-        
-        // Base anticipation (most people expect moderate jet lag)
-        const anticipation = 3;
-        
-        // Time zone effect (more time zones = worse symptoms)
-        const timeZoneEffect = (timezonesCrossed - 1) * 0.25;
-        
-        // App effect (more usage = better results, capped at -1.5 max benefit)
-        const appEffect = -(pointsCompleted / 12) * 1.5;
-        
-        // Generate post-travel severity for each symptom using Gaussian distribution
-        const generateSymptomSeverity = () => {
-            const baseSeverity = anticipation + timeZoneEffect + appEffect;
-            const randomVariation = gaussianRandom(0, 0.8);
-            return Math.max(1, Math.min(5, Math.round(baseSeverity + randomVariation)));
-        };
-        
-        const survey = {
-            surveyCode: `TEST${String(i + 1).padStart(3, '0')}`,
-            destinationCode: destination,
-            timezonesCount: timezonesCrossed,
-            travelDirection: travelDirection,
-            pointsCompleted: pointsCompleted,
-            surveyCompleted: true,
-            
-            // Post-travel symptom severities (1-5 scale)
-            postSleepSeverity: generateSymptomSeverity(),
-            postFatigueSeverity: generateSymptomSeverity(),
-            postConcentrationSeverity: generateSymptomSeverity(),
-            postIrritabilitySeverity: generateSymptomSeverity(),
-            postMotivationSeverity: generateSymptomSeverity(),
-            postGISeverity: generateSymptomSeverity(),
-            
-            // Timestamp (spread over last 6 months)
-            timestamp: new Date(Date.now() - Math.random() * 180 * 24 * 60 * 60 * 1000).toISOString(),
-            
-            // Platform info
-            platform: Math.random() > 0.5 ? 'iOS' : 'Android',
-            appVersion: '1.0.0'
-        };
-        
-        data.push(survey);
-    }
-    
-    return data;
-}
-
-// Get current data source (real or test)
+// Get current data source (with developer ID filtering)
 function getCurrentData() {
-    const data = currentDataSource === 'real' ? surveyData : testData;
-    const filteredData = getFilteredTrips(data || []);
+    const data = surveyData || [];
     
     // Filter out developer's trip ID (2330B376) - exclude from all analysis
     const developerTripId = '2330B376';
-    return filteredData.filter(trip => {
+    return data.filter(trip => {
         const tripId = trip.tripId || '';
         // Check if tripId starts with developer ID (handles both exact match and extended IDs like "2330B376-...")
         return !tripId.startsWith(developerTripId);
     });
-}
-
-// Switch between real and test data
-function switchDataSource(source) {
-    currentDataSource = source;
-    
-    if (source === 'test' && testData.length === 0) {
-        testData = generateTestData();
-    }
-    
-    // Refresh dashboard with new data
-    renderDashboard();
-    renderStimulationEfficacy();
-    renderRecentSubmissions();
-    renderAdvancedAnalytics();
 }
 
 // Initialize function (no Firebase SDK needed)
@@ -236,61 +139,6 @@ async function loadSurveyData() {
     }
 }
 
-
-// Render timezone validation statistics (DRY)
-function renderTimezoneValidationStats() {
-    const container = document.getElementById('timezoneValidationStats');
-    if (!container) return;
-    
-    // Get current data using the same method as other functions
-    const allData = getCurrentData();
-    
-    if (!allData || allData.length === 0) {
-        container.innerHTML = '<div class="error">No data available for timezone validation analysis</div>';
-        return;
-    }
-    
-    // Use TripValidator to get validation stats
-    const validationStats = TripValidator.getValidationStats(allData);
-    const breakdown = TripValidator.getValidationBreakdown(allData);
-    
-    container.innerHTML = `
-        <div class="validation-stats">
-            <h3>🌍 Trip Validation Statistics</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Validation Breakdown</h4>
-                    <div class="stat-item">
-                        <span class="stat-label">Legacy Data:</span>
-                        <span class="stat-value">${breakdown.legacy}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Real Travel:</span>
-                        <span class="stat-value">${breakdown.real_travel}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Survey Fallback:</span>
-                        <span class="stat-value">${breakdown.survey_fallback}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Test Data:</span>
-                        <span class="stat-value invalid">${breakdown.test_data}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px;">
-                <h4>📊 Validation Rules</h4>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                    <li><strong>Legacy Data:</strong> No timezone fields (older data format) - Always valid</li>
-                    <li><strong>Real Travel:</strong> Different arrival and origin timezones - Valid</li>
-                    <li><strong>Survey Fallback:</strong> Same timezone but survey completed offline - Valid</li>
-                    <li><strong>Test Data:</strong> Same timezone without survey fallback - Invalid</li>
-                </ul>
-            </div>
-        </div>
-    `;
-}
 
 // Convert Firestore document format to flat structure (handles both old nested and new flattened formats)
 function convertFirestoreDocument(document) {
@@ -409,12 +257,6 @@ function convertFirestoreDocument(document) {
         console.error('Error converting document:', error);
         return null;
     }
-}
-
-// Calculate key statistics (now handled in renderSymptomAnalysis)
-function calculateStatistics() {
-    // Statistics are now calculated and displayed directly in renderSymptomAnalysis
-    // This function is kept for compatibility but no longer updates DOM elements
 }
 
 // Render dashboard sections
@@ -554,52 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //     }
 // }, 5 * 60 * 1000);
 
-// Render symptom analysis (updated for new data structure)
-function renderSymptomAnalysis() {
-    const container = document.getElementById('symptomAnalysis');
-    if (!container) return;
-    
-    const data = getCurrentData();
-    
-    if (!data || data.length === 0) {
-        container.innerHTML = '<div class="error">No survey data available</div>';
-        return;
-    }
-
-    // Show comprehensive trip completion and survey statistics
-    let html = '<table class="data-table"><thead><tr><th>Metric</th><th>Value</th><th>Details</th></tr></thead><tbody>';
-    
-    // Core metrics (moved from top stat cards)
-    const totalTrips = data.length;
-    const completedTrips = data.filter(s => s.surveyCompleted).length;
-    const completionRate = Math.round((completedTrips/totalTrips)*100);
-    
-    // Recent surveys (last 7 days)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const recentCount = data.filter(survey => {
-        const surveyDate = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
-        const surveyDateObj = surveyDate ? new Date(surveyDate) : null;
-        return surveyDateObj && surveyDateObj >= sevenDaysAgo;
-    }).length;
-    
-    html += `<tr><td><strong>✈️ Total Trips</strong></td><td>${totalTrips}</td><td>Total trip completions collected</td></tr>`;
-    html += `<tr><td><strong>📅 Recent Submissions</strong></td><td>${recentCount}</td><td>Surveys in the last 7 days</td></tr>`;
-    html += `<tr><td><strong>✅ Completion Rate</strong></td><td>${completionRate}%</td><td>Percentage of completed surveys</td></tr>`;
-    
-    // Additional trip completion statistics
-    const iosTrips = data.filter(s => s.platform === 'iOS').length;
-    const webTrips = data.filter(s => s.platform !== 'iOS').length;
-    
-    html += `<tr><td><strong>Completed Surveys</strong></td><td>${completedTrips}</td><td>${completionRate}% completion rate</td></tr>`;
-    html += `<tr><td><strong>Web Survey Trips</strong></td><td>${webTrips}</td><td>${Math.round((webTrips/totalTrips)*100)}% of total</td></tr>`;
-
-    html += '</tbody></table>';
-    
-    container.innerHTML = html;
-}
-
-// Render recent submissions with pagination
+// Render recent submissions
 function renderRecentSubmissions() {
     const container = document.getElementById('recentSubmissions');
     if (!container) return;
@@ -695,61 +492,6 @@ function renderRecentSubmissions() {
     html += '</div>';
     
     container.innerHTML = html;
-}
-
-// Render pagination controls
-function renderPaginationControls() {
-    if (totalPages <= 1) {
-        return '';
-    }
-
-    let html = '<div class="pagination-controls">';
-    
-    // Previous button
-    const prevDisabled = currentPage === 1 ? 'disabled' : '';
-    html += `<button class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${prevDisabled}>
-        <span class="pagination-arrow">←</span> Previous
-    </button>`;
-    
-    // Page numbers (show up to 5 pages around current page)
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, currentPage + 2);
-    
-    if (startPage > 1) {
-        html += `<button class="pagination-btn" onclick="goToPage(1)">1</button>`;
-        if (startPage > 2) {
-            html += '<span class="pagination-ellipsis">...</span>';
-        }
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        const activeClass = i === currentPage ? 'active' : '';
-        html += `<button class="pagination-btn ${activeClass}" onclick="goToPage(${i})">${i}</button>`;
-    }
-    
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            html += '<span class="pagination-ellipsis">...</span>';
-        }
-        html += `<button class="pagination-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
-    }
-    
-    // Next button
-    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
-    html += `<button class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${nextDisabled}>
-        Next <span class="pagination-arrow">→</span>
-    </button>`;
-    
-    html += '</div>';
-    return html;
-}
-
-// Go to specific page
-function goToPage(page) {
-    if (page >= 1 && page <= totalPages && page !== currentPage) {
-        currentPage = page;
-        renderRecentSubmissions();
-    }
 }
 
 // Render stimulation efficacy analysis
@@ -967,12 +709,11 @@ function renderTripStats() {
     const realTripsText = `with surveys ${validWithSurveys.length} (${validWithSurveysPercent}%)<br>without surveys ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)`;
     
     html += '<table style="width: auto; border-collapse: collapse; border: 1px solid #ddd;">';
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Trips (Total / Real / Test):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${realTripsText}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Trips (Total / Confirmed / Test):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Confirmed Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${realTripsText}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Early Data:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.legacy}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Real Travel:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${breakdown.real_travel + breakdown.survey_fallback}</td></tr>`;
-    html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Real = Early data (no TZ fields) or travel where Arrival TZ # Departure TZ</td></tr>';
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Data Type:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Early Data (${breakdown.legacy}), Confirmed Travel (${breakdown.real_travel + breakdown.survey_fallback})</td></tr>`;
+    html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Confirmed = Early data (no TZ fields) or travel where Arrival TZ # Departure TZ</td></tr>';
     html += '</table>';
     
     html += '</div>';
