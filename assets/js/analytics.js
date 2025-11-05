@@ -686,14 +686,6 @@ function renderRecentSubmissions() {
     
     html += '</div>';
     
-    // Test Data Section
-    if (testData.length > 0) {
-        html += '<div style="margin-bottom: 30px;">';
-        html += `<h3>🧪 TEST DATA (${testData.length})</h3>`;
-        html += renderTripTable(testData);
-        html += '</div>';
-    }
-    
     container.innerHTML = html;
 }
 
