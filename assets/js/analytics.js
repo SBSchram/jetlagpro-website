@@ -134,7 +134,15 @@ function generateTestData(numSurveys = 300) {
 // Get current data source (real or test)
 function getCurrentData() {
     const data = currentDataSource === 'real' ? surveyData : testData;
-    return getFilteredTrips(data || []);
+    const filteredData = getFilteredTrips(data || []);
+    
+    // Filter out developer's trip ID (2330B376) - exclude from all analysis
+    const developerTripId = '2330B376';
+    return filteredData.filter(trip => {
+        const tripId = trip.tripId || '';
+        // Check if tripId starts with developer ID (handles both exact match and extended IDs like "2330B376-...")
+        return !tripId.startsWith(developerTripId);
+    });
 }
 
 // Switch between real and test data
