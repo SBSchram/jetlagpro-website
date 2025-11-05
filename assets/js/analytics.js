@@ -997,12 +997,12 @@ function renderTripStats() {
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
     const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
     
-    html += '<table style="width: 100%; border-collapse: collapse;">';
+    html += '<table style="width: auto; border-collapse: collapse;">';
     html += `<tr><td style="text-align: left; padding: 8px 0;">Total Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.total}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 0;">Test Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.invalid} - <em>(Excluded)</em></td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 0;">Valid Trips:</td><td style="text-align: right; padding: 8px 0;">${validationStats.valid}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0; padding-left: 20px;">Valid trips with surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 0; padding-left: 20px;">Valid trips without surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 0;">Valid trips with surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 0;">Valid trips without surveys:</td><td style="text-align: right; padding: 8px 0;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
     html += '<tr><td colspan="2" style="padding-top: 15px; border-top: 1px solid #ddd; font-size: 0.9em;">Validation Rules: Valid - Legacy data (no timezone fields), real travel (different timezones), or survey fallback (same timezone with survey completion). Invalid - Same origin/destination timezone without survey completion (test data)</td></tr>';
     html += '</table>';
     
