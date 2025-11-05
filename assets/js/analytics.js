@@ -424,7 +424,6 @@ function showLoadingState() {
     document.getElementById('tripStats').innerHTML = '<div class="loading">Loading trip stats...</div>';
     document.getElementById('advancedAnalytics').innerHTML = '<div class="loading">Loading advanced analytics...</div>';
     document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
-    document.getElementById('symptomAnalysis').innerHTML = '<div class="loading">Loading trip data...</div>';
     document.getElementById('pointMappingTable').innerHTML = '<div class="loading">Loading point stimulation data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
     document.getElementById('timezoneValidationStats').innerHTML = '<div class="loading">Loading timezone validation data...</div>';
@@ -432,8 +431,12 @@ function showLoadingState() {
 
 // Show error message
 function showError(message) {
-    const container = document.getElementById('symptomAnalysis');
-    container.innerHTML = `<div class="error">${message}</div>`;
+    const container = document.getElementById('tripStats');
+    if (container) {
+        container.innerHTML = `<div class="error">${message}</div>`;
+    } else {
+        console.error(message);
+    }
 }
 
 // Refresh data function
