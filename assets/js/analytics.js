@@ -1003,7 +1003,7 @@ function renderTripStats() {
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.valid}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips with surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Valid trips without surveys:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
-    html += '<tr><td colspan="2" style="padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).<br>Same origin/destination timezone</td></tr>';
+    html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Valid = Legacy data (no timezone fields) or real travel (different timezones).<br>Invalid = Same origin/destination timezone</td></tr>';
     html += '</table>';
     
     html += '</div>';
