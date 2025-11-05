@@ -1042,7 +1042,6 @@ function renderAdvancedAnalytics() {
     
     // Dose-Response Analysis Section
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += '<h4>📊 Dose-Response Analysis</h4>';
     html += '<p>Multiple lines showing how different levels of app usage affect symptom severity across time zones crossed. Error bars show ±1 standard error.</p>';
     html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
     html += '<canvas id="doseResponseAnalysisChart" width="800" height="400"></canvas>';
