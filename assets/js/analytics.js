@@ -54,12 +54,12 @@ const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpr
 function getCurrentData() {
     const data = surveyData || [];
     
-    // Filter out developer's trip ID (2330B376) - exclude from all analysis
-    const developerTripId = '2330B376';
+    // Filter out developer trip IDs - exclude from all analysis
+    const developerTripIds = ['2330B376', '7482966F'];
     return data.filter(trip => {
         const tripId = trip.tripId || '';
-        // Check if tripId starts with developer ID (handles both exact match and extended IDs like "2330B376-...")
-        return !tripId.startsWith(developerTripId);
+        // Check if tripId starts with any developer ID (handles both exact match and extended IDs)
+        return !developerTripIds.some(devId => tripId.startsWith(devId));
     });
 }
 

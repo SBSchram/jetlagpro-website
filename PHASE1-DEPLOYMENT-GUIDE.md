@@ -16,7 +16,7 @@ This guide walks you through deploying Phase 1 of the Data Integrity Safeguards 
 
 ### Firebase Security Rules
 - ✅ `firestore.rules` - Firebase Security Rules (ready to deploy)
-- ✅ Enforces tripId format validation (8 hex chars)
+- ✅ Enforces tripId format validation (iOS format: `8HEX-4HEX-6DIGIT-4DIGIT`)
 - ✅ Blocks "naked-survey-code" and standalone submissions
 - ✅ Requires `_writeMetadata` on all creates/updates
 
@@ -33,11 +33,32 @@ This guide walks you through deploying Phase 1 of the Data Integrity Safeguards 
 
 ---
 
+## ⚠️ CRITICAL: Deployment Order
+
+**YOU MUST UPDATE iOS APP BEFORE DEPLOYING FIREBASE RULES!**
+
+If you deploy rules before updating the iOS app:
+- ❌ All new trips from iOS app will be BLOCKED
+- ❌ App will appear broken to users
+- ❌ Firebase write errors in production
+
+**Correct Order:**
+1. ✅ Update iOS app with `_writeMetadata` (use Swift template)
+2. ✅ Test locally with Xcode
+3. ✅ Deploy to TestFlight and verify works
+4. ✅ Get some users on new version
+5. ✅ THEN deploy Firebase rules
+
+---
+
 ## 📋 Pre-Deployment Checklist
 
 Before deploying, verify:
-- [ ] Web survey code changes reviewed
-- [ ] iOS app will be updated (or test with rules relaxed first)
+- [ ] Web survey code changes reviewed and deployed
+- [ ] iOS app updated with `_writeMetadata` code
+- [ ] iOS app tested locally (Xcode)
+- [ ] iOS app deployed to TestFlight
+- [ ] At least a few trips created with new iOS version
 - [ ] Have Firebase Console access
 - [ ] Have Firebase CLI installed (optional, for CLI deployment)
 - [ ] Understand rollback procedure (see bottom)

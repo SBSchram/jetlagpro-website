@@ -19,8 +19,9 @@ service cloud.firestore {
         // 1. Document ID matches tripId in data (blocks standalone surveys)
         request.resource.data.tripId == tripId
         
-        // 2. TripId is valid format (8 hex chars, blocks "naked-survey-code")
-        && tripId.matches('^[A-F0-9]{8}$')
+        // 2. TripId is valid app format (blocks "naked-survey-code")
+        // Real format: 7482966F-DXBE-251025-0946 (8hex-4hex-6digit-4digit)
+        && tripId.matches('^[A-F0-9]{8}-[A-F0-9]{4}-[0-9]{6}-[0-9]{4}$')
         
         // 3. Write includes metadata object
         && request.resource.data.keys().hasAll(['_writeMetadata'])
