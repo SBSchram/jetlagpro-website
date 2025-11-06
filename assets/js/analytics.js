@@ -146,8 +146,8 @@ function convertFirestoreDocument(document) {
         const fields = document.fields;
         if (!fields) return null;
         
-        // Helper function to extract nested values (for old format)
-        const extractNestedValue = (fieldName, nestedPath = null) => {
+        // Helper function to extract values from Firestore format (handles both old nested and new flat formats)
+        const extractValue = (fieldName, nestedPath = null) => {
             const field = fields[fieldName];
             if (!field) return null;
             
@@ -172,82 +172,65 @@ function convertFirestoreDocument(document) {
             return null;
         };
         
-        // Extract values from Firestore format (handles both formats)
-        const extractString = (fieldName, nestedPath = null) => {
-            return extractNestedValue(fieldName, nestedPath);
-        };
-        
-        const extractInteger = (fieldName, nestedPath = null) => {
-            return extractNestedValue(fieldName, nestedPath);
-        };
-        
-        const extractBoolean = (fieldName, nestedPath = null) => {
-            return extractNestedValue(fieldName, nestedPath);
-        };
-        
-        const extractTimestamp = (fieldName, nestedPath = null) => {
-            return extractNestedValue(fieldName, nestedPath);
-        };
-        
         // Convert to flat structure matching the iOS app data format
         // Try new format first, then fall back to old nested format
         const flatData = {
             id: document.name ? document.name.split('/').pop() : null,
-            surveyCode: extractString('surveyCode') || extractString('tripData', 'surveyCode'),
-            tripId: extractString('tripId') || extractString('tripData', 'tripId'),
-            platform: extractString('platform') || extractString('tripData', 'platform'),
-            appVersion: extractString('appVersion') || extractString('tripData', 'appVersion'),
-            destinationCode: extractString('destinationCode') || extractString('tripData', 'destinationCode'),
-            timezonesCount: extractInteger('timezonesCount') || extractInteger('tripData', 'timezonesCount'),
-            travelDirection: extractString('travelDirection') || extractString('tripData', 'travelDirection'),
-            pointsCompleted: extractInteger('pointsCompleted') || extractInteger('tripData', 'pointsCompleted'),
-            startDate: extractTimestamp('startDate') || extractTimestamp('tripData', 'startDate'),
-            completionDate: extractTimestamp('completionDate') || extractTimestamp('tripData', 'completionDate'),
-            completionMethod: extractString('completionMethod') || extractString('tripData', 'completionMethod'),
-            arrivalTimeZone: extractString('arrivalTimeZone') || extractString('tripData', 'arrivalTimeZone') || extractString('arrivalTimeZone'),
-            originTimezone: extractString('originTimezone') || extractString('tripData', 'originTimezone') || extractString('originTimezone'),
-            surveyCompleted: extractBoolean('surveyCompleted') || extractBoolean('surveyData', 'surveyCompleted'),
-            created: extractTimestamp('created') || extractTimestamp('tripData', 'created'),
+            surveyCode: extractValue('surveyCode') || extractValue('tripData', 'surveyCode'),
+            tripId: extractValue('tripId') || extractValue('tripData', 'tripId'),
+            platform: extractValue('platform') || extractValue('tripData', 'platform'),
+            appVersion: extractValue('appVersion') || extractValue('tripData', 'appVersion'),
+            destinationCode: extractValue('destinationCode') || extractValue('tripData', 'destinationCode'),
+            timezonesCount: extractValue('timezonesCount') || extractValue('tripData', 'timezonesCount'),
+            travelDirection: extractValue('travelDirection') || extractValue('tripData', 'travelDirection'),
+            pointsCompleted: extractValue('pointsCompleted') || extractValue('tripData', 'pointsCompleted'),
+            startDate: extractValue('startDate') || extractValue('tripData', 'startDate'),
+            completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
+            completionMethod: extractValue('completionMethod') || extractValue('tripData', 'completionMethod'),
+            arrivalTimeZone: extractValue('arrivalTimeZone') || extractValue('tripData', 'arrivalTimeZone') || extractValue('arrivalTimeZone'),
+            originTimezone: extractValue('originTimezone') || extractValue('tripData', 'originTimezone') || extractValue('originTimezone'),
+            surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
+            created: extractValue('created') || extractValue('tripData', 'created'),
             
             // Extract individual point completion status
-            point1Completed: extractBoolean('point1Completed'),
-            point2Completed: extractBoolean('point2Completed'),
-            point3Completed: extractBoolean('point3Completed'),
-            point4Completed: extractBoolean('point4Completed'),
-            point5Completed: extractBoolean('point5Completed'),
-            point6Completed: extractBoolean('point6Completed'),
-            point7Completed: extractBoolean('point7Completed'),
-            point8Completed: extractBoolean('point8Completed'),
-            point9Completed: extractBoolean('point9Completed'),
-            point10Completed: extractBoolean('point10Completed'),
-            point11Completed: extractBoolean('point11Completed'),
-            point12Completed: extractBoolean('point12Completed'),
+            point1Completed: extractValue('point1Completed'),
+            point2Completed: extractValue('point2Completed'),
+            point3Completed: extractValue('point3Completed'),
+            point4Completed: extractValue('point4Completed'),
+            point5Completed: extractValue('point5Completed'),
+            point6Completed: extractValue('point6Completed'),
+            point7Completed: extractValue('point7Completed'),
+            point8Completed: extractValue('point8Completed'),
+            point9Completed: extractValue('point9Completed'),
+            point10Completed: extractValue('point10Completed'),
+            point11Completed: extractValue('point11Completed'),
+            point12Completed: extractValue('point12Completed'),
             
             // Note: Baseline/typical symptom data removed from survey - now focusing on anticipated vs post-travel
             
             // Extract anticipated symptoms - handles both formats
-            anticipatedSleepSeverity: extractInteger('sleepExpectations') || extractInteger('surveyData', 'sleepExpectations'),
-            anticipatedFatigueSeverity: extractInteger('fatigueExpectations') || extractInteger('surveyData', 'fatigueExpectations'),
-            anticipatedConcentrationSeverity: extractInteger('concentrationExpectations') || extractInteger('surveyData', 'concentrationExpectations'),
-            anticipatedIrritabilitySeverity: extractInteger('irritabilityExpectations') || extractInteger('surveyData', 'irritabilityExpectations'),
-            anticipatedGISeverity: extractInteger('giExpectations') || extractInteger('surveyData', 'giExpectations'),
+            anticipatedSleepSeverity: extractValue('sleepExpectations') || extractValue('surveyData', 'sleepExpectations'),
+            anticipatedFatigueSeverity: extractValue('fatigueExpectations') || extractValue('surveyData', 'fatigueExpectations'),
+            anticipatedConcentrationSeverity: extractValue('concentrationExpectations') || extractValue('surveyData', 'concentrationExpectations'),
+            anticipatedIrritabilitySeverity: extractValue('irritabilityExpectations') || extractValue('surveyData', 'irritabilityExpectations'),
+            anticipatedGISeverity: extractValue('giExpectations') || extractValue('surveyData', 'giExpectations'),
             
             // Extract post-travel symptoms - handles both formats
-            postSleepSeverity: extractInteger('sleepPost') || extractInteger('surveyData', 'sleepPost'),
-            postFatigueSeverity: extractInteger('fatiguePost') || extractInteger('surveyData', 'fatiguePost'),
-            postConcentrationSeverity: extractInteger('concentrationPost') || extractInteger('surveyData', 'concentrationPost'),
-            postIrritabilitySeverity: extractInteger('irritabilityPost') || extractInteger('surveyData', 'irritabilityPost'),
-            postMotivationSeverity: extractInteger('motivationPost') || extractInteger('surveyData', 'motivationPost'),
-            postGISeverity: extractInteger('giPost') || extractInteger('surveyData', 'giPost'),
+            postSleepSeverity: extractValue('sleepPost') || extractValue('surveyData', 'sleepPost'),
+            postFatigueSeverity: extractValue('fatiguePost') || extractValue('surveyData', 'fatiguePost'),
+            postConcentrationSeverity: extractValue('concentrationPost') || extractValue('surveyData', 'concentrationPost'),
+            postIrritabilitySeverity: extractValue('irritabilityPost') || extractValue('surveyData', 'irritabilityPost'),
+            postMotivationSeverity: extractValue('motivationPost') || extractValue('surveyData', 'motivationPost'),
+            postGISeverity: extractValue('giPost') || extractValue('surveyData', 'giPost'),
             
             // Extract demographics - only age (gender and travel experience removed)
-            age: extractString('age') || extractString('ageRange'),
-            region: extractString('region'),
+            age: extractValue('age') || extractValue('ageRange'),
+            region: extractValue('region'),
             
             // For compatibility with existing dashboard logic - handles both formats
-            timestamp: extractTimestamp('completionDate') || extractTimestamp('created') || extractTimestamp('tripData', 'completionDate'),
-            timezones_count: extractInteger('timezonesCount') || extractInteger('tripData', 'timezonesCount'),
-            travel_direction: extractString('travelDirection') || extractString('tripData', 'travelDirection')
+            timestamp: extractValue('completionDate') || extractValue('created') || extractValue('tripData', 'completionDate'),
+            timezones_count: extractValue('timezonesCount') || extractValue('tripData', 'timezonesCount'),
+            travel_direction: extractValue('travelDirection') || extractValue('tripData', 'travelDirection')
         };
         
         return flatData;
@@ -506,7 +489,7 @@ function renderStimulationEfficacy() {
     }
     
     // Filter to only valid trips (exclude test data)
-    const validData = allData.filter(trip => TripValidator && TripValidator.isValidTrip ? TripValidator.isValidTrip(trip) : true);
+    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
     
     // Filter to only include completed surveys (ignore app exploration/testing)
     const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
@@ -778,7 +761,7 @@ function renderPointStimulationAnalysis() {
     }
 
     // Filter to only valid trips (exclude test data)
-    const data = allData.filter(trip => TripValidator && TripValidator.isValidTrip ? TripValidator.isValidTrip(trip) : true);
+    const data = allData.filter(trip => TripValidator.isValidTrip(trip));
     
     if (data.length === 0) {
         container.innerHTML = '<div class="error">No valid trip data available for analysis</div>';
