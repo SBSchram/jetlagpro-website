@@ -10,13 +10,26 @@ This guide walks you through deploying Phase 1 of the Data Integrity Safeguards 
 
 ### Web Survey Code
 - ✅ `survey.js` has been updated with write metadata
-- ✅ Both trip-based and standalone survey paths include `_writeMetadata`
+- ✅ Trip-based survey path includes `_writeMetadata`
+- ✅ **Standalone survey path REMOVED** (app-only submissions)
 - ✅ No cryptography used (Apple compliance friendly)
 
-### Files Created
+### Firebase Security Rules
 - ✅ `firestore.rules` - Firebase Security Rules (ready to deploy)
+- ✅ Enforces tripId format validation (8 hex chars)
+- ✅ Blocks "naked-survey-code" and standalone submissions
+- ✅ Requires `_writeMetadata` on all creates/updates
+
+### Files Created
 - ✅ `iOS-WriteMetadata-Template.swift` - iOS code template
 - ✅ This deployment guide
+
+### Survey Access Policy
+- ✅ **Survey page is PUBLIC** (anyone can view questions)
+- ✅ **Submit button is HIDDEN** if no tripId (view-only mode)
+- ✅ **Submissions are APP-ONLY** (require valid tripId from app)
+- ✅ Standalone surveys (no tripId) are BLOCKED at UI, code & database level
+- ✅ Researchers can review survey content but cannot submit
 
 ---
 
@@ -65,6 +78,8 @@ Before deploying, verify:
   "...": "rest of survey data"
 }
 ```
+
+**Note:** Survey edits (retaking) work normally - web_survey source can always update survey fields.
 
 ---
 
@@ -145,7 +160,29 @@ firebase deploy --only firestore:rules
 
 **This is GOOD!** It means unauthorized writes are blocked.
 
-#### Test 4: Old Data Still Readable
+#### Test 4: Survey Edits (Retaking) Work
+1. Complete a survey for a trip
+2. Retake the same survey (edit existing responses)
+3. Change some answers and resubmit
+4. **Expected:** Survey updates successfully
+5. Check Firebase - document updated with new `_writeMetadata` timestamp
+
+**This verifies:** Web survey can update completed surveys (allowed by rules)
+
+#### Test 5: Standalone Surveys Are BLOCKED 🚫
+1. Open `survey.html` directly (without `?tripId=` parameter)
+2. **Expected:** Survey displays normally BUT submit button is HIDDEN
+3. Check browser console - should show: "ℹ️ Survey opened without tripId - view-only mode (submit button hidden)"
+4. Verify no way to submit the form (button not visible)
+5. Try opening with `?tripId=ABC12345` - submit button should appear
+6. Check browser console - should show: "✅ Survey opened with tripId - submission enabled"
+
+**This verifies:** 
+- Survey is viewable without tripId (for researcher review)
+- Submit button only appears when opened from app with valid tripId
+- Simple, clean UX without error messages
+
+#### Test 6: Old Data Still Readable
 1. Open analytics dashboard at `/analytics-secret.html`
 2. Verify all charts load
 3. Old data (without `_writeMetadata`) can still be read

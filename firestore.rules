@@ -14,32 +14,46 @@ service cloud.firestore {
       
       // -------------------- CREATE ACCESS --------------------
       // Allow creation ONLY if all conditions met:
+      // NOTE: This blocks standalone surveys (no tripId) and "naked-survey-code" documents
       allow create: if 
-        // 1. Document ID matches tripId in data
+        // 1. Document ID matches tripId in data (blocks standalone surveys)
         request.resource.data.tripId == tripId
         
-        // 2. Write includes metadata object
+        // 2. TripId is valid format (8 hex chars, blocks "naked-survey-code")
+        && tripId.matches('^[A-F0-9]{8}$')
+        
+        // 3. Write includes metadata object
         && request.resource.data.keys().hasAll(['_writeMetadata'])
         
-        // 3. Metadata has required fields
+        // 4. Metadata has required fields
         && request.resource.data._writeMetadata.keys().hasAll(['source', 'timestamp'])
         
-        // 4. Source is from approved list
+        // 5. Source is from approved list
         && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
         
-        // 5. Timestamp is server timestamp
+        // 6. Timestamp is server timestamp
         && request.resource.data._writeMetadata.timestamp is timestamp;
       
       // -------------------- UPDATE ACCESS --------------------
       // Allow updates ONLY if:
       allow update: if 
-        // Survey not yet completed OR only updating allowed fields
-        (resource.data.surveyCompleted != true || onlyUpdatingAllowedFields())
-        
-        // AND write includes proper metadata
-        && request.resource.data.keys().hasAll(['_writeMetadata'])
+        // Write includes proper metadata
+        request.resource.data.keys().hasAll(['_writeMetadata'])
         && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
-        && request.resource.data._writeMetadata.timestamp is timestamp;
+        && request.resource.data._writeMetadata.timestamp is timestamp
+        
+        // AND one of these conditions:
+        && (
+          // 1. Survey not yet completed (any updates allowed)
+          resource.data.surveyCompleted != true
+          
+          // 2. Web survey retaking/editing (all survey fields allowed)
+          || request.resource.data._writeMetadata.source == 'web_survey'
+          
+          // 3. iOS app updating point completions during active trip
+          || (request.resource.data._writeMetadata.source == 'ios_app' 
+              && onlyUpdatingAllowedFields())
+        );
       
       // -------------------- DELETE ACCESS --------------------
       // NEVER allow deletes (prevent data loss)

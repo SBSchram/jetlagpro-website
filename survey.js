@@ -939,6 +939,13 @@ async function exportSurveyData() {
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
     const tripId = window.currentTripId;
     
+    // SECURITY: Survey can ONLY be submitted via app link (with tripId)
+    // Note: Submit button is hidden if no tripId, so this should never be reached
+    if (!tripId || tripId === '') {
+        console.error('❌ Survey submission blocked: No tripId provided');
+        throw new Error('Survey requires app link with trip ID.');
+    }
+    
     // Wait for Firebase functions to be available (timing issue fix)
     let retryCount = 0;
     while ((!window.firebaseDoc || !window.firebaseUpdateDoc || !window.firebaseGetDoc || !window.firebaseSetDoc || !window.firebaseArrayUnion) && retryCount < 10) {
@@ -1035,115 +1042,8 @@ async function exportSurveyData() {
                 }
             }
         } else {
-            console.warn('⚠️ Cannot update unified collection - missing requirements:', {
-                firebaseDB: !window.firebaseDB,
-                firebaseCollection: !window.firebaseCollection,
-                firebaseDoc: !window.firebaseDoc,
-                firebaseUpdateDoc: !window.firebaseUpdateDoc,
-                firebaseServerTimestamp: !window.firebaseServerTimestamp,
-                tripId: !tripId
-            });
-            
-            // Fallback: if tripId is missing, create a standalone survey record
-            if (!tripId) {
-                console.log('⚠️ No tripId available - creating standalone survey record');
-                
-                // Create write metadata for data integrity (Phase 1: Write Source Authentication)
-                const standalonWriteMetadata = {
-                    source: 'web_survey',
-                    sourceVersion: '1.0.0',
-                    timestamp: window.firebaseServerTimestamp(),
-                    userAgent: navigator.userAgent.substring(0, 100),
-                    browserInfo: `${navigator.platform}; ${navigator.language}`,
-                    surveyUrl: window.location.href.split('?')[0]
-                };
-                
-                // Create a new document with just survey data (no trip link)
-                const standaloneSurveyData = {
-                    // Survey completion status
-                    surveyCompleted: true,
-                    surveySubmittedAt: timestamp,
-                    surveyCode: surveyCode,
-                    
-                    // Write metadata for security and audit trail
-                    _writeMetadata: standalonWriteMetadata,
-                    
-                    // Individual survey responses (only fields actually asked)
-                    userComment: surveyData.userComment || '',
-                    ageRange: surveyData.ageRange || '',
-                    
-                    // Rating responses (only fields actually asked - 1-5 scale)
-                    generalAnticipated: surveyData.generalAnticipated || 1,
-                    sleepPost: surveyData.sleepPost || 1,
-                    fatiguePost: surveyData.fatiguePost || 1,
-                    concentrationPost: surveyData.concentrationPost || 1,
-                    irritabilityPost: surveyData.irritabilityPost || 1,
-                    motivationPost: surveyData.motivationPost || 1,
-                    giPost: surveyData.giPost || 1
-                };
-                
-                // Add sanitized comment if present
-                if (surveyData.userComment) {
-                    const sanitizedComment = sanitizeComment(surveyData.userComment);
-                    if (sanitizedComment) {
-                        standaloneSurveyData.userComment = sanitizedComment;
-                    }
-                }
-                
-                try {
-                    // First, check if this survey code already exists
-                    const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
-                    const existingDoc = await window.firebaseGetDoc(nakedSurveyDocRef);
-                    
-                    if (existingDoc.exists()) {
-                        const existingData = existingDoc.data();
-                        const existingCodes = existingData.legacySurveyCodes || [];
-                        
-                        // Check if this survey code already exists
-                        if (existingCodes.includes(surveyCode)) {
-                            console.log('⚠️ Survey code already exists in naked survey record:', surveyCode);
-                            throw new Error('This survey code has already been used. Each survey code can only be used once.');
-                        }
-                    }
-                    
-                    // Create a single "naked survey code" document for all legacy users
-                    await window.firebaseUpdateDoc(nakedSurveyDocRef, {
-                        // Survey completion status
-                        surveyCompleted: true,
-                        surveySubmittedAt: timestamp,
-                        lastUpdated: window.firebaseServerTimestamp(),
-                        
-                        // Store all legacy survey codes in an array
-                        legacySurveyCodes: window.firebaseArrayUnion(surveyCode),
-                        
-                        // Store survey data with survey code as key
-                        [`surveyData_${surveyCode}`]: standaloneSurveyData
-                    });
-                    console.log('✅ Added legacy survey data to naked survey code record:', surveyCode);
-                } catch (updateError) {
-                    console.warn('⚠️ Failed to update naked survey record, trying to create it:', updateError);
-                    
-                    try {
-                        // Create the naked survey code document if it doesn't exist
-                        const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
-                        await window.firebaseSetDoc(nakedSurveyDocRef, {
-                            // Survey completion status
-                            surveyCompleted: true,
-                            surveySubmittedAt: timestamp,
-                            
-                            // Store all legacy survey codes in an array (first entry)
-                            legacySurveyCodes: [surveyCode],
-                            
-                            // Store survey data with survey code as key
-                            [`surveyData_${surveyCode}`]: standaloneSurveyData
-                        });
-                        console.log('✅ Created naked survey code record with legacy data:', surveyCode);
-                    } catch (createError) {
-                        console.error('❌ Failed to create naked survey code record:', createError);
-                        throw createError;
-                    }
-                }
-            }
+            console.error('⚠️ Cannot save survey - missing required Firebase functions or tripId');
+            throw new Error('Firebase connection error. Please try again.');
         }
     } catch (error) {
         console.error('❌ Error updating tripCompletions record:', error);
@@ -1539,6 +1439,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize survey functionality
 function initializeSurvey() {
+    // Check if this is a valid app-linked survey
+    const submitBtn = document.getElementById('submitSurveyBtn');
+    
+    if (!window.currentTripId) {
+        // No tripId = view-only mode (hide submit button)
+        if (submitBtn) {
+            submitBtn.style.display = 'none';
+        }
+        console.log('ℹ️ Survey opened without tripId - view-only mode (submit button hidden)');
+    } else {
+        // Valid tripId = submission allowed
+        if (submitBtn) {
+            submitBtn.style.display = 'block';
+        }
+        console.log('✅ Survey opened with tripId - submission enabled');
+    }
+    
     // Add event listeners for form elements
     setupFormEventListeners();
     
