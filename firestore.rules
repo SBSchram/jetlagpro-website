@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================
+    // TRIP COMPLETIONS COLLECTION (Main Research Data)
+    // Phase 1: Write Source Authentication
+    // ============================================================
+    match /tripCompletions/{tripId} {
+      
+      // -------------------- READ ACCESS --------------------
+      // Anyone can read for analytics dashboard
+      allow read: if true;
+      
+      // -------------------- CREATE ACCESS --------------------
+      // Allow creation ONLY if all conditions met:
+      allow create: if 
+        // 1. Document ID matches tripId in data
+        request.resource.data.tripId == tripId
+        
+        // 2. Write includes metadata object
+        && request.resource.data.keys().hasAll(['_writeMetadata'])
+        
+        // 3. Metadata has required fields
+        && request.resource.data._writeMetadata.keys().hasAll(['source', 'timestamp'])
+        
+        // 4. Source is from approved list
+        && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
+        
+        // 5. Timestamp is server timestamp
+        && request.resource.data._writeMetadata.timestamp is timestamp;
+      
+      // -------------------- UPDATE ACCESS --------------------
+      // Allow updates ONLY if:
+      allow update: if 
+        // Survey not yet completed OR only updating allowed fields
+        (resource.data.surveyCompleted != true || onlyUpdatingAllowedFields())
+        
+        // AND write includes proper metadata
+        && request.resource.data.keys().hasAll(['_writeMetadata'])
+        && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
+        && request.resource.data._writeMetadata.timestamp is timestamp;
+      
+      // -------------------- DELETE ACCESS --------------------
+      // NEVER allow deletes (prevent data loss)
+      allow delete: if false;
+      
+      // -------------------- HELPER FUNCTIONS --------------------
+      function onlyUpdatingAllowedFields() {
+        // During active trip, allow updating point completion fields
+        // This lets app update as user stimulates points
+        let allowedFields = [
+          'pointsCompleted', 
+          'point1Completed', 'point2Completed', 'point3Completed',
+          'point4Completed', 'point5Completed', 'point6Completed',
+          'point7Completed', 'point8Completed', 'point9Completed',
+          'point10Completed', 'point11Completed', 'point12Completed',
+          '_writeMetadata'  // Always allow updating metadata
+        ];
+        
+        return request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly(allowedFields);
+      }
+    }
+    
+    // ============================================================
+    // AUDIT LOG COLLECTION (Phase 2 - Not Yet Implemented)
+    // ============================================================
+    match /auditLog/{entry} {
+      allow read: if true;  // Public can verify
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+    
+    // ============================================================
+    // SNAPSHOTS COLLECTION (Phase 3 - Not Yet Implemented)
+    // ============================================================
+    match /_snapshots/{doc} {
+      allow read: if true;  // Public can verify
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+  }
+}
+

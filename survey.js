@@ -969,11 +969,24 @@ async function exportSurveyData() {
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
             console.log('🚀 Attempting to update existing tripCompletions record...');
             
+            // Create write metadata for data integrity (Phase 1: Write Source Authentication)
+            const writeMetadata = {
+                source: 'web_survey',
+                sourceVersion: '1.0.0',
+                timestamp: window.firebaseServerTimestamp(),
+                userAgent: navigator.userAgent.substring(0, 100),
+                browserInfo: `${navigator.platform}; ${navigator.language}`,
+                surveyUrl: window.location.href.split('?')[0]
+            };
+            
             // Prepare flat survey data to add to existing trip record
             const surveyUpdateData = {
                 // Survey completion status
                 surveyCompleted: true,
                 surveySubmittedAt: timestamp,
+                
+                // Write metadata for security and audit trail
+                _writeMetadata: writeMetadata,
                 
                 // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',
@@ -1035,12 +1048,25 @@ async function exportSurveyData() {
             if (!tripId) {
                 console.log('⚠️ No tripId available - creating standalone survey record');
                 
+                // Create write metadata for data integrity (Phase 1: Write Source Authentication)
+                const standalonWriteMetadata = {
+                    source: 'web_survey',
+                    sourceVersion: '1.0.0',
+                    timestamp: window.firebaseServerTimestamp(),
+                    userAgent: navigator.userAgent.substring(0, 100),
+                    browserInfo: `${navigator.platform}; ${navigator.language}`,
+                    surveyUrl: window.location.href.split('?')[0]
+                };
+                
                 // Create a new document with just survey data (no trip link)
                 const standaloneSurveyData = {
                     // Survey completion status
                     surveyCompleted: true,
                     surveySubmittedAt: timestamp,
                     surveyCode: surveyCode,
+                    
+                    // Write metadata for security and audit trail
+                    _writeMetadata: standalonWriteMetadata,
                     
                     // Individual survey responses (only fields actually asked)
                     userComment: surveyData.userComment || '',
