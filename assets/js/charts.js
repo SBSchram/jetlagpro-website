@@ -353,7 +353,7 @@ function renderSymptomAnalysisChart(surveys, tzGroups) {
                 pointBorderWidth: 2,
                 tension: 0.1,
                 fill: false,
-                spanGaps: false
+                spanGaps: true  // Allow lines to span across empty time zone ranges
             });
         }
     });
