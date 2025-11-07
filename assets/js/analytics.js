@@ -690,11 +690,14 @@ function renderTripStats() {
     // Format confirmed trips with survey status
     const confirmedTripsText = `with surveys ${validWithSurveys.length} (${validWithSurveysPercent}%)<br>without surveys ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)`;
     
+    // Format data type on separate lines
+    const dataTypeText = `Early Data (${breakdown.legacy})<br>Confirmed Travel (${breakdown.real_travel + breakdown.survey_fallback})`;
+    
     html += '<table style="width: auto; border-collapse: collapse; border: 1px solid #ddd;">';
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Trips (Total / Confirmed / Test):</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Confirmed Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${confirmedTripsText}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
-    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Data Type:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Early Data (${breakdown.legacy}), Confirmed Travel (${breakdown.real_travel + breakdown.survey_fallback})</td></tr>`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Data Type:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${dataTypeText}</td></tr>`;
     html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Confirmed = Early data (no TZ fields) or travel where Arrival TZ # Departure TZ</td></tr>';
     html += '</table>';
     
