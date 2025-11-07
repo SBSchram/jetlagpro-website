@@ -738,11 +738,16 @@ function renderAdvancedAnalytics() {
         return;
     }
     
+    // Update the section heading with trip count
+    const headingElement = document.getElementById('doseResponseHeading');
+    if (headingElement) {
+        headingElement.innerHTML = `<span class="icon">📊</span>Dose-Response Analysis (${completedSurveys.length} trips)`;
+    }
+    
     let html = '<div style="margin-bottom: 30px;">';
     
     // Dose-Response Analysis Section
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += `<h3>Dose-Response Analysis for ${completedSurveys.length} trips</h3>`;
     html += '<p>Multiple lines show how different levels of app usage affect symptom severity across time zones crossed.<br>Error bars show ±1 standard error.</p>';
     html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
     html += '<canvas id="doseResponseAnalysisChart" width="800" height="400"></canvas>';
