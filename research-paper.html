@@ -517,9 +517,12 @@
         </div>
 
 
-            <p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. Then a notification is scheduled for 2 days later to remind the user to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p> 
-			
-			<p>Participation in the survey was voluntary and anonymous. By submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. To encourage participation, survey completion unlocked free lifetime use of the application. Access to the survey required a direct link from the app to guarantee authenticity.</p>
+<p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our iOS and Android applications automatically account for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
+
+<p>A final step when the trip ends is the scheduling of a notification for 2 days later to remind the user to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
+
+<p>Participation in the survey was voluntary and anonymous. By submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. To encourage participation, survey completion unlocked free lifetime use of the application. Access to the survey required a direct link from the app to guarantee authenticity.</p>
+
 			
              <h2 style="text-align: left;">Data Collected</h2>
             
@@ -563,37 +566,25 @@
                 </tbody>
             </table>
   	
-        <h2>Data Integrity and Security</h2>
-        
-        <p>To ensure scientific rigor and address potential concerns about data manipulation, multiple safeguards were implemented to maintain research data integrity. These measures are particularly important given that the principal investigator has technical administrative access to the Firebase database where anonymized survey responses are stored.</p>
-        
-        <h4>Write Source Authentication</h4>
-        <p>All write operations to the database are authenticated by source. Firebase Security Rules enforce that data modifications can only originate from legitimate sources (the iOS application or the web survey interface). Any attempt to modify data through the Firebase Console, scripts, or unauthorized access points is blocked by these security rules. Each write operation includes metadata identifying its source, version, and timestamp, creating a verifiable chain of custody.</p>
-        
-        <h4>Immutable Audit Trail</h4>
-        <p>Every database write operation—whether creating a new trip record, updating point stimulation data, or completing a survey—is automatically logged to an append-only audit collection via Cloud Functions. This audit log captures the complete before-and-after state of each modification, the operation type (create, update, delete), and the authenticated source. The audit log itself is protected by Firebase Security Rules that prevent any modifications, including by administrators, ensuring a tamper-evident record of all data operations.</p>
-        
-        <h4>External Data Snapshots</h4>
-        <p>Complete database snapshots are automatically exported daily to external storage systems, including a GitHub repository with commit timestamps. These snapshots include cryptographic checksums that enable third-party verification of data integrity. This external archival ensures that even if the primary database were compromised, the historical record remains intact and independently verifiable.</p>
-        
-        <h4>Transparency and Verification</h4>
-        <p>To address common peer review questions about data integrity, we provide the following assurances:</p>
-        
-        <div style="margin-left: 40px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #0066cc;">
-            <p><strong>Q: How do we know the researcher didn't tamper with the data?</strong></p>
-            <p>A: All write operations are authenticated by source. Any write from Firebase Console or scripts is blocked by security rules. The audit log shows all write operations originated from legitimate app/web sources with proper authentication metadata.</p>
-            
-            <p style="margin-top: 15px;"><strong>Q: Could you have modified the audit log?</strong></p>
-            <p>A: The audit log has append-only security rules preventing any modifications, even by administrators. Additionally, daily snapshots were exported to an external GitHub repository with commit timestamps, providing third-party verification independent of the primary database.</p>
-            
-            <p style="margin-top: 15px;"><strong>Q: How can independent researchers verify this?</strong></p>
-            <p>A: The complete audit log and daily snapshots are available at a public URL for independent verification. Researchers can verify data integrity using the provided cryptographic checksums and external repository commit history. The GitHub repository commit history proves when safeguards were implemented relative to data collection.</p>
-            
-            <p style="margin-top: 15px;"><strong>Q: When were these safeguards implemented?</strong></p>
-            <p>A: Security rules were deployed on [DATE - to be filled in upon implementation] before data collection began. The GitHub commit history provides cryptographic proof that safeguards were in place throughout the study period, not added retroactively.</p>
-        </div>
-        
-        <p style="margin-top: 15px;">These measures collectively ensure that the research data maintains scientific integrity standards required for peer-reviewed publication, with multiple independent verification mechanisms that prevent undetectable tampering.</p>
+		<h2>Data Integrity and Security</h2>
+
+		<p>Multiple safeguards ensure research data integrity and enable independent verification by journal reviewers and other researchers.</p>
+
+		<h4>Write Source Authentication</h4>
+		<p>Firebase Security Rules enforce that all database modifications originate exclusively from authenticated sources: the iOS application or the web survey interface. Each write operation includes metadata (source, version, timestamp), creating a verifiable chain of custody. Unauthorized access attempts, including through the Firebase Console, are automatically blocked.</p>
+		
+		<p>Device identifiers enable distinction between participant data and test data generated during app development. Test entries remain in the raw database for transparency but are excluded from analysis through data filtering.</p>
+
+		<h4>Immutable Audit Trail</h4>
+		<p>Cloud Functions automatically log every database write operation to an append-only audit collection. Each audit entry captures the complete before-and-after state, operation type (create, update, delete), and authenticated source. Security rules prevent any modifications to the audit log, including by administrators.</p>
+
+		<h4>External Data Snapshots</h4>
+		<p>Complete database snapshots are exported daily to external storage, including a public GitHub repository with commit timestamps. Cryptographic checksums enable third-party verification of data integrity. This external archival preserves the historical record independent of the primary database.</p>
+
+		<h4>Independent Verification</h4>
+		<p>The complete audit log and daily snapshots are publicly accessible at [URL] for independent verification. Researchers can verify data integrity using the provided cryptographic checksums and GitHub repository commit history. The commit history provides cryptographic proof of when safeguards were implemented relative to data collection.</p>
+
+		<p>Security rules were deployed on [date] after initial testing with [N] records. All subsequent data collection maintains verifiable integrity throughout the study period.</p>
 		
         <h2>Data Analysis</h2>
         
