@@ -463,7 +463,6 @@ function renderRecentSubmissions() {
     
     // Valid Trips Section
     html += '<div style="margin-bottom: 30px;">';
-    html += `<h3>📊 VALID TRIPS</h3>`;
     
     // Survey Completed
     html += '<div style="margin: 20px 0;">';
