@@ -1409,15 +1409,15 @@ ${htmlContent.outerHTML}
                 const allData = researchData;
                 
                 // Filter to only valid trips (exclude test data) and completed surveys
-                // Also exclude developer's trip ID (2330B376)
-                const developerTripId = '2330B376';
+                // Also exclude developer's trip IDs (2330B376, 7482966F)
+                const developerTripIds = ['2330B376', '7482966F'];
                 const surveyData = allData
                     .filter(trip => TripValidator.isValidTrip(trip))
                     .filter(trip => trip.surveyCompleted === true)
                     .filter(trip => {
                         const tripId = trip.tripId || '';
                         // Exclude developer's trips (handles both exact match and extended IDs like "2330B376-...")
-                        return !tripId.startsWith(developerTripId);
+                        return !developerTripIds.some(devId => tripId.startsWith(devId));
                     });
                 
                 if (surveyData.length === 0) {
