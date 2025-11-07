@@ -405,6 +405,12 @@ function renderRecentSubmissions() {
     const validCompleted = validTrips.filter(trip => trip.surveyCompleted === true);
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
+    // Update the section heading with trip count
+    const sectionHeading = container.parentElement.querySelector('h2');
+    if (sectionHeading) {
+        sectionHeading.innerHTML = `<span class="icon">🕒</span>Recent Submissions (${validTrips.length} trips)`;
+    }
+
     // Build HTML
     let html = '';
     
@@ -457,7 +463,7 @@ function renderRecentSubmissions() {
     
     // Valid Trips Section
     html += '<div style="margin-bottom: 30px;">';
-    html += `<h3>📊 VALID TRIPS (${validTrips.length})</h3>`;
+    html += `<h3>📊 VALID TRIPS</h3>`;
     
     // Survey Completed
     html += '<div style="margin: 20px 0;">';
