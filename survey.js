@@ -976,8 +976,8 @@ async function exportSurveyData() {
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
             console.log('🚀 Attempting to update existing tripCompletions record...');
             
-            // Create write metadata for data integrity (Phase 1: Write Source Authentication)
-            const writeMetadata = {
+            // Create survey metadata (separate from trip _writeMetadata to preserve original)
+            const surveyMetadata = {
                 source: 'web_survey',
                 sourceVersion: '1.0.0',
                 timestamp: window.firebaseServerTimestamp(),
@@ -992,8 +992,8 @@ async function exportSurveyData() {
                 surveyCompleted: true,
                 surveySubmittedAt: timestamp,
                 
-                // Write metadata for security and audit trail
-                _writeMetadata: writeMetadata,
+                // Survey metadata (keeps original trip _writeMetadata intact)
+                _surveyMetadata: surveyMetadata,
                 
                 // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',
