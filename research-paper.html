@@ -569,24 +569,16 @@
 
 	<h2>Data Integrity</h2>
 
-	<p>To ensure research data authenticity and prevent tampering, we implemented multiple security measures throughout data collection and storage. These safeguards were deployed shortly after initial data collection began.</p>
+	<p>To ensure research data authenticity and prevent tampering, we implemented multiple security measures throughout data collection and storage.</p>
+<ul style="margin-left: 40px; padding-left: 20px;">
+	<li><strong>Cryptographic authentication</strong> – Trip identifiers incorporate HMAC-SHA256 signatures (8-character codes) verifiable only with the application's secret key. This makes it computationally infeasible to generate valid trip identifiers externally, preventing fabrication of trip records.</li>
+	<li><strong>Metadata provenance tracking</strong> – Every trip completion includes immutable metadata recording data source (iOS/React Native app), application version, build number, device identifier, and server-controlled timestamp. Survey completions append separate metadata preserving the original trip creation context, establishing complete chain of custody.</li>
+	<li><strong>Server-side validation</strong> – Firebase Firestore security rules enforce metadata requirements on all writes, prevent post-completion modifications, and block unauthorized access including through the Firebase Console. Rules operate independently of client applications and cannot be bypassed.</li>
+	<li><strong>Automated data filtering</strong> – Analytics exclude developer testing sessions (identified by device identifiers) and invalid trips (identical origin/destination time zones indicating app testing rather than travel). Test data remains in the database for transparency but is filtered from all analyses.</li>
+	<li><strong>Audit trail and verification</strong> – Cloud Functions log all database operations to an append-only audit collection. Pre-publication, the dataset was cryptographically hashed (SHA-256) and archived in a version-controlled repository. The published hash enables detection of any post-publication modifications.</li>
+</ul>
 
-	<h4>Cryptographic Authentication</h4>
-	<p>Trip identifiers incorporate HMAC-SHA256 cryptographic signatures (8-character authentication codes) that are verifiable only with the application's secret key. Each trip identifier follows the format: <code>deviceID-destination-date-time-signature</code>. The signature is computed from the base identifier components, making it computationally infeasible to generate valid trip identifiers without access to the application's secret key. This prevents external fabrication of trip records while maintaining backward compatibility with pre-signature data collected during early deployment.</p>
-
-	<h4>Metadata Provenance Tracking</h4>
-	<p>Every trip completion includes immutable metadata recording the data source (iOS or React Native application), application version, build number, device identifier, and server-controlled timestamp. Survey completions append separate metadata preserving the original creation context. Server-side timestamps cannot be manipulated by client applications, establishing temporal ordering of all data operations. This metadata enables verification of data origin and tracking of potential issues to specific application versions.</p>
-
-	<h4>Server-Side Validation</h4>
-	<p>Firebase Firestore security rules enforce metadata requirements on all write operations, prevent post-completion modifications to trip data, and block unauthorized database access. The rules restrict trip creation to authenticated application sources, require immutable metadata on all writes, prevent survey re-submission after completion, and block all delete operations to maintain data permanence. These server-side rules operate independently of client applications and cannot be bypassed through direct database access or the Firebase Console.</p>
-
-	<h4>Automated Data Filtering</h4>
-	<p>Analytics exclude developer testing sessions identified by device identifiers and invalid trips defined as identical origin and destination time zones (indicating application testing rather than actual travel). Developer test data remains in the database for transparency but is automatically filtered from all research analyses. Trips are validated by comparing origin and arrival time zones, with same-timezone entries classified as test data.</p>
-
-	<h4>Audit Trail and Verification</h4>
-	<p>Cloud Functions log all database write operations to an append-only audit collection capturing operation metadata, validation results, and timestamps. Pre-publication, the dataset was cryptographically hashed (SHA-256) and archived in a version-controlled repository. The hash value published with this research enables detection of any post-publication dataset modifications. Daily database snapshots with cryptographic checksums provide ongoing verification capability and temporal integrity validation.</p>
-
-	<p>These measures were implemented in phases: metadata tracking (Build 5.0, November 7, 2025), cryptographic signatures (Build 5.2, November 8, 2025), and Firebase security rules (November [deployment date]). Data collected before security implementation (10 trips) remains in the dataset but is flagged as "legacy" data without cryptographic authentication. All subsequent data collection maintains verifiable integrity throughout the study period.</p>
+<p>These measures were implemented in phases: metadata tracking (Build 5.0, November 7, 2025), cryptographic signatures (Build 5.2, November 8, 2025), and Firebase security rules (November [deployment date]). Data collected before security implementation (10 trips) remains in the dataset but is flagged as "legacy" data without cryptographic authentication.</p>
         
 		
 		<h2>Data Analysis</h2>
