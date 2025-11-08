@@ -663,7 +663,7 @@
 		<p>We are waiting on survey results from app usage. App distribution is starting in late October 2025. It may take a few monthy of use to get sufficient data to analyze. The graph does show current live data.</p>
 		
 		<h4>Placeholder text below</h4>
-			<p>We analyzed data from [xxx] survey results and stimulation records and present that data in the graph below. We examined how different levels of acupressure stimulation affect jet lag symptoms across time zones crossed. The baseline (dashed gray line) represents expected natural jet lag severity without intervention.</p> 
+			<p>We analyzed data from <span id="surveyCount">[loading...]</span> survey results and stimulation records and present that data in the graph below. We examined how different levels of acupressure stimulation affect jet lag symptoms across time zones crossed. The baseline (dashed gray line) represents expected natural jet lag severity without intervention.</p> 
 		
 		<div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #e5e7eb;">
 			<div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 15px; height: 500px; position: relative;">
@@ -1407,6 +1407,12 @@ ${htmlContent.outerHTML}
                     requireSurvey: true,
                     excludeDeveloper: true
                 });
+                
+                // Update the survey count in the text
+                const surveyCountElement = document.getElementById('surveyCount');
+                if (surveyCountElement) {
+                    surveyCountElement.textContent = surveyData.length;
+                }
                 
                 if (surveyData.length === 0) {
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
