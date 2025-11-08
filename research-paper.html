@@ -1430,10 +1430,11 @@ ${htmlContent.outerHTML}
                     '9-12 points': surveyData.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
                 };
                 
-                // Time zone ranges (starting at 2 time zones)
-                const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                // Time zone ranges (starting at 2 time zones, extending to 20 for long-haul travel)
+                const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
                 
                 // Baseline data from Waterhouse study
+                // Extended with reasonable projections for >12 TZ based on Waterhouse findings
                 const baselineData = [
                     { timeZones: 2, severity: 1.8 },
                     { timeZones: 3, severity: 2.5 },
@@ -1445,7 +1446,16 @@ ${htmlContent.outerHTML}
                     { timeZones: 9, severity: 3.6 },
                     { timeZones: 10, severity: 3.6 },
                     { timeZones: 11, severity: 3.6 },
-                    { timeZones: 12, severity: 3.6 }
+                    { timeZones: 12, severity: 3.6 },
+                    // Extended range: severity plateaus per Waterhouse findings
+                    { timeZones: 13, severity: 3.6 },
+                    { timeZones: 14, severity: 3.6 },
+                    { timeZones: 15, severity: 3.6 },
+                    { timeZones: 16, severity: 3.6 },
+                    { timeZones: 17, severity: 3.6 },
+                    { timeZones: 18, severity: 3.6 },
+                    { timeZones: 19, severity: 3.6 },
+                    { timeZones: 20, severity: 3.6 }
                 ];
                 
                 // Calculate aggregate severity for each usage group and time zone
