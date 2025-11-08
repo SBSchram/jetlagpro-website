@@ -577,7 +577,7 @@
 	<li><strong>Audit trail and verification</strong> – Cloud Functions log all database operations to an append-only audit collection. Pre-publication, the dataset was cryptographically hashed (SHA-256) and archived in a version-controlled repository. The published hash enables detection of any post-publication modifications.</li>
 </ul>
 
-<p>Data for 10 trips collected before security implementation remains in the dataset but is flagged as "legacy" data without cryptographic authentication.</p>
+<p>Data for 10 trips collected before security implementation remains in the dataset but is flagged as "legacy" without cryptographic authentication.</p>
         
 		
 		<h2>Data Analysis</h2>
@@ -626,7 +626,7 @@
 <p></p>
 
         <h4>Time Zone Offset Calculations</h4>
-        <p>The app records the raw timezone offset between origin and destination (the actual signed time difference in hours). This raw offset represents the initial circadian disruption imposed on the traveler's biological clock. For trips crossing more than 12 time zones, the circadian system may adjust via the shorter path (e.g., a +17-hour eastward shift may be experienced as a -7-hour westward delay), but the raw offset captures the initial challenge faced at arrival. Our analysis uses this raw offset to correlate jet lag severity with the magnitude of time displacement.</p>
+        <p>The app records the raw timezone offset between origin and destination (the actual signed time difference in hours). This raw offset represents the initial circadian disruption imposed on the traveler's biological clock. For trips crossing more than 12 time zones, the circadian system may adjust via the shorter path (e.g., a +17-hour eastward shift may be experienced as a -7-hour westward delay), but the raw offset captures the initial challenge faced at arrival. Travel direction classifications (east/west) refer to geographic direction, not circadian adjustment direction. Our analysis uses this raw offset to correlate jet lag severity with the magnitude of time displacement.</p>
 
 <p></p>
         <h4>Primary and Secondary Analysis</h4>
