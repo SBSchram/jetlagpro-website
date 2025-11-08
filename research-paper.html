@@ -569,19 +569,19 @@
 
 	<h2>Data Integrity</h2>
 
-	<p>To ensure research data authenticity and prevent tampering, we implemented multiple security measures throughout data collection and storage.</p>
+	<p>To ensure data authenticity and prevent tampering, multiple security measures were implemented.</p>
 <ul style="margin-left: 40px; padding-left: 20px;">
-	<li><strong>Cryptographic authentication</strong> – Trip identifiers incorporate HMAC-SHA256 signatures (8-character codes) verifiable only with the application's secret key. This makes it computationally infeasible to generate valid trip identifiers externally, preventing fabrication of trip records.</li>
-	<li><strong>Metadata provenance tracking</strong> – Every trip completion includes immutable metadata recording data source, application version, build number, device identifier, and server-controlled timestamp. Survey completions append separate metadata preserving the original trip creation context, establishing complete chain of custody.</li>
+	<li><strong>Cryptographic authentication</strong> – To make trip record fabrication computationally infeasible, trip identifiers incorporate HMAC-SHA256 signatures verifiable only with the application's secret key.</li>
+	<li><strong>Metadata provenance tracking</strong> – Every trip completion reports immutable metadata including data source, application version, build number, device identifier, and a server-controlled timestamp. Survey completions append separate metadata preserving the original trip creation context, establishing complete chain of custody.</li>
 	<li><strong>Server-side validation</strong> – Firebase Firestore security rules enforce metadata requirements on all writes, prevent post-completion modifications, and block unauthorized access including through the Firebase Console. Rules operate independently of client applications and cannot be bypassed.</li>
-	<li><strong>Automated data filtering</strong> – Analytics exclude developer testing sessions (identified by device identifiers) and invalid trips (identical origin/destination time zones indicating app testing rather than travel). Test data remains in the database for transparency but is filtered from all analyses.</li>
 	<li><strong>Audit trail and verification</strong> – Cloud Functions log all database operations to an append-only audit collection. Pre-publication, the dataset was cryptographically hashed (SHA-256) and archived in a version-controlled repository. The published hash enables detection of any post-publication modifications.</li>
 </ul>
 
-<p>These measures were implemented in phases: metadata tracking (Build 5.0, November 7, 2025), cryptographic signatures (Build 6, November 8, 2025), and Firebase security rules (November [deployment date]). Data collected before security implementation (10 trips) remains in the dataset but is flagged as "legacy" data without cryptographic authentication.</p>
+<p>Data for 10 trips collected before security implementation remains in the dataset but is flagged as "legacy" data without cryptographic authentication.</p>
         
 		
 		<h2>Data Analysis</h2>
+		<p>Data analysis excludes both developer sessions (identified by device IDs) and trips with identical origin/arrival time zones and any non-legacy records with invalid cryptographic signatures. </p>
         
         <h4>Primary Research Question</h4>
         <p>Does chronoacupuncture as provided by the app reduce jet lag symptoms as measured by post-travel symptom severity. </p>

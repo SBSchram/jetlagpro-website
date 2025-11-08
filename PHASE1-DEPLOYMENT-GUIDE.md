@@ -31,6 +31,11 @@ This guide walks you through deploying Phase 1 of the Data Integrity Safeguards 
 - ✅ Standalone surveys (no tripId) are BLOCKED at UI, code & database level
 - ✅ Researchers can review survey content but cannot submit
 
+### App & Metadata Validation
+- ✅ iOS and React Native builds now emit `_writeMetadata` (source, sourceVersion, appBuild, deviceId, platform, timestamp)
+- ✅ Web survey writes `_surveyMetadata` (browser info, version, timestamp) while preserving trip creation metadata
+- ✅ November 7, 2025 trip tested end-to-end: metadata recorded for app write and survey completion
+
 ---
 
 ## ⚠️ CRITICAL: Deployment Order
@@ -43,10 +48,10 @@ If you deploy rules before updating the iOS app:
 - ❌ Firebase write errors in production
 
 **Correct Order:**
-1. ✅ Update iOS app with `_writeMetadata` (use Swift template)
-2. ✅ Test locally with Xcode
-3. ✅ Deploy to TestFlight and verify works
-4. ✅ Get some users on new version
+1. ✅ Update iOS/React Native apps with `_writeMetadata`
+2. ✅ Test locally with Xcode/Metro + Firebase console payloads
+3. ✅ Ship to TestFlight/App Store and verify telemetry
+4. ✅ Wait ~24 hours so auto-updates install (users may finish active trips before relaunch)
 5. ✅ THEN deploy Firebase rules
 
 ---
@@ -104,7 +109,7 @@ Before deploying, verify:
 
 ---
 
-### Step 2: Update iOS App Code
+### Step 2: Update iOS App Code (COMPLETED ✅)
 
 **Follow `iOS-WriteMetadata-Template.swift` to:**
 
@@ -112,7 +117,7 @@ Before deploying, verify:
 2. Update `saveTripCompletion()` to include metadata
 3. Update `updateTripCompletion()` to include metadata
 4. Test app locally or with TestFlight
-5. Verify Firebase documents have `_writeMetadata` field
+5. Verify Firebase documents have `_writeMetadata` field (done – see Nov 7 sample)
 
 **Testing iOS app:**
 - Complete a trip in the app
@@ -173,7 +178,7 @@ firebase deploy --only firestore:rules
 3. Check for `_writeMetadata` field
 4. No errors reported
 
-#### Test 3: Console Writes Are BLOCKED ⚠️
+#### Test 3: Console Writes Are BLOCKED ⚠️ (perform after rule deployment)
 1. Go to Firebase Console
 2. Navigate to **Firestore Database** → **Data** tab
 3. Try to manually create a document in `tripCompletions`
@@ -181,7 +186,7 @@ firebase deploy --only firestore:rules
 
 **This is GOOD!** It means unauthorized writes are blocked.
 
-#### Test 4: Survey Edits (Retaking) Work
+#### Test 4: Survey Edits (Retaking) Work (validate after rule deployment)
 1. Complete a survey for a trip
 2. Retake the same survey (edit existing responses)
 3. Change some answers and resubmit
@@ -229,6 +234,7 @@ firebase deploy --only firestore:rules
 1. Open `/analytics-secret.html`
 2. Verify data loads normally
 3. Check Trip Stats section shows correct counts
+4. Confirm developer device IDs (e.g., `2330B376`, `7482966F`) remain filtered from production analytics
 
 ---
 
@@ -336,7 +342,7 @@ Edit `research-paper.html` line 593:
 
 **After:**
 ```html
-<p>A: Security rules were deployed on November 6, 2025
+<p>A: Security rules were deployed on [DATE - update after deployment]
 ```
 
 ### Document in Scratchpad

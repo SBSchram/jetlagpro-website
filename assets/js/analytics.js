@@ -713,8 +713,15 @@ function renderTripStats() {
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Confirmed Trips:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${confirmedTripsText}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Travel Direction:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${travelDirectionText || 'N/A'}</td></tr>`;
     html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Data Type:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${dataTypeText}</td></tr>`;
+    
+    // Add HMAC validation stats (Build 6+ cryptographic authentication)
+    const hmacStats = TripValidator.getHMACStats(allData);
+    const hmacStatusText = `🔐 Authenticated (Build 6+): ${hmacStats.authenticated}<br>📜 Legacy (Pre-Build 6): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">⚠️ Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
+    html += `<tr><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">Cryptographic Status:</td><td style="text-align: left; padding: 8px 12px; border: 1px solid #ddd;">${hmacStatusText}</td></tr>`;
+    
     html += '<tr><td colspan="2" style="text-align: left; padding-top: 15px; padding: 8px 12px; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: none; font-size: 0.9em;">Confirmed = Early data (no TZ fields) or travel where Arrival TZ # Departure TZ</td></tr>';
-    html += '<tr><td colspan="2" style="text-align: left; padding: 8px 12px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</td></tr>';
+    html += '<tr><td colspan="2" style="text-align: left; padding: 8px 12px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: none; font-size: 0.9em;">Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</td></tr>';
+    html += '<tr><td colspan="2" style="text-align: left; padding: 8px 12px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; font-size: 0.9em;">🔐 Authenticated = Trip IDs with valid HMAC-SHA256 signatures (Build 6+, prevents data fabrication)</td></tr>';
     html += '</table>';
     
     html += '</div>';

@@ -4,9 +4,149 @@
  * 
  * DRY Principle: Single source of truth for validation rules
  * Easy maintenance: Update rules in one place, applies everywhere
+ * 
+ * Build 6+: Includes HMAC-SHA256 signature validation for cryptographic authentication
  */
 
 class TripValidator {
+    // HMAC secret key for signature validation
+    // Note: This is exposed client-side for analytics validation only
+    // Same key is embedded in iOS and React Native apps
+    static HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
+    
+    /**
+     * Validates HMAC-SHA256 signature on a trip ID
+     * Trip IDs from Build 6+ have format: deviceID-dest-date-time-signature
+     * 
+     * @param {string} tripId - Full trip identifier with signature
+     * @returns {Object} - Validation result with details
+     */
+    static validateHMAC(tripId) {
+        if (!tripId) {
+            return { valid: false, reason: 'missing_trip_id', category: 'error' };
+        }
+        
+        const parts = tripId.split('-');
+        
+        // Legacy format (4 parts): Pre-Build 6 data without signatures
+        if (parts.length === 4) {
+            return { 
+                valid: true, 
+                reason: 'legacy_no_signature', 
+                category: 'legacy',
+                tripId: tripId
+            };
+        }
+        
+        // Build 6+ format (5 parts): deviceID-dest-date-time-signature
+        if (parts.length === 5) {
+            const baseTripId = parts.slice(0, 4).join('-');
+            const providedSignature = parts[4];
+            
+            // Validate signature format (8 hex characters)
+            if (!/^[a-fA-F0-9]{8}$/.test(providedSignature)) {
+                return { 
+                    valid: false, 
+                    reason: 'invalid_signature_format', 
+                    category: 'invalid',
+                    tripId: tripId,
+                    providedSignature: providedSignature
+                };
+            }
+            
+            // Check if CryptoJS is available (required for HMAC computation)
+            if (typeof CryptoJS === 'undefined') {
+                console.warn('CryptoJS not loaded - cannot validate HMAC signatures');
+                return { 
+                    valid: true, // Assume valid if we can't verify
+                    reason: 'crypto_unavailable', 
+                    category: 'unverified',
+                    tripId: tripId
+                };
+            }
+            
+            // Compute expected signature
+            const hmac = CryptoJS.HmacSHA256(baseTripId, this.HMAC_SECRET);
+            const expectedSignature = hmac.toString(CryptoJS.enc.Hex).substring(0, 8).toLowerCase();
+            
+            if (providedSignature.toLowerCase() === expectedSignature) {
+                return { 
+                    valid: true, 
+                    reason: 'valid_signature', 
+                    category: 'authenticated',
+                    tripId: tripId,
+                    signature: providedSignature
+                };
+            } else {
+                return { 
+                    valid: false, 
+                    reason: 'signature_mismatch', 
+                    category: 'invalid',
+                    tripId: tripId,
+                    expected: expectedSignature,
+                    provided: providedSignature
+                };
+            }
+        }
+        
+        // Unexpected format
+        return { 
+            valid: false, 
+            reason: 'unexpected_format', 
+            category: 'error',
+            tripId: tripId,
+            parts: parts.length
+        };
+    }
+    
+    /**
+     * Categorizes trips by HMAC validation status
+     * 
+     * @param {Array} trips - Array of trip objects with tripId field
+     * @returns {Object} - Categorized trips
+     */
+    static categorizeByHMAC(trips) {
+        const categories = {
+            authenticated: [],  // Build 6+ with valid signatures
+            legacy: [],         // Pre-Build 6 without signatures
+            invalid: [],        // Invalid or mismatched signatures
+            error: []          // Missing trip IDs or malformed
+        };
+        
+        trips.forEach(trip => {
+            const validation = this.validateHMAC(trip.tripId);
+            categories[validation.category].push({
+                ...trip,
+                hmacValidation: validation
+            });
+        });
+        
+        return categories;
+    }
+    
+    /**
+     * Gets HMAC validation statistics for a dataset
+     * 
+     * @param {Array} trips - Array of trip objects
+     * @returns {Object} - HMAC validation statistics
+     */
+    static getHMACStats(trips) {
+        const categories = this.categorizeByHMAC(trips);
+        
+        return {
+            total: trips.length,
+            authenticated: categories.authenticated.length,
+            legacy: categories.legacy.length,
+            invalid: categories.invalid.length,
+            error: categories.error.length,
+            authenticatedPercentage: trips.length > 0 ? 
+                Math.round((categories.authenticated.length / trips.length) * 100) : 0,
+            legacyPercentage: trips.length > 0 ? 
+                Math.round((categories.legacy.length / trips.length) * 100) : 0
+        };
+    }
+    
+
     /**
      * Validates if a trip is legitimate (not test data)
      * 

@@ -9,6 +9,7 @@
 - Added write metadata to trip-based survey path (lines 972-980)
 - Added write metadata to standalone survey path (lines 1051-1059)
 - No cryptographic hashing (Apple compliance friendly)
+- Stores `_surveyMetadata` (source, version, browser info, timestamp) so survey edits keep their own provenance while preserving trip creation metadata
 
 **Metadata Included:**
 ```javascript
@@ -59,11 +60,11 @@
 
 ## 🎯 Current Status
 
-**Web Survey:** ✅ Ready to deploy (code complete)
-**iOS App:** ⏸️ Needs implementation (template provided)
-**Firebase Rules:** ⏸️ Ready to deploy (after iOS app updated)
+**Web Survey:** ✅ Metadata shipping with `_surveyMetadata`
+**iOS / React Native Apps:** ✅ `_writeMetadata` implemented, tested (Nov 7, 2025 sample)
+**Firebase Rules:** ⏸️ Ready to deploy after ~24-hour adoption window for new build
 
-**Recommendation:** Update iOS app first, then deploy rules together
+**Recommendation:** Confirm updated build adoption (24h window) before deploying rules; monitor metadata on every new trip/survey
 
 ---
 
@@ -83,16 +84,14 @@
 ## 🚦 Next Actions
 
 ### Immediate (This Week):
-1. **Review Changes:** Review the modified `survey.js` code
-2. **Update iOS App:** Implement changes per Swift template
-3. **Test Both:** Verify app and survey work with metadata
-4. **Deploy Rules:** Deploy `firestore.rules` to Firebase
+1. **Confirm Adoption:** Verify users auto-updated to Build 5 with metadata (monitor `_writeMetadata.sourceVersion`)
+2. **Deploy Rules:** Publish `firestore.rules` once adoption threshold met (~24h after release)
 
 ### Short Term (Next 2 Weeks):
-1. **Monitor:** Check daily that no errors occur
-2. **Verify:** All new documents have `_writeMetadata`
-3. **Confirm:** Console writes are blocked
-4. **Document:** Update research paper with deployment date
+1. **Monitor:** Check daily that no permission errors occur (survey + apps)
+2. **Verify:** All new documents have `_writeMetadata` and `_surveyMetadata`
+3. **Confirm:** Console writes blocked after rules go live
+4. **Document:** Update research paper with actual rule deployment date
 
 ### Future (Phase 2):
 1. **Implement Audit Logging:** Cloud Function to track all writes
@@ -117,16 +116,17 @@
 **Decision:** Require `source` field in metadata (`ios_app` or `web_survey`)
 **Reason:** Proves write came from legitimate application
 **Benefit:** Console writes automatically blocked
+- **Extension:** Separate `_surveyMetadata` keeps survey updates auditable while preserving original trip metadata
 
 ---
 
 ## 🔒 Security Model
 
-### What's Protected:
+### What's Protected (after rules deployment):
 - ✅ Unauthorized console writes blocked
 - ✅ Research data can't be manually altered
 - ✅ All writes tagged with source and timestamp
-- ✅ Completed surveys can't be modified
+- ✅ Completed surveys can't be modified outside allowed fields
 - ✅ Deletes are never allowed
 
 ### What's Still Readable:
@@ -152,8 +152,8 @@ After successful deployment:
 
 **For Research:**
 - Data integrity guaranteed
-- Journal reviewers can verify no tampering
-- Audit trail begins (in Phase 2)
+- Journal reviewers can verify write provenance via metadata fields
+- Audit trail expands in Phase 2 (Cloud Functions)
 
 **For Developer:**
 - Cannot modify data via console
@@ -164,10 +164,7 @@ After successful deployment:
 
 ## ⚠️ Important Notes
 
-### Before Deploying Rules:
-- ⚠️ **Must update iOS app first** or app writes will fail
-- ⚠️ **Must verify web survey works** with new metadata
-- ⚠️ **Have rollback plan ready** (permissive rules)
+**Before Deploying Rules:** Ensure updated builds are in use (allow ~24 hours after release) and metadata confirmed for new trips/surveys
 
 ### After Deploying Rules:
 - ✅ Test immediately that survey still works
@@ -187,15 +184,15 @@ After successful deployment:
 Phase 1 is successful when ALL of these are true:
 
 - [x] Web survey code updated with metadata
-- [ ] iOS app code updated with metadata
-- [ ] Firebase rules deployed
-- [ ] Survey submissions work (100% success)
-- [ ] iOS app works (100% success)
-- [ ] Console writes blocked (verified)
-- [ ] All new docs have `_writeMetadata` (100% coverage)
-- [ ] Zero user-facing errors
-- [ ] Analytics dashboard loads normally
-- [ ] Research paper updated with date
+- [x] iOS / React Native app code updated with metadata
+- [ ] Firebase rules deployed (after adoption window)
+- [x] Survey submissions work (100% success with `_surveyMetadata`)
+- [x] iOS app works (100% success with `_writeMetadata`)
+- [ ] Console writes blocked (verify post-rules)
+- [x] All new docs have `_writeMetadata` / `_surveyMetadata` (100% coverage to date)
+- [x] Zero user-facing errors (monitored during pilot)
+- [x] Analytics dashboard loads normally (with developer trip filtering)
+- [ ] Research paper updated with deployment date
 
 ---
 
