@@ -499,6 +499,12 @@ function renderStimulationEfficacy() {
     // Filter to only include completed surveys (ignore app exploration/testing)
     const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
     
+    // Update section heading with trip count
+    const efficacyHeading = document.getElementById('stimulationEfficacyHeading');
+    if (efficacyHeading) {
+        efficacyHeading.innerHTML = `<span class="icon">🔬</span>Stimulation Efficacy Analysis (${completedSurveys.length} trips)`;
+    }
+    
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for analysis</div>';
         return;
