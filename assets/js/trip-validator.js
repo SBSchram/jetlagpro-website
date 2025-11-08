@@ -325,6 +325,52 @@ class TripValidator {
         const surveyData = this.filterSurveyData(trips);
         return this.getValidationStats(surveyData);
     }
+    
+    /**
+     * Filters trips for research analysis - excludes test data, developer sessions,
+     * and trips with invalid HMAC signatures
+     * 
+     * @param {Array} trips - Array of trip objects
+     * @param {Object} options - Filtering options
+     * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
+     * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
+     * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: ['2330B376', '7482966F'])
+     * @returns {Array} - Filtered array of trips for analysis
+     */
+    static filterForAnalysis(trips, options = {}) {
+        const {
+            requireSurvey = false,
+            excludeDeveloper = true,
+            developerDeviceIds = ['2330B376', '7482966F']
+        } = options;
+        
+        let filtered = trips;
+        
+        // 1. Exclude test trips (same timezone) - uses existing isValidTrip logic
+        filtered = filtered.filter(trip => this.isValidTrip(trip));
+        
+        // 2. Exclude trips with invalid HMAC signatures (Build 6+)
+        filtered = filtered.filter(trip => {
+            const hmacValidation = this.validateHMAC(trip.tripId);
+            // Include if valid OR legacy (but not invalid)
+            return hmacValidation.valid || hmacValidation.category === 'legacy';
+        });
+        
+        // 3. Optionally exclude developer test sessions
+        if (excludeDeveloper) {
+            filtered = filtered.filter(trip => {
+                const tripId = trip.tripId || '';
+                return !developerDeviceIds.some(devId => tripId.startsWith(devId));
+            });
+        }
+        
+        // 4. Optionally require completed surveys
+        if (requireSurvey) {
+            filtered = filtered.filter(trip => trip.surveyCompleted === true);
+        }
+        
+        return filtered;
+    }
 }
 
 // Export for use in other modules
