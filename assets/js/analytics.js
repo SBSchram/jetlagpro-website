@@ -408,7 +408,7 @@ function renderRecentSubmissions() {
     // Update the section heading with trip count
     const sectionHeading = container.parentElement.querySelector('h2');
     if (sectionHeading) {
-        sectionHeading.innerHTML = `<span class="icon">🕒</span>Recent Submissions (${validTrips.length} trips)`;
+        sectionHeading.innerHTML = `<span class="icon">🕒</span>Recent Submissions (${validTrips.length})`;
     }
 
     // Build HTML
@@ -502,7 +502,7 @@ function renderStimulationEfficacy() {
     // Update section heading with trip count
     const efficacyHeading = document.getElementById('stimulationEfficacyHeading');
     if (efficacyHeading) {
-        efficacyHeading.innerHTML = `<span class="icon">🔬</span>Stimulation Efficacy Analysis (${completedSurveys.length} trips)`;
+        efficacyHeading.innerHTML = `<span class="icon">🔬</span>Stimulation Efficacy Analysis (${completedSurveys.length})`;
     }
     
     if (completedSurveys.length === 0) {
@@ -695,6 +695,10 @@ function renderTripStats() {
     
     let html = '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 0 0 15px 0;">';
     
+    html += '<div style="background: #e0f2fe; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9em; border-left: 3px solid #0ea5e9;">';
+    html += '<strong>Note:</strong> Numbers in section headings throughout this dashboard indicate trip counts with completed surveys.';
+    html += '</div>';
+    
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
     const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
     
@@ -748,7 +752,7 @@ function renderAdvancedAnalytics() {
     // Update the section heading with trip count
     const headingElement = document.getElementById('doseResponseHeading');
     if (headingElement) {
-        headingElement.innerHTML = `<span class="icon">📊</span>Dose-Response Analysis (${completedSurveys.length} trips)`;
+        headingElement.innerHTML = `<span class="icon">📊</span>Dose-Response Analysis (${completedSurveys.length})`;
     }
     
     let html = '<div style="margin-bottom: 30px;">';
@@ -792,7 +796,7 @@ function renderPointStimulationAnalysis() {
     // Update the section heading with valid trip count
     const headingElement = document.getElementById('pointMappingHeading');
     if (headingElement) {
-        headingElement.innerHTML = `<span class="icon">🎯</span>Acupuncture Point Stimulation Analysis (${data.length} trips)`;
+        headingElement.innerHTML = `<span class="icon">🎯</span>Acupuncture Point Stimulation Analysis (${data.length})`;
     }
 
     // Point mapping data
