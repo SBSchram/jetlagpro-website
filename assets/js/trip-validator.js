@@ -28,6 +28,22 @@ class TripValidator {
         
         const parts = tripId.split('-');
         
+        // Check for UUID format (legacy, very old trips)
+        // UUIDs have 5 parts with specific lengths: 8-4-4-4-12
+        if (parts.length === 5 && 
+            parts[0].length === 8 && 
+            parts[1].length === 4 && 
+            parts[2].length === 4 && 
+            parts[3].length === 4 && 
+            parts[4].length === 12) {
+            return { 
+                valid: true, 
+                reason: 'legacy_uuid_format', 
+                category: 'legacy',
+                tripId: tripId
+            };
+        }
+        
         // Legacy format (4 parts): Pre-Build 6 data without signatures
         if (parts.length === 4) {
             return { 
