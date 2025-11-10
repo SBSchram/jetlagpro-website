@@ -2995,15 +2995,12 @@ body.modal-open {
         max-height: 95vh;
     }
     
-    .modal-body h3 {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-        margin-top: 12px;
-    }
-    
     .modal-body p {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         margin-bottom: 12px;
+        margin-top: 8px;
+        font-weight: 500;
+        color: #1e40af;
     }
     
     .modal-image-wrapper {
@@ -3011,7 +3008,7 @@ body.modal-open {
     }
     
     .modal-image {
-        max-height: 45vh;
+        max-height: 36vh;
         width: auto;
         margin: 0 auto;
     }
