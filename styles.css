@@ -2853,18 +2853,16 @@ body.swiping * {
     margin-bottom: 20px;
 }
 
-.beta-warning {
-    background: #fef2f2;
-    border: 3px solid #dc2626;
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.15);
+.beta-step.info-step {
+    background: #eff6ff;
+    border: 2px solid #3b82f6;
+    color: #1e3a8a;
 }
 
-.beta-warning h3 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
+.beta-step.info-step p {
+    color: #1e3a8a;
+    font-weight: 500;
+    margin-bottom: 0;
 }
 
 /* Mobile responsive for beta steps */
@@ -2874,8 +2872,7 @@ body.swiping * {
         margin: 24px auto;
     }
     
-    .beta-step,
-    .beta-warning {
+    .beta-step {
         padding: 20px 16px;
     }
     
@@ -2889,14 +2886,95 @@ body.swiping * {
         margin-bottom: 16px;
     }
     
-    .beta-warning h3 {
-        font-size: 1.2rem;
-    }
-    
     /* Make download section header more compact on mobile */
     .download-content h2 {
         font-size: 1.5rem;
         margin-bottom: 16px;
+    }
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 2000;
+}
+
+.modal-overlay.is-visible {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.4);
+    text-align: center;
+}
+
+.modal-body h3 {
+    font-size: 1.5rem;
+    color: #1e40af;
+    margin-bottom: 12px;
+}
+
+.modal-body p {
+    color: #1f2937;
+    margin-bottom: 20px;
+}
+
+.modal-image-wrapper {
+    margin-bottom: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(30, 64, 175, 0.25);
+}
+
+.modal-image {
+    width: 100%;
+    display: block;
+}
+
+.modal-primary {
+    width: 100%;
+    justify-content: center;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #1e40af;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 24px 20px;
+    }
+    
+    .modal-body h3 {
+        font-size: 1.3rem;
     }
 }
 

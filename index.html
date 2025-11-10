@@ -337,14 +337,13 @@
                             <div class="step-logo">
                                 <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
                             </div>
-                            <a href="https://apps.apple.com/us/app/testflight/id899247664" class="btn btn-primary">Get TestFlight</a>
+                            <p>Apple requires TestFlight for all beta apps. You’ll return here after installation.</p>
+                            <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
                         </div>
                         
-                        <div class="beta-warning">
-                            <h3 style="color: #dc2626; margin-bottom: 20px;">Step 2: Close TestFlight when you see this.</h3>
-                            <div style="position: relative; display: inline-block; max-width: 300px;">
-                                <img src="assets/images/TestFlightRedeem.JPG?v=2" alt="TestFlight Redeem Code Screen - Close This" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                            </div>
+                        <div class="beta-step info-step">
+                            <h3>Step 2: Close the Redeem Screen</h3>
+                            <p>After TestFlight installs, it launches automatically. When you see the Redeem screen, close TestFlight and return to this tab for Step 3.</p>
                         </div>
                         
                         <div class="beta-step">
@@ -352,7 +351,24 @@
                             <div class="step-logo">
                                 <img src="/favicon.ico" alt="JetLagPro" style="width: 64px; height: 64px;">
                             </div>
+                            <p>Once you’re back on this page, tap below to install JetLagPro.</p>
                             <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
+                        </div>
+                    </div>
+                    
+                    <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
+                        <div class="modal-content">
+                            <button type="button" class="modal-close" id="closeTestFlightModal" aria-label="Close dialog">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="modal-body">
+                                <h3 id="testflightModalTitle">After TestFlight Installs</h3>
+                                <p id="testflightModalDescription">Close TestFlight when you see this screen, then return here for Step 3.</p>
+                                <div class="modal-image-wrapper">
+                                    <img src="assets/images/TestFlightRedeem.JPG?v=2" alt="Screenshot of TestFlight Redeem screen that should be closed" class="modal-image">
+                                </div>
+                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Continue to TestFlight</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -462,6 +478,55 @@
         });
 
         // Clean two-step process - no auto-copy needed
+        
+        // TestFlight warning modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const testFlightButton = document.getElementById('openTestFlightModal');
+            const modal = document.getElementById('testflightModal');
+            const continueButton = document.getElementById('continueToTestFlight');
+            const closeButton = document.getElementById('closeTestFlightModal');
+            const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
+
+            if (!testFlightButton || !modal || !continueButton || !closeButton) {
+                return;
+            }
+
+            const openModal = (event) => {
+                event.preventDefault();
+                modal.classList.add('is-visible');
+                document.body.classList.add('modal-open');
+                continueButton.focus();
+            };
+
+            const closeModal = () => {
+                modal.classList.remove('is-visible');
+                document.body.classList.remove('modal-open');
+                testFlightButton.focus();
+            };
+
+            testFlightButton.addEventListener('click', openModal);
+            closeButton.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+                    closeModal();
+                }
+            });
+
+            continueButton.addEventListener('click', () => {
+                closeModal();
+                const newWindow = window.open(TESTFLIGHT_URL, '_blank');
+                if (newWindow) {
+                    newWindow.opener = null;
+                }
+            });
+        });
 
     </script>
 </body>
