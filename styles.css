@@ -2968,8 +2968,6 @@ body.swiping * {
 
 body.modal-open {
     overflow: hidden;
-    position: fixed;
-    width: 100%;
 }
 
 @media (max-width: 480px) {
