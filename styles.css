@@ -2916,23 +2916,44 @@ body.swiping * {
     padding: 32px;
     max-width: 480px;
     width: 100%;
+    max-height: 90vh;
     box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.4);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(30, 64, 175, 0.35);
+    border-radius: 999px;
 }
 
 .modal-body h3 {
     font-size: 1.5rem;
     color: #1e40af;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 }
 
 .modal-body p {
     color: #1f2937;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .modal-image-wrapper {
-    margin-bottom: 24px;
+    margin-bottom: 8px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(30, 64, 175, 0.25);
@@ -2946,6 +2967,7 @@ body.swiping * {
 .modal-primary {
     width: 100%;
     justify-content: center;
+    margin-top: 8px;
 }
 
 .modal-close {
