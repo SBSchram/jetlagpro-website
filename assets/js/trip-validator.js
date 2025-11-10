@@ -334,14 +334,14 @@ class TripValidator {
      * @param {Object} options - Filtering options
      * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
      * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
-     * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: ['2330B376', '7482966F'])
+     * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: ['2330B376', '7482966F', '5E001B36'])
      * @returns {Array} - Filtered array of trips for analysis
      */
     static filterForAnalysis(trips, options = {}) {
         const {
             requireSurvey = false,
             excludeDeveloper = true,
-            developerDeviceIds = ['2330B376', '7482966F']
+            developerDeviceIds = ['2330B376', '7482966F', '5E001B36', '23DB54B0']
         } = options;
         
         let filtered = trips;
