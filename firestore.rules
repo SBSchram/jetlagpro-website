@@ -19,9 +19,13 @@ service cloud.firestore {
         // 1. Document ID matches tripId in data (blocks standalone surveys)
         request.resource.data.tripId == tripId
         
-        // 2. TripId is valid app format (blocks "naked-survey-code")
-        // Real format: 7482966F-DXBE-251025-0946 (8hex-4hex-6digit-4digit)
-        && tripId.matches('^[A-F0-9]{8}-[A-F0-9]{4}-[0-9]{6}-[0-9]{4}$')
+        // 2. TripId matches supported formats (legacy + HMAC signature)
+        // Legacy format: 7482966F-DXBE-251025-0946 (8hex-4hex-6digit-4digit)
+        // HMAC format:   7482966F-DXBE-251025-0946-1fff947f (adds 8char signature)
+        && (
+          tripId.matches('^[A-F0-9]{8}-[A-F0-9]{4}-[0-9]{6}-[0-9]{4}$')
+          || tripId.matches('^[A-F0-9]{8}-[A-F0-9]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$')
+        )
         
         // 3. Write includes metadata object
         && request.resource.data.keys().hasAll(['_writeMetadata'])
@@ -36,20 +40,28 @@ service cloud.firestore {
         && request.resource.data._writeMetadata.timestamp is timestamp;
       
       // -------------------- UPDATE ACCESS --------------------
-      // Allow updates ONLY if:
+      // Allow updates ONLY if final document maintains metadata integrity:
       allow update: if 
-        // Write includes proper metadata
-        request.resource.data.keys().hasAll(['_writeMetadata'])
+        // Final document (after merge) includes metadata
+        request.resource.data._writeMetadata != null
         && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
         && request.resource.data._writeMetadata.timestamp is timestamp
+        // Original metadata must still exist (cannot be deleted)
+        && resource.data._writeMetadata != null
         
         // AND one of these conditions:
         && (
           // 1. Survey not yet completed (any updates allowed)
           resource.data.surveyCompleted != true
           
-          // 2. Web survey retaking/editing (all survey fields allowed)
-          || request.resource.data._writeMetadata.source == 'web_survey'
+          // 2. Web survey retaking/editing (allows survey fields)
+          || (
+            request.resource.data.keys().hasAny(['_surveyMetadata', 'surveyCompleted'])
+            && (
+              request.resource.data._surveyMetadata.source == 'web_survey'
+              || resource.data._surveyMetadata.source == 'web_survey'
+            )
+          )
           
           // 3. iOS app updating point completions during active trip
           || (request.resource.data._writeMetadata.source == 'ios_app' 
