@@ -2853,18 +2853,6 @@ body.swiping * {
     margin-bottom: 20px;
 }
 
-.beta-step.info-step {
-    background: #eff6ff;
-    border: 2px solid #3b82f6;
-    color: #1e3a8a;
-}
-
-.beta-step.info-step p {
-    color: #1e3a8a;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
 /* Mobile responsive for beta steps */
 @media (max-width: 768px) {
     .beta-steps {
@@ -2931,9 +2919,10 @@ body.swiping * {
 }
 
 .modal-body p {
-    color: #1f2937;
+    color: #dc2626;
     margin-bottom: 20px;
     line-height: 1.5;
+    font-weight: 600;
 }
 
 .modal-image-wrapper {
@@ -2999,8 +2988,8 @@ body.modal-open {
         font-size: 0.95rem;
         margin-bottom: 12px;
         margin-top: 8px;
-        font-weight: 500;
-        color: #1e40af;
+        font-weight: 600;
+        color: #dc2626;
     }
     
     .modal-image-wrapper {

@@ -329,7 +329,7 @@
         <section id="download" class="download">
             <div class="container">
                 <div class="download-content">
-                    <h2>Get JetLagPro in 3 Steps</h2>
+                    <h2>Get JetLagPro in 2 Steps</h2>
                     
                     <div class="beta-steps">
                         <div class="beta-step">
@@ -337,21 +337,16 @@
                             <div class="step-logo">
                                 <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
                             </div>
-                            <p>Apple requires TestFlight for all beta apps. You’ll return here after installation.</p>
+                            <p>Apple requires TestFlight for all beta apps. You'll return here after installation.</p>
                             <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
                         </div>
                         
-                        <div class="beta-step info-step">
-                            <h3>Step 2: Close the Redeem Screen</h3>
-                            <p>After TestFlight installs, it launches automatically. When you see the Redeem screen, close TestFlight and return to this tab for Step 3.</p>
-                        </div>
-                        
                         <div class="beta-step">
-                            <h3>Step 3: Install JetLagPro</h3>
+                            <h3>Step 2: Install JetLagPro</h3>
                             <div class="step-logo">
                                 <img src="/favicon.ico" alt="JetLagPro" style="width: 64px; height: 64px;">
                             </div>
-                            <p>Once you’re back on this page, tap below to install JetLagPro.</p>
+                            <p>Once you're back on this page, tap below to install JetLagPro.</p>
                             <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
                         </div>
                     </div>
@@ -362,7 +357,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <div class="modal-body">
-                                <p id="testflightModalDescription">After TestFlight installs, close it when you see this screen and return here.</p>
+                                <p id="testflightModalDescription">After TestFlight shows you this screen, close it and return here.</p>
                                 <div class="modal-image-wrapper">
                                     <img src="assets/images/TestFlightRedeem.JPG?v=3" alt="Screenshot of TestFlight Redeem screen that should be closed" class="modal-image">
                                 </div>
@@ -521,11 +516,19 @@
             });
 
             continueButton.addEventListener('click', () => {
+                // Prevent double-triggering
+                if (continueButton.disabled) return;
+                continueButton.disabled = true;
+                continueButton.textContent = 'Opening...';
+                
                 closeModal();
-                const newWindow = window.open(TESTFLIGHT_URL, '_blank');
-                if (newWindow) {
-                    newWindow.opener = null;
-                } else {
+                
+                // Mark as visited to prevent re-prompts
+                sessionStorage.setItem('testflightVisited', 'true');
+                
+                // Try to open in new tab, fallback to redirect
+                const newWindow = window.open(TESTFLIGHT_URL, '_blank', 'noopener,noreferrer');
+                if (!newWindow) {
                     window.location.href = TESTFLIGHT_URL;
                 }
             });
