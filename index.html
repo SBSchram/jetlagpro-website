@@ -337,7 +337,7 @@
                             <div class="step-logo">
                                 <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
                             </div>
-                            <p>Apple requires TestFlight for all beta apps. You'll return here after installation.</p>
+                            <p>Apple requires TestFlight for all beta apps.</p>
                             <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
                         </div>
                         
@@ -346,7 +346,6 @@
                             <div class="step-logo">
                                 <img src="/favicon.ico" alt="JetLagPro" style="width: 64px; height: 64px;">
                             </div>
-                            <p>Once you're back on this page, tap below to install JetLagPro.</p>
                             <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
                         </div>
                     </div>
@@ -489,6 +488,13 @@
                 if (event) {
                     event.preventDefault();
                 }
+                
+                // If already visited TestFlight, skip modal and go directly
+                if (sessionStorage.getItem('testflightVisited') === 'true') {
+                    window.location.href = TESTFLIGHT_URL;
+                    return;
+                }
+                
                 modal.classList.add('is-visible');
                 document.body.classList.add('modal-open');
                 continueButton.focus({ preventScroll: true });
@@ -526,11 +532,8 @@
                 // Mark as visited to prevent re-prompts
                 sessionStorage.setItem('testflightVisited', 'true');
                 
-                // Try to open in new tab, fallback to redirect
-                const newWindow = window.open(TESTFLIGHT_URL, '_blank', 'noopener,noreferrer');
-                if (!newWindow) {
-                    window.location.href = TESTFLIGHT_URL;
-                }
+                // Navigate directly to avoid Safari's "Open in AppStore?" prompt on return
+                window.location.href = TESTFLIGHT_URL;
             });
         })();
 
