@@ -480,7 +480,7 @@
         // Clean two-step process - no auto-copy needed
         
         // TestFlight warning modal
-        document.addEventListener('DOMContentLoaded', () => {
+        (function () {
             const testFlightButton = document.getElementById('openTestFlightModal');
             const modal = document.getElementById('testflightModal');
             const continueButton = document.getElementById('continueToTestFlight');
@@ -492,16 +492,18 @@
             }
 
             const openModal = (event) => {
-                event.preventDefault();
+                if (event) {
+                    event.preventDefault();
+                }
                 modal.classList.add('is-visible');
                 document.body.classList.add('modal-open');
-                continueButton.focus();
+                continueButton.focus({ preventScroll: true });
             };
 
             const closeModal = () => {
                 modal.classList.remove('is-visible');
                 document.body.classList.remove('modal-open');
-                testFlightButton.focus();
+                testFlightButton.focus({ preventScroll: true });
             };
 
             testFlightButton.addEventListener('click', openModal);
@@ -524,9 +526,11 @@
                 const newWindow = window.open(TESTFLIGHT_URL, '_blank');
                 if (newWindow) {
                     newWindow.opener = null;
+                } else {
+                    window.location.href = TESTFLIGHT_URL;
                 }
             });
-        });
+        })();
 
     </script>
 </body>
