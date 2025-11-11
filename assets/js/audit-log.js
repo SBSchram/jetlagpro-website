@@ -165,7 +165,27 @@ function renderAuditEntry(entry) {
     
     // Build changes display (for UPDATE operations)
     let changesHtml = '';
-    if (entry.operation === 'UPDATE' && entry.changedFields && entry.changedFields.length > 0) {
+    if (entry.operation === 'UPDATE' && entry.changes && Object.keys(entry.changes).length > 0) {
+        changesHtml = `
+            <div class="audit-changes">
+                <h4>📝 Changed Fields (${Object.keys(entry.changes).length}):</h4>
+                <div class="change-list">
+                    ${Object.entries(entry.changes).map(([fieldName, changeObj]) => {
+                        const beforeValue = formatValue(changeObj.before);
+                        const afterValue = formatValue(changeObj.after);
+                        return `
+                            <div class="change-item">
+                                <span class="field-name">${escapeHtml(fieldName)}:</span><br>
+                                <span class="old-value">Before: ${escapeHtml(beforeValue)}</span><br>
+                                <span class="new-value">After: ${escapeHtml(afterValue)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    } else if (entry.operation === 'UPDATE' && entry.changedFields && entry.changedFields.length > 0) {
+        // Fallback for old format (field names only)
         changesHtml = `
             <div class="audit-changes">
                 <h4>📝 Changed Fields (${entry.changedFields.length}):</h4>
@@ -330,6 +350,41 @@ function exportAuditLog() {
     document.body.removeChild(link);
     
     console.log(`✅ Exported ${filteredData.length} entries to ${filename}`);
+}
+
+/**
+ * Format value for display (handles objects, arrays, null, etc.)
+ */
+function formatValue(value) {
+    if (value === null || value === undefined) {
+        return '(empty)';
+    }
+    if (typeof value === 'object') {
+        // Handle Firestore timestamps
+        if (value.toDate && typeof value.toDate === 'function') {
+            return value.toDate().toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        // Handle regular objects/arrays
+        const jsonStr = JSON.stringify(value, null, 2);
+        // Truncate very long values
+        if (jsonStr.length > 200) {
+            return jsonStr.substring(0, 200) + '... (truncated)';
+        }
+        return jsonStr;
+    }
+    if (typeof value === 'boolean') {
+        return value ? 'true' : 'false';
+    }
+    if (typeof value === 'string' && value.length > 500) {
+        return value.substring(0, 500) + '... (truncated)';
+    }
+    return String(value);
 }
 
 /**

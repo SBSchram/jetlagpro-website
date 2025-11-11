@@ -307,24 +307,41 @@ body {
 
 .change-item {
     font-size: 0.9rem;
-    padding: 8px;
+    padding: 12px;
     background: #f5f5f5;
     border-radius: 4px;
-    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-color);
+    line-height: 1.6;
 }
 
 .change-item .field-name {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--primary-color);
+    font-size: 1rem;
+    display: inline-block;
+    margin-bottom: 4px;
 }
 
 .change-item .old-value {
     color: var(--error-color);
-    text-decoration: line-through;
+    background: #ffebee;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin: 2px 0;
 }
 
 .change-item .new-value {
     color: var(--success-color);
+    background: #e8f5e9;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin: 2px 0;
 }
 
 /* Severity Badges */
