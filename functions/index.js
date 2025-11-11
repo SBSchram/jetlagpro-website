@@ -245,8 +245,8 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   for (const key of allKeys) {
     if (JSON.stringify(beforeData[key]) !== JSON.stringify(afterData[key])) {
       changes[key] = {
-        before: beforeData[key],
-        after: afterData[key],
+        before: beforeData[key] !== undefined ? beforeData[key] : null,
+        after: afterData[key] !== undefined ? afterData[key] : null,
       };
     }
   }
