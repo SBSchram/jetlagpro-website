@@ -36,8 +36,11 @@ service cloud.firestore {
         // 5. Source is from approved list
         && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
         
-        // 6. Timestamp is server timestamp
-        && request.resource.data._writeMetadata.timestamp is timestamp;
+        // 6. Timestamp is present (accept both server timestamp and ISO8601 string for backward compatibility)
+        && (
+          request.resource.data._writeMetadata.timestamp is timestamp
+          || request.resource.data._writeMetadata.timestamp is string
+        );
       
       // -------------------- UPDATE ACCESS --------------------
       // Allow updates ONLY if final document maintains metadata integrity:
@@ -45,7 +48,10 @@ service cloud.firestore {
         // Final document (after merge) includes metadata
         request.resource.data._writeMetadata != null
         && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
-        && request.resource.data._writeMetadata.timestamp is timestamp
+        && (
+          request.resource.data._writeMetadata.timestamp is timestamp
+          || request.resource.data._writeMetadata.timestamp is string
+        )
         // Original metadata must still exist (cannot be deleted)
         && resource.data._writeMetadata != null
         
