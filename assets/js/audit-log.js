@@ -119,6 +119,10 @@ function renderTableRow(entry, index) {
     let sourceClass = '';
     let rawSource = entry.source;
 
+    if (!rawSource && entry.metadata?.surveyMetadata?.source === 'web_survey') {
+        rawSource = 'web_survey';
+    }
+
     if (!rawSource && (entry.operation === 'CREATE' || entry.operation === 'UPDATE')) {
         const writeMetadata = entry.metadata?.writeMetadata ||
                              entry.dataSnapshot?._writeMetadata ||
