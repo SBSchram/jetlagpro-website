@@ -1,22 +1,31 @@
 /**
- * JetLagPro Cloud Functions - Phase 2: Audit Logging & HMAC Validation
+ * JetLagPro Cloud Functions - Phase 2.5: Immutable Audit Logging
  * 
  * Functions:
- * 1. auditLogger - Logs all tripCompletions writes to auditLog collection
+ * 1. auditLoggerCreate/Update/Delete - Logs all tripCompletions writes to both Firestore and GCS
  * 2. hmacValidator - Validates HMAC signatures on trip creation
  * 3. metadataValidator - Checks metadata consistency (device IDs, timestamps, builds)
+ * 
+ * Phase 2.5 Addition: Dual-write system
+ * - Firestore (auditLog collection) for real-time viewing
+ * - GCS (jetlagpro-audit-logs bucket) for immutable 10-year retention
  */
 
 const {setGlobalOptions} = require("firebase-functions/v2");
 const {onDocumentCreated, onDocumentUpdated, onDocumentDeleted} = require("firebase-functions/v2/firestore");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const {Storage} = require("@google-cloud/storage");
 const logger = require("firebase-functions/logger");
 const crypto = require("crypto");
 
 // Initialize Firebase Admin
 initializeApp();
 const db = getFirestore();
+
+// Initialize Google Cloud Storage
+const storage = new Storage();
+const auditBucket = storage.bucket("jetlagpro-audit-logs");
 
 // Set global options for cost control
 setGlobalOptions({
@@ -27,6 +36,59 @@ setGlobalOptions({
 // HMAC Secret Key (same as iOS/RN apps)
 // TODO: Move to environment variable before production deployment
 const HMAC_SECRET = "7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a";
+
+/**
+ * Writes audit entry to both Firestore (real-time) and GCS (immutable).
+ * 
+ * @param {Object} auditEntry - The audit log entry to write
+ * @return {Promise<void>}
+ */
+async function writeAuditEntry(auditEntry) {
+  try {
+    // 1. Write to Firestore (for real-time viewing)
+    const firestoreRef = await db.collection("auditLog").add(auditEntry);
+    logger.info(`✅ Firestore: Audit entry written (${firestoreRef.id})`);
+
+    // 2. Write to GCS (immutable archive)
+    const timestamp = Date.now();
+    const operation = auditEntry.operation || "UNKNOWN";
+    const tripId = auditEntry.tripId || auditEntry.documentId || "unknown";
+    const fileName = `${timestamp}-${operation}-${tripId}.json`;
+    const file = auditBucket.file(`audit-logs/${fileName}`);
+
+    // Prepare entry for GCS (convert Firestore timestamps to ISO strings)
+    const gcsEntry = JSON.parse(JSON.stringify(auditEntry, (key, value) => {
+      // Convert Firestore FieldValue.serverTimestamp() sentinel to ISO string
+      if (value && value._methodName === "FieldValue.serverTimestamp") {
+        return new Date().toISOString();
+      }
+      // Convert Firestore Timestamp objects to ISO strings
+      if (value && typeof value === "object" && value._seconds) {
+        return new Date(value._seconds * 1000).toISOString();
+      }
+      return value;
+    }));
+
+    await file.save(JSON.stringify(gcsEntry, null, 2), {
+      metadata: {
+        contentType: "application/json",
+        // Custom metadata for searchability
+        operation: operation,
+        tripId: tripId,
+        severity: auditEntry.severity || "INFO",
+        timestamp: new Date().toISOString(),
+        // Firestore document ID for cross-reference
+        firestoreDocId: firestoreRef.id,
+      },
+    });
+
+    logger.info(`✅ GCS: Audit entry written (${fileName})`);
+  } catch (error) {
+    logger.error("❌ Error writing audit entry:", error);
+    // Don't throw - we don't want to break the main operation
+    // Just log the error for monitoring
+  }
+}
 
 /**
  * Calculate HMAC-SHA256 signature
@@ -152,7 +214,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   };
   
   try {
-    await db.collection("auditLog").add(auditEntry);
+    await writeAuditEntry(auditEntry);
     logger.info(`✅ Audit log created for trip ${tripId}`, {tripId, operation: "CREATE"});
   } catch (error) {
     logger.error(`❌ Failed to create audit log for trip ${tripId}`, {tripId, error: error.message});
@@ -209,7 +271,7 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   };
   
   try {
-    await db.collection("auditLog").add(auditEntry);
+    await writeAuditEntry(auditEntry);
     logger.info(`✅ Audit log created for trip update ${tripId}`, {
       tripId,
       operation: "UPDATE",
@@ -256,7 +318,7 @@ exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async 
   };
   
   try {
-    await db.collection("auditLog").add(auditEntry);
+    await writeAuditEntry(auditEntry);
     logger.warn(`⚠️ Audit log created for trip deletion ${tripId}`, {tripId, operation: "DELETE"});
   } catch (error) {
     logger.error(`❌ Failed to create audit log for trip deletion ${tripId}`, {tripId, error: error.message});
@@ -289,7 +351,7 @@ exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (eve
     });
     
     // Log to audit trail
-    await db.collection("auditLog").add({
+    await writeAuditEntry({
       operation: "HMAC_VALIDATION_FAILED",
       collection: "tripCompletions",
       documentId: tripId,
@@ -337,7 +399,7 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
     });
     
     // Log to audit trail
-    await db.collection("auditLog").add({
+    await writeAuditEntry({
       operation: "METADATA_VALIDATION_FAILED",
       collection: "tripCompletions",
       documentId: tripId,
