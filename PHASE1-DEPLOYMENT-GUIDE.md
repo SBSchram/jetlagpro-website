@@ -56,14 +56,14 @@ If you deploy rules before updating the iOS app:
 
 ---
 
-## 📋 Pre-Deployment Checklist
+## 📋 Pre-Deployment Checklist (as of 2025-11-10)
 
 Before deploying, verify:
-- [ ] Web survey code changes reviewed and deployed
-- [ ] iOS app updated with `_writeMetadata` code
-- [ ] iOS app tested locally (Xcode)
-- [ ] iOS app deployed to TestFlight
-- [ ] At least a few trips created with new iOS version
+- [x] Web survey code changes reviewed and deployed
+- [x] iOS app updated with `_writeMetadata` code
+- [x] iOS app tested locally (Xcode)
+- [x] iOS app deployed to TestFlight (Build 6, HMAC)
+- [x] At least a few trips created with new iOS version (Nov 10 test trip `2330B376-ISTE-251110-1024-1fff947f`)
 - [ ] Have Firebase Console access
 - [ ] Have Firebase CLI installed (optional, for CLI deployment)
 - [ ] Understand rollback procedure (see bottom)
@@ -109,7 +109,7 @@ Before deploying, verify:
 
 ---
 
-### Step 2: Update iOS App Code (COMPLETED ✅)
+### Step 2: Update iOS App Code & Ship to TestFlight (COMPLETED ✅ — Build 6 live on TestFlight as of 2025-11-10)
 
 **Follow `iOS-WriteMetadata-Template.swift` to:**
 
@@ -119,10 +119,11 @@ Before deploying, verify:
 4. Test app locally or with TestFlight
 5. Verify Firebase documents have `_writeMetadata` field (done – see Nov 7 sample)
 
-**Testing iOS app:**
-- Complete a trip in the app
-- Check Firebase Console
-- Verify document has `_writeMetadata.source = "ios_app"`
+**Testing iOS app (completed Nov 10, 2025):**
+- ✅ Complete a trip in the app
+- ✅ Check Firebase Console
+- ✅ Verify document has `_writeMetadata.source = "ios_app"`
+- ✅ Upload Build 6 (HMAC) to TestFlight and confirm processing complete
 
 ---
 
