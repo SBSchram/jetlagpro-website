@@ -178,6 +178,20 @@ function validateMetadata(metadata) {
 }
 
 /**
+ * Determine canonical source string for audit entries.
+ * Prioritizes write metadata source, then survey metadata, with optional fallback.
+ */
+function resolveSource(writeMetadata, surveyMetadata, fallback = null) {
+  if (writeMetadata && typeof writeMetadata.source === "string" && writeMetadata.source.trim() !== "") {
+    return writeMetadata.source.trim();
+  }
+  if (surveyMetadata && typeof surveyMetadata.source === "string" && surveyMetadata.source.trim() !== "") {
+    return surveyMetadata.source.trim();
+  }
+  return fallback;
+}
+
+/**
  * Audit Logger - Logs all tripCompletions writes
  * Triggers on document creation
  */
@@ -191,6 +205,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   }
   
   const data = snapshot.data();
+  const source = resolveSource(data._writeMetadata, data._surveyMetadata, "firebase_console");
   
   // Create audit log entry (minimal - full data is in tripCompletions)
   const auditEntry = {
@@ -203,6 +218,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
     destinationCode: data.destinationCode || null,
     originTimezone: data.originTimezone || null,
     arrivalTimeZone: data.arrivalTimeZone || null,
+    source: source,
     // Store metadata for source verification
     metadata: {
       writeMetadata: data._writeMetadata || null,
@@ -237,6 +253,7 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   
   const beforeData = beforeSnapshot.data();
   const afterData = afterSnapshot.data();
+  const source = resolveSource(afterData._writeMetadata, afterData._surveyMetadata, "firebase_console");
   
   // Calculate what changed
   const changes = {};
@@ -260,6 +277,7 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
     timestamp: FieldValue.serverTimestamp(),
     changes: changes, // Only the fields that changed
     changedFields: Object.keys(changes), // Field names for easy filtering
+    source: source,
     // Store metadata to identify source (app vs survey vs console)
     metadata: {
       writeMetadata: afterData._writeMetadata || null,
@@ -299,6 +317,7 @@ exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async 
   }
   
   const data = snapshot.data();
+  const source = resolveSource(data._writeMetadata, data._surveyMetadata, "firebase_console");
   
   // Create audit log entry for deletion
   const auditEntry = {
@@ -310,6 +329,7 @@ exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async 
     deletedData: data,
     severity: "WARNING",
     message: `⚠️ Trip ${tripId} deleted from Firebase Console`,
+    source: source,
     metadata: {
       writeMetadata: data._writeMetadata || null,
       surveyMetadata: data._surveyMetadata || null,
@@ -356,6 +376,7 @@ exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (eve
       collection: "tripCompletions",
       documentId: tripId,
       timestamp: FieldValue.serverTimestamp(),
+      source: resolveSource(data._writeMetadata, data._surveyMetadata, data._writeMetadata?.source || null),
       reason: validation.reason,
       metadata: data._writeMetadata || null,
       eventId: event.id,
@@ -404,6 +425,7 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
       collection: "tripCompletions",
       documentId: tripId,
       timestamp: FieldValue.serverTimestamp(),
+      source: resolveSource(metadata, data._surveyMetadata, metadata?.source || null),
       issues: validation.issues,
       metadata: metadata || null, // Handle undefined metadata
       eventId: event.id,
