@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Audit Log Viewer</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="JetLagPro Research Data Audit Trail">
+    <script src="load-common-head.js?v=20250912224615"></script>
+    
+    <!-- External CSS and JavaScript files -->
+    <link rel="stylesheet" href="assets/css/audit-log.css">
+    <script src="assets/js/firebase-service.js"></script>
+    <script src="assets/js/audit-log.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Audit Log Viewer</h1>
+            <p class="subtitle">Complete tamper-detection trail for research data integrity</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-section">
+            <h2>Filters</h2>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="operationFilter">Operation Type:</label>
+                    <select id="operationFilter">
+                        <option value="all">All Operations</option>
+                        <option value="CREATE">CREATE</option>
+                        <option value="UPDATE">UPDATE</option>
+                        <option value="VALIDATION">VALIDATION</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="severityFilter">Severity:</label>
+                    <select id="severityFilter">
+                        <option value="all">All Levels</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARNING">WARNING</option>
+                        <option value="ERROR">ERROR</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tripIdSearch">Trip ID:</label>
+                    <input type="text" id="tripIdSearch" placeholder="Search by trip ID...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="dateRange">Date Range:</label>
+                    <select id="dateRange">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn-secondary" onclick="resetFilters()">Reset</button>
+                <button class="btn-export" onclick="exportAuditLog()">📥 Export CSV</button>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-value" id="totalEntries">-</div>
+                <div class="stat-label">Total Entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="createCount">-</div>
+                <div class="stat-label">Creates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="updateCount">-</div>
+                <div class="stat-label">Updates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="validationCount">-</div>
+                <div class="stat-label">Validations</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-value" id="warningCount">-</div>
+                <div class="stat-label">Warnings</div>
+            </div>
+        </div>
+
+        <!-- Audit Log Timeline -->
+        <div class="data-section">
+            <h2>Audit Trail Timeline</h2>
+            <div id="auditLog" class="audit-timeline loading">Loading audit log...</div>
+        </div>
+
+        <!-- Export Info -->
+        <div class="info-section">
+            <h3>ℹ️ About This Audit Log</h3>
+            <p>This log records every operation on research data for tamper detection and verification. All entries are immutable and written by Cloud Functions only.</p>
+            <ul>
+                <li><strong>CREATE:</strong> New trip completion submitted (app or web survey)</li>
+                <li><strong>UPDATE:</strong> Existing trip modified (point completions or survey edits)</li>
+                <li><strong>VALIDATION:</strong> HMAC signature and metadata consistency checks</li>
+                <li><strong>Before/After:</strong> Shows what changed in each update for transparency</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
