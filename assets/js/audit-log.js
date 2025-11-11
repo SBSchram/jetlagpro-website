@@ -68,6 +68,12 @@ async function loadAuditLog() {
         });
         
         console.log(`✅ Loaded ${auditLogData.length} audit entries (${allEntries.length} total)`);
+        console.log('🔎 Sample entries:', auditLogData.slice(0, 3).map(entry => ({
+            operation: entry.operation,
+            source: entry.source,
+            writeSource: entry.metadata?.writeMetadata?.source,
+            surveySource: entry.metadata?.surveyMetadata?.source
+        })));
         
         renderAuditTable();
         updateStats();
