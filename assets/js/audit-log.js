@@ -98,71 +98,30 @@ function renderAuditTable() {
  * Render individual table row
  */
 function renderTableRow(entry, index) {
-    // Extract data from entry
     const timestamp = entry.timestamp ? entry.timestamp.toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
     }) : '-';
-    
+
     const action = entry.operation || 'VALIDATION';
     const actionClass = `action-${action}`;
-    
-    // Validation status
-    const validStatus = entry.validationStatus === 'invalid' ? 
-        '<span class="valid-no">✗</span>' : 
-        '<span class="valid-yes">✓</span>';
-    
-    // Determine source
-    let source = '-';
-    let sourceClass = '';
-    let rawSource = entry.source;
 
-    if (entry.operation === 'UPDATE' && entry.metadata?.surveyMetadata?.source === 'web_survey') {
-        rawSource = 'web_survey';
-    } else if (!rawSource) {
-        const writeMetadata = entry.metadata?.writeMetadata ||
-                             entry.dataSnapshot?._writeMetadata ||
-                             entry.beforeSnapshot?._writeMetadata ||
-                             entry.afterSnapshot?._writeMetadata;
-        const surveyMetadata = entry.operation === 'DELETE' ? null : (entry.metadata?.surveyMetadata ||
-                               entry.dataSnapshot?._surveyMetadata ||
-                               entry.beforeSnapshot?._surveyMetadata ||
-                               entry.afterSnapshot?._surveyMetadata);
-        rawSource = writeMetadata?.source || surveyMetadata?.source || null;
-    }
+    const validStatus = entry.validationStatus === 'invalid'
+        ? '<span class=\"valid-no\">✗</span>'
+        : '<span class=\"valid-yes\">✓</span>';
 
-    if (rawSource) {
-        switch (rawSource) {
-            case 'ios_app':
-                source = 'App';
-                sourceClass = 'source-app';
-                break;
-            case 'web_survey':
-                source = 'Survey';
-                sourceClass = 'source-survey';
-                break;
-            case 'firebase_console':
-            case 'console':
-                source = 'FC';
-                sourceClass = 'source-console';
-                break;
-            default:
-                source = rawSource;
-                sourceClass = 'source-console';
-        }
-    }
-    
-    // Extract trip data
+    const rawSource = determineRawSource(entry);
+    const {label: source, cssClass: sourceClass} = mapSource(rawSource);
+
     const tripId = entry.tripId || entry.documentId || '';
     const surveyCode = tripId ? tripId.split('-')[0] : '-';
-    
-    // Extract origin, dest, arrival from snapshot
+
     let origin = '-';
     let dest = '-';
     let arrival = '-';
-    
+
     if (entry.operation === 'CREATE' && entry.dataSnapshot) {
         origin = entry.dataSnapshot.originTimezone || '-';
         dest = entry.dataSnapshot.destinationCode || '-';
@@ -172,42 +131,39 @@ function renderTableRow(entry, index) {
         dest = entry.afterSnapshot.destinationCode || '-';
         arrival = entry.afterSnapshot.arrivalTimeZone || '-';
     }
-    
-    // Format origin and arrival (show just timezone name)
+
     origin = formatTimezone(origin);
     arrival = formatTimezone(arrival);
-    
-    // Determine if expandable (console edits only)
+
     const isExpandable = source === 'FC' && entry.changes && Object.keys(entry.changes).length > 0;
     const expandClass = isExpandable ? 'expandable' : '';
-    const onclick = isExpandable ? `onclick="toggleExpand(${index})"` : '';
-    
+    const onclick = isExpandable ? `onclick=\"toggleExpand(${index})\"` : '';
+
     let html = `
-        <tr class="${expandClass}" ${onclick} data-index="${index}">
+        <tr class=\"${expandClass}\" ${onclick} data-index=\"${index}\">
             <td>${timestamp}</td>
-            <td class="${actionClass}">${action}</td>
+            <td class=\"${actionClass}\">${action}</td>
             <td>${validStatus}</td>
-            <td class="${sourceClass}">${source}</td>
+            <td class=\"${sourceClass}\">${source}</td>
             <td>${surveyCode}</td>
             <td>${origin}</td>
             <td>${dest}</td>
             <td>${arrival}</td>
         </tr>
     `;
-    
-    // Add expanded row for console edits
+
     if (isExpandable) {
         html += `
-            <tr class="expanded-row" id="expanded-${index}">
-                <td colspan="8">
-                    <div class="expanded-content">
+            <tr class=\"expanded-row\" id=\"expanded-${index}\">
+                <td colspan=\"8\">
+                    <div class=\"expanded-content\">
                         <h4>Console Changes:</h4>
-                        <div class="change-list">
+                        <div class=\"change-list\">
                             ${Object.entries(entry.changes).map(([field, change]) => `
-                                <div class="change-item">
-                                    <span class="field-name">${escapeHtml(field)}</span>
-                                    <span class="old-value">Before: ${escapeHtml(formatValue(change.before))}</span>
-                                    <span class="new-value">After: ${escapeHtml(formatValue(change.after))}</span>
+                                <div class=\"change-item\">
+                                    <span class=\"field-name\">${escapeHtml(field)}</span>
+                                    <span class=\"old-value\">Before: ${escapeHtml(formatValue(change.before))}</span>
+                                    <span class=\"new-value\">After: ${escapeHtml(formatValue(change.after))}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -216,8 +172,48 @@ function renderTableRow(entry, index) {
             </tr>
         `;
     }
-    
+
     return html;
+}
+
+function determineRawSource(entry) {
+    if (entry.source) {
+        return entry.source;
+    }
+
+    const writeMetadata = entry.metadata?.writeMetadata ||
+        entry.dataSnapshot?._writeMetadata ||
+        entry.beforeSnapshot?._writeMetadata ||
+        entry.afterSnapshot?._writeMetadata;
+
+    if (writeMetadata && typeof writeMetadata.source === 'string') {
+        return writeMetadata.source;
+    }
+
+    const surveyMetadata = entry.metadata?.surveyMetadata ||
+        entry.dataSnapshot?._surveyMetadata ||
+        entry.beforeSnapshot?._surveyMetadata ||
+        entry.afterSnapshot?._surveyMetadata;
+
+    if (surveyMetadata && typeof surveyMetadata.source === 'string') {
+        return surveyMetadata.source;
+    }
+
+    return null;
+}
+
+function mapSource(rawSource) {
+    switch (rawSource) {
+        case 'ios_app':
+            return {label: 'App', cssClass: 'source-app'};
+        case 'web_survey':
+            return {label: 'Survey', cssClass: 'source-survey'};
+        case 'firebase_console':
+        case 'console':
+            return {label: 'FC', cssClass: 'source-console'};
+        default:
+            return {label: '-', cssClass: ''};
+    }
 }
 
 /**
