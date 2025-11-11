@@ -5,6 +5,7 @@
 class FirebaseService {
     constructor() {
         this.restUrl = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
+        this.auditLogUrl = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog";
         this.isLoading = false;
     }
 
@@ -186,6 +187,109 @@ class FirebaseService {
     // Check if service is currently loading
     isLoading() {
         return this.isLoading;
+    }
+
+    // Load audit log data from Firebase REST API
+    async getAuditLog(limit = 1000) {
+        try {
+            const url = `${this.auditLogUrl}?pageSize=${limit}&orderBy=timestamp desc`;
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            let auditEntries = [];
+            
+            if (data.documents && Array.isArray(data.documents)) {
+                data.documents.forEach((document) => {
+                    if (document.fields) {
+                        const entry = this.convertAuditLogDocument(document);
+                        if (entry) {
+                            auditEntries.push(entry);
+                        }
+                    }
+                });
+            }
+            
+            return auditEntries;
+            
+        } catch (error) {
+            console.error('Error loading audit log:', error);
+            throw new Error('Failed to load audit log from Firebase: ' + error.message);
+        }
+    }
+
+    // Convert audit log document from Firestore format
+    convertAuditLogDocument(document) {
+        try {
+            const fields = document.fields;
+            if (!fields) return null;
+
+            const entry = {
+                id: document.name.split('/').pop()
+            };
+
+            // Extract all fields
+            if (fields.operation?.stringValue) entry.operation = fields.operation.stringValue;
+            if (fields.collection?.stringValue) entry.collection = fields.collection.stringValue;
+            if (fields.documentId?.stringValue) entry.documentId = fields.documentId.stringValue;
+            if (fields.tripId?.stringValue) entry.tripId = fields.tripId.stringValue;
+            if (fields.timestamp?.timestampValue) entry.timestamp = new Date(fields.timestamp.timestampValue);
+            if (fields.severity?.stringValue) entry.severity = fields.severity.stringValue;
+            if (fields.message?.stringValue) entry.message = fields.message.stringValue;
+            if (fields.reason?.stringValue) entry.reason = fields.reason.stringValue;
+            if (fields.source?.stringValue) entry.source = fields.source.stringValue;
+            if (fields.actor?.stringValue) entry.actor = fields.actor.stringValue;
+            if (fields.eventId?.stringValue) entry.eventId = fields.eventId.stringValue;
+
+            // Extract arrays
+            if (fields.changedFields?.arrayValue?.values) {
+                entry.changedFields = fields.changedFields.arrayValue.values.map(v => v.stringValue);
+            }
+            if (fields.issues?.arrayValue?.values) {
+                entry.issues = fields.issues.arrayValue.values.map(v => v.stringValue);
+            }
+
+            // Extract changes object (nested map)
+            if (fields.changes?.mapValue?.fields) {
+                entry.changes = {};
+                Object.entries(fields.changes.mapValue.fields).forEach(([key, value]) => {
+                    if (value.mapValue?.fields) {
+                        entry.changes[key] = {
+                            before: this.extractValue(value.mapValue.fields.before),
+                            after: this.extractValue(value.mapValue.fields.after)
+                        };
+                    }
+                });
+            }
+
+            return entry;
+            
+        } catch (error) {
+            console.error('Error converting audit log document:', error);
+            return null;
+        }
+    }
+
+    // Helper to extract any type of value
+    extractValue(field) {
+        if (!field) return null;
+        if (field.stringValue !== undefined) return field.stringValue;
+        if (field.integerValue !== undefined) return parseInt(field.integerValue);
+        if (field.booleanValue !== undefined) return field.booleanValue;
+        if (field.timestampValue) return new Date(field.timestampValue);
+        if (field.nullValue) return null;
+        if (field.mapValue) return '(object)'; // Simplified for display
+        if (field.arrayValue) return '(array)'; // Simplified for display
+        return null;
     }
 }
 

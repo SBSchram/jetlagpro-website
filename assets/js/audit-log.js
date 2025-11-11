@@ -1,10 +1,11 @@
 /**
- * AUDIT LOG VIEWER
- * Displays complete tamper-detection trail for research data integrity
+ * AUDIT LOG VIEWER - REST API VERSION
+ * Simple, DRY approach using FirebaseService (same as analytics)
  */
 
 let auditLogData = [];
 let filteredData = [];
+const firebaseService = new FirebaseService();
 
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', async () => {
@@ -13,36 +14,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
- * Load audit log from Firestore
+ * Load audit log from Firestore via REST API
  */
 async function loadAuditLog() {
     try {
-        // Wait for Firebase to initialize
-        if (typeof window.firebaseDB === 'undefined') {
-            console.log('⏳ Waiting for Firebase initialization...');
-            setTimeout(loadAuditLog, 500);
-            return;
-        }
-
-        console.log('📥 Fetching audit log from Firestore...');
+        console.log('📥 Fetching audit log from Firestore REST API...');
         
-        const auditCollection = window.firebaseCollection(window.firebaseDB, 'auditLog');
-        const q = window.firebaseQuery(
-            auditCollection,
-            window.firebaseOrderBy('timestamp', 'desc'),
-            window.firebaseLimit(1000) // Last 1000 entries
-        );
+        auditLogData = await firebaseService.getAuditLog(1000);
         
-        const snapshot = await window.firebaseGetDocs(q);
-        
-        auditLogData = [];
-        snapshot.forEach((doc) => {
-            auditLogData.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-
         console.log(`✅ Loaded ${auditLogData.length} audit entries`);
         
         // Apply initial filters (show all)
@@ -87,8 +66,8 @@ function applyFilters() {
         }
         
         // Date range filter
-        if (dateRange !== 'all') {
-            const entryDate = entry.timestamp?.toDate ? entry.timestamp.toDate() : new Date(entry.timestamp);
+        if (dateRange !== 'all' && entry.timestamp) {
+            const entryDate = entry.timestamp;
             const now = new Date();
             const daysDiff = (now - entryDate) / (1000 * 60 * 60 * 24);
             
@@ -142,8 +121,7 @@ function renderAuditLog() {
  * Render individual audit entry
  */
 function renderAuditEntry(entry) {
-    const timestamp = entry.timestamp?.toDate ? entry.timestamp.toDate() : new Date(entry.timestamp);
-    const formattedTime = timestamp.toLocaleString('en-US', {
+    const formattedTime = entry.timestamp ? entry.timestamp.toLocaleString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -151,7 +129,7 @@ function renderAuditEntry(entry) {
         minute: '2-digit',
         second: '2-digit',
         timeZoneName: 'short'
-    });
+    }) : 'Unknown time';
     
     const operationClass = entry.operation || 'VALIDATION';
     const severityClass = entry.severity || 'INFO';
@@ -315,9 +293,9 @@ function exportAuditLog() {
     
     // CSV rows
     const rows = filteredData.map(entry => {
-        const timestamp = entry.timestamp?.toDate ? entry.timestamp.toDate() : new Date(entry.timestamp);
+        const timestamp = entry.timestamp ? entry.timestamp.toISOString() : '';
         return [
-            timestamp.toISOString(),
+            timestamp,
             entry.operation || '',
             entry.severity || '',
             entry.tripId || '',
@@ -359,20 +337,17 @@ function formatValue(value) {
     if (value === null || value === undefined) {
         return '(empty)';
     }
+    if (typeof value === 'object' && value instanceof Date) {
+        return value.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
     if (typeof value === 'object') {
-        // Handle Firestore timestamps
-        if (value.toDate && typeof value.toDate === 'function') {
-            return value.toDate().toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-        // Handle regular objects/arrays
         const jsonStr = JSON.stringify(value, null, 2);
-        // Truncate very long values
         if (jsonStr.length > 200) {
             return jsonStr.substring(0, 200) + '... (truncated)';
         }
@@ -395,4 +370,3 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
