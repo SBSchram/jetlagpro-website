@@ -119,16 +119,18 @@ function renderTableRow(entry, index) {
     let sourceClass = '';
     let rawSource = entry.source;
 
-    if (!rawSource && entry.metadata?.surveyMetadata?.source === 'web_survey') {
+    if (entry.operation === 'UPDATE' && entry.metadata?.surveyMetadata?.source === 'web_survey') {
         rawSource = 'web_survey';
-    }
-
-    if (!rawSource && (entry.operation === 'CREATE' || entry.operation === 'UPDATE')) {
+    } else if (!rawSource) {
         const writeMetadata = entry.metadata?.writeMetadata ||
                              entry.dataSnapshot?._writeMetadata ||
                              entry.beforeSnapshot?._writeMetadata ||
                              entry.afterSnapshot?._writeMetadata;
-        rawSource = writeMetadata?.source || null;
+        const surveyMetadata = entry.operation === 'DELETE' ? null : (entry.metadata?.surveyMetadata ||
+                               entry.dataSnapshot?._surveyMetadata ||
+                               entry.beforeSnapshot?._surveyMetadata ||
+                               entry.afterSnapshot?._surveyMetadata);
+        rawSource = writeMetadata?.source || surveyMetadata?.source || null;
     }
 
     if (rawSource) {
