@@ -53,32 +53,6 @@ Cloud Function Triggered
 
 ## Implementation Steps
 
-### Step 0: Delete Test Audit Logs (Pre-Deployment Cleanup)
-
-Before deploying Phase 2.5, delete the test audit logs from Firestore so the first GCS entries are production data only.
-
-**Via Firebase Console:**
-1. Open Firebase Console → Firestore Database
-2. Navigate to `auditLog` collection
-3. Delete all documents (should be ~7 test entries from Nov 10-11, 2025)
-4. Verify collection is empty
-
-**Via gcloud CLI (alternative):**
-```bash
-# List all audit log documents
-firebase firestore:delete auditLog --recursive --yes
-
-# Verify deletion
-firebase firestore:get auditLog
-```
-
-**Why delete test logs:**
-- Cleaner research paper (no need to explain test vs production entries)
-- Simpler audit trail (all GCS entries are production data)
-- Transparency comes from locked GCS system, not test documentation
-
----
-
 ### Step 1: Install Google Cloud Storage SDK
 
 ```bash
