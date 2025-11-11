@@ -192,7 +192,9 @@ class FirebaseService {
     // Load audit log data from Firebase REST API
     async getAuditLog(limit = 1000) {
         try {
-            const url = `${this.auditLogUrl}?pageSize=${limit}&orderBy=timestamp desc`;
+            // Note: Firestore REST API doesn't support orderBy in simple queries
+            // We'll fetch all and sort client-side
+            const url = `${this.auditLogUrl}?pageSize=${limit}`;
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -218,6 +220,12 @@ class FirebaseService {
                     }
                 });
             }
+            
+            // Sort by timestamp descending (newest first)
+            auditEntries.sort((a, b) => {
+                if (!a.timestamp || !b.timestamp) return 0;
+                return b.timestamp - a.timestamp;
+            });
             
             return auditEntries;
             
