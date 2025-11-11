@@ -29,10 +29,32 @@ body {
     padding-bottom: 10px;
 }
 
+.title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.actions-row {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.version-tag {
+    font-size: 0.85rem;
+    color: #2563eb;
+    background: #e8f0fe;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
 .header h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin: 0;
 }
 
 .header .subtitle {
@@ -236,4 +258,21 @@ body {
     .audit-table td {
         padding: 5px 8px;
     }
+}
+
+
+.refresh-button {
+    margin-left: auto;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.refresh-button:hover {
+    background: #1d4ed8;
 }

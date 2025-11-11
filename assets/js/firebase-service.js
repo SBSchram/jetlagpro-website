@@ -266,6 +266,26 @@ class FirebaseService {
                 entry.issues = fields.issues.arrayValue.values.map(v => v.stringValue);
             }
 
+            // Extract metadata for provenance
+            if (fields.metadata?.mapValue?.fields) {
+                entry.metadata = {};
+                const metadataFields = fields.metadata.mapValue.fields;
+
+                if (metadataFields.writeMetadata?.mapValue?.fields) {
+                    entry.metadata.writeMetadata = {};
+                    Object.entries(metadataFields.writeMetadata.mapValue.fields).forEach(([key, value]) => {
+                        entry.metadata.writeMetadata[key] = this.extractValue(value);
+                    });
+                }
+
+                if (metadataFields.surveyMetadata?.mapValue?.fields) {
+                    entry.metadata.surveyMetadata = {};
+                    Object.entries(metadataFields.surveyMetadata.mapValue.fields).forEach(([key, value]) => {
+                        entry.metadata.surveyMetadata[key] = this.extractValue(value);
+                    });
+                }
+            }
+
             // Extract changes object (nested map)
             if (fields.changes?.mapValue?.fields) {
                 entry.changes = {};

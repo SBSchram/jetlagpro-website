@@ -6,6 +6,14 @@
 let auditLogData = [];
 const firebaseService = new FirebaseService();
 
+async function refreshAuditLog() {
+    const tbody = document.getElementById('auditLog');
+    if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">Refreshing audit log...</td></tr>';
+    }
+    await loadAuditLog();
+}
+
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔍 Initializing Audit Log Viewer...');
@@ -109,24 +117,34 @@ function renderTableRow(entry, index) {
     // Determine source
     let source = '-';
     let sourceClass = '';
-    if (entry.operation === 'CREATE' || entry.operation === 'UPDATE') {
-        // Check metadata for source (audit logger puts it in metadata.writeMetadata)
-        const writeMetadata = entry.metadata?.writeMetadata || 
-                             entry.dataSnapshot?._writeMetadata || 
-                             entry.beforeSnapshot?._writeMetadata || 
+    let rawSource = entry.source;
+
+    if (!rawSource && (entry.operation === 'CREATE' || entry.operation === 'UPDATE')) {
+        const writeMetadata = entry.metadata?.writeMetadata ||
+                             entry.dataSnapshot?._writeMetadata ||
+                             entry.beforeSnapshot?._writeMetadata ||
                              entry.afterSnapshot?._writeMetadata;
-        if (writeMetadata && writeMetadata.source) {
-            if (writeMetadata.source === 'ios_app') {
+        rawSource = writeMetadata?.source || null;
+    }
+
+    if (rawSource) {
+        switch (rawSource) {
+            case 'ios_app':
                 source = 'App';
                 sourceClass = 'source-app';
-            } else if (writeMetadata.source === 'web_survey') {
+                break;
+            case 'web_survey':
                 source = 'Survey';
                 sourceClass = 'source-survey';
-            }
-        } else {
-            // No metadata = console edit
-            source = 'FC';
-            sourceClass = 'source-console';
+                break;
+            case 'firebase_console':
+            case 'console':
+                source = 'FC';
+                sourceClass = 'source-console';
+                break;
+            default:
+                source = rawSource;
+                sourceClass = 'source-console';
         }
     }
     
