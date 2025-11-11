@@ -8,7 +8,7 @@
  */
 
 const {setGlobalOptions} = require("firebase-functions/v2");
-const {onDocumentCreated, onDocumentUpdated} = require("firebase-functions/v2/firestore");
+const {onDocumentCreated, onDocumentUpdated, onDocumentDeleted} = require("firebase-functions/v2/firestore");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
 const logger = require("firebase-functions/logger");
@@ -130,17 +130,24 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   
   const data = snapshot.data();
   
-  // Create audit log entry
+  // Create audit log entry (minimal - full data is in tripCompletions)
   const auditEntry = {
     operation: "CREATE",
     collection: "tripCompletions",
     documentId: tripId,
+    tripId: tripId,
     timestamp: FieldValue.serverTimestamp(),
-    dataSnapshot: data,
+    // Store key trip info for quick reference
+    destinationCode: data.destinationCode || null,
+    originTimezone: data.originTimezone || null,
+    arrivalTimeZone: data.arrivalTimeZone || null,
+    // Store metadata for source verification
     metadata: {
       writeMetadata: data._writeMetadata || null,
       surveyMetadata: data._surveyMetadata || null,
     },
+    severity: "INFO",
+    message: `Trip ${tripId} created`,
     eventId: event.id,
   };
   
@@ -182,19 +189,22 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
     }
   }
   
-  // Create audit log entry
+  // Create audit log entry (store only what changed - not full snapshots)
   const auditEntry = {
     operation: "UPDATE",
     collection: "tripCompletions",
     documentId: tripId,
+    tripId: tripId,
     timestamp: FieldValue.serverTimestamp(),
-    changes: changes,
-    beforeSnapshot: beforeData,
-    afterSnapshot: afterData,
+    changes: changes, // Only the fields that changed
+    changedFields: Object.keys(changes), // Field names for easy filtering
+    // Store metadata to identify source (app vs survey vs console)
     metadata: {
       writeMetadata: afterData._writeMetadata || null,
       surveyMetadata: afterData._surveyMetadata || null,
     },
+    severity: "INFO",
+    message: `Trip ${tripId} updated (${Object.keys(changes).length} fields changed)`,
     eventId: event.id,
   };
   
@@ -210,6 +220,46 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
       tripId,
       error: error.message,
     });
+  }
+});
+
+/**
+ * Audit Logger - Logs all tripCompletions deletes
+ * Triggers on document deletion
+ */
+exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async (event) => {
+  const snapshot = event.data;
+  const tripId = event.params.tripId;
+  
+  if (!snapshot) {
+    logger.warn("No data associated with delete event");
+    return;
+  }
+  
+  const data = snapshot.data();
+  
+  // Create audit log entry for deletion
+  const auditEntry = {
+    operation: "DELETE",
+    collection: "tripCompletions",
+    documentId: tripId,
+    tripId: tripId,
+    timestamp: FieldValue.serverTimestamp(),
+    deletedData: data,
+    severity: "WARNING",
+    message: `⚠️ Trip ${tripId} deleted from Firebase Console`,
+    metadata: {
+      writeMetadata: data._writeMetadata || null,
+      surveyMetadata: data._surveyMetadata || null,
+    },
+    eventId: event.id,
+  };
+  
+  try {
+    await db.collection("auditLog").add(auditEntry);
+    logger.warn(`⚠️ Audit log created for trip deletion ${tripId}`, {tripId, operation: "DELETE"});
+  } catch (error) {
+    logger.error(`❌ Failed to create audit log for trip deletion ${tripId}`, {tripId, error: error.message});
   }
 });
 

@@ -1,10 +1,9 @@
 /**
- * AUDIT LOG VIEWER - REST API VERSION
- * Simple, DRY approach using FirebaseService (same as analytics)
+ * AUDIT LOG VIEWER - TABLE FORMAT
+ * Concise, scannable table of audit entries
  */
 
 let auditLogData = [];
-let filteredData = [];
 const firebaseService = new FirebaseService();
 
 // Initialize on page load
@@ -20,229 +19,222 @@ async function loadAuditLog() {
     try {
         console.log('📥 Fetching audit log from Firestore REST API...');
         
-        auditLogData = await firebaseService.getAuditLog(1000);
+        const allEntries = await firebaseService.getAuditLog(1000);
         
-        console.log(`✅ Loaded ${auditLogData.length} audit entries`);
+        // Group entries by trip ID to combine CREATE/UPDATE with their VALIDATION
+        const entriesByTrip = {};
+        allEntries.forEach(entry => {
+            const tripId = entry.tripId || entry.documentId;
+            if (!tripId) return;
+            
+            if (!entriesByTrip[tripId]) {
+                entriesByTrip[tripId] = { creates: [], updates: [], validations: [] };
+            }
+            
+            if (entry.operation === 'CREATE') {
+                entriesByTrip[tripId].creates.push(entry);
+            } else if (entry.operation === 'UPDATE') {
+                entriesByTrip[tripId].updates.push(entry);
+            } else if (entry.operation === 'VALIDATION') {
+                entriesByTrip[tripId].validations.push(entry);
+            }
+        });
         
-        // Apply initial filters (show all)
-        filteredData = [...auditLogData];
-        renderAuditLog();
+        // Build final list: CREATE/UPDATE entries with validation status attached
+        auditLogData = [];
+        allEntries.forEach(entry => {
+            if (entry.operation === 'VALIDATION') return; // Skip standalone validations
+            
+            const tripId = entry.tripId || entry.documentId;
+            const tripValidations = entriesByTrip[tripId]?.validations || [];
+            
+            // Check if any validation failed
+            const hasError = tripValidations.some(v => 
+                v.severity === 'ERROR' || 
+                v.reason === 'signature_invalid' ||
+                (v.issues && v.issues.length > 0)
+            );
+            
+            entry.validationStatus = hasError ? 'invalid' : 'valid';
+            auditLogData.push(entry);
+        });
+        
+        console.log(`✅ Loaded ${auditLogData.length} audit entries (${allEntries.length} total)`);
+        
+        renderAuditTable();
         updateStats();
         
     } catch (error) {
         console.error('❌ Error loading audit log:', error);
         document.getElementById('auditLog').innerHTML = `
-            <div class="empty-state">
-                <h3>⚠️ Error Loading Audit Log</h3>
-                <p>${error.message}</p>
-            </div>
+            <tr><td colspan="8" class="empty-state">Error loading audit log: ${error.message}</td></tr>
         `;
     }
 }
 
 /**
- * Apply filters to audit log
+ * Render audit log as table rows
  */
-function applyFilters() {
-    const operationFilter = document.getElementById('operationFilter').value;
-    const severityFilter = document.getElementById('severityFilter').value;
-    const tripIdSearch = document.getElementById('tripIdSearch').value.trim().toLowerCase();
-    const dateRange = document.getElementById('dateRange').value;
+function renderAuditTable() {
+    const tbody = document.getElementById('auditLog');
     
-    filteredData = auditLogData.filter(entry => {
-        // Operation filter
-        if (operationFilter !== 'all' && entry.operation !== operationFilter) {
-            return false;
-        }
-        
-        // Severity filter
-        if (severityFilter !== 'all' && entry.severity !== severityFilter) {
-            return false;
-        }
-        
-        // Trip ID search
-        if (tripIdSearch && !entry.tripId?.toLowerCase().includes(tripIdSearch)) {
-            return false;
-        }
-        
-        // Date range filter
-        if (dateRange !== 'all' && entry.timestamp) {
-            const entryDate = entry.timestamp;
-            const now = new Date();
-            const daysDiff = (now - entryDate) / (1000 * 60 * 60 * 24);
-            
-            if (dateRange === 'today' && daysDiff > 1) return false;
-            if (dateRange === 'week' && daysDiff > 7) return false;
-            if (dateRange === 'month' && daysDiff > 30) return false;
-        }
-        
-        return true;
-    });
-    
-    console.log(`🔍 Filters applied: ${filteredData.length} of ${auditLogData.length} entries shown`);
-    renderAuditLog();
-    updateStats();
-}
-
-/**
- * Reset all filters
- */
-function resetFilters() {
-    document.getElementById('operationFilter').value = 'all';
-    document.getElementById('severityFilter').value = 'all';
-    document.getElementById('tripIdSearch').value = '';
-    document.getElementById('dateRange').value = 'all';
-    
-    filteredData = [...auditLogData];
-    renderAuditLog();
-    updateStats();
-}
-
-/**
- * Render audit log timeline
- */
-function renderAuditLog() {
-    const container = document.getElementById('auditLog');
-    
-    if (filteredData.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <h3>📭 No Audit Entries Found</h3>
-                <p>Try adjusting your filters or check back later.</p>
-            </div>
-        `;
+    if (auditLogData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No audit entries found</td></tr>';
         return;
     }
     
-    container.innerHTML = filteredData.map(entry => renderAuditEntry(entry)).join('');
+    tbody.innerHTML = auditLogData.map((entry, index) => renderTableRow(entry, index)).join('');
 }
 
 /**
- * Render individual audit entry
+ * Render individual table row
  */
-function renderAuditEntry(entry) {
-    const formattedTime = entry.timestamp ? entry.timestamp.toLocaleString('en-US', {
-        year: 'numeric',
+function renderTableRow(entry, index) {
+    // Extract data from entry
+    const timestamp = entry.timestamp ? entry.timestamp.toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'short'
-    }) : 'Unknown time';
+        minute: '2-digit'
+    }) : '-';
     
-    const operationClass = entry.operation || 'VALIDATION';
-    const severityClass = entry.severity || 'INFO';
+    const action = entry.operation || 'VALIDATION';
+    const actionClass = `action-${action}`;
     
-    // Build metadata display
-    const metadata = [];
-    if (entry.tripId) metadata.push(`<div class="audit-field"><strong>Trip ID:</strong> ${entry.tripId}</div>`);
-    if (entry.operation) metadata.push(`<div class="audit-field"><strong>Operation:</strong> ${entry.operation}</div>`);
-    if (entry.source) metadata.push(`<div class="audit-field"><strong>Source:</strong> ${entry.source}</div>`);
-    if (entry.actor) metadata.push(`<div class="audit-field"><strong>Actor:</strong> ${entry.actor}</div>`);
+    // Validation status
+    const validStatus = entry.validationStatus === 'invalid' ? 
+        '<span class="valid-no">✗</span>' : 
+        '<span class="valid-yes">✓</span>';
     
-    // Build changes display (for UPDATE operations)
-    let changesHtml = '';
-    if (entry.operation === 'UPDATE' && entry.changes && Object.keys(entry.changes).length > 0) {
-        changesHtml = `
-            <div class="audit-changes">
-                <h4>📝 Changed Fields (${Object.keys(entry.changes).length}):</h4>
-                <div class="change-list">
-                    ${Object.entries(entry.changes).map(([fieldName, changeObj]) => {
-                        const beforeValue = formatValue(changeObj.before);
-                        const afterValue = formatValue(changeObj.after);
-                        return `
-                            <div class="change-item">
-                                <span class="field-name">${escapeHtml(fieldName)}:</span><br>
-                                <span class="old-value">Before: ${escapeHtml(beforeValue)}</span><br>
-                                <span class="new-value">After: ${escapeHtml(afterValue)}</span>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    } else if (entry.operation === 'UPDATE' && entry.changedFields && entry.changedFields.length > 0) {
-        // Fallback for old format (field names only)
-        changesHtml = `
-            <div class="audit-changes">
-                <h4>📝 Changed Fields (${entry.changedFields.length}):</h4>
-                <div class="change-list">
-                    ${entry.changedFields.map(change => `
-                        <div class="change-item">
-                            <span class="field-name">${escapeHtml(change)}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+    // Determine source
+    let source = '-';
+    let sourceClass = '';
+    if (entry.operation === 'CREATE' || entry.operation === 'UPDATE') {
+        // Check metadata for source (audit logger puts it in metadata.writeMetadata)
+        const writeMetadata = entry.metadata?.writeMetadata || 
+                             entry.dataSnapshot?._writeMetadata || 
+                             entry.beforeSnapshot?._writeMetadata || 
+                             entry.afterSnapshot?._writeMetadata;
+        if (writeMetadata && writeMetadata.source) {
+            if (writeMetadata.source === 'ios_app') {
+                source = 'App';
+                sourceClass = 'source-app';
+            } else if (writeMetadata.source === 'web_survey') {
+                source = 'Survey';
+                sourceClass = 'source-survey';
+            }
+        } else {
+            // No metadata = console edit
+            source = 'FC';
+            sourceClass = 'source-console';
+        }
     }
     
-    // Build validation issues display (for VALIDATION operations)
-    if (entry.operation === 'VALIDATION' && entry.issues && entry.issues.length > 0) {
-        changesHtml = `
-            <div class="audit-changes">
-                <h4>⚠️ Validation Issues (${entry.issues.length}):</h4>
-                <div class="change-list">
-                    ${entry.issues.map(issue => `
-                        <div class="change-item">
-                            <span class="field-name">${escapeHtml(issue)}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+    // Extract trip data
+    const tripId = entry.tripId || entry.documentId || '';
+    const surveyCode = tripId ? tripId.split('-')[0] : '-';
+    
+    // Extract origin, dest, arrival from snapshot
+    let origin = '-';
+    let dest = '-';
+    let arrival = '-';
+    
+    if (entry.operation === 'CREATE' && entry.dataSnapshot) {
+        origin = entry.dataSnapshot.originTimezone || '-';
+        dest = entry.dataSnapshot.destinationCode || '-';
+        arrival = entry.dataSnapshot.arrivalTimeZone || '-';
+    } else if (entry.operation === 'UPDATE' && entry.afterSnapshot) {
+        origin = entry.afterSnapshot.originTimezone || '-';
+        dest = entry.afterSnapshot.destinationCode || '-';
+        arrival = entry.afterSnapshot.arrivalTimeZone || '-';
     }
     
-    // Build reason display (for HMAC validation)
-    if (entry.reason) {
-        changesHtml += `
-            <div class="audit-changes">
-                <h4>🔐 Validation Reason:</h4>
-                <div class="change-list">
-                    <div class="change-item">
-                        <span class="field-name">${escapeHtml(entry.reason)}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
+    // Format origin and arrival (show just timezone name)
+    origin = formatTimezone(origin);
+    arrival = formatTimezone(arrival);
     
-    return `
-        <div class="audit-entry ${operationClass} ${severityClass}">
-            <div class="audit-header">
-                <div class="audit-title">
-                    ${getOperationIcon(entry.operation)} ${entry.operation || 'VALIDATION'}
-                    <span class="severity-badge ${severityClass}">${severityClass}</span>
-                </div>
-                <div class="audit-timestamp">⏰ ${formattedTime}</div>
-            </div>
-            
-            <div class="audit-metadata">
-                ${metadata.join('')}
-            </div>
-            
-            ${entry.message ? `
-                <div class="audit-message">
-                    ${escapeHtml(entry.message)}
-                </div>
-            ` : ''}
-            
-            ${changesHtml}
-        </div>
+    // Determine if expandable (console edits only)
+    const isExpandable = source === 'FC' && entry.changes && Object.keys(entry.changes).length > 0;
+    const expandClass = isExpandable ? 'expandable' : '';
+    const onclick = isExpandable ? `onclick="toggleExpand(${index})"` : '';
+    
+    let html = `
+        <tr class="${expandClass}" ${onclick} data-index="${index}">
+            <td>${timestamp}</td>
+            <td class="${actionClass}">${action}</td>
+            <td>${validStatus}</td>
+            <td class="${sourceClass}">${source}</td>
+            <td>${surveyCode}</td>
+            <td>${origin}</td>
+            <td>${dest}</td>
+            <td>${arrival}</td>
+        </tr>
     `;
+    
+    // Add expanded row for console edits
+    if (isExpandable) {
+        html += `
+            <tr class="expanded-row" id="expanded-${index}">
+                <td colspan="8">
+                    <div class="expanded-content">
+                        <h4>Console Changes:</h4>
+                        <div class="change-list">
+                            ${Object.entries(entry.changes).map(([field, change]) => `
+                                <div class="change-item">
+                                    <span class="field-name">${escapeHtml(field)}</span>
+                                    <span class="old-value">Before: ${escapeHtml(formatValue(change.before))}</span>
+                                    <span class="new-value">After: ${escapeHtml(formatValue(change.after))}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+    
+    return html;
 }
 
 /**
- * Get icon for operation type
+ * Toggle expanded row
  */
-function getOperationIcon(operation) {
-    switch (operation) {
-        case 'CREATE': return '➕';
-        case 'UPDATE': return '✏️';
-        case 'VALIDATION': return '🔍';
-        default: return '📝';
+function toggleExpand(index) {
+    const expandedRow = document.getElementById(`expanded-${index}`);
+    if (expandedRow) {
+        expandedRow.classList.toggle('show');
     }
+}
+
+/**
+ * Format timezone (show short name)
+ */
+function formatTimezone(tz) {
+    if (!tz || tz === '-') return '-';
+    // Show just the last part (e.g. "America/New_York" -> "New_York")
+    const parts = tz.split('/');
+    return parts[parts.length - 1].replace(/_/g, ' ');
+}
+
+/**
+ * Format value for display
+ */
+function formatValue(value) {
+    if (value === null || value === undefined) return '(empty)';
+    if (typeof value === 'object' && value instanceof Date) {
+        return value.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    if (typeof value === 'object') return JSON.stringify(value);
+    if (typeof value === 'boolean') return value ? 'true' : 'false';
+    if (typeof value === 'string' && value.length > 100) {
+        return value.substring(0, 100) + '...';
+    }
+    return String(value);
 }
 
 /**
@@ -250,14 +242,14 @@ function getOperationIcon(operation) {
  */
 function updateStats() {
     const stats = {
-        total: filteredData.length,
+        total: auditLogData.length,
         creates: 0,
         updates: 0,
         validations: 0,
         warnings: 0
     };
     
-    filteredData.forEach(entry => {
+    auditLogData.forEach(entry => {
         if (entry.operation === 'CREATE') stats.creates++;
         if (entry.operation === 'UPDATE') stats.updates++;
         if (entry.operation === 'VALIDATION') stats.validations++;
@@ -269,97 +261,6 @@ function updateStats() {
     document.getElementById('updateCount').textContent = stats.updates;
     document.getElementById('validationCount').textContent = stats.validations;
     document.getElementById('warningCount').textContent = stats.warnings;
-}
-
-/**
- * Export audit log to CSV
- */
-function exportAuditLog() {
-    console.log('📥 Exporting audit log to CSV...');
-    
-    // CSV headers
-    const headers = [
-        'Timestamp',
-        'Operation',
-        'Severity',
-        'Trip ID',
-        'Source',
-        'Actor',
-        'Message',
-        'Changed Fields',
-        'Issues',
-        'Reason'
-    ];
-    
-    // CSV rows
-    const rows = filteredData.map(entry => {
-        const timestamp = entry.timestamp ? entry.timestamp.toISOString() : '';
-        return [
-            timestamp,
-            entry.operation || '',
-            entry.severity || '',
-            entry.tripId || '',
-            entry.source || '',
-            entry.actor || '',
-            entry.message || '',
-            (entry.changedFields || []).join('; '),
-            (entry.issues || []).join('; '),
-            entry.reason || ''
-        ];
-    });
-    
-    // Build CSV content
-    const csvContent = [
-        headers.join(','),
-        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    ].join('\n');
-    
-    // Download CSV
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    const filename = `jetlagpro-audit-log-${new Date().toISOString().split('T')[0]}.csv`;
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    console.log(`✅ Exported ${filteredData.length} entries to ${filename}`);
-}
-
-/**
- * Format value for display (handles objects, arrays, null, etc.)
- */
-function formatValue(value) {
-    if (value === null || value === undefined) {
-        return '(empty)';
-    }
-    if (typeof value === 'object' && value instanceof Date) {
-        return value.toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-    if (typeof value === 'object') {
-        const jsonStr = JSON.stringify(value, null, 2);
-        if (jsonStr.length > 200) {
-            return jsonStr.substring(0, 200) + '... (truncated)';
-        }
-        return jsonStr;
-    }
-    if (typeof value === 'boolean') {
-        return value ? 'true' : 'false';
-    }
-    if (typeof value === 'string' && value.length > 500) {
-        return value.substring(0, 500) + '... (truncated)';
-    }
-    return String(value);
 }
 
 /**
