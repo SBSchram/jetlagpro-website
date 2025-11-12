@@ -157,6 +157,7 @@ body {
 #tripStats {
     margin-left: 0;
     padding-left: 0;
+    text-align: center; /* Center the table and explanatory text */
 }
 
 .data-table {
