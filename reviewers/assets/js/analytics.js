@@ -408,7 +408,7 @@ function renderRecentSubmissions() {
     // Update the section heading with trip count
     const sectionHeading = container.parentElement.querySelector('h2');
     if (sectionHeading) {
-        sectionHeading.innerHTML = `<span class="icon">🕒</span>Recent Submissions (${validTrips.length})`;
+        sectionHeading.innerHTML = `Recent Submissions (${validTrips.length})`;
     }
 
     // Build HTML
@@ -502,7 +502,7 @@ function renderStimulationEfficacy() {
     // Update section heading with trip count
     const efficacyHeading = document.getElementById('stimulationEfficacyHeading');
     if (efficacyHeading) {
-        efficacyHeading.innerHTML = `<span class="icon">🔬</span>Stimulation Efficacy Analysis (${completedSurveys.length})`;
+        efficacyHeading.innerHTML = `Stimulation Efficacy Analysis (${completedSurveys.length})`;
     }
     
     if (completedSurveys.length === 0) {
@@ -712,10 +712,12 @@ function renderTripStats() {
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     html += `<tr><th>Data Type</th><td>${dataTypeText}</td></tr>`;
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
-    html += '<tr><td colspan="2" style="padding-top: 15px; font-size: 0.85em; color: #6b7280;">Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</td></tr>';
-    html += '<tr><td colspan="2" style="font-size: 0.85em; color: #6b7280;">Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</td></tr>';
-    html += '<tr><td colspan="2" style="font-size: 0.85em; color: #6b7280;">Authenticated = Trip IDs with valid HMAC-SHA256 signatures (Build 6+, prevents data fabrication)</td></tr>';
     html += '</table>';
+    html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6;">';
+    html += '<div>Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</div>';
+    html += '<div>Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</div>';
+    html += '<div>Authenticated = Trip IDs with valid HMAC-SHA256 signatures (Build 6+, prevents data fabrication)</div>';
+    html += '</div>';
     
     container.innerHTML = html;
 }
@@ -750,7 +752,7 @@ function renderAdvancedAnalytics() {
     // Update the section heading with trip count
     const headingElement = document.getElementById('doseResponseHeading');
     if (headingElement) {
-        headingElement.innerHTML = `<span class="icon">📊</span>Dose-Response Analysis (${completedSurveys.length})`;
+        headingElement.innerHTML = `Dose-Response Analysis (${completedSurveys.length})`;
     }
     
     let html = '<div style="margin-bottom: 30px;">';
@@ -794,7 +796,7 @@ function renderPointStimulationAnalysis() {
     // Update the section heading with valid trip count
     const headingElement = document.getElementById('pointMappingHeading');
     if (headingElement) {
-        headingElement.innerHTML = `<span class="icon">🎯</span>Acupuncture Point Stimulation Analysis (${data.length})`;
+        headingElement.innerHTML = `Acupuncture Point Stimulation Analysis (${data.length})`;
     }
 
     // Point mapping data
