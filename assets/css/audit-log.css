@@ -130,7 +130,12 @@ body {
 
 .audit-table th:nth-child(3),
 .audit-table td:nth-child(3) {
-    width: auto;
+    width: 90px;
+}
+
+.audit-table th:nth-child(4),
+.audit-table td:nth-child(4) {
+    width: 110px;
 }
 
 .audit-table th:nth-child(8),

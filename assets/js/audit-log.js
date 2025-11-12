@@ -143,9 +143,13 @@ function renderTableRow(entry, index) {
     if (entry.operation === 'CREATE') {
         const data = entry.dataSnapshot || {};
         const metaBefore = entry.beforeSnapshot || {};
-        origin = data.originTimezone || metaBefore.originTimezone || entry.metadata?.writeMetadata?.originTimezone || '-';
-        dest = data.destinationCode || metaBefore.destinationCode || entry.metadata?.writeMetadata?.destinationCode || '-';
-        arrival = data.arrivalTimeZone || metaBefore.arrivalTimeZone || entry.metadata?.writeMetadata?.arrivalTimeZone || '-';
+        const meta = entry.metadata?.writeMetadata || {};
+        origin = data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
+        dest = data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
+        arrival = data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
+        if (!origin || origin === '-') {
+            console.debug('CREATE entry missing origin, metadata snapshot:', entry);
+        }
     } else if (entry.operation === 'UPDATE' && entry.afterSnapshot) {
         origin = entry.afterSnapshot.originTimezone || '-';
         dest = entry.afterSnapshot.destinationCode || '-';
