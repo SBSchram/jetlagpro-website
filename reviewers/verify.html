@@ -184,9 +184,15 @@
                 if (!gcsEntries || gcsEntries.length === 0) {
                     resultsDiv.className = 'verification-results warning';
                     resultsDiv.innerHTML = `<pre>Firestore entries: ${firestoreEntries.length}
-GCS entries: Unable to access (bucket may not be publicly readable)
+GCS entries: Unable to access (bucket not publicly readable)
 
-To verify manually:
+The GCS bucket needs to be made publicly readable for web-based verification.
+
+Option 1: Make bucket public (recommended)
+Run this command to enable public read access:
+  gsutil iam ch allUsers:objectViewer gs://jetlagpro-audit-logs
+
+Option 2: Manual verification
 1. Download Firestore data using the curl command above
 2. Download GCS archive using gsutil command above
 3. Run the verification script locally</pre>`;
@@ -247,28 +253,43 @@ Discrepancies:     ${comparison.discrepancies}
                 });
                 
                 if (!response.ok) {
+                    if (response.status === 403) {
+                        console.warn('GCS bucket not publicly readable (403 Forbidden)');
+                    } else if (response.status === 404) {
+                        console.warn('GCS bucket not found (404 Not Found)');
+                    }
                     return null; // Bucket not publicly readable
                 }
                 
                 const data = await response.json();
                 const files = data.items || [];
                 
-                // Fetch each JSON file and parse
+                if (files.length === 0) {
+                    console.warn('GCS bucket is accessible but contains no files');
+                    return [];
+                }
+                
+                // Fetch each JSON file and parse (limit to reasonable number for performance)
                 const entries = [];
-                for (const file of files) {
-                    if (file.name.endsWith('.json')) {
-                        try {
-                            const fileResponse = await fetch(`https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`, {
-                                cache: 'no-store'
-                            });
-                            if (fileResponse.ok) {
-                                const entry = await fileResponse.json();
-                                entries.push(entry);
-                            }
-                        } catch (e) {
-                            console.warn(`Failed to fetch ${file.name}:`, e);
+                const maxFiles = 1000; // Limit to prevent timeout
+                const filesToFetch = files.filter(f => f.name.endsWith('.json')).slice(0, maxFiles);
+                
+                for (const file of filesToFetch) {
+                    try {
+                        const fileResponse = await fetch(`https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`, {
+                            cache: 'no-store'
+                        });
+                        if (fileResponse.ok) {
+                            const entry = await fileResponse.json();
+                            entries.push(entry);
                         }
+                    } catch (e) {
+                        console.warn(`Failed to fetch ${file.name}:`, e);
                     }
+                }
+                
+                if (files.length > maxFiles) {
+                    console.warn(`Only fetched first ${maxFiles} of ${files.length} files`);
                 }
                 
                 return entries;
