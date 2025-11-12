@@ -173,7 +173,10 @@
             try {
                 // Step 1: Fetch Firestore audit entries
                 const firebaseService = new FirebaseService();
-                const firestoreEntries = await firebaseService.getAuditLog(10000);
+                const firestoreEntriesRaw = await firebaseService.getAuditLog(10000);
+                
+                // Normalize Firestore entries to match GCS format
+                const firestoreEntries = firestoreEntriesRaw.map(entry => normalizeEntry(entry));
                 
                 resultsDiv.innerHTML = `<pre>Firestore entries: ${firestoreEntries.length}\nFetching GCS archive...</pre>`;
                 
@@ -299,7 +302,8 @@ Discrepancies:     ${comparison.discrepancies}
                         
                         if (fileResponse.ok) {
                             const entry = await fileResponse.json();
-                            entries.push(entry);
+                            // GCS entries are already in plain JSON, but normalize to ensure consistency
+                            entries.push(normalizeEntry(entry));
                         } else {
                             console.warn(`Failed to fetch ${file.name}: ${fileResponse.status} ${fileResponse.statusText}`);
                         }
@@ -394,9 +398,9 @@ Discrepancies:     ${comparison.discrepancies}
         
         function normalizeEntry(entry) {
             // Normalize an entry for comparison by:
-            // 1. Sorting all keys
-            // 2. Converting Firestore REST API format to plain values
-            // 3. Removing Firestore-specific document metadata
+            // 1. Converting Firestore REST API format to plain values
+            // 2. Removing Firestore-specific document metadata
+            // 3. Sorting nested object keys for consistent comparison
             const normalized = {};
             
             // Fields to skip (Firestore document metadata, not part of audit data)
@@ -416,10 +420,40 @@ Discrepancies:     ${comparison.discrepancies}
                 // Convert Firestore REST API format to plain values
                 value = extractFirestoreValue(value);
                 
+                // Recursively sort nested object keys for consistent comparison
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    value = sortObjectKeys(value);
+                }
+                
                 normalized[key] = value;
             }
             
             return normalized;
+        }
+        
+        function sortObjectKeys(obj) {
+            // Recursively sort all object keys for consistent comparison
+            if (obj === null || typeof obj !== 'object') {
+                return obj;
+            }
+            
+            if (Array.isArray(obj)) {
+                return obj.map(item => sortObjectKeys(item));
+            }
+            
+            const sorted = {};
+            const keys = Object.keys(obj).sort();
+            for (const key of keys) {
+                const value = obj[key];
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    sorted[key] = sortObjectKeys(value);
+                } else if (Array.isArray(value)) {
+                    sorted[key] = value.map(item => sortObjectKeys(item));
+                } else {
+                    sorted[key] = value;
+                }
+            }
+            return sorted;
         }
         
         function extractFirestoreValue(value) {
