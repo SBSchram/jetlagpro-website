@@ -151,12 +151,13 @@ body {
 
 /* Ensure Trip Stats section content aligns properly */
 #trip-stats {
-    padding-left: 96px; /* At least 1 inch (96px) more left padding */
+    text-align: center; /* Center the entire section */
 }
 
 #trip-stats h2 {
     margin-left: 0;
     padding-left: 0;
+    text-align: center; /* Center the heading */
 }
 
 #tripStats {
