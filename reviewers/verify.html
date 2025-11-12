@@ -78,12 +78,48 @@
             padding: 10px;
             margin: 10px 0;
             overflow-x: auto;
+            position: relative;
         }
         .code-block code {
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             color: #1f2937;
             white-space: pre;
+            display: block;
+        }
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 6px 8px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .copy-button:hover {
+            opacity: 1;
+            background: #f3f4f6;
+        }
+        .copy-button svg {
+            width: 14px;
+            height: 14px;
+            stroke: #374151;
+            fill: none;
+            stroke-width: 1.5;
+        }
+        .copy-button.copied {
+            opacity: 1;
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+        .copy-button.copied svg {
+            stroke: #10b981;
         }
         .example-output {
             background: #f0f9ff;
@@ -177,6 +213,31 @@
     </style>
     <script src="../assets/js/firebase-service.js?v=20251112-05"></script>
     <script>
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const codeElement = codeBlock.querySelector('code');
+            const text = codeElement.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                button.classList.add('copied');
+                const originalTitle = button.getAttribute('title');
+                button.setAttribute('title', 'Copied!');
+                
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.setAttribute('title', originalTitle);
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback: select text
+                const range = document.createRange();
+                range.selectNode(codeElement);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+            });
+        }
+        
         async function runVerification() {
             const btn = document.getElementById('verifyBtn');
             const resultsDiv = document.getElementById('verificationResults');
@@ -825,6 +886,12 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Step 1: Download Firestore Audit Data</h2>
             <p>Export audit entries via Firestore REST API (public read access):</p>
             <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" \
   -o firestore-audit.json</code>
             </div>
@@ -837,6 +904,12 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Step 2: Download Immutable GCS Archive</h2>
             <p>Download the immutable archive using <code>gsutil</code>:</p>
             <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code>
             </div>
             <div class="note">
@@ -854,6 +927,12 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Step 3: Run Verification Script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button" style="margin-left: 15px;">View Verification Source Code</a></h2>
             <p>The verification script compares Firestore entries with the GCS archive:</p>
             <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>python scripts/verify_audit_consistency.py \
   --firestore firestore-audit.json \
   --gcs-dir ./gcs-audit</code>
