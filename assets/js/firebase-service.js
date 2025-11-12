@@ -254,7 +254,13 @@ class FirebaseService {
             if (fields.severity?.stringValue) entry.severity = fields.severity.stringValue;
             if (fields.message?.stringValue) entry.message = fields.message.stringValue;
             if (fields.reason?.stringValue) entry.reason = fields.reason.stringValue;
-            if (fields.source?.stringValue) entry.source = fields.source.stringValue;
+            // Extract source - could be stringValue or already extracted
+            if (fields.source?.stringValue) {
+                entry.source = fields.source.stringValue;
+            } else if (fields.source) {
+                // Handle if source is already a plain value (from GCS)
+                entry.source = this.extractValue(fields.source);
+            }
             if (fields.actor?.stringValue) entry.actor = fields.actor.stringValue;
             if (fields.eventId?.stringValue) entry.eventId = fields.eventId.stringValue;
             if (fields.originTimezone?.stringValue) entry.originTimezone = fields.originTimezone.stringValue;
@@ -302,6 +308,14 @@ class FirebaseService {
                 });
             }
 
+            // Extract deletedData (full trip data snapshot for DELETE operations)
+            if (fields.deletedData?.mapValue?.fields) {
+                entry.deletedData = {};
+                Object.entries(fields.deletedData.mapValue.fields).forEach(([key, value]) => {
+                    entry.deletedData[key] = this.extractValue(value);
+                });
+            }
+
             return entry;
             
         } catch (error) {
@@ -310,16 +324,31 @@ class FirebaseService {
         }
     }
 
-    // Helper to extract any type of value
+    // Helper to extract any type of value (recursively for nested structures)
     extractValue(field) {
         if (!field) return null;
         if (field.stringValue !== undefined) return field.stringValue;
         if (field.integerValue !== undefined) return parseInt(field.integerValue);
-        if (field.booleanValue !== undefined) return field.booleanValue;
-        if (field.timestampValue) return new Date(field.timestampValue);
-        if (field.nullValue) return null;
-        if (field.mapValue) return '(object)'; // Simplified for display
-        if (field.arrayValue) return '(array)'; // Simplified for display
+        if (field.doubleValue !== undefined) return parseFloat(field.doubleValue);
+        if (field.booleanValue !== undefined) return field.booleanValue === 'true' || field.booleanValue === true;
+        if (field.timestampValue) {
+            // Return ISO string for consistent comparison
+            const date = new Date(field.timestampValue);
+            return isNaN(date.getTime()) ? field.timestampValue : date.toISOString();
+        }
+        if (field.nullValue !== undefined) return null;
+        if (field.mapValue?.fields) {
+            // Recursively extract nested map
+            const result = {};
+            Object.entries(field.mapValue.fields).forEach(([key, value]) => {
+                result[key] = this.extractValue(value);
+            });
+            return result;
+        }
+        if (field.arrayValue?.values) {
+            // Recursively extract array values
+            return field.arrayValue.values.map(v => this.extractValue(v));
+        }
         return null;
     }
 }
