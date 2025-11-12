@@ -441,20 +441,20 @@ function renderRecentSubmissions() {
     // Build HTML
     let html = '';
     
-    // Helper function to render a trip table
+    // Helper function to render a trip table - use stats-table for tight columns
     const renderTripTable = (trips, showStatus = true) => {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
         
-        let tableHtml = '<table class="data-table"><thead><tr>';
-        tableHtml += '<th>Date</th><th>Code</th><th>Destination</th><th>East/West</th><th>Points</th><th>Timezones</th>';
+        let tableHtml = '<table class="stats-table"><thead><tr>';
+        tableHtml += '<th>Date</th><th>Code</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
         if (showStatus) tableHtml += '<th>Status</th>';
         tableHtml += '</tr></thead><tbody>';
 
         trips.forEach(survey => {
             const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
-            const dateStr = date ? new Date(date).toLocaleDateString() : 'N/A';
+            const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
             const isComplete = survey.surveyCompleted;
-            const status = isComplete ? '✅ Complete' : '⚠️ Partial';
+            const status = isComplete ? 'Complete' : 'Partial';
             const statusColor = isComplete ? '#16a34a' : '#f59e0b';
             
             // Process survey code - always extract first section of tripId
@@ -468,7 +468,7 @@ function renderRecentSubmissions() {
             // Convert travel direction to East/West format
             const timezones = survey.timezonesCount || 0;
             const direction = (timezones === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
-            const eastWest = direction === 'east' ? '🌅 East' : direction === 'west' ? '🌇 West' : 'N/A';
+            const eastWest = direction === 'east' ? 'E' : direction === 'west' ? 'W' : 'N/A';
 
             // Points stimulated
             const pointsStimulated = survey.pointsCompleted || 0;
@@ -488,18 +488,18 @@ function renderRecentSubmissions() {
         return tableHtml;
     };
     
-    // Valid Trips Section
-    html += '<div style="margin-bottom: 30px;">';
+    // Valid Trips Section - simplified, tight layout
+    html += '<div style="text-align: center; margin-bottom: 20px;">';
     
     // Survey Completed
-    html += '<div style="margin: 20px 0;">';
-    html += `<h4 style="color: #16a34a;">✅ Survey Completed (${validCompleted.length} trips)</h4>`;
+    html += `<div style="margin-bottom: 15px;"><strong>Survey Completed (${validCompleted.length})</strong></div>`;
+    html += '<div style="display: inline-block;">';
     html += renderTripTable(validCompleted, false);
     html += '</div>';
     
     // Survey Not Completed
-    html += '<div style="margin: 20px 0;">';
-    html += `<h4 style="color: #f59e0b;">⚠️ Survey Not Completed (${validNotCompleted.length} trips)</h4>`;
+    html += `<div style="margin-top: 20px; margin-bottom: 15px;"><strong>Survey Not Completed (${validNotCompleted.length})</strong></div>`;
+    html += '<div style="display: inline-block;">';
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
@@ -558,13 +558,9 @@ function renderStimulationEfficacy() {
         else stimulationGroups['10-12 points'].push(survey);
     });
 
-    let html = '<div style="margin-bottom: 30px;">';
-    html += '<h3>Time Zone Effect vs. Stimulation Analysis</h3>';                                                                       
-    html += '<p>Primary analysis: How acupressure stimulation reduces the expected increase in post-travel symptoms from crossing more time zones</p>';                                            
-    html += '</div>';
-
-    // Create efficacy table
-    html += '<table class="data-table"><thead><tr><th>Stimulation Level</th><th>Sample Size</th><th>Avg Post-Travel Severity</th><th>Avg Time Zones Crossed</th><th>Protection Effect*</th></tr></thead><tbody>';
+    // Create efficacy table - use stats-table for tight columns, centered
+    html = '<div style="text-align: center;">';
+    html += '<table class="stats-table" style="margin: 0 auto;"><thead><tr><th>Stimulation Level</th><th>Sample Size</th><th>Avg Severity</th><th>Avg TZ</th><th>Protection</th></tr></thead><tbody>';
 
     Object.entries(stimulationGroups).forEach(([group, surveys]) => {
         if (surveys.length === 0) return;
@@ -606,10 +602,10 @@ function renderStimulationEfficacy() {
     });
 
     html += '</tbody></table>';
+    html += '</div>';
 
-    // Add Time Zone Analysis
-    html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">Primary Analysis: Time Zone → Symptom Relationship</h3>';                                        
-    html += '<p>Core research question: Does acupressure stimulation reduce the expected increase in post-travel symptoms from crossing more time zones?</p>';
+    // Add Time Zone Analysis - centered, tight layout
+    html += '<div style="text-align: center; margin-top: 30px;">';
     
     // Group by time zone ranges
     const tzGroups = {
@@ -627,7 +623,7 @@ function renderStimulationEfficacy() {
         else tzGroups['10+ time zones'].push(survey);
     });
 
-    html += '<table class="data-table"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Stimulation Points</th><th>Avg Post-Travel Severity</th></tr></thead><tbody>';
+    html += '<table class="stats-table" style="margin: 0 auto;"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Points</th><th>Avg Severity</th></tr></thead><tbody>';
 
     Object.entries(tzGroups).forEach(([range, surveys]) => {
         if (surveys.length === 0) return;
@@ -651,6 +647,7 @@ function renderStimulationEfficacy() {
     });
 
     html += '</tbody></table>';
+    html += '</div>';
 
     // Add All Symptoms Analysis - Multi-Series Chart
     html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
