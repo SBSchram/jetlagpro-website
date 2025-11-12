@@ -332,18 +332,22 @@ Discrepancies:     ${comparison.discrepancies}
             const missingInGCS = [];
             const mismatched = [];
             
-            // Create maps for quick lookup
+            // Create maps for quick lookup (using normalized entries)
             const firestoreMap = new Map();
             firestoreEntries.forEach(entry => {
+                // Extract tripId from normalized entry
                 const tripId = entry.tripId || entry.documentId || '';
-                const key = `${entry.operation || 'UNKNOWN'}-${tripId}`;
+                const operation = entry.operation || 'UNKNOWN';
+                const key = `${operation}-${tripId}`;
                 firestoreMap.set(key, entry);
             });
             
             const gcsMap = new Map();
             gcsEntries.forEach(entry => {
+                // Extract tripId from normalized entry
                 const tripId = entry.tripId || entry.documentId || '';
-                const key = `${entry.operation || 'UNKNOWN'}-${tripId}`;
+                const operation = entry.operation || 'UNKNOWN';
+                const key = `${operation}-${tripId}`;
                 gcsMap.set(key, entry);
             });
             
@@ -467,9 +471,17 @@ Discrepancies:     ${comparison.discrepancies}
                 return value;
             }
             
-            // Handle Firestore value wrappers
-            if (value.timestampValue) {
-                return value.timestampValue; // ISO string
+            // Handle Firestore value wrappers (check these first before recursing)
+            if (value.timestampValue !== undefined) {
+                // Could be ISO string or Firestore timestamp object
+                if (typeof value.timestampValue === 'string') {
+                    return value.timestampValue;
+                }
+                // If it's an object with _seconds, convert to ISO
+                if (value.timestampValue._seconds) {
+                    return new Date(value.timestampValue._seconds * 1000).toISOString();
+                }
+                return value.timestampValue;
             }
             if (value.stringValue !== undefined) {
                 return value.stringValue;
@@ -498,12 +510,17 @@ Discrepancies:     ${comparison.discrepancies}
                 return nested;
             }
             
-            // If it's a plain object/array, recurse
+            // Handle Firestore Timestamp objects (from Admin SDK, not REST API)
+            if (value._seconds !== undefined) {
+                return new Date(value._seconds * 1000).toISOString();
+            }
+            
+            // If it's a plain array, recurse
             if (Array.isArray(value)) {
                 return value.map(v => extractFirestoreValue(v));
             }
             
-            // Plain object - recurse on all values
+            // Plain object - recurse on all values to extract any nested Firestore values
             const result = {};
             for (const [k, v] of Object.entries(value)) {
                 result[k] = extractFirestoreValue(v);
