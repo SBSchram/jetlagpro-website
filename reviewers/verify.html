@@ -177,9 +177,11 @@
                 
                 // Store raw entries for inspection, then normalize
                 const firestoreEntries = firestoreEntriesRaw.map(entry => {
-                    // Store raw entry for later inspection
-                    entry._raw = JSON.parse(JSON.stringify(entry));
-                    return normalizeEntry(entry);
+                    // Store raw entry BEFORE normalization (deep copy)
+                    const rawEntry = JSON.parse(JSON.stringify(entry));
+                    const normalized = normalizeEntry(entry);
+                    normalized._raw = rawEntry;
+                    return normalized;
                 });
                 
                 resultsDiv.innerHTML = `<pre>Firestore entries: ${firestoreEntries.length}\nFetching GCS archive...</pre>`;
