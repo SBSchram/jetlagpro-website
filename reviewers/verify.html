@@ -175,8 +175,12 @@
                 const firebaseService = new FirebaseService();
                 const firestoreEntriesRaw = await firebaseService.getAuditLog(10000);
                 
-                // Normalize Firestore entries to match GCS format
-                const firestoreEntries = firestoreEntriesRaw.map(entry => normalizeEntry(entry));
+                // Store raw entries for inspection, then normalize
+                const firestoreEntries = firestoreEntriesRaw.map(entry => {
+                    // Store raw entry for later inspection
+                    entry._raw = JSON.parse(JSON.stringify(entry));
+                    return normalizeEntry(entry);
+                });
                 
                 resultsDiv.innerHTML = `<pre>Firestore entries: ${firestoreEntries.length}\nFetching GCS archive...</pre>`;
                 
@@ -318,8 +322,12 @@ Discrepancies:     ${comparison.discrepancies}
                         
                         if (fileResponse.ok) {
                             const entry = await fileResponse.json();
+                            // Store raw entry for inspection
+                            const rawEntry = JSON.parse(JSON.stringify(entry));
                             // GCS entries are already in plain JSON, but normalize to ensure consistency
-                            entries.push(normalizeEntry(entry));
+                            const normalized = normalizeEntry(entry);
+                            normalized._raw = rawEntry;
+                            entries.push(normalized);
                         } else {
                             console.warn(`Failed to fetch ${file.name}: ${fileResponse.status} ${fileResponse.statusText}`);
                         }
@@ -349,22 +357,33 @@ Discrepancies:     ${comparison.discrepancies}
             const mismatched = [];
             
             // Create maps for quick lookup (using normalized entries)
+            // Also store raw entries for inspection
             const firestoreMap = new Map();
+            const firestoreRawMap = new Map();
             firestoreEntries.forEach(entry => {
                 // Extract tripId from normalized entry
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const key = `${operation}-${tripId}`;
                 firestoreMap.set(key, entry);
+                // Store raw entry if available
+                if (entry._raw) {
+                    firestoreRawMap.set(key, entry._raw);
+                }
             });
             
             const gcsMap = new Map();
+            const gcsRawMap = new Map();
             gcsEntries.forEach(entry => {
                 // Extract tripId from normalized entry
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const key = `${operation}-${tripId}`;
                 gcsMap.set(key, entry);
+                // Store raw entry if available
+                if (entry._raw) {
+                    gcsRawMap.set(key, entry._raw);
+                }
             });
             
             // Find matches and discrepancies
@@ -393,9 +412,9 @@ Discrepancies:     ${comparison.discrepancies}
                         const diffFields = [];
                         const diffDetails = [];
                         
-                        // Store raw entries for inspection
-                        const rawFirestore = JSON.parse(JSON.stringify(firestoreEntry));
-                        const rawGCS = JSON.parse(JSON.stringify(gcsEntry));
+                        // Store raw entries for inspection (before normalization)
+                        const rawFirestore = firestoreRawMap.get(key) || JSON.parse(JSON.stringify(firestoreEntry));
+                        const rawGCS = gcsRawMap.get(key) || JSON.parse(JSON.stringify(gcsEntry));
                         
                         const allKeys = new Set([...Object.keys(firestoreNorm), ...Object.keys(gcsNorm)]);
                         for (const k of allKeys) {
