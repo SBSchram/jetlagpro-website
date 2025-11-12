@@ -312,32 +312,6 @@ function formatValue(value) {
     return String(value);
 }
 
-async function loadVerificationStatus() {
-    const statusEl = document.getElementById('verificationStatus');
-    if (!statusEl) return;
-    try {
-        const response = await fetch(`${VERIFICATION_STATUS_URL}?t=${Date.now()}`, {
-            cache: 'no-store'
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        const data = await response.json();
-        const timestamp = data.timestamp || data.verifiedAt || null;
-        const discrepancies = data.discrepancies ?? data.mismatches ?? 0;
-        let summary = '';
-        if (timestamp) {
-            const when = new Date(timestamp);
-            summary = `Checked ${when.toLocaleString()} · `;
-        }
-        summary += discrepancies === 0 ? 'No discrepancies' : `${discrepancies} discrepancy${discrepancies === 1 ? '' : 'ies'}`;
-        statusEl.textContent = summary;
-    } catch (error) {
-        console.warn('Verification status unavailable:', error);
-        statusEl.textContent = 'Verification report unavailable';
-    }
-}
-
 /**
  * Update summary statistics
  */
