@@ -5,7 +5,6 @@
 
 let auditLogData = [];
 const firebaseService = new FirebaseService();
-const VERIFICATION_STATUS_URL = 'https://storage.googleapis.com/jetlagpro-audit-logs/latest-verification.json';
 
 async function refreshAuditLog() {
     const refreshBtn = document.getElementById('refreshBtn');
@@ -31,7 +30,6 @@ async function refreshAuditLog() {
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔍 Initializing Audit Log Viewer...');
     await loadAuditLog();
-    loadVerificationStatus();
 });
 
 /**
