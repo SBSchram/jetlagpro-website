@@ -144,16 +144,19 @@ function renderTableRow(entry, index) {
         const data = entry.dataSnapshot || {};
         const metaBefore = entry.beforeSnapshot || {};
         const meta = entry.metadata?.writeMetadata || {};
-        origin = data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
-        dest = data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
-        arrival = data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
-        if (!origin || origin === '-') {
-            console.debug('CREATE entry missing origin, metadata snapshot:', entry);
-        }
+        origin = entry.originTimezone || data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
+        dest = entry.destinationCode || data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
+        arrival = entry.arrivalTimeZone || data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
     } else if (entry.operation === 'UPDATE' && entry.afterSnapshot) {
-        origin = entry.afterSnapshot.originTimezone || '-';
-        dest = entry.afterSnapshot.destinationCode || '-';
-        arrival = entry.afterSnapshot.arrivalTimeZone || '-';
+        origin = entry.afterSnapshot.originTimezone || entry.originTimezone || '-';
+        dest = entry.afterSnapshot.destinationCode || entry.destinationCode || '-';
+        arrival = entry.afterSnapshot.arrivalTimeZone || entry.arrivalTimeZone || '-';
+    } else if (entry.operation === 'DELETE') {
+        const data = entry.deletedData || {};
+        const meta = entry.metadata?.writeMetadata || {};
+        origin = entry.originTimezone || data.originTimezone || meta.originTimezone || '-';
+        dest = entry.destinationCode || data.destinationCode || meta.destinationCode || '-';
+        arrival = entry.arrivalTimeZone || data.arrivalTimeZone || meta.arrivalTimeZone || '-';
     }
 
     origin = formatTimezone(origin);
