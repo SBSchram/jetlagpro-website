@@ -868,18 +868,14 @@ Discrepancies:     ${comparison.discrepancies}
         </nav>
 
         <div class="header">
-            <h1>Verify Audit Trail</h1>
-            <p>Independent verification that Firestore audit entries match the immutable archive</p>
+            <h1>Trust but Verify</h1>
         </div>
 
         <div class="section">
-            <h2>Overview</h2>
-            <p>Every audit entry is written to two locations:</p>
             <ul style="color: #374151; line-height: 1.8;">
-                <li><strong>Firestore</strong> – Real-time view for the website</li>
-                <li><strong>GCS Archive</strong> – Immutable storage with 10-year retention</li>
+                <li>Verify that Firestore audit entries match the immutable and authoritative record in the GCS archive.</li>
+                <li>Verify that Firestore trip records were submitted by legitimate iOS devices</li>
             </ul>
-            <p>Verification confirms these match. The GCS archive is authoritative.</p>
         </div>
 
         <div class="section">
