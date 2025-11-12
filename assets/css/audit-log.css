@@ -118,6 +118,11 @@ body {
     border-right: none;
 }
 
+.audit-table th:first-child,
+.audit-table td:first-child {
+    width: 150px;
+}
+
 .audit-table tbody tr {
     border-bottom: 1px solid #e5e5e5;
 }

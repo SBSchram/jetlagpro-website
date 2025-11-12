@@ -74,6 +74,12 @@ async function loadAuditLog() {
             writeSource: entry.metadata?.writeMetadata?.source,
             surveySource: entry.metadata?.surveyMetadata?.source
         })));
+
+        auditLogData.sort((a, b) => {
+            const aTime = a.timestamp instanceof Date ? a.timestamp.getTime() : 0;
+            const bTime = b.timestamp instanceof Date ? b.timestamp.getTime() : 0;
+            return bTime - aTime;
+        });
         
         renderAuditTable();
         updateStats();
