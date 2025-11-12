@@ -851,7 +851,7 @@ Discrepancies:     ${comparison.discrepancies}
         </div>
 
         <div class="section">
-            <h2>Step 3: Run Verification Script</h2>
+            <h2>Step 3: Run Verification Script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button" style="margin-left: 15px;">View Verification Source Code</a></h2>
             <p>The verification script compares Firestore entries with the GCS archive:</p>
             <div class="code-block">
                 <code>python scripts/verify_audit_consistency.py \
@@ -870,7 +870,6 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Run Verification</h2>
             <p>Click the button below to verify the audit trail in real-time:</p>
             <button id="verifyBtn" class="verify-button" onclick="runVerification()">Run Verification</button>
-            <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button">View Verification Source Code</a>
             <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
