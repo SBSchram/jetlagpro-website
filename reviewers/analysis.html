@@ -37,6 +37,15 @@
                     }
                 });
             }
+            
+            // Add event listener for Top link (CSP-compliant)
+            const topLink = document.querySelector('.analysis-subnav a[href="#"]');
+            if (topLink) {
+                topLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                });
+            }
         });
     </script>
 </head>
@@ -60,6 +69,7 @@
             <a href="#stimulation-efficacy">Stimulation Efficacy</a>
             <a href="#recent-submissions">Recent Submissions</a>
             <a href="#point-mapping">Point Mapping</a>
+            <a href="#">Top</a>
         </nav>
 
         <div class="header">
