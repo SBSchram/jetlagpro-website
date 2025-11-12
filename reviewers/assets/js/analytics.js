@@ -343,13 +343,40 @@ async function loadDashboardDataWithService() {
 }
 
 // NEW: Refresh data using Firebase service
-function refreshDataWithService() {
-    if (firebaseService) {
-        console.log('🔄 Refreshing data with Firebase service...');
-        loadDashboardDataWithService();
-    } else {
-        console.log('🔄 Firebase service not available, using existing refresh method...');
-        refreshData(); // Fallback to existing method
+async function refreshDataWithService() {
+    const refreshBtn = document.querySelector('.refresh-btn');
+    const originalText = refreshBtn ? refreshBtn.textContent : 'Refresh Data';
+    
+    // Disable button and show loading state
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Refreshing...';
+        refreshBtn.style.opacity = '0.6';
+        refreshBtn.style.cursor = 'not-allowed';
+    }
+    
+    try {
+        if (firebaseService) {
+            console.log('🔄 Refreshing data with Firebase service...');
+            await loadDashboardDataWithService();
+        } else {
+            console.log('🔄 Firebase service not available, using existing refresh method...');
+            await new Promise((resolve) => {
+                refreshData(); // Fallback to existing method
+                // Give it a moment to complete
+                setTimeout(resolve, 500);
+            });
+        }
+    } catch (error) {
+        console.error('Error refreshing data:', error);
+    } finally {
+        // Re-enable button when done
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = originalText;
+            refreshBtn.style.opacity = '1';
+            refreshBtn.style.cursor = 'pointer';
+        }
     }
 }
 
