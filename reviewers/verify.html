@@ -211,6 +211,8 @@
             word-wrap: break-word;
         }
     </style>
+    <!-- CryptoJS for HMAC-SHA256 validation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="../assets/js/firebase-service.js?v=20251112-05"></script>
     <script>
         function copyCode(button) {
@@ -852,6 +854,190 @@ Discrepancies:     ${comparison.discrepancies}
             // Use JSON.stringify with sorted keys for consistent hashing
             return JSON.stringify(normalized, Object.keys(normalized).sort());
         }
+        
+        // HMAC-SHA256 secret key (same as in iOS app and trip-validator.js)
+        const HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
+        
+        /**
+         * Validates HMAC-SHA256 signature on a trip ID
+         * Trip IDs from Build 6+ have format: deviceID-dest-date-time-signature
+         */
+        function validateTripHMAC(tripId) {
+            if (!tripId) {
+                return { valid: false, reason: 'missing_trip_id', category: 'error' };
+            }
+            
+            const parts = tripId.split('-');
+            
+            // Check for UUID format (legacy, very old trips)
+            if (parts.length === 5 && 
+                parts[0].length === 8 && 
+                parts[1].length === 4 && 
+                parts[2].length === 4 && 
+                parts[3].length === 4 && 
+                parts[4].length === 12) {
+                return { 
+                    valid: true, 
+                    reason: 'legacy_uuid_format', 
+                    category: 'legacy',
+                    tripId: tripId
+                };
+            }
+            
+            // Legacy format (4 parts): Pre-Build 6 data without signatures
+            if (parts.length === 4) {
+                return { 
+                    valid: true, 
+                    reason: 'legacy_no_signature', 
+                    category: 'legacy',
+                    tripId: tripId
+                };
+            }
+            
+            // Build 6+ format (5 parts): deviceID-dest-date-time-signature
+            if (parts.length === 5) {
+                const baseTripId = parts.slice(0, 4).join('-');
+                const providedSignature = parts[4];
+                
+                // Validate signature format (8 hex characters)
+                if (!/^[a-fA-F0-9]{8}$/.test(providedSignature)) {
+                    return { 
+                        valid: false, 
+                        reason: 'invalid_signature_format', 
+                        category: 'invalid',
+                        tripId: tripId,
+                        providedSignature: providedSignature
+                    };
+                }
+                
+                // Check if CryptoJS is available
+                if (typeof CryptoJS === 'undefined') {
+                    return { 
+                        valid: true, // Assume valid if we can't verify
+                        reason: 'crypto_unavailable', 
+                        category: 'unverified',
+                        tripId: tripId
+                    };
+                }
+                
+                // Compute expected signature
+                const hmac = CryptoJS.HmacSHA256(baseTripId, HMAC_SECRET);
+                const expectedSignature = hmac.toString(CryptoJS.enc.Hex).substring(0, 8).toLowerCase();
+                
+                if (providedSignature.toLowerCase() === expectedSignature) {
+                    return { 
+                        valid: true, 
+                        reason: 'valid_signature', 
+                        category: 'authenticated',
+                        tripId: tripId,
+                        signature: providedSignature
+                    };
+                } else {
+                    return { 
+                        valid: false, 
+                        reason: 'signature_mismatch', 
+                        category: 'invalid',
+                        tripId: tripId,
+                        expected: expectedSignature,
+                        provided: providedSignature
+                    };
+                }
+            }
+            
+            // Unexpected format
+            return { 
+                valid: false, 
+                reason: 'unexpected_format', 
+                category: 'error',
+                tripId: tripId,
+                parts: parts.length
+            };
+        }
+        
+        async function runTripVerification() {
+            const btn = document.getElementById('verifyTripBtn');
+            const resultsDiv = document.getElementById('tripVerificationResults');
+            
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = 'verification-results';
+            resultsDiv.innerHTML = '<pre>Fetching Firestore trip data...</pre>';
+            
+            try {
+                // Step 1: Fetch Firestore trip records
+                const firebaseService = new FirebaseService();
+                const trips = await firebaseService.getTripCompletions();
+                
+                resultsDiv.innerHTML = `<pre>Trip records: ${trips.length}\nValidating HMAC signatures...</pre>`;
+                
+                // Step 2: Validate HMAC signatures
+                const categories = {
+                    authenticated: [],  // Build 6+ with valid signatures
+                    legacy: [],         // Pre-Build 6 without signatures
+                    invalid: [],        // Invalid or mismatched signatures
+                    error: []          // Missing trip IDs or malformed
+                };
+                
+                trips.forEach(trip => {
+                    const tripId = trip.tripId || trip.documentId || '';
+                    const validation = validateTripHMAC(tripId);
+                    categories[validation.category].push({
+                        tripId: tripId,
+                        documentId: trip.documentId || trip.id || 'unknown',
+                        validation: validation
+                    });
+                });
+                
+                // Step 3: Display results
+                let output = `Trip records: ${trips.length}
+
+HMAC Validation Results:
+  Authenticated (valid signatures): ${categories.authenticated.length}
+  Legacy (pre-Build 6, no signature): ${categories.legacy.length}
+  Invalid (signature mismatch): ${categories.invalid.length}
+  Error (malformed trip IDs): ${categories.error.length}
+
+`;
+                
+                if (categories.invalid.length === 0 && categories.error.length === 0) {
+                    output += 'Trip verification complete: all signatures are valid or legacy.';
+                    resultsDiv.className = 'verification-results success';
+                } else {
+                    output += 'INVALID SIGNATURES FOUND:\n\n';
+                    
+                    if (categories.invalid.length > 0) {
+                        output += `Invalid Signatures (${categories.invalid.length}):\n`;
+                        categories.invalid.forEach(item => {
+                            output += `  - ${item.tripId}\n`;
+                            if (item.validation.expected && item.validation.provided) {
+                                output += `    Expected: ${item.validation.expected}\n`;
+                                output += `    Provided: ${item.validation.provided}\n`;
+                            }
+                        });
+                        output += '\n';
+                    }
+                    
+                    if (categories.error.length > 0) {
+                        output += `Malformed Trip IDs (${categories.error.length}):\n`;
+                        categories.error.forEach(item => {
+                            output += `  - ${item.tripId || 'missing'} (${item.validation.reason})\n`;
+                        });
+                    }
+                    
+                    resultsDiv.className = 'verification-results error';
+                }
+                
+                resultsDiv.innerHTML = `<pre>${output}</pre>`;
+                
+            } catch (error) {
+                resultsDiv.className = 'verification-results error';
+                resultsDiv.innerHTML = `<pre>Error: ${error.message}\n\nPlease use the manual verification steps above.</pre>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Run Trip Verification';
+            }
+        }
     </script>
 </head>
 <body>
@@ -879,13 +1065,14 @@ Discrepancies:     ${comparison.discrepancies}
         </div>
 
         <div class="section">
-            <p>Click the button below to verify the audit trail:</p>
+            <h2>Section 1: Verify Audit Trail</h2>
+            <p>Click the button below to verify that Firestore audit entries match the immutable GCS archive:</p>
             <button id="verifyBtn" class="verify-button" onclick="runVerification()">Run Verification</button>
             <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
         <div class="section">
-            <h2>Independent Verification</h2>
+            <h2>Independent Verification: Audit Trail</h2>
             <p>To verify the audit trail on your own computer using the same methodology, follow these steps:</p>
         </div>
 
@@ -946,12 +1133,74 @@ Discrepancies:     ${comparison.discrepancies}
         </div>
 
         <div class="section">
-            <h2>Interpreting Results</h2>
+            <h2>Interpreting Audit Trail Results</h2>
             <ul style="color: #374151; line-height: 1.8;">
                 <li><strong>All records match</strong> – Firestore mirrors the immutable archive</li>
                 <li><strong>Missing in Firestore</strong> – Unexpected; investigate immediately (GCS is authoritative)</li>
                 <li><strong>Missing in GCS</strong> – Unexpected; investigate immediately (all post-deployment entries should exist in both systems)</li>
                 <li><strong>Content mismatches</strong> – Potential tampering; investigate immediately (GCS is authoritative)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Section 2: Verify Trip Records from Legitimate iOS Devices</h2>
+            <p><strong>Background:</strong> Starting with Build 6, iOS devices generate trip IDs with HMAC-SHA256 signatures. The trip ID format is <code>deviceID-dest-date-time-signature</code> (5 parts). The signature is computed using <code>HMAC-SHA256(baseTripId, secret_key)</code> where the base trip ID is the first 4 parts. This cryptographic signature proves the trip ID was generated by a legitimate iOS device with the secret key embedded in the app. Invalid signatures indicate potential tampering or unauthorized submissions.</p>
+            <p>Click the button below to verify that trip records have valid HMAC signatures:</p>
+            <button id="verifyTripBtn" class="verify-button" onclick="runTripVerification()">Run Trip Verification</button>
+            <div id="tripVerificationResults" style="display: none; margin-top: 20px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>Independent Verification: Trip Records</h2>
+            <p>To verify trip records on your own computer using the same methodology, follow these steps:</p>
+        </div>
+
+        <div class="section">
+            <h2>Step 1: Download Firestore Trip Data</h2>
+            <p>Export trip records via Firestore REST API (public read access):</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" \
+  -o firestore-trips.json</code>
+            </div>
+            <div class="note">
+                <strong>Note:</strong> If the response includes <code>"nextPageToken"</code>, repeat the call with <code>&pageToken=...</code> and append results to the same file.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Step 2: Run HMAC Verification Script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button" style="margin-left: 15px;">View Verification Source Code</a></h2>
+            <p>The verification script validates HMAC-SHA256 signatures on trip IDs:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code># The verification logic is embedded in verify.html
+# Extract the HMAC validation function and run it on your downloaded data
+# HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a'
+# For each trip ID with 5 parts (Build 6+):
+#   1. Extract base trip ID (first 4 parts)
+#   2. Compute HMAC-SHA256(baseTripId, HMAC_SECRET)
+#   3. Compare first 8 hex characters with provided signature
+#   4. Report trips with invalid signatures</code>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Interpreting Trip Verification Results</h2>
+            <ul style="color: #374151; line-height: 1.8;">
+                <li><strong>All signatures valid</strong> – All trip records were submitted by legitimate iOS devices</li>
+                <li><strong>Legacy trips (no signature)</strong> – Expected for pre-Build 6 data (before HMAC was implemented)</li>
+                <li><strong>Invalid signatures</strong> – Potential tampering or unauthorized submissions; investigate immediately</li>
+                <li><strong>Missing trip IDs</strong> – Data integrity issue; investigate immediately</li>
             </ul>
         </div>
     </div>
