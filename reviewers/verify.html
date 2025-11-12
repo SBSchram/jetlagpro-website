@@ -883,6 +883,17 @@ Discrepancies:     ${comparison.discrepancies}
         </div>
 
         <div class="section">
+            <p>Click the button below to verify the audit trail:</p>
+            <button id="verifyBtn" class="verify-button" onclick="runVerification()">Run Verification</button>
+            <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>Independent Verification</h2>
+            <p>To verify the audit trail on your own computer using the same methodology, follow these steps:</p>
+        </div>
+
+        <div class="section">
             <h2>Step 1: Download Firestore Audit Data</h2>
             <p>Export audit entries via Firestore REST API (public read access):</p>
             <div class="code-block">
@@ -937,12 +948,6 @@ Discrepancies:     ${comparison.discrepancies}
   --firestore firestore-audit.json \
   --gcs-dir ./gcs-audit</code>
             </div>
-        </div>
-
-        <div class="section">
-            <p>Click the button below to verify the audit trail:</p>
-            <button id="verifyBtn" class="verify-button" onclick="runVerification()">Run Verification</button>
-            <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
         <div class="section">
