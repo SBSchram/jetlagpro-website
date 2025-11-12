@@ -384,18 +384,3 @@ body {
 }
 
 
-.refresh-button {
-    margin-left: auto;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.refresh-button:hover {
-    background: #1d4ed8;
-}

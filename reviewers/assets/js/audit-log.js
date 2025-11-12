@@ -101,7 +101,7 @@ async function loadAuditLog() {
     } catch (error) {
         console.error('❌ Error loading audit log:', error);
         document.getElementById('auditLog').innerHTML = `
-            <tr><td colspan="8" class="empty-state">Error loading audit log: ${error.message}</td></tr>
+            <tr><td colspan="9" class="empty-state">Error loading audit log: ${error.message}</td></tr>
         `;
     }
 }
