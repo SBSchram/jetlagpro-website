@@ -395,46 +395,86 @@ Discrepancies:     ${comparison.discrepancies}
         function normalizeEntry(entry) {
             // Normalize an entry for comparison by:
             // 1. Sorting all keys
-            // 2. Converting timestamps to strings
-            // 3. Removing Firestore-specific metadata
+            // 2. Converting Firestore REST API format to plain values
+            // 3. Removing Firestore-specific document metadata
             const normalized = {};
+            
+            // Fields to skip (Firestore document metadata, not part of audit data)
+            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', 'eventId']);
             
             // Sort keys for consistent comparison
             const keys = Object.keys(entry).sort();
             
             for (const key of keys) {
-                let value = entry[key];
-                
                 // Skip Firestore document metadata
-                if (key === 'name' || key === 'createTime' || key === 'updateTime') {
+                if (skipFields.has(key)) {
                     continue;
                 }
                 
-                // Convert timestamps to ISO strings for comparison
-                if (value && typeof value === 'object') {
-                    if (value.timestampValue) {
-                        value = value.timestampValue;
-                    } else if (value.stringValue) {
-                        value = value.stringValue;
-                    } else if (value.integerValue) {
-                        value = parseInt(value.integerValue);
-                    } else if (value.booleanValue) {
-                        value = value.booleanValue === 'true' || value.booleanValue === true;
-                    } else if (value.mapValue && value.mapValue.fields) {
-                        // Recursively normalize nested objects
-                        value = normalizeEntry(value.mapValue.fields);
-                    } else if (Array.isArray(value)) {
-                        value = value.map(v => normalizeEntry(v));
-                    } else {
-                        // Try to normalize the object
-                        value = normalizeEntry(value);
-                    }
-                }
+                let value = entry[key];
+                
+                // Convert Firestore REST API format to plain values
+                value = extractFirestoreValue(value);
                 
                 normalized[key] = value;
             }
             
             return normalized;
+        }
+        
+        function extractFirestoreValue(value) {
+            // Handle Firestore REST API value types
+            if (value === null || value === undefined) {
+                return null;
+            }
+            
+            // If it's not an object, return as-is
+            if (typeof value !== 'object') {
+                return value;
+            }
+            
+            // Handle Firestore value wrappers
+            if (value.timestampValue) {
+                return value.timestampValue; // ISO string
+            }
+            if (value.stringValue !== undefined) {
+                return value.stringValue;
+            }
+            if (value.integerValue !== undefined) {
+                return parseInt(value.integerValue);
+            }
+            if (value.doubleValue !== undefined) {
+                return parseFloat(value.doubleValue);
+            }
+            if (value.booleanValue !== undefined) {
+                return value.booleanValue === 'true' || value.booleanValue === true;
+            }
+            if (value.nullValue !== undefined) {
+                return null;
+            }
+            if (value.arrayValue && value.arrayValue.values) {
+                return value.arrayValue.values.map(v => extractFirestoreValue(v));
+            }
+            if (value.mapValue && value.mapValue.fields) {
+                // Recursively extract nested map
+                const nested = {};
+                for (const [k, v] of Object.entries(value.mapValue.fields)) {
+                    nested[k] = extractFirestoreValue(v);
+                }
+                return nested;
+            }
+            
+            // If it's a plain object/array, recurse
+            if (Array.isArray(value)) {
+                return value.map(v => extractFirestoreValue(v));
+            }
+            
+            // Plain object - recurse on all values
+            const result = {};
+            for (const [k, v] of Object.entries(value)) {
+                result[k] = extractFirestoreValue(v);
+            }
+            return result;
         }
         
         function hashEntry(entry) {
