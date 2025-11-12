@@ -12,12 +12,14 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
+    overflow-x: auto; /* Allow horizontal scroll on very small screens, but layout stays desktop */
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
+    min-width: 1200px; /* Ensure desktop minimum width */
 }
 
 .header {
@@ -45,7 +47,7 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, 1fr); /* Fixed 4 columns for desktop */
     gap: 25px;
     margin-bottom: 30px;
 }
@@ -514,34 +516,7 @@ body {
     margin-bottom: 15px;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .stat-value {
-        font-size: 2.5rem;
-    }
-    
-    .pagination-controls {
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-    
-    .pagination-btn {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
-}
+/* Desktop-only: No mobile media queries - reviewer tools are desktop-centric */
 
 /* Point Mapping Reference Styles */
 .point-mapping-reference {
@@ -661,17 +636,4 @@ body {
     font-weight: 600;
 }
 
-@media (max-width: 768px) {
-    .mapping-table {
-        font-size: 0.8rem;
-    }
-    
-    .mapping-table th,
-    .mapping-table td {
-        padding: 8px 6px;
-    }
-    
-    .point-mapping-reference {
-        padding: 20px 15px;
-    }
-}
+/* Desktop-only: No mobile media queries - reviewer tools are desktop-centric */
