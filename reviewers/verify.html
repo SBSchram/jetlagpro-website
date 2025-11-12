@@ -1058,10 +1058,15 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <ul style="color: #374151; line-height: 1.8;">
-                <li>Verify that Firestore audit entries match the immutable and authoritative record in the GCS archive.</li>
-                <li>Verify that Firestore trip records were submitted by legitimate iOS devices</li>
-            </ul>
+            <p>How do you know research data hasn't been manipulated? We provide two independent verifications:</p>
+            
+            <p><strong>✓ Audit Trail Verification</strong><br>
+            Every time data is created, modified, or deleted, a permanent record is written to Google Cloud Storage. This archive is immutable (cannot be changed) and version-locked for 10 years. You can verify that our live database matches this authoritative record.</p>
+            
+            <p><strong>✓ Device Authentication</strong><br>
+            Starting November 8, 2025, every trip record includes a cryptographic signature. This proves it was submitted by a legitimate iOS device with our app installed. You can verify that our database contains only authenticated entries.</p>
+            
+            <p>These measures provide reviewers with verifiable proof of data integrity. For technical details, see the research paper appendix.</p>
         </div>
 
         <div class="section">
