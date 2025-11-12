@@ -123,6 +123,11 @@ body {
     width: 150px;
 }
 
+.audit-table th:nth-child(2),
+.audit-table td:nth-child(2) {
+    width: 90px;
+}
+
 .audit-table tbody tr {
     border-bottom: 1px solid #e5e5e5;
 }
