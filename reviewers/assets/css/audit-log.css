@@ -143,6 +143,7 @@ body {
     display: inline-block;
     overflow-x: auto;
     border: 1px solid #ddd;
+    margin: 0 auto; /* Center the table */
 }
 
 /* Audit Table */
