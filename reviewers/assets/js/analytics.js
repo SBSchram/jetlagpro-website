@@ -529,7 +529,7 @@ function renderStimulationEfficacy() {
     // Update section heading with trip count
     const efficacyHeading = document.getElementById('stimulationEfficacyHeading');
     if (efficacyHeading) {
-        efficacyHeading.innerHTML = `Stimulation Efficacy Analysis (${completedSurveys.length})`;
+        efficacyHeading.innerHTML = `Stimulation Analysis (${completedSurveys.length})`;
     }
     
     if (completedSurveys.length === 0) {
