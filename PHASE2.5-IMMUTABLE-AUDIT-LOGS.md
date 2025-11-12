@@ -330,7 +330,7 @@ Total Cost: ~$0.005/month = $0.06/year
 
 ### Add GCS Verification Button
 
-**File:** `assets/js/audit-log.js`
+**File:** `reviewers/assets/js/audit-log.js`
 
 Add verification function:
 
