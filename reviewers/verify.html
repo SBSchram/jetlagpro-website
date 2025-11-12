@@ -38,45 +38,45 @@
         }
         .header {
             padding: 0;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-align: center;
         }
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
             color: #1f2937;
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
         }
         .header p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #6b7280;
             margin: 0;
         }
         .section {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #e5e7eb;
         }
         .section:last-child {
             border-bottom: none;
         }
         .section h2 {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #1f2937;
-            margin: 0 0 15px 0;
+            margin: 0 0 10px 0;
         }
         .section p {
             color: #374151;
-            line-height: 1.6;
-            margin: 0 0 15px 0;
+            line-height: 1.5;
+            margin: 0 0 10px 0;
         }
         .code-block {
             background: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 15px 0;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
             overflow-x: auto;
         }
         .code-block code {
@@ -113,12 +113,29 @@
             background: #3b82f6;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
             transition: background 0.3s ease;
+            margin-right: 10px;
+        }
+        .source-button {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+        .source-button:hover {
+            background: #4b5563;
         }
         .verify-button:hover {
             background: #2563eb;
@@ -845,6 +862,7 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Run Verification</h2>
             <p>Click the button below to verify the audit trail in real-time:</p>
             <button id="verifyBtn" class="verify-button" onclick="runVerification()">Run Verification</button>
+            <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button">View Verification Source Code</a>
             <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
