@@ -456,6 +456,21 @@ Discrepancies:     ${comparison.discrepancies}
                 // Convert Firestore REST API format to plain values
                 value = extractFirestoreValue(value);
                 
+                // Special handling for source field - ensure it's always a string
+                if (key === 'source') {
+                    if (value && typeof value === 'object') {
+                        // If it's still an object after extraction, try to extract again
+                        value = extractFirestoreValue(value);
+                    }
+                    if (value && typeof value !== 'string') {
+                        // Convert to string if not already
+                        value = String(value);
+                    }
+                    if (!value) {
+                        value = null;
+                    }
+                }
+                
                 // Normalize timestamp field specifically (and any field that looks like a timestamp)
                 if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
                     value = normalizeTimestamp(value);
