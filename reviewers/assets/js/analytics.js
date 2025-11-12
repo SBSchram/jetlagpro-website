@@ -661,16 +661,9 @@ function renderStimulationEfficacy() {
     html += '<canvas id="symptomAnalysisChart" width="800" height="400"></canvas>';
     html += '</div>';
     
-    // Add explanatory notes
-    html += '<div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9;">';       
-    html += '<h4>📊 Analysis Notes:</h4>';
-    html += '<ul style="margin: 10px 0; padding-left: 20px;">';                                                                         
-    html += '<li><strong>Post-Travel Severity:</strong> Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</li>';                  
-    html += '<li><strong>Core Research Question:</strong> Does using the app result in less jet lag symptoms?</li>';                
-    html += '<li><strong>Three Key Variables:</strong> Post-travel symptom severity (1-5), App use (points stimulated), Time zones crossed</li>';               
-    html += '<li><strong>Expected Pattern:</strong> More time zones = worse symptoms, but more app use = reduced symptoms</li>';           
-    html += '<li><strong>Success Criteria:</strong> Post-travel symptom levels of 1-2 indicate good results from app usage</li>';           
-    html += '</ul>';
+    // Add explanatory note - severity scale only
+    html += '<div style="margin-top: 20px; font-size: 0.85em; color: #6b7280; text-align: center;">';
+    html += '<div>Post-Travel Severity: Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</div>';
     html += '</div>';
 
     container.innerHTML = html;
