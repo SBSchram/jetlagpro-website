@@ -183,29 +183,21 @@ function renderTableRow(entry, index) {
 }
 
 function determineRawSource(entry) {
-    if (entry.source) {
-        return entry.source;
+    const message = (entry.message || "").toLowerCase();
+    const hasDeleteCue = entry.operation === 'DELETE' || message.includes('deleted');
+
+    if (hasDeleteCue) {
+        return 'firebase_console';
     }
 
-    const writeMetadata = entry.metadata?.writeMetadata ||
-        entry.dataSnapshot?._writeMetadata ||
-        entry.beforeSnapshot?._writeMetadata ||
-        entry.afterSnapshot?._writeMetadata;
+    const hasChangedFields = Array.isArray(entry.changedFields) && entry.changedFields.length > 0;
+    const hasChangesMap = entry.changes && Object.keys(entry.changes).length > 0;
 
-    if (writeMetadata && typeof writeMetadata.source === 'string') {
-        return writeMetadata.source;
+    if (hasChangedFields || hasChangesMap) {
+        return 'web_survey';
     }
 
-    const surveyMetadata = entry.metadata?.surveyMetadata ||
-        entry.dataSnapshot?._surveyMetadata ||
-        entry.beforeSnapshot?._surveyMetadata ||
-        entry.afterSnapshot?._surveyMetadata;
-
-    if (surveyMetadata && typeof surveyMetadata.source === 'string') {
-        return surveyMetadata.source;
-    }
-
-    return null;
+    return 'ios_app';
 }
 
 function mapSource(rawSource) {
