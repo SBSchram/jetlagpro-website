@@ -140,10 +140,12 @@ function renderTableRow(entry, index) {
     let dest = '-';
     let arrival = '-';
 
-    if (entry.operation === 'CREATE' && entry.dataSnapshot) {
-        origin = entry.dataSnapshot.originTimezone || '-';
-        dest = entry.dataSnapshot.destinationCode || '-';
-        arrival = entry.dataSnapshot.arrivalTimeZone || '-';
+    if (entry.operation === 'CREATE') {
+        const data = entry.dataSnapshot || {};
+        const metaBefore = entry.beforeSnapshot || {};
+        origin = data.originTimezone || metaBefore.originTimezone || entry.metadata?.writeMetadata?.originTimezone || '-';
+        dest = data.destinationCode || metaBefore.destinationCode || entry.metadata?.writeMetadata?.destinationCode || '-';
+        arrival = data.arrivalTimeZone || metaBefore.arrivalTimeZone || entry.metadata?.writeMetadata?.arrivalTimeZone || '-';
     } else if (entry.operation === 'UPDATE' && entry.afterSnapshot) {
         origin = entry.afterSnapshot.originTimezone || '-';
         dest = entry.afterSnapshot.destinationCode || '-';
