@@ -132,7 +132,14 @@ body {
 
 .data-section {
     padding: 12px 0;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    border-top: 2px solid #1f2937; /* Bold separator line */
+    padding-top: 20px; /* Space above content */
+}
+
+.data-section:first-child {
+    border-top: none; /* No border on first section */
+    padding-top: 12px;
 }
 
 .data-section h2 {
