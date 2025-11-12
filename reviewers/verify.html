@@ -356,16 +356,28 @@ Discrepancies:     ${comparison.discrepancies}
                 } else if (!gcsEntry) {
                     missingInGCS.push(key);
                 } else {
-                    // Compare hashes (simplified - compare key fields)
+                    // Compare normalized entries
                     const firestoreHash = hashEntry(firestoreEntry);
                     const gcsHash = hashEntry(gcsEntry);
                     
                     if (firestoreHash === gcsHash) {
                         matchedCount++;
                     } else {
+                        // For debugging, show what fields differ
+                        const firestoreNorm = normalizeEntry(firestoreEntry);
+                        const gcsNorm = normalizeEntry(gcsEntry);
+                        const diffFields = [];
+                        
+                        const allKeys = new Set([...Object.keys(firestoreNorm), ...Object.keys(gcsNorm)]);
+                        for (const k of allKeys) {
+                            if (JSON.stringify(firestoreNorm[k]) !== JSON.stringify(gcsNorm[k])) {
+                                diffFields.push(k);
+                            }
+                        }
+                        
                         mismatched.push({
                             tripId: key,
-                            reason: 'Content mismatch'
+                            reason: diffFields.length > 0 ? `Fields differ: ${diffFields.slice(0, 5).join(', ')}` : 'Content mismatch'
                         });
                     }
                 }
@@ -380,15 +392,56 @@ Discrepancies:     ${comparison.discrepancies}
             };
         }
         
+        function normalizeEntry(entry) {
+            // Normalize an entry for comparison by:
+            // 1. Sorting all keys
+            // 2. Converting timestamps to strings
+            // 3. Removing Firestore-specific metadata
+            const normalized = {};
+            
+            // Sort keys for consistent comparison
+            const keys = Object.keys(entry).sort();
+            
+            for (const key of keys) {
+                let value = entry[key];
+                
+                // Skip Firestore document metadata
+                if (key === 'name' || key === 'createTime' || key === 'updateTime') {
+                    continue;
+                }
+                
+                // Convert timestamps to ISO strings for comparison
+                if (value && typeof value === 'object') {
+                    if (value.timestampValue) {
+                        value = value.timestampValue;
+                    } else if (value.stringValue) {
+                        value = value.stringValue;
+                    } else if (value.integerValue) {
+                        value = parseInt(value.integerValue);
+                    } else if (value.booleanValue) {
+                        value = value.booleanValue === 'true' || value.booleanValue === true;
+                    } else if (value.mapValue && value.mapValue.fields) {
+                        // Recursively normalize nested objects
+                        value = normalizeEntry(value.mapValue.fields);
+                    } else if (Array.isArray(value)) {
+                        value = value.map(v => normalizeEntry(v));
+                    } else {
+                        // Try to normalize the object
+                        value = normalizeEntry(value);
+                    }
+                }
+                
+                normalized[key] = value;
+            }
+            
+            return normalized;
+        }
+        
         function hashEntry(entry) {
-            // Create a simple hash by stringifying key fields
-            const keyFields = {
-                operation: entry.operation,
-                tripId: entry.tripId || entry.documentId,
-                timestamp: entry.timestamp,
-                source: entry.source
-            };
-            return JSON.stringify(keyFields);
+            // Normalize the entry and create a hash
+            const normalized = normalizeEntry(entry);
+            // Use JSON.stringify with sorted keys for consistent hashing
+            return JSON.stringify(normalized, Object.keys(normalized).sort());
         }
     </script>
 </head>
