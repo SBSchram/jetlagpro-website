@@ -237,6 +237,17 @@ Discrepancies:     ${comparison.discrepancies}
                                 output += `  - ${detail}\n`;
                             });
                         }
+                        // Add raw data inspection
+                        output += `\n=== RAW DATA INSPECTION ===\n`;
+                        output += `\nFIRESTORE RAW (first 2000 chars):\n`;
+                        output += JSON.stringify(item.rawFirestore, null, 2).substring(0, 2000) + '\n';
+                        output += `\nGCS RAW (first 2000 chars):\n`;
+                        output += JSON.stringify(item.rawGCS, null, 2).substring(0, 2000) + '\n';
+                        output += `\nFIRESTORE NORMALIZED (first 2000 chars):\n`;
+                        output += JSON.stringify(item.normalizedFirestore, null, 2).substring(0, 2000) + '\n';
+                        output += `\nGCS NORMALIZED (first 2000 chars):\n`;
+                        output += JSON.stringify(item.normalizedGCS, null, 2).substring(0, 2000) + '\n';
+                        output += `\n=== END INSPECTION ===\n\n`;
                     });
                     resultsDiv.className = 'verification-results error';
                 }
@@ -382,6 +393,10 @@ Discrepancies:     ${comparison.discrepancies}
                         const diffFields = [];
                         const diffDetails = [];
                         
+                        // Store raw entries for inspection
+                        const rawFirestore = JSON.parse(JSON.stringify(firestoreEntry));
+                        const rawGCS = JSON.parse(JSON.stringify(gcsEntry));
+                        
                         const allKeys = new Set([...Object.keys(firestoreNorm), ...Object.keys(gcsNorm)]);
                         for (const k of allKeys) {
                             const fsVal = firestoreNorm[k];
@@ -414,7 +429,11 @@ Discrepancies:     ${comparison.discrepancies}
                             reason: diffFields.length > 0 
                                 ? `Fields differ: ${diffFields.slice(0, 5).join(', ')}` 
                                 : 'Content mismatch',
-                            details: diffDetails.slice(0, 3)
+                            details: diffDetails.slice(0, 3),
+                            rawFirestore: rawFirestore,
+                            rawGCS: rawGCS,
+                            normalizedFirestore: firestoreNorm,
+                            normalizedGCS: gcsNorm
                         });
                     }
                 }
