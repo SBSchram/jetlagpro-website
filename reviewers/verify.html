@@ -434,6 +434,7 @@ Discrepancies:     ${comparison.discrepancies}
             // 1. Converting Firestore REST API format to plain values
             // 2. Removing Firestore-specific document metadata
             // 3. Sorting nested object keys for consistent comparison
+            // 4. Normalizing timestamps to ISO strings
             const normalized = {};
             
             // Fields to skip (Firestore document metadata, not part of audit data)
@@ -452,6 +453,20 @@ Discrepancies:     ${comparison.discrepancies}
                 
                 // Convert Firestore REST API format to plain values
                 value = extractFirestoreValue(value);
+                
+                // Normalize timestamp field specifically
+                if (key === 'timestamp' && value) {
+                    if (typeof value === 'string') {
+                        try {
+                            const date = new Date(value);
+                            if (!isNaN(date.getTime())) {
+                                value = date.toISOString();
+                            }
+                        } catch (e) {
+                            // Keep as-is if parsing fails
+                        }
+                    }
+                }
                 
                 // Recursively sort nested object keys for consistent comparison
                 if (value && typeof value === 'object' && !Array.isArray(value)) {
@@ -504,6 +519,15 @@ Discrepancies:     ${comparison.discrepancies}
             if (value.timestampValue !== undefined) {
                 // Could be ISO string or Firestore timestamp object
                 if (typeof value.timestampValue === 'string') {
+                    // Normalize timestamp strings (remove milliseconds if present, standardize format)
+                    try {
+                        const date = new Date(value.timestampValue);
+                        if (!isNaN(date.getTime())) {
+                            return date.toISOString();
+                        }
+                    } catch (e) {
+                        // If parsing fails, return as-is
+                    }
                     return value.timestampValue;
                 }
                 // If it's an object with _seconds, convert to ISO
@@ -541,7 +565,22 @@ Discrepancies:     ${comparison.discrepancies}
             
             // Handle Firestore Timestamp objects (from Admin SDK, not REST API)
             if (value._seconds !== undefined) {
-                return new Date(value._seconds * 1000).toISOString();
+                const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
+                const nanoseconds = value._nanoseconds || 0;
+                // Convert to ISO string, ignoring nanoseconds for comparison
+                return new Date(seconds * 1000).toISOString();
+            }
+            
+            // Handle ISO date strings - normalize them
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+                try {
+                    const date = new Date(value);
+                    if (!isNaN(date.getTime())) {
+                        return date.toISOString();
+                    }
+                } catch (e) {
+                    // If parsing fails, return as-is
+                }
             }
             
             // If it's a plain array, recurse
