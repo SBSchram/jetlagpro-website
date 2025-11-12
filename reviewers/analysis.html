@@ -46,6 +46,27 @@
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 });
             }
+            
+            // Fix anchor links to account for sticky nav offset
+            document.querySelectorAll('.analysis-subnav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return; // Top link handled above
+                    
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const offset = 60; // Height of sticky nav
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -64,12 +85,12 @@
 
         <!-- Analysis Page Sub-Menu -->
         <nav class="analysis-subnav">
+            <a href="#">Top</a>
             <a href="#trip-stats">Trip Stats</a>
             <a href="#dose-response">Dose-Response</a>
             <a href="#stimulation-efficacy">Stimulation Efficacy</a>
             <a href="#recent-submissions">Recent Submissions</a>
             <a href="#point-mapping">Point Mapping</a>
-            <a href="#">Top</a>
         </nav>
 
         <div class="header">

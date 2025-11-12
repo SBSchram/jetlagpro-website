@@ -140,6 +140,7 @@ body {
     margin-bottom: 30px;
     border-top: 2px solid #1f2937; /* Bold separator line */
     padding-top: 20px; /* Space above content */
+    scroll-margin-top: 60px; /* Offset for sticky nav when scrolling to anchors */
 }
 
 .data-section:first-child {
