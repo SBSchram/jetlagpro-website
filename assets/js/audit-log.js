@@ -166,6 +166,8 @@ function renderTableRow(entry, index) {
     const expandClass = isExpandable ? 'expandable' : '';
     const onclick = isExpandable ? `onclick=\"toggleExpand(${index})\"` : '';
 
+    let evaluation = classifyEntry(entry);
+
     let html = `
         <tr class="${expandClass}" ${onclick} data-index="${index}">
             <td>${timestamp}</td>
@@ -175,6 +177,7 @@ function renderTableRow(entry, index) {
             <td>${origin}</td>
             <td>${dest}</td>
             <td>${arrival}</td>
+            <td>${evaluation}</td>
             <td>${validStatus}</td>
         </tr>
     `;
@@ -233,6 +236,24 @@ function mapSource(rawSource) {
         default:
             return {label: '-', cssClass: ''};
     }
+}
+
+const DEVELOPER_PREFIXES = ['2330B376', '7482966F', '5E001B36', '23DB54B0'];
+
+function classifyEntry(entry) {
+    const tripId = entry.tripId || entry.documentId || '';
+    if (DEVELOPER_PREFIXES.some(prefix => tripId.startsWith(prefix))) {
+        return 'Dev';
+    }
+
+    const origin = entry.originTimezone || entry.afterSnapshot?.originTimezone || entry.dataSnapshot?.originTimezone || entry.metadata?.writeMetadata?.originTimezone || entry.deletedData?.originTimezone || '-';
+    const arrival = entry.arrivalTimeZone || entry.afterSnapshot?.arrivalTimeZone || entry.dataSnapshot?.arrivalTimeZone || entry.metadata?.writeMetadata?.arrivalTimeZone || entry.deletedData?.arrivalTimeZone || '-';
+
+    if (origin !== '-' && arrival !== '-' && origin === arrival) {
+        return 'Test';
+    }
+
+    return 'Real';
 }
 
 /**

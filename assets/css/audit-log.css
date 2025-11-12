@@ -157,6 +157,11 @@ body {
 
 .audit-table th:nth-child(8),
 .audit-table td:nth-child(8) {
+    width: 70px;
+}
+
+.audit-table th:nth-child(9),
+.audit-table td:nth-child(9) {
     width: 60px;
 }
 
