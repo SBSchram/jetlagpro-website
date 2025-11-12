@@ -160,15 +160,15 @@ function renderTableRow(entry, index) {
     const onclick = isExpandable ? `onclick=\"toggleExpand(${index})\"` : '';
 
     let html = `
-        <tr class=\"${expandClass}\" ${onclick} data-index=\"${index}\">
+        <tr class="${expandClass}" ${onclick} data-index="${index}">
             <td>${timestamp}</td>
-            <td class=\"${actionClass}\">${action}</td>
-            <td>${validStatus}</td>
-            <td class=\"${sourceClass}\">${source}</td>
+            <td class="${actionClass}">${action}</td>
+            <td class="${sourceClass}">${source}</td>
             <td>${surveyCode}</td>
             <td>${origin}</td>
             <td>${dest}</td>
             <td>${arrival}</td>
+            <td>${validStatus}</td>
         </tr>
     `;
 
