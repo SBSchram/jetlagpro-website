@@ -649,8 +649,11 @@ function renderStimulationEfficacy() {
     html += '</tbody></table>';
     html += '</div>';
 
+    // Add separator bar above All Symptoms Analysis
+    html += '<div style="margin-top: 40px; margin-bottom: 20px; border-top: 1px solid #1f2937; width: 50%; margin-left: auto; margin-right: auto;"></div>';
+
     // Add All Symptoms Analysis - Multi-Series Chart
-    html += '<h3 style="margin-top: 40px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
+    html += '<h3 style="margin-top: 20px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
     html += '<p>Interactive chart showing all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
     
     // Chart container
