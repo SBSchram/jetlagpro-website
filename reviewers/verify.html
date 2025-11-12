@@ -937,12 +937,7 @@ Discrepancies:     ${comparison.discrepancies}
   --firestore firestore-audit.json \
   --gcs-dir ./gcs-audit</code>
             </div>
-            <p>The script:</p>
-            <ul style="color: #374151; line-height: 1.8;">
-                <li>Normalizes Firestore documents into JSON</li>
-                <li>Hashes each entry and compares with GCS files</li>
-                <li>Reports missing or altered Firestore entries</li>
-            </ul>
+            <p>The script looks for discrepancies between Firestore audit data and immutable GCS records.</p>
         </div>
 
         <div class="section">
