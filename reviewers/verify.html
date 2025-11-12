@@ -1187,14 +1187,8 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code># The verification logic is embedded in verify.html
-# Extract the HMAC validation function and run it on your downloaded data
-# HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a'
-# For each trip ID with 5 parts (November 8, 2025 and later):
-#   1. Extract base trip ID (first 4 parts)
-#   2. Compute HMAC-SHA256(baseTripId, HMAC_SECRET)
-#   3. Compare first 8 hex characters with provided signature
-#   4. Report trips with invalid signatures</code>
+                <code>python scripts/verify_trip_signatures.py \
+  --firestore firestore-trips.json</code>
             </div>
         </div>
 
