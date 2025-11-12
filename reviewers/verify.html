@@ -471,15 +471,36 @@ Discrepancies:     ${comparison.discrepancies}
             
             // Ensure critical fields exist (set to null if missing for consistent comparison)
             // This handles cases where Firestore entries were created before we added these fields
+            // Also normalize source to always be a string (not an object)
             if (!('source' in normalized)) {
                 normalized.source = null;
+            } else if (normalized.source && typeof normalized.source === 'object') {
+                // If source is an object (from Firestore REST API), extract the string value
+                normalized.source = extractFirestoreValue(normalized.source);
+            } else if (normalized.source && typeof normalized.source !== 'string') {
+                // Convert to string if it's not already
+                normalized.source = String(normalized.source);
             }
+            
             if (!('changedFields' in normalized)) {
                 normalized.changedFields = null;
+            } else if (normalized.changedFields === null) {
+                normalized.changedFields = null;
+            } else if (!Array.isArray(normalized.changedFields)) {
+                // Ensure changedFields is an array (convert if needed)
+                normalized.changedFields = [];
+            } else {
+                // Sort array for consistent comparison
+                normalized.changedFields = [...normalized.changedFields].sort();
             }
+            
             if (!('changes' in normalized)) {
                 normalized.changes = null;
+            } else if (normalized.changes && typeof normalized.changes !== 'object') {
+                // Ensure changes is an object
+                normalized.changes = null;
             }
+            
             if (!('deletedData' in normalized)) {
                 normalized.deletedData = null;
             }
