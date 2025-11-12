@@ -484,7 +484,8 @@ Discrepancies:     ${comparison.discrepancies}
             
             // Fields to skip (Firestore document metadata, not part of audit data)
             // Note: 'eventId' is part of the audit entry, not Firestore metadata, so we keep it
-            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id']);
+            // Skip '_raw' as it's a duplicate of the top-level fields for debugging
+            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', '_raw']);
             
             // Get all possible keys from both Firestore and GCS entries
             // For now, we'll just use the keys from this entry
