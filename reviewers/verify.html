@@ -226,23 +226,19 @@ Discrepancies:     ${comparison.discrepancies}
 `;
                 
                 if (comparison.discrepancies === 0) {
-                    output += 'Audit verification complete: all records match.';
+                    output += 'Audit verification complete: all records match.\n\n';
+                    output += 'Note: 4 pre-deployment entries were excluded from verification.\n';
+                    output += 'These entries were created before immutable logging was deployed\n';
+                    output += 'and are documented in the verification code.';
                     resultsDiv.className = 'verification-results success';
                 } else {
                     output += 'DISCREPANCIES FOUND:\n\n';
                     
-                    // Explain missing GCS entries
-                    if (comparison.missingInGCS.length > 0) {
-                        output += `Missing in GCS: ${comparison.missingInGCS.length} entries were created before immutable logging was deployed.\n`;
-                        output += `This is not indicative of tampering.\n\n`;
-                        comparison.missingInGCS.forEach(tripId => {
-                            output += `  ${tripId}\n`;
-                        });
-                        output += '\n';
-                    }
-                    
                     comparison.missingInFirestore.forEach(tripId => {
                         output += `Missing in Firestore: ${tripId}\n`;
+                    });
+                    comparison.missingInGCS.forEach(tripId => {
+                        output += `Missing in GCS: ${tripId}\n`;
                     });
                     comparison.mismatched.forEach(item => {
                         output += `Mismatch: ${item.tripId} (${item.reason})\n`;
@@ -366,6 +362,18 @@ Discrepancies:     ${comparison.discrepancies}
             const missingInGCS = [];
             const mismatched = [];
             
+            // Known pre-deployment entries: These 4 audit entries were created before the 
+            // immutable GCS archive was deployed (2025-11-11). They exist only in Firestore
+            // and are expected to be missing from GCS. We filter them out for verification
+            // to avoid false positives. This list is hardcoded for transparency - any future
+            // missing entries would indicate a real problem.
+            const preDeploymentEventIds = new Set([
+                '3479ae2f-5a3f-46ef-9439-f7ca2984337d',
+                'dcd41966-3520-486e-93cc-0d50d76e1ac5',
+                '1f54b779-aff3-4cd7-b667-ecfdfc898a47',
+                '4253d2be-9d13-466f-b535-f55ade5b5dec'
+            ]);
+            
             // Create maps for quick lookup using eventId (unique identifier for each audit event)
             // Also store raw entries for inspection
             const firestoreMap = new Map();
@@ -377,6 +385,12 @@ Discrepancies:     ${comparison.discrepancies}
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const key = eventId || `${operation}-${tripId}`;
+                
+                // Skip pre-deployment entries - they're expected to be missing from GCS
+                if (preDeploymentEventIds.has(key)) {
+                    return;
+                }
+                
                 firestoreMap.set(key, entry);
                 // Store raw entry if available
                 if (entry._raw) {
@@ -393,6 +407,12 @@ Discrepancies:     ${comparison.discrepancies}
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const key = eventId || `${operation}-${tripId}`;
+                
+                // Skip pre-deployment entries (they shouldn't be in GCS, but filter just in case)
+                if (preDeploymentEventIds.has(key)) {
+                    return;
+                }
+                
                 gcsMap.set(key, entry);
                 // Store raw entry if available
                 if (entry._raw) {
@@ -834,9 +854,9 @@ Discrepancies:     ${comparison.discrepancies}
         <div class="section">
             <h2>Interpreting Results</h2>
             <ul style="color: #374151; line-height: 1.8;">
-                <li><strong>All records match</strong> – Firestore mirrors the immutable archive</li>
-                <li><strong>Missing in GCS</strong> – Entries created before immutable logging was deployed. This is not indicative of tampering.</li>
+                <li><strong>All records match</strong> – Firestore mirrors the immutable archive. (Note: 4 pre-deployment entries are filtered out; see verification code.)</li>
                 <li><strong>Missing in Firestore</strong> – Unexpected; investigate immediately (GCS is authoritative)</li>
+                <li><strong>Missing in GCS</strong> – Unexpected; investigate immediately (all post-deployment entries should exist in both systems)</li>
                 <li><strong>Content mismatches</strong> – Potential tampering; investigate immediately (GCS is authoritative)</li>
             </ul>
         </div>
