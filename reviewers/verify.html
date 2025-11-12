@@ -232,6 +232,11 @@ Discrepancies:     ${comparison.discrepancies}
                     });
                     comparison.mismatched.forEach(item => {
                         output += `Mismatch: ${item.tripId} (${item.reason})\n`;
+                        if (item.details && item.details.length > 0) {
+                            item.details.forEach(detail => {
+                                output += `  - ${detail}\n`;
+                            });
+                        }
                     });
                     resultsDiv.className = 'verification-results error';
                 }
@@ -375,17 +380,41 @@ Discrepancies:     ${comparison.discrepancies}
                         const firestoreNorm = normalizeEntry(firestoreEntry);
                         const gcsNorm = normalizeEntry(gcsEntry);
                         const diffFields = [];
+                        const diffDetails = [];
                         
                         const allKeys = new Set([...Object.keys(firestoreNorm), ...Object.keys(gcsNorm)]);
                         for (const k of allKeys) {
-                            if (JSON.stringify(firestoreNorm[k]) !== JSON.stringify(gcsNorm[k])) {
+                            const fsVal = firestoreNorm[k];
+                            const gcsVal = gcsNorm[k];
+                            const fsStr = JSON.stringify(fsVal);
+                            const gcsStr = JSON.stringify(gcsVal);
+                            
+                            if (fsStr !== gcsStr) {
                                 diffFields.push(k);
+                                // For arrays, show length difference
+                                if (Array.isArray(fsVal) && Array.isArray(gcsVal)) {
+                                    diffDetails.push(`${k}: lengths ${fsVal.length} vs ${gcsVal.length}`);
+                                } else if (typeof fsVal === 'object' && typeof gcsVal === 'object') {
+                                    // For objects, show key differences
+                                    const fsKeys = Object.keys(fsVal || {}).sort();
+                                    const gcsKeys = Object.keys(gcsVal || {}).sort();
+                                    if (fsKeys.join(',') !== gcsKeys.join(',')) {
+                                        diffDetails.push(`${k}: keys differ`);
+                                    } else {
+                                        diffDetails.push(`${k}: values differ`);
+                                    }
+                                } else {
+                                    diffDetails.push(`${k}: ${typeof fsVal} vs ${typeof gcsVal}`);
+                                }
                             }
                         }
                         
                         mismatched.push({
                             tripId: key,
-                            reason: diffFields.length > 0 ? `Fields differ: ${diffFields.slice(0, 5).join(', ')}` : 'Content mismatch'
+                            reason: diffFields.length > 0 
+                                ? `Fields differ: ${diffFields.slice(0, 5).join(', ')}` 
+                                : 'Content mismatch',
+                            details: diffDetails.slice(0, 3)
                         });
                     }
                 }
