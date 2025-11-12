@@ -713,7 +713,7 @@ function renderTripStats() {
     html += `<tr><th>Data Type</th><td>${dataTypeText}</td></tr>`;
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
     html += '</table>';
-    html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6;">';
+    html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: left;">';
     html += '<div>Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</div>';
     html += '<div>Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</div>';
     html += '<div>Authenticated = Trip IDs with valid HMAC-SHA256 signatures (Build 6+, prevents data fabrication)</div>';
