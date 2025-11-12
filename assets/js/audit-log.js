@@ -334,21 +334,21 @@ function updateStats() {
         creates: 0,
         updates: 0,
         validations: 0,
-        warnings: 0
+        deletions: 0
     };
     
     auditLogData.forEach(entry => {
         if (entry.operation === 'CREATE') stats.creates++;
         if (entry.operation === 'UPDATE') stats.updates++;
         if (entry.operation === 'VALIDATION') stats.validations++;
-        if (entry.severity === 'WARNING' || entry.severity === 'ERROR') stats.warnings++;
+        if (entry.operation === 'DELETE') stats.deletions++;
     });
     
     document.getElementById('totalEntries').textContent = stats.total;
     document.getElementById('createCount').textContent = stats.creates;
     document.getElementById('updateCount').textContent = stats.updates;
     document.getElementById('validationCount').textContent = stats.validations;
-    document.getElementById('warningCount').textContent = stats.warnings;
+    document.getElementById('deletionCount').textContent = stats.deletions;
 }
 
 /**

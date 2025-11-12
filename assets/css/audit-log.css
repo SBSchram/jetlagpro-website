@@ -212,12 +212,19 @@ body {
 
 /* Action Column */
 .action-CREATE {
-    color: #0066cc;
+    color: #007700;
     font-weight: 600;
 }
 
-.action-UPDATE {
-    color: #666;
+.action-UPDATE,
+.action-MODIFY {
+    color: #ff6600;
+    font-weight: 600;
+}
+
+.action-DELETE {
+    color: #cc0000;
+    font-weight: 600;
 }
 
 .action-VALIDATION {
