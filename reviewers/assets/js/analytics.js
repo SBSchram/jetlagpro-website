@@ -820,7 +820,7 @@ function renderPointStimulationAnalysis() {
     // Update the section heading with valid trip count
     const headingElement = document.getElementById('pointMappingHeading');
     if (headingElement) {
-        headingElement.innerHTML = `Acupuncture Point Stimulation Analysis (${data.length})`;
+        headingElement.innerHTML = `Point Usage (${data.length} trips)`;
     }
 
     // Point mapping data
