@@ -22,6 +22,54 @@ body {
     min-width: 1200px; /* Ensure desktop minimum width */
 }
 
+/* Common Reviewer Navigation */
+.reviewer-nav {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+}
+
+.reviewer-nav a {
+    color: #374151;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.reviewer-nav a:hover {
+    color: #1f2937;
+    text-decoration: underline;
+}
+
+.reviewer-nav a.active {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.reviewer-nav span {
+    color: #d1d5db;
+    margin: 0 8px;
+}
+
+/* Analysis Page Sub-Menu */
+.analysis-subnav {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.85rem;
+}
+
+.analysis-subnav a {
+    color: #6b7280;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.analysis-subnav a:hover {
+    color: #1f2937;
+    text-decoration: underline;
+}
+
 .header {
     background: #ffffff;
     padding: 20px;
