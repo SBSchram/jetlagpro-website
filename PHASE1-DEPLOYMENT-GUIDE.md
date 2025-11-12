@@ -210,7 +210,7 @@ firebase deploy --only firestore:rules
 - Simple, clean UX without error messages
 
 #### Test 6: Old Data Still Readable
-1. Open analytics dashboard at `/analytics-secret.html`
+1. Open data analysis dashboard at `/reviewers/analysis.html`
 2. Verify all charts load
 3. Old data (without `_writeMetadata`) can still be read
 4. Only NEW writes require metadata
@@ -231,11 +231,11 @@ firebase deploy --only firestore:rules
 3. Verify all have `_writeMetadata` field
 4. Verify `source` is either "ios_app" or "web_survey"
 
-**Analytics Dashboard Check:**
-1. Open `/analytics-secret.html`
+**Data Analysis Dashboard Check:**
+1. Open `/reviewers/analysis.html`
 2. Verify data loads normally
 3. Check Trip Stats section shows correct counts
-4. Confirm developer device IDs (e.g., `2330B376`, `7482966F`) remain filtered from production analytics
+4. Confirm developer device IDs (e.g., `2330B376`, `7482966F`) remain filtered from production analysis
 
 ---
 
@@ -326,7 +326,7 @@ Phase 1 is successful when:
 - ✅ All new documents have `_writeMetadata` field (100% coverage)
 - ✅ Console write attempts are blocked (0 unauthorized writes)
 - ✅ Zero user-facing errors reported
-- ✅ Analytics dashboard loads normally
+- ✅ Data analysis dashboard loads normally
 
 ---
 

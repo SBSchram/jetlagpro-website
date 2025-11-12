@@ -33,7 +33,7 @@ Trip Completion Event
 Cloud Function Triggered
     ↓
     ├─→ Write to Firestore (auditLog collection)
-    │   └─→ For real-time viewing in audit-log.html
+    │   └─→ For real-time viewing in reviewers/audit-log.html
     │   └─→ Can be queried quickly
     │   └─→ Can be deleted (not authoritative)
     │
@@ -465,7 +465,7 @@ function showNotification(message, type) {
 
 ### Add Verification Button to UI
 
-**File:** `audit-log.html`
+**File:** `reviewers/audit-log.html`
 
 Add button after the summary stats:
 
@@ -604,7 +604,7 @@ A: Do it BEFORE locking. After locking, all files are permanent.
 
 **Q: How do reviewers access audit logs?**  
 A: Two ways:
-1. View at jetlagpro.com/audit-log.html (Firestore)
+1. View at jetlagpro.com/reviewers/audit-log.html (Firestore)
 2. Download from gs://jetlagpro-audit-logs/ (GCS immutable)
 
 **Q: Is this overkill for academic research?**  

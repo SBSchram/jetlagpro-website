@@ -6,7 +6,7 @@ The Audit Log Viewer provides a clean, minimal interface for external reviewers 
 
 ## Access
 
-**URL:** `https://jetlagpro.com/audit-log.html`
+**URL:** `https://jetlagpro.com/reviewers/audit-log.html`
 
 ## Features
 
