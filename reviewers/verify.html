@@ -454,18 +454,9 @@ Discrepancies:     ${comparison.discrepancies}
                 // Convert Firestore REST API format to plain values
                 value = extractFirestoreValue(value);
                 
-                // Normalize timestamp field specifically
-                if (key === 'timestamp' && value) {
-                    if (typeof value === 'string') {
-                        try {
-                            const date = new Date(value);
-                            if (!isNaN(date.getTime())) {
-                                value = date.toISOString();
-                            }
-                        } catch (e) {
-                            // Keep as-is if parsing fails
-                        }
-                    }
+                // Normalize timestamp field specifically (and any field that looks like a timestamp)
+                if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
+                    value = normalizeTimestamp(value);
                 }
                 
                 // Recursively sort nested object keys for consistent comparison
@@ -481,7 +472,12 @@ Discrepancies:     ${comparison.discrepancies}
         
         function sortObjectKeys(obj) {
             // Recursively sort all object keys for consistent comparison
+            // Also normalize any timestamp values found in nested structures
             if (obj === null || typeof obj !== 'object') {
+                // Check if it's a timestamp string
+                if (typeof obj === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(obj)) {
+                    return normalizeTimestamp(obj);
+                }
                 return obj;
             }
             
@@ -492,7 +488,13 @@ Discrepancies:     ${comparison.discrepancies}
             const sorted = {};
             const keys = Object.keys(obj).sort();
             for (const key of keys) {
-                const value = obj[key];
+                let value = obj[key];
+                
+                // Normalize timestamp fields in nested objects
+                if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
+                    value = normalizeTimestamp(value);
+                }
+                
                 if (value && typeof value === 'object' && !Array.isArray(value)) {
                     sorted[key] = sortObjectKeys(value);
                 } else if (Array.isArray(value)) {
@@ -504,37 +506,51 @@ Discrepancies:     ${comparison.discrepancies}
             return sorted;
         }
         
+        function normalizeTimestamp(value) {
+            // Normalize any timestamp value to ISO string
+            if (!value) return value;
+            
+            if (typeof value === 'string') {
+                try {
+                    const date = new Date(value);
+                    if (!isNaN(date.getTime())) {
+                        return date.toISOString();
+                    }
+                } catch (e) {
+                    // If parsing fails, return as-is
+                }
+                return value;
+            }
+            
+            if (typeof value === 'object') {
+                // Firestore Timestamp object with _seconds
+                if (value._seconds !== undefined) {
+                    const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
+                    return new Date(seconds * 1000).toISOString();
+                }
+            }
+            
+            return value;
+        }
+        
         function extractFirestoreValue(value) {
             // Handle Firestore REST API value types
             if (value === null || value === undefined) {
                 return null;
             }
             
-            // If it's not an object, return as-is
+            // If it's not an object, check if it's a timestamp string
             if (typeof value !== 'object') {
+                // Check if it looks like a timestamp string
+                if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+                    return normalizeTimestamp(value);
+                }
                 return value;
             }
             
             // Handle Firestore value wrappers (check these first before recursing)
             if (value.timestampValue !== undefined) {
-                // Could be ISO string or Firestore timestamp object
-                if (typeof value.timestampValue === 'string') {
-                    // Normalize timestamp strings (remove milliseconds if present, standardize format)
-                    try {
-                        const date = new Date(value.timestampValue);
-                        if (!isNaN(date.getTime())) {
-                            return date.toISOString();
-                        }
-                    } catch (e) {
-                        // If parsing fails, return as-is
-                    }
-                    return value.timestampValue;
-                }
-                // If it's an object with _seconds, convert to ISO
-                if (value.timestampValue._seconds) {
-                    return new Date(value.timestampValue._seconds * 1000).toISOString();
-                }
-                return value.timestampValue;
+                return normalizeTimestamp(value.timestampValue);
             }
             if (value.stringValue !== undefined) {
                 return value.stringValue;
@@ -565,22 +581,7 @@ Discrepancies:     ${comparison.discrepancies}
             
             // Handle Firestore Timestamp objects (from Admin SDK, not REST API)
             if (value._seconds !== undefined) {
-                const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
-                const nanoseconds = value._nanoseconds || 0;
-                // Convert to ISO string, ignoring nanoseconds for comparison
-                return new Date(seconds * 1000).toISOString();
-            }
-            
-            // Handle ISO date strings - normalize them
-            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
-                try {
-                    const date = new Date(value);
-                    if (!isNaN(date.getTime())) {
-                        return date.toISOString();
-                    }
-                } catch (e) {
-                    // If parsing fails, return as-is
-                }
+                return normalizeTimestamp(value);
             }
             
             // If it's a plain array, recurse
