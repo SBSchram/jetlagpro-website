@@ -655,15 +655,13 @@ function renderStimulationEfficacy() {
     // Add All Symptoms Analysis - Multi-Series Chart
     html += '<h3 style="margin-top: 20px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
     html += '<p>Interactive chart showing all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
+    html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; text-align: center;">';
+    html += '<div>Post-Travel Severity: Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</div>';
+    html += '</div>';
     
     // Chart container
     html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
     html += '<canvas id="symptomAnalysisChart" width="800" height="400"></canvas>';
-    html += '</div>';
-    
-    // Add explanatory note - severity scale only
-    html += '<div style="margin-top: 20px; font-size: 0.85em; color: #6b7280; text-align: center;">';
-    html += '<div>Post-Travel Severity: Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</div>';
     html += '</div>';
 
     container.innerHTML = html;
