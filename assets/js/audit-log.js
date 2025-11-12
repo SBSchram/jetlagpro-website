@@ -111,7 +111,13 @@ function renderTableRow(entry, index) {
         minute: '2-digit'
     }) : '-';
 
-    const action = entry.operation || 'VALIDATION';
+    let action = entry.operation || 'VALIDATION';
+    if (entry.operation === 'UPDATE') {
+        const surveyMetaChange = entry.changes && entry.changes._surveyMetadata;
+        const isInitialSurvey = surveyMetaChange && surveyMetaChange.before == null;
+        action = isInitialSurvey ? 'UPDATE' : 'MODIFY';
+    }
+
     const actionClass = `action-${action}`;
 
     const validStatus = entry.validationStatus === 'invalid'
