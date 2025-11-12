@@ -164,16 +164,18 @@ function renderTableRow(entry, index) {
     origin = formatTimezone(origin);
     arrival = formatTimezone(arrival);
 
-    const isExpandable = source === 'FC' && entry.changes && Object.keys(entry.changes).length > 0;
+    const hasChanges = entry.changes && Object.keys(entry.changes).length > 0;
+    const isExpandable = (source === 'FC' || action === 'MODIFY') && hasChanges;
     const expandClass = isExpandable ? 'expandable' : '';
     const onclick = isExpandable ? `onclick=\"toggleExpand(${index})\"` : '';
+    const expandIcon = isExpandable ? ' <span class="expand-icon">▼</span>' : '';
 
     let evaluation = classifyEntry(entry);
 
     let html = `
         <tr class="${expandClass}" ${onclick} data-index="${index}">
             <td>${timestamp}</td>
-            <td class="${actionClass}">${action}</td>
+            <td class="${actionClass}">${action}${expandIcon}</td>
             <td class="${sourceClass}">${source}</td>
             <td>${surveyCode}</td>
             <td>${origin}</td>
@@ -185,11 +187,12 @@ function renderTableRow(entry, index) {
     `;
 
     if (isExpandable) {
+        const changeType = action === 'MODIFY' ? 'Survey Changes' : 'Console Changes';
         html += `
             <tr class=\"expanded-row\" id=\"expanded-${index}\">
-                <td colspan=\"8\">
+                <td colspan=\"9\">
                     <div class=\"expanded-content\">
-                        <h4>Console Changes:</h4>
+                        <h4>${changeType}:</h4>
                         <div class=\"change-list\">
                             ${Object.entries(entry.changes).map(([field, change]) => `
                                 <div class=\"change-item\">

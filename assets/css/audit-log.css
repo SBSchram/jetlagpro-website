@@ -232,6 +232,22 @@ body {
     font-style: italic;
 }
 
+.expand-icon {
+    font-size: 0.75rem;
+    margin-left: 4px;
+    opacity: 0.6;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.audit-table tbody tr.expandable .expand-icon {
+    opacity: 1;
+}
+
+.audit-table tbody tr.expandable:hover .expand-icon {
+    opacity: 1;
+}
+
 /* Valid Column */
 .valid-yes {
     color: #007700;
