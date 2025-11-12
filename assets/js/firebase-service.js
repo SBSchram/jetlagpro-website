@@ -257,6 +257,9 @@ class FirebaseService {
             if (fields.source?.stringValue) entry.source = fields.source.stringValue;
             if (fields.actor?.stringValue) entry.actor = fields.actor.stringValue;
             if (fields.eventId?.stringValue) entry.eventId = fields.eventId.stringValue;
+            if (fields.originTimezone?.stringValue) entry.originTimezone = fields.originTimezone.stringValue;
+            if (fields.destinationCode?.stringValue) entry.destinationCode = fields.destinationCode.stringValue;
+            if (fields.arrivalTimeZone?.stringValue) entry.arrivalTimeZone = fields.arrivalTimeZone.stringValue;
 
             // Extract arrays
             if (fields.changedFields?.arrayValue?.values) {
