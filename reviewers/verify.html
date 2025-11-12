@@ -839,6 +839,14 @@ Discrepancies:     ${comparison.discrepancies}
             <div class="code-block">
                 <code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code>
             </div>
+            <div class="note">
+                <strong>Prerequisite:</strong> <code>gsutil</code> is part of the Google Cloud SDK. If not installed:
+                <ul style="margin: 8px 0 0 0; padding-left: 20px; line-height: 1.6;">
+                    <li><strong>macOS (Homebrew):</strong> <code>brew install google-cloud-sdk</code></li>
+                    <li><strong>Linux/Windows:</strong> Download from <a href="https://cloud.google.com/sdk/docs/install" target="_blank">cloud.google.com/sdk/docs/install</a></li>
+                </ul>
+                After installation, run <code>gcloud init</code> and <code>gcloud auth login</code>. The bucket is publicly readable, so no special permissions are required.
+            </div>
             <p>Each JSON file in the archive is a single audit event, version-locked for 10 years.</p>
         </div>
 
