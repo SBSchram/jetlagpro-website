@@ -8,11 +8,23 @@ const firebaseService = new FirebaseService();
 const VERIFICATION_STATUS_URL = 'https://storage.googleapis.com/jetlagpro-audit-logs/latest-verification.json';
 
 async function refreshAuditLog() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Refreshing...';
+    }
+    
     const tbody = document.getElementById('auditLog');
     if (tbody) {
-        tbody.innerHTML = '<tr><td colspan="8" class="loading">Refreshing audit log...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="loading">Refreshing audit log...</td></tr>';
     }
+    
     await loadAuditLog();
+    
+    if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.textContent = 'Refresh Data';
+    }
 }
 
 // Initialize on page load

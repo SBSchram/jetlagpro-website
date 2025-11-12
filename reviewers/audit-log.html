@@ -12,23 +12,42 @@
     <link rel="stylesheet" href="assets/css/audit-log.css?v=20251112-05">
     <script src="../assets/js/firebase-service.js?v=20251112-05"></script>
     <script src="assets/js/audit-log.js?v=20251112-05"></script>
+    <script>
+        // Add event listener for refresh button (CSP-compliant, no inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (typeof refreshAuditLog === 'function') {
+                        refreshAuditLog();
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
+        <!-- Common Reviewer Navigation -->
+        <nav class="reviewer-nav">
+            <a href="index.html">Reviewer Resources</a>
+            <span>|</span>
+            <a href="analysis.html">Data Analysis</a>
+            <span>|</span>
+            <a href="audit-log.html" class="active">Audit Log</a>
+            <span>|</span>
+            <a href="verify.html">Verify</a>
+        </nav>
+
         <div class="header">
-            <div class="title-row">
-                <h1>Audit Log</h1>
-                <span class="version-tag">v2025.11.12-05</span>
-            </div>
-            <div class="actions-row">
-                <p class="subtitle">Research data audit trail</p>
-                <button class="refresh-button" onclick="refreshAuditLog()">⟳ Refresh</button>
-            </div>
-            <div class="verification-row">
-                <span>Verification:</span>
-                <span id="verificationStatus">Loading…</span>
-                <a class="verification-link" href="reviewers/verify.html">How it works</a>
-            </div>
+            <h1>Audit Log</h1>
+            <button class="refresh-btn" id="refreshBtn">Refresh Data</button>
+        </div>
+
+        <div class="verification-row">
+            <span>Verification:</span>
+            <span id="verificationStatus">Loading…</span>
+            <a class="verification-link" href="verify.html">How it works</a>
         </div>
 
         <!-- Summary Stats Bar -->
