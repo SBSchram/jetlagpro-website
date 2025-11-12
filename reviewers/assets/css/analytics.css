@@ -160,7 +160,8 @@ body {
 /* Center headings that are above centered graphs */
 #dose-response h2,
 #stimulation-efficacy h2,
-#recent-submissions h2 {
+#recent-submissions h2,
+#point-mapping h2 {
     text-align: center;
 }
 

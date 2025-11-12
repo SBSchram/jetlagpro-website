@@ -866,7 +866,7 @@ function renderPointStimulationAnalysis() {
     // Sort by point ID (LU-8 first, then LI-1, ST-36, etc.)
     pointStats.sort((a, b) => a.id - b.id);
 
-    // Generate HTML table - use stats-table for tight columns, centered
+    // Generate HTML table - use stats-table for tight columns, centered (DRY - matches other sections)
     let html = '<div style="text-align: center;">';
     html += '<table class="stats-table" style="margin: 0 auto;">';
     html += '<thead><tr>';
@@ -880,8 +880,8 @@ function renderPointStimulationAnalysis() {
         const countDisplay = point.stimulationCount > 0 ? point.stimulationCount : '0';
         
         html += '<tr>';
-        html += `<td><strong>${point.name}</strong></td>`;
-        html += `<td><span class="highlight">${countDisplay}</span></td>`;
+        html += `<td>${point.name}</td>`;
+        html += `<td>${countDisplay}</td>`;
         html += `<td>${usageRate}</td>`;
         html += '</tr>';
     });
