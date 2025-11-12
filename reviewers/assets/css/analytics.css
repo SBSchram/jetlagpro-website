@@ -106,13 +106,14 @@ body {
 }
 
 .stats-table th {
-    background: #f8fafc;
+    background: #ffffff;
     font-weight: 600;
     color: #374151;
     font-size: 0.85rem;
 }
 
 .stats-table td {
+    background: #ffffff;
     color: #1f2937;
     font-size: 0.85rem;
 }
@@ -129,6 +130,11 @@ body {
     margin: 0 0 10px 0;
     padding: 0;
     text-align: left;
+}
+
+/* Align Trip Stats heading with table - table has no left margin, so heading should match */
+#trip-stats h2 {
+    margin-left: 0;
 }
 
 .data-table {
