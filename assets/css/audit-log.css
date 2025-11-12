@@ -87,15 +87,17 @@ body {
 
 /* Table Container */
 .table-container {
+    display: inline-block;
     overflow-x: auto;
     border: 1px solid #ddd;
 }
 
 /* Audit Table */
 .audit-table {
-    width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
+    table-layout: auto;
+    width: auto;
 }
 
 .audit-table thead {
