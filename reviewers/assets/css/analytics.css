@@ -122,6 +122,12 @@ body {
     white-space: nowrap;
 }
 
+/* Center Count column (2nd column) in stats tables */
+.stats-table th:nth-child(2),
+.stats-table td:nth-child(2) {
+    text-align: center;
+}
+
 .stats-table th {
     background: #ffffff;
     font-weight: 600;
