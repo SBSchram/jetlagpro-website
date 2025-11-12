@@ -6,52 +6,197 @@
     <title>Verify Audit Trail</title>
     <script src="load-reviewer-head.js?v=20251112-01"></script>
     <link rel="stylesheet" href="assets/css/reviewers.css?v=20251112-02">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 20px 20px 40px;
+        }
+        .reviewer-nav {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .reviewer-nav a {
+            color: #374151;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+        .reviewer-nav a:hover {
+            color: #1f2937;
+            text-decoration: underline;
+        }
+        .reviewer-nav a.active {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .reviewer-nav span {
+            color: #d1d5db;
+            margin: 0 8px;
+        }
+        .header {
+            padding: 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 10px 0;
+        }
+        .header p {
+            font-size: 1rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 15px 0;
+        }
+        .section p {
+            color: #374151;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+        .code-block {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #1f2937;
+            white-space: pre;
+        }
+        .example-output {
+            background: #f0f9ff;
+            border-left: 3px solid #3b82f6;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #1e40af;
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #92400e;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #1f2937;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
+        <!-- Common Reviewer Navigation -->
+        <nav class="reviewer-nav">
+            <a href="index.html">Reviewer Resources</a>
+            <span>|</span>
+            <a href="analysis.html">Data Analysis</a>
+            <span>|</span>
+            <a href="audit-log.html">Audit Log</a>
+            <span>|</span>
+            <a href="verify.html" class="active">Verify</a>
+        </nav>
+
+        <div class="header">
             <h1>Verify Audit Trail</h1>
-            <p class="subtitle">Reproduce our tamper checks with open-source tooling.</p>
-        </header>
+            <p>Independent verification that Firestore audit entries match the immutable archive</p>
+        </div>
 
-        <section>
-            <h2>1. Download Firestore Audit Entries</h2>
-            <p>Audit documents are publicly readable via Firestore REST. Export them to a local file:</p>
-            <pre><code>curl -s \"https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000\" \\
-  -o firestore-audit.json</code></pre>
-            <p>If more than 1000 entries exist, follow the <code>nextPageToken</code> links and append results to the same file.</p>
-        </section>
-
-        <section>
-            <h2>2. Download Immutable Archive</h2>
-            <p>The immutable log is hosted at <code>gs://jetlagpro-audit-logs/audit-logs/</code>. Use <code>gsutil</code> or any HTTP client:</p>
-            <pre><code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code></pre>
-            <p>Each file corresponds to a single audit event and is version-locked for 10 years.</p>
-        </section>
-
-        <section>
-            <h2>3. Run the Verification Script</h2>
-            <p>The repository includes a lightweight CLI verifier:</p>
-            <pre><code>python scripts/verify_audit_consistency.py \\
-  --firestore firestore-audit.json \\
-  --gcs-dir ./gcs-audit</code></pre>
-            <p>The script compares counts and hashes. Any missing or altered Firestore entries are listed.</p>
-        </section>
-
-        <section>
-            <h2>4. Interpret Results</h2>
-            <ul>
-                <li><strong>All records match</strong>: Firestore mirrors the immutable archive.</li>
-                <li><strong>Discrepancies reported</strong>: Investigate the listed <code>eventId</code>; the GCS JSON is authoritative.</li>
+        <div class="section">
+            <h2>Overview</h2>
+            <p>Every audit entry is written to two locations:</p>
+            <ul style="color: #374151; line-height: 1.8;">
+                <li><strong>Firestore</strong> – Real-time view for the website</li>
+                <li><strong>GCS Archive</strong> – Immutable storage with 10-year retention</li>
             </ul>
-        </section>
+            <p>Verification confirms these match. The GCS archive is authoritative.</p>
+        </div>
 
-        <section>
-            <h2>Latest Verification</h2>
-            <p>We periodically run the same script and publish the report to</p>
-            <p><code>https://storage.googleapis.com/jetlagpro-audit-logs/latest-verification.json</code></p>
-            <p>The audit log viewer displays the timestamp and discrepancy count on refresh.</p>
-        </section>
+        <div class="section">
+            <h2>Step 1: Download Firestore Audit Data</h2>
+            <p>Export audit entries via Firestore REST API (public read access):</p>
+            <div class="code-block">
+                <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" \
+  -o firestore-audit.json</code>
+            </div>
+            <div class="note">
+                <strong>Note:</strong> If the response includes <code>"nextPageToken"</code>, repeat the call with <code>&pageToken=...</code> and append results to the same file.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Step 2: Download Immutable GCS Archive</h2>
+            <p>Download the immutable archive using <code>gsutil</code>:</p>
+            <div class="code-block">
+                <code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code>
+            </div>
+            <p>Each JSON file in the archive is a single audit event, version-locked for 10 years.</p>
+        </div>
+
+        <div class="section">
+            <h2>Step 3: Run Verification Script</h2>
+            <p>The verification script compares Firestore entries with the GCS archive:</p>
+            <div class="code-block">
+                <code>python scripts/verify_audit_consistency.py \
+  --firestore firestore-audit.json \
+  --gcs-dir ./gcs-audit</code>
+            </div>
+            <p>The script:</p>
+            <ul style="color: #374151; line-height: 1.8;">
+                <li>Normalizes Firestore documents into JSON</li>
+                <li>Hashes each entry and compares with GCS files</li>
+                <li>Reports missing or altered Firestore entries</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Example Output</h2>
+            <p>When all records match:</p>
+            <div class="example-output">
+Firestore entries: 128
+GCS entries:       128
+Matched:           128
+Discrepancies:     0
+
+Audit verification complete: all records match.
+            </div>
+            <p>If discrepancies are found, the script lists affected <code>tripId</code>s and reasons. The GCS JSON is authoritative.</p>
+        </div>
+
+        <div class="section">
+            <h2>Interpreting Results</h2>
+            <ul style="color: #374151; line-height: 1.8;">
+                <li><strong>All records match</strong> – Firestore mirrors the immutable archive</li>
+                <li><strong>Discrepancies reported</strong> – Investigate listed entries; GCS is authoritative</li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
