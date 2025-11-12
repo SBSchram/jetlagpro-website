@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Reviewer Resources</title>
+    <script src="../load-common-head.js?v=20251112-02"></script>
+    <link rel="stylesheet" href="../assets/css/reviewers.css?v=20251112-02">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Reviewer Resources</h1>
+            <p class="subtitle">Tools and documentation for independent verification.</p>
+        </header>
+
+        <section>
+            <h2>Data Transparency Toolkit</h2>
+            <ul class="resource-list">
+                <li><a href="../analytics.html">Analytics Dashboard</a> — explore trip outcomes.</li>
+                <li><a href="../audit-log.html">Audit Log Viewer</a> — review all database operations.</li>
+                <li><a href="verify.html">Verify Audit Trail</a> — instructions and script for tamper checks.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Immutable Archive</h2>
+            <p>
+                Every audit entry is stored in Firestore for real-time viewing and simultaneously
+                written to an immutable Google Cloud Storage archive:
+            </p>
+            <p>
+                <code>gs://jetlagpro-audit-logs/audit-logs/</code>
+            </p>
+            <p>
+                The archive is read-only and protected by a 10-year retention policy with object versioning.
+            </p>
+        </section>
+    </div>
+</body>
+</html>
+

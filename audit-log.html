@@ -9,20 +9,25 @@
     <script src="load-common-head.js?v=20250912224615"></script>
     
     <!-- External CSS and JavaScript files (REST API - no Firebase SDK needed) -->
-    <link rel="stylesheet" href="assets/css/audit-log.css?v=20251112-02">
-    <script src="assets/js/firebase-service.js?v=20251112-02"></script>
-    <script src="assets/js/audit-log.js?v=20251112-02"></script>
+    <link rel="stylesheet" href="assets/css/audit-log.css?v=20251112-03">
+    <script src="assets/js/firebase-service.js?v=20251112-03"></script>
+    <script src="assets/js/audit-log.js?v=20251112-03"></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="title-row">
                 <h1>Audit Log</h1>
-                <span class="version-tag">v2025.11.12-02</span>
+                <span class="version-tag">v2025.11.12-03</span>
             </div>
             <div class="actions-row">
                 <p class="subtitle">Research data audit trail</p>
                 <button class="refresh-button" onclick="refreshAuditLog()">⟳ Refresh</button>
+            </div>
+            <div class="verification-row">
+                <span>Verification:</span>
+                <span id="verificationStatus">Loading…</span>
+                <a class="verification-link" href="reviewers/verify.html">How it works</a>
             </div>
         </div>
 
