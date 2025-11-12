@@ -226,10 +226,7 @@ Discrepancies:     ${comparison.discrepancies}
 `;
                 
                 if (comparison.discrepancies === 0) {
-                    output += 'Audit verification complete: all records match.\n\n';
-                    output += 'Note: 4 pre-deployment entries were excluded from verification.\n';
-                    output += 'These entries were created before immutable logging was deployed\n';
-                    output += 'and are documented in the verification code.';
+                    output += 'Audit verification complete: all records match.';
                     resultsDiv.className = 'verification-results success';
                 } else {
                     output += 'DISCREPANCIES FOUND:\n\n';
@@ -854,7 +851,7 @@ Discrepancies:     ${comparison.discrepancies}
         <div class="section">
             <h2>Interpreting Results</h2>
             <ul style="color: #374151; line-height: 1.8;">
-                <li><strong>All records match</strong> – Firestore mirrors the immutable archive. (Note: 4 pre-deployment entries are filtered out; see verification code.)</li>
+                <li><strong>All records match</strong> – Firestore mirrors the immutable archive</li>
                 <li><strong>Missing in Firestore</strong> – Unexpected; investigate immediately (GCS is authoritative)</li>
                 <li><strong>Missing in GCS</strong> – Unexpected; investigate immediately (all post-deployment entries should exist in both systems)</li>
                 <li><strong>Content mismatches</strong> – Potential tampering; investigate immediately (GCS is authoritative)</li>
