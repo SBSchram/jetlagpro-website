@@ -246,55 +246,77 @@ Discrepancies:     ${comparison.discrepancies}
         
         async function fetchGCSEntries() {
             try {
-                // Try to fetch the GCS bucket listing
-                // Note: This requires the bucket to be publicly readable
-                const response = await fetch('https://storage.googleapis.com/storage/v1/b/jetlagpro-audit-logs/o?prefix=audit-logs/&maxResults=10000', {
-                    cache: 'no-store'
+                // Try to fetch the GCS bucket listing using JSON API
+                // Note: Bucket must be publicly readable
+                const listUrl = 'https://storage.googleapis.com/storage/v1/b/jetlagpro-audit-logs/o?prefix=audit-logs/&maxResults=10000';
+                console.log('Fetching GCS bucket listing from:', listUrl);
+                
+                const response = await fetch(listUrl, {
+                    cache: 'no-store',
+                    method: 'GET'
                 });
                 
+                console.log('GCS API response status:', response.status, response.statusText);
+                
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('GCS API error response:', errorText);
+                    
                     if (response.status === 403) {
                         console.warn('GCS bucket not publicly readable (403 Forbidden)');
                     } else if (response.status === 404) {
                         console.warn('GCS bucket not found (404 Not Found)');
+                    } else {
+                        console.warn(`GCS API error: ${response.status} ${response.statusText}`);
                     }
-                    return null; // Bucket not publicly readable
+                    return null;
                 }
                 
                 const data = await response.json();
+                console.log('GCS API returned', data.items?.length || 0, 'items');
                 const files = data.items || [];
                 
                 if (files.length === 0) {
-                    console.warn('GCS bucket is accessible but contains no files');
+                    console.warn('GCS bucket is accessible but contains no files in audit-logs/ prefix');
                     return [];
                 }
                 
                 // Fetch each JSON file and parse (limit to reasonable number for performance)
                 const entries = [];
                 const maxFiles = 1000; // Limit to prevent timeout
-                const filesToFetch = files.filter(f => f.name.endsWith('.json')).slice(0, maxFiles);
+                const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+                const filesToFetch = jsonFiles.slice(0, maxFiles);
+                
+                console.log(`Fetching ${filesToFetch.length} JSON files from GCS...`);
                 
                 for (const file of filesToFetch) {
                     try {
-                        const fileResponse = await fetch(`https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`, {
+                        // Use the mediaLink or construct direct URL
+                        const fileUrl = file.mediaLink || `https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`;
+                        const fileResponse = await fetch(fileUrl, {
                             cache: 'no-store'
                         });
+                        
                         if (fileResponse.ok) {
                             const entry = await fileResponse.json();
                             entries.push(entry);
+                        } else {
+                            console.warn(`Failed to fetch ${file.name}: ${fileResponse.status} ${fileResponse.statusText}`);
                         }
                     } catch (e) {
-                        console.warn(`Failed to fetch ${file.name}:`, e);
+                        console.warn(`Error fetching ${file.name}:`, e);
                     }
                 }
                 
-                if (files.length > maxFiles) {
-                    console.warn(`Only fetched first ${maxFiles} of ${files.length} files`);
+                console.log(`Successfully fetched ${entries.length} audit entries from GCS`);
+                
+                if (jsonFiles.length > maxFiles) {
+                    console.warn(`Only fetched first ${maxFiles} of ${jsonFiles.length} JSON files`);
                 }
                 
                 return entries;
             } catch (error) {
-                console.warn('GCS fetch failed:', error);
+                console.error('GCS fetch failed:', error);
                 return null;
             }
         }
