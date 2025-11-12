@@ -53,7 +53,7 @@ body {
 
 .stats-table th,
 .stats-table td {
-    padding: 8px 12px;
+    padding: 6px 10px;
     text-align: left;
     border: 1px solid #e5e7eb;
     white-space: nowrap;
@@ -63,12 +63,12 @@ body {
     background: #f8fafc;
     font-weight: 600;
     color: #374151;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .stats-table td {
     color: #1f2937;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .data-section {
