@@ -152,19 +152,15 @@ body {
 
 /* Ensure Trip Stats section content aligns properly */
 #trip-stats {
-    text-align: center; /* Center the entire section */
+    text-align: center;
 }
 
 #trip-stats h2 {
-    margin-left: 0;
-    padding-left: 0;
-    text-align: center; /* Center the heading */
+    text-align: center;
 }
 
-#tripStats {
-    margin-left: 0;
-    padding-left: 0;
-    text-align: center; /* Center the table and explanatory text */
+#trip-stats .stats-table {
+    margin: 0 auto; /* Center the table */
 }
 
 .data-table {
