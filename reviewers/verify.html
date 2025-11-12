@@ -483,7 +483,8 @@ Discrepancies:     ${comparison.discrepancies}
             const normalized = {};
             
             // Fields to skip (Firestore document metadata, not part of audit data)
-            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', 'eventId']);
+            // Note: 'eventId' is part of the audit entry, not Firestore metadata, so we keep it
+            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id']);
             
             // Get all possible keys from both Firestore and GCS entries
             // For now, we'll just use the keys from this entry
@@ -564,7 +565,53 @@ Discrepancies:     ${comparison.discrepancies}
                 normalized.deletedData = null;
             }
             
-            return normalized;
+            // Normalize metadata structure: ensure surveyMetadata exists for CREATE entries
+            // GCS explicitly adds surveyMetadata: null for CREATE entries, but Firestore doesn't store it
+            if (normalized.operation === 'CREATE' && normalized.metadata) {
+                if (!('surveyMetadata' in normalized.metadata)) {
+                    normalized.metadata.surveyMetadata = null;
+                }
+            }
+            
+            // Normalize timestamp strings to remove millisecond precision for comparison
+            // This handles the fact that GCS might round timestamps differently than Firestore
+            const normalizeTimestampString = (str) => {
+                if (typeof str !== 'string') return str;
+                // Match ISO timestamp with optional milliseconds: 2025-11-12T01:49:14.942Z
+                const match = str.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{3})?Z?$/);
+                if (match) {
+                    // Round to seconds: remove milliseconds
+                    return match[1] + (match[3] ? 'Z' : '');
+                }
+                return str;
+            };
+            
+            // Recursively normalize all timestamp strings in the normalized object
+            const normalizeTimestampsInObject = (obj) => {
+                if (obj === null || obj === undefined) return obj;
+                if (typeof obj === 'string') {
+                    return normalizeTimestampString(obj);
+                }
+                if (Array.isArray(obj)) {
+                    return obj.map(item => normalizeTimestampsInObject(item));
+                }
+                if (typeof obj === 'object') {
+                    const result = {};
+                    for (const [key, value] of Object.entries(obj)) {
+                        // Special handling for timestamp fields
+                        if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
+                            result[key] = normalizeTimestampsInObject(value);
+                        } else {
+                            result[key] = normalizeTimestampsInObject(value);
+                        }
+                    }
+                    return result;
+                }
+                return obj;
+            };
+            
+            // Apply timestamp normalization
+            return normalizeTimestampsInObject(normalized);
         }
         
         function sortObjectKeys(obj) {

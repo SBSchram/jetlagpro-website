@@ -57,17 +57,50 @@ async function writeAuditEntry(auditEntry) {
     const file = auditBucket.file(`audit-logs/${fileName}`);
 
     // Prepare entry for GCS (convert Firestore timestamps to ISO strings)
-    const gcsEntry = JSON.parse(JSON.stringify(auditEntry, (key, value) => {
+    // Recursively process the entry to normalize timestamps
+    const normalizeForGCS = (obj) => {
+      if (obj === null || obj === undefined) {
+        return obj;
+      }
+      
       // Convert Firestore FieldValue.serverTimestamp() sentinel to ISO string
-      if (value && value._methodName === "FieldValue.serverTimestamp") {
+      if (obj && obj._methodName === "FieldValue.serverTimestamp") {
         return new Date().toISOString();
       }
-      // Convert Firestore Timestamp objects to ISO strings
-      if (value && typeof value === "object" && value._seconds) {
-        return new Date(value._seconds * 1000).toISOString();
+      
+      // Convert Firestore Timestamp objects to ISO strings (preserve milliseconds)
+      if (obj && typeof obj === "object" && obj._seconds !== undefined) {
+        const seconds = typeof obj._seconds === 'number' ? obj._seconds : parseInt(obj._seconds);
+        const nanoseconds = obj._nanoseconds || 0;
+        // Preserve millisecond precision: seconds * 1000 + nanoseconds / 1000000
+        const milliseconds = seconds * 1000 + Math.floor(nanoseconds / 1000000);
+        return new Date(milliseconds).toISOString();
       }
-      return value;
-    }));
+      
+      // Handle arrays
+      if (Array.isArray(obj)) {
+        return obj.map(item => normalizeForGCS(item));
+      }
+      
+      // Handle objects
+      if (typeof obj === "object") {
+        const normalized = {};
+        for (const [key, value] of Object.entries(obj)) {
+          normalized[key] = normalizeForGCS(value);
+        }
+        return normalized;
+      }
+      
+      // Handle ISO timestamp strings - normalize to remove milliseconds if present
+      if (typeof obj === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(obj)) {
+        // Keep the timestamp as-is (don't round)
+        return obj;
+      }
+      
+      return obj;
+    };
+    
+    const gcsEntry = normalizeForGCS(auditEntry);
 
     await file.save(JSON.stringify(gcsEntry, null, 2), {
       metadata: {
