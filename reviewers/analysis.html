@@ -26,6 +26,18 @@
         // Inline JavaScript removed - now using external files:
         // - analytics.js: Main dashboard functionality
         // - charts.js: Chart rendering functions
+        
+        // Add event listener for refresh button (CSP-compliant, no inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (typeof refreshDataWithService === 'function') {
+                        refreshDataWithService();
+                    }
+                });
+            }
+        });
     </script>
 </head>
 <body>
@@ -54,7 +66,7 @@
             <h1>Data Analysis</h1>
         </div>
 
-        <button class="refresh-btn" onclick="refreshDataWithService()">Refresh Data</button>
+        <button class="refresh-btn" id="refreshBtn">Refresh Data</button>
 
         <div class="data-section" id="trip-stats">
             <h2>Trip Stats</h2>
