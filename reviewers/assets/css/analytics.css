@@ -7,6 +7,12 @@
     box-sizing: border-box;
 }
 
+/* Ensure tables have no default margins that could affect alignment */
+table {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #ffffff;
@@ -132,9 +138,19 @@ body {
     text-align: left;
 }
 
-/* Align Trip Stats heading with table - table has no left margin, so heading should match */
+/* Ensure Trip Stats section content aligns properly */
+#trip-stats {
+    padding-left: 0;
+}
+
 #trip-stats h2 {
     margin-left: 0;
+    padding-left: 0;
+}
+
+#tripStats {
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .data-table {
