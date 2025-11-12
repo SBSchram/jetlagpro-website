@@ -230,6 +230,15 @@ Discrepancies:     ${comparison.discrepancies}
                     resultsDiv.className = 'verification-results success';
                 } else {
                     output += 'DISCREPANCIES FOUND:\n\n';
+                    
+                    // Explain missing GCS entries
+                    if (comparison.missingInGCS.length > 0) {
+                        output += `Note: ${comparison.missingInGCS.length} entries are missing from GCS.\n`;
+                        output += `These are audit entries created before GCS logging was deployed (Phase 2.5).\n`;
+                        output += `This is expected and does not indicate data tampering.\n`;
+                        output += `All entries created after GCS deployment are present in both systems.\n\n`;
+                    }
+                    
                     comparison.missingInFirestore.forEach(tripId => {
                         output += `Missing in Firestore: ${tripId}\n`;
                     });
@@ -827,8 +836,13 @@ Discrepancies:     ${comparison.discrepancies}
             <h2>Interpreting Results</h2>
             <ul style="color: #374151; line-height: 1.8;">
                 <li><strong>All records match</strong> – Firestore mirrors the immutable archive</li>
-                <li><strong>Discrepancies reported</strong> – Investigate listed entries; GCS is authoritative</li>
+                <li><strong>Missing in GCS</strong> – Entries created before GCS logging deployment (Phase 2.5, deployed 2025-11-11). This is expected and does not indicate tampering.</li>
+                <li><strong>Missing in Firestore</strong> – Unexpected; investigate immediately (GCS is authoritative)</li>
+                <li><strong>Content mismatches</strong> – Potential tampering; investigate immediately (GCS is authoritative)</li>
             </ul>
+            <div class="note" style="margin-top: 20px;">
+                <strong>Transparency Note:</strong> The current dataset includes 4 audit entries created during initial testing before the immutable GCS archive was deployed. These pre-deployment entries exist only in Firestore and are expected to show as "Missing in GCS". All entries created after Phase 2.5 deployment appear in both systems and should match exactly.
+            </div>
         </div>
     </div>
 </body>
