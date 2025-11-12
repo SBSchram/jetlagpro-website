@@ -866,12 +866,13 @@ function renderPointStimulationAnalysis() {
     // Sort by point ID (LU-8 first, then LI-1, ST-36, etc.)
     pointStats.sort((a, b) => a.id - b.id);
 
-    // Generate HTML table
-    let html = '<table class="data-table">';
+    // Generate HTML table - use stats-table for tight columns, centered
+    let html = '<div style="text-align: center;">';
+    html += '<table class="stats-table" style="margin: 0 auto;">';
     html += '<thead><tr>';
-    html += '<th>Acupuncture Point</th>';
-    html += '<th>Stimulation Count</th>';
-    html += '<th>Usage Rate</th>';
+    html += '<th>Point</th>';
+    html += '<th>Count</th>';
+    html += '<th>Rate</th>';
     html += '</tr></thead><tbody>';
 
     pointStats.forEach(point => {
@@ -886,6 +887,7 @@ function renderPointStimulationAnalysis() {
     });
 
     html += '</tbody></table>';
+    html += '</div>';
 
     container.innerHTML = html;
 }
