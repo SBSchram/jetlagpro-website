@@ -358,15 +358,17 @@ Discrepancies:     ${comparison.discrepancies}
             const missingInGCS = [];
             const mismatched = [];
             
-            // Create maps for quick lookup (using normalized entries)
+            // Create maps for quick lookup using eventId (unique identifier for each audit event)
             // Also store raw entries for inspection
             const firestoreMap = new Map();
             const firestoreRawMap = new Map();
             firestoreEntries.forEach(entry => {
-                // Extract tripId from normalized entry
+                // Use eventId as the key (unique per audit event)
+                // Fallback to operation-tripId if eventId is missing
+                const eventId = entry.eventId || entry._raw?.eventId;
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = `${operation}-${tripId}`;
+                const key = eventId || `${operation}-${tripId}`;
                 firestoreMap.set(key, entry);
                 // Store raw entry if available
                 if (entry._raw) {
@@ -377,10 +379,12 @@ Discrepancies:     ${comparison.discrepancies}
             const gcsMap = new Map();
             const gcsRawMap = new Map();
             gcsEntries.forEach(entry => {
-                // Extract tripId from normalized entry
+                // Use eventId as the key (unique per audit event)
+                // Fallback to operation-tripId if eventId is missing
+                const eventId = entry.eventId || entry._raw?.eventId;
                 const tripId = entry.tripId || entry.documentId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = `${operation}-${tripId}`;
+                const key = eventId || `${operation}-${tripId}`;
                 gcsMap.set(key, entry);
                 // Store raw entry if available
                 if (entry._raw) {

@@ -79,6 +79,8 @@ async function writeAuditEntry(auditEntry) {
         timestamp: new Date().toISOString(),
         // Firestore document ID for cross-reference
         firestoreDocId: firestoreRef.id,
+        // Event ID for matching Firestore and GCS entries
+        eventId: auditEntry.eventId || null,
       },
     });
 
