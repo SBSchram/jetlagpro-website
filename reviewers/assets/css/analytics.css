@@ -138,6 +138,12 @@ body {
     text-align: left;
 }
 
+/* Center headings that are above centered graphs */
+#dose-response h2,
+#stimulation-efficacy h2 {
+    text-align: center;
+}
+
 /* Ensure Trip Stats section content aligns properly */
 #trip-stats {
     padding-left: 0;
