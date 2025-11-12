@@ -435,12 +435,14 @@ Discrepancies:     ${comparison.discrepancies}
             // 2. Removing Firestore-specific document metadata
             // 3. Sorting nested object keys for consistent comparison
             // 4. Normalizing timestamps to ISO strings
+            // 5. Handling missing fields (set to null for consistent comparison)
             const normalized = {};
             
             // Fields to skip (Firestore document metadata, not part of audit data)
             const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', 'eventId']);
             
-            // Sort keys for consistent comparison
+            // Get all possible keys from both Firestore and GCS entries
+            // For now, we'll just use the keys from this entry
             const keys = Object.keys(entry).sort();
             
             for (const key of keys) {
@@ -465,6 +467,21 @@ Discrepancies:     ${comparison.discrepancies}
                 }
                 
                 normalized[key] = value;
+            }
+            
+            // Ensure critical fields exist (set to null if missing for consistent comparison)
+            // This handles cases where Firestore entries were created before we added these fields
+            if (!('source' in normalized)) {
+                normalized.source = null;
+            }
+            if (!('changedFields' in normalized)) {
+                normalized.changedFields = null;
+            }
+            if (!('changes' in normalized)) {
+                normalized.changes = null;
+            }
+            if (!('deletedData' in normalized)) {
+                normalized.deletedData = null;
             }
             
             return normalized;
