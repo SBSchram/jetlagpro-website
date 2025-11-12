@@ -71,10 +71,8 @@ body {
 }
 
 .header {
-    background: #ffffff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 0;
+    margin-bottom: 15px;
 }
 
 .header h1 {
@@ -120,10 +118,8 @@ body {
 }
 
 .data-section {
-    background: #ffffff;
-    padding: 12px 20px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 0;
+    margin-bottom: 20px;
 }
 
 .data-section h2 {
@@ -139,8 +135,6 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    background: white;
-    border: 1px solid #e5e7eb;
 }
 
 .data-table th,
