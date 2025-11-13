@@ -720,9 +720,9 @@ function renderTripStats() {
     // Format data type on separate lines
     const dataTypeText = `Early Data (${breakdown.legacy})<br>Confirmed Travel (${breakdown.real_travel + breakdown.survey_fallback})`;
     
-    // Add HMAC validation stats (Build 6+ cryptographic authentication)
+    // Add HMAC validation stats (cryptographic authentication)
     const hmacStats = TripValidator.getHMACStats(allData);
-    const hmacStatusText = `Authenticated (Build 6+): ${hmacStats.authenticated}<br>Legacy (Pre-Build 6): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
+    const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
     
     let html = '<table class="stats-table">';
     html += `<tr><th>Trips (Total / Confirmed / Test)</th><td>${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
