@@ -9,31 +9,44 @@
 </head>
 <body>
     <div class="container">
+        <!-- Common Reviewer Navigation -->
+        <nav class="reviewer-nav">
+            <a href="index.html" class="active">Reviewer Resources</a>
+            <span>|</span>
+            <a href="analysis.html">Data Analysis</a>
+            <span>|</span>
+            <a href="audit-log.html">Audit Log</a>
+            <span>|</span>
+            <a href="verify.html">Verify</a>
+        </nav>
+
         <header>
             <h1>Reviewer Resources</h1>
-            <p class="subtitle">Tools and documentation for independent verification.</p>
+            <p class="subtitle">Tools for independent verification of research data integrity.</p>
         </header>
 
         <section>
             <h2>Data Transparency Toolkit</h2>
             <ul class="resource-list">
-                <li><a href="analysis.html">Data Analysis</a> — explore trip outcomes.</li>
-                <li><a href="audit-log.html">Audit Log Viewer</a> — review all database operations.</li>
-                <li><a href="verify.html">Verify Audit Trail</a> — instructions and script for tamper checks.</li>
+                <li><a href="analysis.html">Data Analysis</a> — View trip outcomes and statistics with device authentication filtering.</li>
+                <li><a href="audit-log.html">Audit Log</a> — Every database operation is recorded. Nothing can be changed without a trace.</li>
+                <li><a href="verify.html">Verify Data Integrity</a> — Confirm that data hasn't been tampered with and comes from legitimate devices.</li>
             </ul>
         </section>
 
         <section>
-            <h2>Immutable Archive</h2>
+            <h2>How We Prevent Data Tampering</h2>
             <p>
-                Every audit entry is stored in Firestore for real-time viewing and simultaneously
-                written to an immutable Google Cloud Storage archive:
+                <strong>Immutable Archive:</strong> Every audit entry is written to two places simultaneously—Firestore (for real-time viewing) and Google Cloud Storage (permanent, unchangeable record). The GCS archive is locked for 10 years and cannot be modified, even by us.
             </p>
             <p>
                 <code>gs://jetlagpro-audit-logs/audit-logs/</code>
             </p>
             <p>
-                The archive is read-only and protected by a 10-year retention policy with object versioning.
+                <strong>Device Authentication:</strong> Starting November 8, 2025, every trip record includes a cryptographic signature proving it came from a legitimate iOS device with our app installed.
+            </p>
+            <p>
+                These safeguards ensure data integrity from collection through analysis. You can verify both independently using the tools above.
             </p>
         </section>
     </div>
