@@ -1120,52 +1120,11 @@
                             // App screenshots - keep smaller for Word
                             targetWidth = 150;
                             finalStyle = 'width: 150px; height: auto; display: inline-block; margin: 5px; border: none;';
-                        } else if (img.src.includes('LU-8.jpg')) {
-                            // LU-8: 1050x1050 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('LI-1.jpg')) {
-                            // LI-1: 389x389 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('ST-36.jpg')) {
-                            // ST-36: 231x231 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('SP-3.jpg')) {
-                            // SP-3: 814x814 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('HT-8.jpg')) {
-                            // HT-8: 652x652 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('SI-5.jpg')) {
-                            // SI-5: 488x447 (not square) -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('BL-66.jpg')) {
-                            // BL-66: 500x500 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('KI-10.jpg')) {
-                            // KI-10: 242x242 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('PC-8.jpg')) {
-                            // PC-8: 279x279 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('SJ-6.jpg')) {
-                            // SJ-6: 362x279 (not square) -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('GB-41.jpg')) {
-                            // GB-41: 238x238 -> 80px
-                            targetWidth = 80;
-                            finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
-                        } else if (img.src.includes('LIV-1.jpg')) {
-                            // LIV-1: 776x776 -> 80px
+                        } else if (img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || img.src.includes('ST-36.jpg') || 
+                                  img.src.includes('SP-3.jpg') || img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
+                                  img.src.includes('BL-66.jpg') || img.src.includes('KI-10.jpg') || img.src.includes('PC-8.jpg') ||
+                                  img.src.includes('SJ-6.jpg') || img.src.includes('GB-41.jpg') || img.src.includes('LIV-1.jpg')) {
+                            // Acupuncture point images - all now 800x800px, scaled to 80px for Word
                             targetWidth = 80;
                             finalStyle = 'width: 80px; height: auto; display: inline-block; margin: 3px; border: none;';
                         } else if (img.src.includes('Wheel-Complex.jpg')) {
