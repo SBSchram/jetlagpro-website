@@ -11,16 +11,30 @@ window.addEventListener('pageshow', function(event) {
     }
 });
 </script>
+<!-- Force one-time reload for returning visitors after Cloudflare cache fix -->
+<script>
+(function() {
+    const SITE_VERSION = '20251113-cloudflare';
+    const cached = localStorage.getItem('siteVersion');
+    
+    if (cached !== SITE_VERSION) {
+        localStorage.setItem('siteVersion', SITE_VERSION);
+        if (cached !== null) {
+            window.location.reload(true);
+        }
+    }
+})();
+</script>
 <!-- Content Security Policy: Allow necessary resources for reviewer tools -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-hashes' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://cdn.jsdelivr.net https://storage.googleapis.com; frame-src 'self';">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="./assets/images/app-icon.png?v=20251112224540">
-<link rel="manifest" href="/manifest.json?v=20251112224540">
+<link rel="icon" type="image/png" href="./assets/images/app-icon.png?v=20251113020924">
+<link rel="manifest" href="/manifest.json?v=20251113020924">
 <meta name="theme-color" content="#2563eb">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="JetLagPro">
-<link rel="apple-touch-icon" href="./assets/images/app-icon.png?v=20251112224540">
-<link rel="apple-touch-icon" sizes="180x180" href="./assets/images/app-icon.png?v=20251112224540">
+<link rel="apple-touch-icon" href="./assets/images/app-icon.png?v=20251113020924">
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/images/app-icon.png?v=20251113020924">
