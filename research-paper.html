@@ -517,11 +517,11 @@
         </div>
 
 
-<p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our iOS and Android applications automatically account for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
+<p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our application automatically accounts for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
 
 <p>A final step when the trip ends is the scheduling of a notification for 2 days later to remind the user to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
 
-<p>Participation in the survey was voluntary and anonymous. By submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. To encourage participation, survey completion unlocked free lifetime use of the application. Access to the survey required a direct link from the app to guarantee authenticity.</p>
+<p>Participation in the survey was voluntary and anonymous. By submitting the survey, participants provided implicit consent to have their anonymized data used for research purposes, consistent with the privacy disclosure available on the website. Access to the survey required a direct link from the app to guarantee authenticity.</p>
 
 			
              <h2 style="text-align: left;">Data Collected</h2>
@@ -581,7 +581,6 @@
 	<li><strong>Analysis excludes test data</strong> – Developer test sessions and test trips are automatically filtered out before analysis.</li>
 </ul>
 
-
 <p>Data for early trips collected before cryptographic signatures were implemented remains in the dataset and is clearly labeled as "legacy" in all analysis tools.</p>
         
 		
@@ -589,7 +588,7 @@
 		
         
         <h4>Primary Research Question</h4>
-        <p>Does chronoacupuncture as provided by the app reduce jet lag symptoms as measured by post-travel symptom severity. </p>
+        <p>Does chronoacupuncture as provided by the app reduce jet lag symptoms compared to no intervention?</p>
 		
 		<p>We use a within-subject design where each participant serves as their own control. Participants complete surveys that include two separate elements: (1) anticipated symptom severity based on prior travel experience, and (2) post-travel symptom severity as reported sometime after completing their journey.</p>
 
@@ -618,6 +617,13 @@
                <p>For each stimulation group, we analyze post-travel symptom severity across different time zone categories to assess how stimulation levels affects the expected symptom increase from crossing more time zones. This grouping provides sufficient sample sizes for statistical analysis while maintaining meaningful intervention categories.</p>
 
 <p></p>
+
+		<h4>Time Zone Offsets and Travel Direction</h4>
+
+		<p>The app records the timezone offset between origin and destination in hours. This offset represents the circadian disruption imposed on the traveler's biological clock at arrival. Travel direction (east/west) indicates whether the traveler must advance their internal clock (eastward travel, destination ahead) or delay it (westward travel, destination behind), regardless of geographic direction. For example, Los Angeles to Sydney involves westward geographic travel but is classified as "east" because Sydney time is 18 hours ahead, requiring circadian phase advance. For trips crossing more than 12 time zones, the circadian system may eventually adjust via the shorter path, but the initial offset captures the temporal displacement at arrival. Our analysis correlates jet lag severity with this time displacement.</p>
+		
+<p></p>
+
         <h4>Dose-Response Analysis Methodology</h4>
         <p>The primary analysis is a comprehensive dose-response visualization showing the interaction between time zones crossed (X-axis) and aggregate symptom severity (Y-axis) across intervention levels. Each intervention group is represented as a separate line, with the baseline data displayed as a dashed reference line showing expected natural progression without intervention. We present two graphs with the following data.</p>
         
@@ -628,10 +634,7 @@
             <li>Standard error of the mean for statistical precision</li>
             <li>95% confidence intervals displayed as error bars (±1 SE)</li>
         </ul>
-<p></p>
 
-        <h4>Time Zone Offsets and Travel Direction</h4>
-        <p>The app records the raw timezone offset between origin and destination (the actual signed time difference in hours). This raw offset represents the initial circadian disruption imposed on the traveler's biological clock. Travel direction (east/west) indicates whether the destination timezone is ahead (east, requiring phase advance) or behind (west, requiring phase delay) the origin timezone, regardless of geographic travel direction. For example, Los Angeles to Sydney involves westward geographic travel but is classified as "east" because Sydney time is 18 hours ahead, requiring circadian phase advance. For trips crossing more than 12 time zones, the circadian system may eventually adjust via the shorter path, but the raw offset captures the initial temporal displacement at arrival. Our analysis uses this raw offset to correlate jet lag severity with the magnitude of time displacement.</p>
 
 <p></p>
         <h4>Primary and Secondary Analysis</h4>
@@ -642,7 +645,7 @@
             <li>Compare eastward vs. westward travel effects within the stimulation framework</li>
         </ul>
         <p></p>
-        <p>Our secondary analyses examines if anticipated vs. actual symptoms show significant differences.</p>
+        <p>Our secondary analysis examines if anticipated vs. actual symptoms show significant differences.</p>
 
 <p></p>		
 		<h4>What We Can't Control</h4>
@@ -664,7 +667,7 @@
 		<h2>Results</h2>
 		<i>
 		<h4>The following sections are placeholders!</h4>
-		<p>We are waiting on survey results from app usage. App distribution is starting in late October 2025. It may take a few monthy of use to get sufficient data to analyze. The graph does show current live data.</p>
+		<p>We are waiting on survey results from app usage. App distribution is starting in late 2025. It may take a few monthy of use to get sufficient data to analyze. The graph does show current live data.</p>
 		
 		<h4>Placeholder text below</h4>
 		<p>We analyzed data from <span id="surveyCount">[loading...]</span> survey results and stimulation records and present that data in the graph below. We examined how different levels of acupressure stimulation affect jet lag symptoms across time zones crossed. The baseline (dashed gray line) represents expected natural jet lag severity without intervention.</p> 
@@ -700,7 +703,6 @@
 		<p>When we think of the implications and applications of this therapeutic approach, an interesting question arises. What would happen if we had a user stimulate points that were 12 hours out of phase with the ideal point. Would the jet lag be worse?</p>
 		
 		<p>This study does not attempt to answer any of the supposition questions, but they remain interesting questions for future research where we could compare point types (e.g., horary vs. Source, etc.) and test stimulation parameters to optimize a protocol. By balancing TCM tradition with practical considerations, we may be able to hone an ideal set of points to use for travelers confined to cramped airline seats.</P>
-
 		
         <p>The interdisciplinary framework merging ancient temporal concepts with circadian biology creates a testable hypothesis from traditionally anecdotal practices. If validated, chronoacupuncture could provide a non-invasive, cost-effective intervention accessible to travelers without medical supervision. Negative findings would redirect research toward alternative non-photic zeitgebers and inform the scientific evaluation of other TCM temporal therapies.</p>
 
