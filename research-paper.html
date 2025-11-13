@@ -1112,39 +1112,49 @@
                             tempImg.src = img.src;
                         });
                         
-                        // Set canvas size and draw image
-                        canvas.width = tempImg.naturalWidth;
-                        canvas.height = tempImg.naturalHeight;
-                        ctx.drawImage(tempImg, 0, 0);
-                        
-                        // Convert to base64
-                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                        img.src = base64;
-                        
-                        // Apply strict size constraints for Word compatibility
+                        // Determine target size based on image type
+                        let targetWidth, targetHeight;
                         let finalStyle = '';
                         
-                        // Handle different image types with appropriate sizing
                         if (originalClass && originalClass.includes('methods-screenshots')) {
                             // App screenshots - keep smaller for Word
+                            targetWidth = 150;
                             finalStyle = 'width: 150px; height: auto; display: inline-block; margin: 5px; border: none;';
                         } else if (img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || img.src.includes('ST-36.jpg') || 
                                   img.src.includes('SP-3.jpg') || img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
                                   img.src.includes('BL-66.jpg') || img.src.includes('KI-10.jpg') || img.src.includes('PC-8.jpg') ||
                                   img.src.includes('SJ-6.jpg') || img.src.includes('GB-41.jpg') || img.src.includes('LIV-1.jpg')) {
                             // Point images - remove borders and keep very small
+                            targetWidth = 60;
                             finalStyle = 'width: 60px; height: auto; display: inline-block; margin: 3px; border: none;';
                         } else if (img.src.includes('Wheel-Complex.jpg')) {
                             // Chinese Organ Clock - moderate size, no border
+                            targetWidth = 300;
                             finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                         } else {
                             // Other images - use original size or reasonable default, no border
-                            if (originalWidth && originalHeight) {
-                                finalStyle = `width: ${Math.min(parseInt(originalWidth), 400)}px; height: auto; display: block; margin: 20px auto; border: none;`;
+                            if (originalWidth) {
+                                targetWidth = Math.min(parseInt(originalWidth), 400);
+                                finalStyle = `width: ${targetWidth}px; height: auto; display: block; margin: 20px auto; border: none;`;
                             } else {
+                                targetWidth = 300;
                                 finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                             }
                         }
+                        
+                        // Calculate proportional height
+                        targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * targetWidth;
+                        
+                        // Set canvas to target size (not full resolution)
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
+                        
+                        // Draw scaled image
+                        ctx.drawImage(tempImg, 0, 0, targetWidth, targetHeight);
+                        
+                        // Convert to base64
+                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
+                        img.src = base64;
                         
                         img.setAttribute('style', finalStyle);
                         
