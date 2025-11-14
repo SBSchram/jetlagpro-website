@@ -1249,37 +1249,53 @@
                     // Chinese Organ Clock table (Table 1) - tight spacing
                     const caption = table.querySelector('caption');
                     if (caption && caption.textContent.includes('Table 1')) {
-                        table.style.margin = '10px auto';
+                        // Add a class for CSS targeting
+                        table.className = 'organ-clock-table';
+                        table.style.margin = '5px auto';
                         table.style.fontSize = '9pt';
                         table.style.width = '100%';
                         table.style.maxWidth = '624px';
+                        table.style.borderCollapse = 'collapse';
+                        table.style.borderSpacing = '0';
                         // Tighten caption
-                        if (caption) {
-                            caption.style.margin = '0 0 5px 0';
-                            caption.style.padding = '5px 0';
-                            caption.style.fontSize = '11pt';
-                            caption.style.lineHeight = '1.2';
-                        }
-                        // Tighten header cells
+                        caption.style.margin = '0 0 3px 0';
+                        caption.style.padding = '3px 0';
+                        caption.style.fontSize = '10pt';
+                        caption.style.lineHeight = '1.1';
+                        // Tighten header cells - very minimal padding
                         const headerCells = table.querySelectorAll('th');
                         headerCells.forEach(cell => {
-                            cell.style.padding = '4px 6px';
-                            cell.style.fontSize = '9pt';
-                            cell.style.lineHeight = '1.2';
+                            cell.style.padding = '2px 4px';
+                            cell.style.fontSize = '8.5pt';
+                            cell.style.lineHeight = '1.1';
+                            cell.style.margin = '0';
                         });
-                        // Tighten data cells
+                        // Tighten data cells - very minimal padding
                         const dataCells = table.querySelectorAll('td');
                         dataCells.forEach(cell => {
-                            cell.style.padding = '3px 6px';
-                            cell.style.fontSize = '9pt';
-                            cell.style.lineHeight = '1.2';
+                            cell.style.padding = '2px 4px';
+                            cell.style.fontSize = '8.5pt';
+                            cell.style.lineHeight = '1.1';
+                            cell.style.margin = '0';
                         });
-                        // Remove row spacing
+                        // Remove all row spacing
                         const rows = table.querySelectorAll('tr');
                         rows.forEach(row => {
                             row.style.margin = '0';
                             row.style.padding = '0';
+                            row.style.height = 'auto';
                         });
+                        // Remove spacing from table body
+                        const tbody = table.querySelector('tbody');
+                        if (tbody) {
+                            tbody.style.margin = '0';
+                            tbody.style.padding = '0';
+                        }
+                        const thead = table.querySelector('thead');
+                        if (thead) {
+                            thead.style.margin = '0';
+                            thead.style.padding = '0';
+                        }
                     }
                     // Methods screenshots table - 450px width
                     else if (table.closest('.methods-screenshots') || 
@@ -1409,32 +1425,42 @@
             font-size: 11pt;
             page-break-inside: avoid;
         }
-        /* Chinese Organ Clock table - tight spacing for Word */
-        table:has(caption[style*="Table 1"]) {
-            margin: 10px auto !important;
+        /* Chinese Organ Clock table - tight spacing for Word export */
+        .organ-clock-table {
+            margin: 5px auto !important;
             font-size: 9pt !important;
             width: 100% !important;
             max-width: 624px !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
         }
-        table:has(caption[style*="Table 1"]) caption {
-            margin: 0 0 5px 0 !important;
-            padding: 5px 0 !important;
-            font-size: 11pt !important;
-            line-height: 1.2 !important;
+        .organ-clock-table caption {
+            margin: 0 0 3px 0 !important;
+            padding: 3px 0 !important;
+            font-size: 10pt !important;
+            line-height: 1.1 !important;
         }
-        table:has(caption[style*="Table 1"]) th {
-            padding: 4px 6px !important;
-            font-size: 9pt !important;
-            line-height: 1.2 !important;
+        .organ-clock-table th {
+            padding: 2px 4px !important;
+            font-size: 8.5pt !important;
+            line-height: 1.1 !important;
             border: 1px solid #333 !important;
+            margin: 0 !important;
         }
-        table:has(caption[style*="Table 1"]) td {
-            padding: 3px 6px !important;
-            font-size: 9pt !important;
-            line-height: 1.2 !important;
+        .organ-clock-table td {
+            padding: 2px 4px !important;
+            font-size: 8.5pt !important;
+            line-height: 1.1 !important;
             border: 1px solid #333 !important;
+            margin: 0 !important;
         }
-        table:has(caption[style*="Table 1"]) tr {
+        .organ-clock-table tr {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+        }
+        .organ-clock-table tbody,
+        .organ-clock-table thead {
             margin: 0 !important;
             padding: 0 !important;
         }
