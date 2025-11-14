@@ -1260,24 +1260,29 @@
                 if (chartImageData) {
                     const chartContainer = wordContent.querySelector('#researchChartContainer');
                     if (chartContainer) {
-                        // Find the canvas element in the cloned content
-                        const chartCanvas = chartContainer.querySelector('canvas');
-                        if (chartCanvas) {
-                            // Create an img element to replace the canvas
-                            const chartImg = document.createElement('img');
-                            chartImg.src = chartImageData;
-                            chartImg.alt = 'Live Research Chart - Current Data';
-                            chartImg.style.width = '100%';
-                            chartImg.style.maxWidth = '800px';
-                            chartImg.style.height = 'auto';
-                            chartImg.style.display = 'block';
-                            chartImg.style.margin = '20px auto';
-                            chartImg.style.border = 'none';
-                            // Replace canvas with image
-                            chartCanvas.parentNode.replaceChild(chartImg, chartCanvas);
-                            console.log('Chart canvas replaced with image in Word export');
-                        }
+                        // Clear the container and add the chart image
+                        chartContainer.innerHTML = '';
+                        // Create an img element with the chart data
+                        const chartImg = document.createElement('img');
+                        chartImg.src = chartImageData;
+                        chartImg.alt = 'Live Research Chart - Current Data Visualization';
+                        chartImg.style.width = '100%';
+                        chartImg.style.maxWidth = '800px';
+                        chartImg.style.height = 'auto';
+                        chartImg.style.display = 'block';
+                        chartImg.style.margin = '0 auto';
+                        chartImg.style.border = 'none';
+                        // Add image to container
+                        chartContainer.appendChild(chartImg);
+                        // Also update the container style to remove flex centering that might affect Word export
+                        chartContainer.style.display = 'block';
+                        chartContainer.style.height = 'auto';
+                        console.log('Chart image inserted into Word export');
+                    } else {
+                        console.warn('Chart container not found in cloned content');
                     }
+                } else {
+                    console.warn('Chart image data not available - chart may not have been rendered');
                 }
                 
                 // Ensure tables maintain fixed widths for Word
