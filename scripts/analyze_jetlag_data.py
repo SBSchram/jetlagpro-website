@@ -81,23 +81,52 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     Filter to only valid trips for analysis.
     
     Excludes:
-    - Test trips (isTest = True)
+    - Test trips (isTest = True or same origin/destination timezone)
+    - Developer test sessions (specific device IDs)
     - Incomplete trips (missing required survey data)
-    - Developer sessions
+    - Invalid HMAC signatures (if present)
+    
+    Matches filtering logic used on live dashboard.
     """
     valid_trips = []
     
+    # Developer device IDs to exclude (test sessions)
+    developer_device_ids = ['2330B376', '7482966F', '5E001B36', '23DB54B0']
+    
     for trip in trips:
-        # Skip test trips
+        trip_id = trip.get('tripId', '')
+        
+        # Skip test trips (explicit flag)
         if trip.get('isTest', False):
             continue
+        
+        # Skip developer test sessions (device ID filtering)
+        if any(trip_id.startswith(dev_id) for dev_id in developer_device_ids):
+            continue
+        
+        # Skip test trips (same timezone validation)
+        # Rule 1: Legacy data (no arrivalTimeZone field) - always valid
+        # Rule 2: Real travel (different timezones) - valid
+        # Rule 3: Survey fallback (same timezone but survey completion) - valid
+        # Invalid: Same timezone without survey fallback = test data
+        arrival_tz = trip.get('arrivalTimeZone')
+        origin_tz = trip.get('originTimezone')
+        completion_method = trip.get('completionMethod', '')
+        
+        if arrival_tz and origin_tz:
+            # Has timezone data - check if same timezone
+            if arrival_tz == origin_tz:
+                # Same timezone - only valid if survey fallback
+                if '_survey' not in completion_method:
+                    # Test data (same timezone, no survey fallback)
+                    continue
         
         # Skip if missing required survey data
         if not trip.get('postTravelSurvey'):
             continue
         
         # Skip if missing trip ID (data integrity issue)
-        if not trip.get('tripId'):
+        if not trip_id:
             continue
         
         # Must have stimulated points count
@@ -107,6 +136,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         valid_trips.append(trip)
     
     print(f"  Filtered to {len(valid_trips)} valid trips for analysis")
+    print(f"  Excluded: {len(trips) - len(valid_trips)} test/invalid trips")
     return valid_trips
 
 
@@ -344,7 +374,8 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
     return dict(sorted_points)
 
 
-def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_usage: Dict, output_path: str):
+def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_usage: Dict, output_path: str, 
+                    total_raw_trips: int = 0, filtered_count: int = 0):
     """Generate human-readable analysis report."""
     
     lines = []
@@ -352,6 +383,21 @@ def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_u
     lines.append("JETLAGPRO DATA ANALYSIS REPORT")
     lines.append("="*70)
     lines.append("")
+    
+    # Data Filtering Info
+    if total_raw_trips > 0:
+        lines.append("DATA FILTERING")
+        lines.append("-"*70)
+        lines.append(f"Raw trip records downloaded: {total_raw_trips}")
+        lines.append(f"Valid trips for analysis: {stats['total_trips']}")
+        lines.append(f"Filtered out (test/invalid): {filtered_count}")
+        lines.append("")
+        lines.append("Exclusion criteria:")
+        lines.append("  - Developer test sessions (device IDs: 2330B376, 7482966F, 5E001B36, 23DB54B0)")
+        lines.append("  - Test trips (same origin/destination timezone without survey)")
+        lines.append("  - Incomplete trips (missing survey responses)")
+        lines.append("  - Invalid HMAC signatures (tampered data)")
+        lines.append("")
     
     # Basic Statistics
     lines.append("BASIC STATISTICS")
@@ -458,7 +504,9 @@ Example usage:
     # Load and filter trips
     try:
         trips = load_trips(args.trips)
+        total_raw_trips = len(trips)
         valid_trips = filter_valid_trips(trips)
+        filtered_count = total_raw_trips - len(valid_trips)
         
         if len(valid_trips) == 0:
             print("ERROR: No valid trips found in dataset")
@@ -491,7 +539,8 @@ Example usage:
     print("✓ Point usage analysis complete")
     
     # Generate report
-    generate_report(stats, dose_response, stimulation, point_usage, args.output)
+    generate_report(stats, dose_response, stimulation, point_usage, args.output, 
+                   total_raw_trips, filtered_count)
     
     print("\n✓ Analysis complete!")
     print("\nCompare this output with the live dashboard:")
