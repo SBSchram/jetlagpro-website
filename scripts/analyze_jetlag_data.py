@@ -91,7 +91,8 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     valid_trips = []
     
     # Developer device IDs to exclude (test sessions)
-    developer_device_ids = ['2330B376', '7482966F', '5E001B36', '23DB54B0']
+    # CRITICAL: Must match live dashboard at reviewers/assets/js/analytics.js:58
+    developer_device_ids = ['2330B376', '7482966F']
     
     for trip in trips:
         trip_id = trip.get('tripId', '')
@@ -121,16 +122,18 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
                     # Test data (same timezone, no survey fallback)
                     continue
         
-        # Skip if missing required survey data
-        if not trip.get('postTravelSurvey'):
+        # Skip if survey not completed
+        # Match live dashboard logic: survey.surveyCompleted === true
+        if not trip.get('surveyCompleted', False):
             continue
         
         # Skip if missing trip ID (data integrity issue)
         if not trip_id:
             continue
         
-        # Must have stimulated points count
-        if 'totalPointsStimulated' not in trip:
+        # Must have points completed count
+        # Note: Field is 'pointsCompleted' in Firestore, not 'pointsCompleted'
+        if trip.get('pointsCompleted') is None:
             continue
         
         valid_trips.append(trip)
@@ -140,23 +143,27 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     return valid_trips
 
 
-def calculate_aggregate_severity(survey: Dict) -> float:
+def calculate_aggregate_severity(trip: Dict) -> float:
     """
     Calculate aggregate symptom severity from survey responses.
     
     Averages the following symptoms (each rated 0-10):
-    - Fatigue
-    - Sleep disruption
-    - Cognitive function
-    - Mood
-    - Digestive issues
+    - Fatigue (postFatigueSeverity)
+    - Sleep disruption (postSleepSeverity)
+    - Cognitive function (postConcentrationSeverity)
+    - Mood (postIrritabilitySeverity + postMotivationSeverity avg)
+    - Digestive issues (postGISeverity)
+    
+    Matches field names from Firestore (flattened structure).
     """
+    # Extract post-travel symptom severities from flattened Firestore fields
     symptoms = [
-        survey.get('fatigue', 0),
-        survey.get('sleepDisruption', 0),
-        survey.get('cognitiveFunction', 0),
-        survey.get('mood', 0),
-        survey.get('digestiveIssues', 0)
+        trip.get('postFatigueSeverity', 0),
+        trip.get('postSleepSeverity', 0),
+        trip.get('postConcentrationSeverity', 0),
+        # Mood: average of irritability and motivation
+        (trip.get('postIrritabilitySeverity', 0) + trip.get('postMotivationSeverity', 0)) / 2 if (trip.get('postIrritabilitySeverity') or trip.get('postMotivationSeverity')) else 0,
+        trip.get('postGISeverity', 0)
     ]
     
     # Convert to numeric (in case strings)
@@ -167,21 +174,18 @@ def calculate_aggregate_severity(survey: Dict) -> float:
 
 def calculate_time_zone_difference(trip: Dict) -> int:
     """
-    Calculate time zone difference crossed.
+    Get time zone difference crossed from trip data.
     
-    Returns absolute difference between departure and arrival time zones.
+    Uses the timezonesCount field directly from Firestore.
+    This matches how the live dashboard handles timezone data.
     """
-    dep_tz = trip.get('departureTimeZone', 0)
-    arr_tz = trip.get('arrivalTimeZone', 0)
+    tz_count = trip.get('timezonesCount', 0)
     
-    # Handle string values
+    # Handle string values (in case Firestore returns strings)
     try:
-        dep_tz = float(dep_tz) if dep_tz else 0
-        arr_tz = float(arr_tz) if arr_tz else 0
+        return abs(int(tz_count)) if tz_count else 0
     except (ValueError, TypeError):
         return 0
-    
-    return abs(int(arr_tz - dep_tz))
 
 
 def categorize_time_zones(tz_diff: int) -> str:
@@ -231,14 +235,13 @@ def basic_statistics(trips: List[Dict]) -> Dict:
         else:
             stats['legacy_trips'] += 1
         
-        # Points stimulated
-        points = trip.get('totalPointsStimulated', 0)
+        # Points completed
+        points = trip.get('pointsCompleted', 0)
         points_list.append(points)
         
-        # Severity
-        if trip.get('postTravelSurvey'):
-            severity = calculate_aggregate_severity(trip['postTravelSurvey'])
-            severity_list.append(severity)
+        # Severity (already filtered for surveyCompleted, so all should have data)
+        severity = calculate_aggregate_severity(trip)
+        severity_list.append(severity)
         
         # Time zone distribution
         tz_diff = calculate_time_zone_difference(trip)
@@ -269,13 +272,11 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
         tz_diff = calculate_time_zone_difference(trip)
         tz_cat = categorize_time_zones(tz_diff)
         
-        points = trip.get('totalPointsStimulated', 0)
+        points = trip.get('pointsCompleted', 0)
         stim_cat = categorize_stimulation(points)
         
-        if not trip.get('postTravelSurvey'):
-            continue
-        
-        severity = calculate_aggregate_severity(trip['postTravelSurvey'])
+        # Calculate severity (all trips already filtered for surveyCompleted)
+        severity = calculate_aggregate_severity(trip)
         
         key = f"{tz_cat}_tz_{stim_cat}_stim"
         if key not in groups:
@@ -320,16 +321,14 @@ def stimulation_efficacy_analysis(trips: List[Dict]) -> Dict:
     }
     
     for trip in trips:
-        points = trip.get('totalPointsStimulated', 0)
+        points = trip.get('pointsCompleted', 0)
         stim_cat = categorize_stimulation(points)
         
         tz_diff = calculate_time_zone_difference(trip)
         tz_cat = categorize_time_zones(tz_diff)
         
-        if not trip.get('postTravelSurvey'):
-            continue
-        
-        severity = calculate_aggregate_severity(trip['postTravelSurvey'])
+        # Calculate severity (all trips already filtered for surveyCompleted)
+        severity = calculate_aggregate_severity(trip)
         
         if tz_cat not in stim_groups[stim_cat]:
             stim_groups[stim_cat][tz_cat] = []
@@ -393,10 +392,10 @@ def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_u
         lines.append(f"Filtered out (test/invalid): {filtered_count}")
         lines.append("")
         lines.append("Exclusion criteria:")
-        lines.append("  - Developer test sessions (device IDs: 2330B376, 7482966F, 5E001B36, 23DB54B0)")
+        lines.append("  - Developer test sessions (device IDs: 2330B376, 7482966F)")
         lines.append("  - Test trips (same origin/destination timezone without survey)")
         lines.append("  - Incomplete trips (missing survey responses)")
-        lines.append("  - Invalid HMAC signatures (tampered data)")
+        lines.append("  - Invalid HMAC signatures (if present)")
         lines.append("")
     
     # Basic Statistics
