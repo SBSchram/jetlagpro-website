@@ -131,11 +131,20 @@
             </p>
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 1: Download Raw Trip Data</h3>
-            <p style="color: #374151; font-size: 0.95rem;">Export all trip completion records from our public Firestore database:</p>
+            <p style="color: #374151; font-size: 0.95rem;">Export all trip completion records (including survey responses) from our public Firestore database:</p>
             <div style="background: #1f2937; color: #f3f4f6; padding: 15px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; margin: 10px 0; position: relative;">
                 <button onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)" style="position: absolute; top: 8px; right: 8px; background: #374151; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Copy</button>
                 <code style="color: #f3f4f6;">curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" \
   -o trips.json</code>
+            </div>
+            <div style="background: #f0f9ff; border-left: 3px solid #3b82f6; padding: 12px 15px; margin: 15px 0; font-size: 0.85rem; color: #1e40af;">
+                <strong>Data Included:</strong> Each trip record contains:
+                <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+                    <li><strong>Trip details</strong>: ID, dates, airports, time zones, direction</li>
+                    <li><strong>Intervention data</strong>: Points stimulated, completion method</li>
+                    <li><strong>Survey responses</strong>: Pre-travel and post-travel symptom ratings (fatigue, sleep disruption, cognitive function, mood, digestive issues)</li>
+                    <li><strong>Metadata</strong>: HMAC signatures, timestamps, device info</li>
+                </ul>
             </div>
             <p style="color: #6b7280; font-size: 0.85rem; margin-top: 10px;">
                 <strong>Note:</strong> If the response includes <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">"nextPageToken"</code>, repeat the call with <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">&pageToken=...</code> to retrieve all pages.
