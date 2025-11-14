@@ -147,29 +147,29 @@ def calculate_aggregate_severity(trip: Dict) -> float:
     """
     Calculate aggregate symptom severity from survey responses.
     
-    Averages the following symptoms (each rated 0-10):
-    - Fatigue (postFatigueSeverity)
-    - Sleep disruption (postSleepSeverity)
-    - Cognitive function (postConcentrationSeverity)
-    - Mood (postIrritabilitySeverity + postMotivationSeverity avg)
-    - Digestive issues (postGISeverity)
-    
-    Matches field names from Firestore (flattened structure).
+    EXACTLY matches charts.js line 88-92:
+    - Uses ALL 6 symptoms: postSleepSeverity, postFatigueSeverity, postConcentrationSeverity,
+      postIrritabilitySeverity, postMotivationSeverity, postGISeverity
+    - Filters to only valid (non-null) symptoms
+    - Averages ALL available symptoms (not just 5)
     """
-    # Extract post-travel symptom severities from flattened Firestore fields
+    # CRITICAL: Must match charts.js line 88 exactly
     symptoms = [
-        trip.get('postFatigueSeverity', 0),
-        trip.get('postSleepSeverity', 0),
-        trip.get('postConcentrationSeverity', 0),
-        # Mood: average of irritability and motivation
-        (trip.get('postIrritabilitySeverity', 0) + trip.get('postMotivationSeverity', 0)) / 2 if (trip.get('postIrritabilitySeverity') or trip.get('postMotivationSeverity')) else 0,
-        trip.get('postGISeverity', 0)
+        trip.get('postSleepSeverity'),
+        trip.get('postFatigueSeverity'),
+        trip.get('postConcentrationSeverity'),
+        trip.get('postIrritabilitySeverity'),
+        trip.get('postMotivationSeverity'),
+        trip.get('postGISeverity')
     ]
     
-    # Convert to numeric (in case strings)
-    symptoms = [float(s) if s else 0 for s in symptoms]
+    # Filter to only valid (non-null) symptoms - matches charts.js line 89
+    valid_symptoms = [s for s in symptoms if s is not None]
     
-    return sum(symptoms) / len(symptoms) if symptoms else 0
+    # Average all valid symptoms - matches charts.js line 92
+    if len(valid_symptoms) > 0:
+        return sum(valid_symptoms) / len(valid_symptoms)
+    return None  # Return None if no valid symptoms (matches charts.js logic)
 
 
 def calculate_time_zone_difference(trip: Dict) -> int:
@@ -189,27 +189,66 @@ def calculate_time_zone_difference(trip: Dict) -> int:
 
 
 def categorize_time_zones(tz_diff: int) -> str:
-    """Categorize time zone difference into groups."""
-    if tz_diff <= 2:
-        return "1-2"
-    elif tz_diff <= 5:
+    """
+    Categorize time zone difference into groups.
+    
+    EXACTLY matches analytics.js line 611-624 for stimulation efficacy:
+    - '1-3 time zones': tz <= 3
+    - '4-6 time zones': tz <= 6
+    - '7-9 time zones': tz <= 9
+    - '10+ time zones': tz > 9
+    """
+    if tz_diff <= 3:
+        return "1-3"
+    elif tz_diff <= 6:
+        return "4-6"
+    elif tz_diff <= 9:
+        return "7-9"
+    else:
+        return "10+"
+
+
+def categorize_stimulation_dose_response(points: int) -> str:
+    """
+    Categorize stimulation level for dose-response analysis.
+    
+    EXACTLY matches charts.js line 40-43:
+    - '0-2 points': points >= 0 && points <= 2
+    - '3-5 points': points >= 3 && points <= 5
+    - '6-8 points': points >= 6 && points <= 8
+    - '9-12 points': points >= 9 && points <= 12
+    """
+    if points <= 2:
+        return "0-2"
+    elif points <= 5:
         return "3-5"
-    elif tz_diff <= 8:
+    elif points <= 8:
         return "6-8"
     else:
-        return "9+"
+        return "9-12"
 
 
-def categorize_stimulation(points: int) -> str:
-    """Categorize stimulation level based on points stimulated."""
-    if points <= 2:
-        return "no-intervention"
-    elif points <= 5:
-        return "low"
-    elif points <= 8:
-        return "moderate"
+def categorize_stimulation_efficacy(points: int) -> str:
+    """
+    Categorize stimulation level for efficacy analysis.
+    
+    EXACTLY matches analytics.js line 544-550:
+    - '0 points': points === 0
+    - '1-3 points': points <= 3
+    - '4-6 points': points <= 6
+    - '7-9 points': points <= 9
+    - '10-12 points': points > 9
+    """
+    if points == 0:
+        return "0"
+    elif points <= 3:
+        return "1-3"
+    elif points <= 6:
+        return "4-6"
+    elif points <= 9:
+        return "7-9"
     else:
-        return "high"
+        return "10-12"
 
 
 def basic_statistics(trips: List[Dict]) -> Dict:
@@ -241,15 +280,16 @@ def basic_statistics(trips: List[Dict]) -> Dict:
         
         # Severity (already filtered for surveyCompleted, so all should have data)
         severity = calculate_aggregate_severity(trip)
-        severity_list.append(severity)
+        if severity is not None:  # Only include if valid severity calculated
+            severity_list.append(severity)
         
-        # Time zone distribution
+        # Time zone distribution (using efficacy categorization)
         tz_diff = calculate_time_zone_difference(trip)
         tz_cat = categorize_time_zones(tz_diff)
         stats['time_zone_distribution'][tz_cat] = stats['time_zone_distribution'].get(tz_cat, 0) + 1
         
-        # Stimulation distribution
-        stim_cat = categorize_stimulation(points)
+        # Stimulation distribution (using dose-response categorization for basic stats)
+        stim_cat = categorize_stimulation_dose_response(points)
         stats['stimulation_distribution'][stim_cat] = stats['stimulation_distribution'].get(stim_cat, 0) + 1
     
     stats['avg_points_stimulated'] = sum(points_list) / len(points_list) if points_list else 0
@@ -262,45 +302,65 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     """
     Analyze dose-response relationship.
     
-    Groups trips by time zone category and stimulation level,
-    calculates mean severity for each group.
+    EXACTLY matches charts.js renderDoseResponseAnalysisChart():
+    - Groups by stimulation level (0-2, 3-5, 6-8, 9-12 points)
+    - Groups by individual time zones (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+)
+    - Calculates aggregate severity for each group
     """
-    # Group trips by time zone and stimulation level
-    groups = {}
+    # Group by stimulation level (matches charts.js line 39-44)
+    usage_groups = {
+        '0-2 points': [],
+        '3-5 points': [],
+        '6-8 points': [],
+        '9-12 points': []
+    }
     
     for trip in trips:
-        tz_diff = calculate_time_zone_difference(trip)
-        tz_cat = categorize_time_zones(tz_diff)
-        
         points = trip.get('pointsCompleted', 0)
-        stim_cat = categorize_stimulation(points)
-        
-        # Calculate severity (all trips already filtered for surveyCompleted)
-        severity = calculate_aggregate_severity(trip)
-        
-        key = f"{tz_cat}_tz_{stim_cat}_stim"
-        if key not in groups:
-            groups[key] = []
-        groups[key].append(severity)
+        if points <= 2:
+            usage_groups['0-2 points'].append(trip)
+        elif points <= 5:
+            usage_groups['3-5 points'].append(trip)
+        elif points <= 8:
+            usage_groups['6-8 points'].append(trip)
+        else:
+            usage_groups['9-12 points'].append(trip)
     
-    # Calculate statistics for each group
+    # Time zone ranges (matches charts.js line 47)
+    time_zone_ranges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, '12+']
+    
+    # Calculate severity for each group and time zone (matches charts.js line 78-117)
     results = {}
-    for key, severities in groups.items():
-        if len(severities) > 0:
-            results[key] = {
-                'n': len(severities),
-                'mean': sum(severities) / len(severities),
-                'min': min(severities),
-                'max': max(severities)
-            }
+    for group_name, group_trips in usage_groups.items():
+        for tz in time_zone_ranges:
+            # Filter trips for this specific time zone (matches charts.js line 81-83)
+            if tz == '12+':
+                tz_trips = [t for t in group_trips if t.get('timezonesCount', 0) >= 12]
+            else:
+                tz_trips = [t for t in group_trips if t.get('timezonesCount', 0) == tz]
             
-            # Calculate standard deviation
-            mean = results[key]['mean']
-            variance = sum((x - mean) ** 2 for x in severities) / len(severities)
-            results[key]['std'] = variance ** 0.5
-            
-            # Standard error of the mean
-            results[key]['sem'] = results[key]['std'] / (len(severities) ** 0.5)
+            if len(tz_trips) > 0:
+                # Calculate aggregate severities (matches charts.js line 87-95)
+                aggregate_severities = []
+                for trip in tz_trips:
+                    severity = calculate_aggregate_severity(trip)
+                    if severity is not None:
+                        aggregate_severities.append(severity)
+                
+                if len(aggregate_severities) > 0:
+                    key = f"{group_name}_{tz}_tz"
+                    results[key] = {
+                        'n': len(aggregate_severities),
+                        'mean': sum(aggregate_severities) / len(aggregate_severities),
+                        'std': 0,  # Will calculate below
+                        'sem': 0   # Will calculate below
+                    }
+                    
+                    # Calculate std and sem (matches charts.js line 101-105)
+                    mean = results[key]['mean']
+                    variance = sum((x - mean) ** 2 for x in aggregate_severities) / len(aggregate_severities)
+                    results[key]['std'] = variance ** 0.5
+                    results[key]['sem'] = results[key]['std'] / (len(aggregate_severities) ** 0.5)
     
     return results
 
@@ -309,48 +369,80 @@ def stimulation_efficacy_analysis(trips: List[Dict]) -> Dict:
     """
     Analyze stimulation efficacy.
     
-    For each stimulation level, calculate mean severity across different
-    time zone crossings to assess intervention effectiveness.
+    EXACTLY matches analytics.js renderStimulationEfficacy():
+    - Groups by stimulation level: 0 points, 1-3, 4-6, 7-9, 10-12 (line 544-550)
+    - Groups by time zones: 1-3, 4-6, 7-9, 10+ (line 611-624)
+    - Calculates mean severity for each combination
     """
-    # Group by stimulation level and time zone
-    stim_groups = {
-        'no-intervention': {},
-        'low': {},
-        'moderate': {},
-        'high': {}
+    # Group by stimulation level (matches analytics.js line 544-550)
+    stimulation_groups = {
+        '0 points': [],
+        '1-3 points': [],
+        '4-6 points': [],
+        '7-9 points': [],
+        '10-12 points': []
     }
     
     for trip in trips:
         points = trip.get('pointsCompleted', 0)
-        stim_cat = categorize_stimulation(points)
-        
-        tz_diff = calculate_time_zone_difference(trip)
-        tz_cat = categorize_time_zones(tz_diff)
-        
-        # Calculate severity (all trips already filtered for surveyCompleted)
-        severity = calculate_aggregate_severity(trip)
-        
-        if tz_cat not in stim_groups[stim_cat]:
-            stim_groups[stim_cat][tz_cat] = []
-        stim_groups[stim_cat][tz_cat].append(severity)
+        if points == 0:
+            stimulation_groups['0 points'].append(trip)
+        elif points <= 3:
+            stimulation_groups['1-3 points'].append(trip)
+        elif points <= 6:
+            stimulation_groups['4-6 points'].append(trip)
+        elif points <= 9:
+            stimulation_groups['7-9 points'].append(trip)
+        else:
+            stimulation_groups['10-12 points'].append(trip)
     
-    # Calculate statistics
+    # Group by time zones (matches analytics.js line 611-624)
+    tz_groups = {
+        '1-3 time zones': [],
+        '4-6 time zones': [],
+        '7-9 time zones': [],
+        '10+ time zones': []
+    }
+    
+    for trip in trips:
+        tz = trip.get('timezonesCount', 0)
+        if tz <= 3:
+            tz_groups['1-3 time zones'].append(trip)
+        elif tz <= 6:
+            tz_groups['4-6 time zones'].append(trip)
+        elif tz <= 9:
+            tz_groups['7-9 time zones'].append(trip)
+        else:
+            tz_groups['10+ time zones'].append(trip)
+    
+    # Calculate statistics for each stimulation level and time zone combination
     results = {}
-    for stim_level, tz_data in stim_groups.items():
+    for stim_level, stim_trips in stimulation_groups.items():
         results[stim_level] = {}
-        for tz_cat, severities in tz_data.items():
-            if len(severities) > 0:
-                mean = sum(severities) / len(severities)
-                variance = sum((x - mean) ** 2 for x in severities) / len(severities) if len(severities) > 1 else 0
-                std = variance ** 0.5
-                sem = std / (len(severities) ** 0.5) if len(severities) > 1 else 0
+        for tz_range, tz_trips in tz_groups.items():
+            # Find trips that match both criteria
+            matching_trips = [t for t in stim_trips if t in tz_trips]
+            
+            if len(matching_trips) > 0:
+                # Calculate aggregate severities
+                severities = []
+                for trip in matching_trips:
+                    severity = calculate_aggregate_severity(trip)
+                    if severity is not None:
+                        severities.append(severity)
                 
-                results[stim_level][tz_cat] = {
-                    'n': len(severities),
-                    'mean': mean,
-                    'std': std,
-                    'sem': sem
-                }
+                if len(severities) > 0:
+                    mean = sum(severities) / len(severities)
+                    variance = sum((x - mean) ** 2 for x in severities) / len(severities) if len(severities) > 1 else 0
+                    std = variance ** 0.5
+                    sem = std / (len(severities) ** 0.5) if len(severities) > 1 else 0
+                    
+                    results[stim_level][tz_range] = {
+                        'n': len(severities),
+                        'mean': mean,
+                        'std': std,
+                        'sem': sem
+                    }
     
     return results
 
@@ -358,19 +450,42 @@ def stimulation_efficacy_analysis(trips: List[Dict]) -> Dict:
 def point_usage_analysis(trips: List[Dict]) -> Dict:
     """
     Analyze which acupuncture points were most commonly stimulated.
+    
+    EXACTLY matches analytics.js renderPointStimulationAnalysis() line 821-858:
+    - Uses point1Completed, point2Completed, etc. boolean fields
+    - Maps to point names: LU-8, LI-1, ST-36, etc.
+    - Counts only trips with surveyCompleted === true
     """
+    # Point mapping (matches analytics.js line 821-834)
+    point_mapping = [
+        {'id': 1, 'name': 'LU-8', 'field': 'point1Completed'},
+        {'id': 2, 'name': 'LI-1', 'field': 'point2Completed'},
+        {'id': 3, 'name': 'ST-36', 'field': 'point3Completed'},
+        {'id': 4, 'name': 'SP-3', 'field': 'point4Completed'},
+        {'id': 5, 'name': 'HT-8', 'field': 'point5Completed'},
+        {'id': 6, 'name': 'SI-5', 'field': 'point6Completed'},
+        {'id': 7, 'name': 'BL-66', 'field': 'point7Completed'},
+        {'id': 8, 'name': 'KI-3', 'field': 'point8Completed'},
+        {'id': 9, 'name': 'PC-8', 'field': 'point9Completed'},
+        {'id': 10, 'name': 'SJ-6', 'field': 'point10Completed'},
+        {'id': 11, 'name': 'GB-34', 'field': 'point11Completed'},
+        {'id': 12, 'name': 'LIV-3', 'field': 'point12Completed'}
+    ]
+    
     point_counts = {}
     
-    for trip in trips:
-        points = trip.get('stimulatedPoints', [])
-        if isinstance(points, list):
-            for point in points:
-                point_counts[point] = point_counts.get(point, 0) + 1
+    # Calculate stimulation counts (matches analytics.js line 841-848)
+    for point in point_mapping:
+        stimulation_count = 0
+        for trip in trips:
+            # Only count if survey completed and point field exists (matches line 842)
+            if trip.get('surveyCompleted') and trip.get(point['field']) is not None:
+                if trip.get(point['field']) is True:  # matches line 844
+                    stimulation_count += 1
+        
+        point_counts[point['name']] = stimulation_count
     
-    # Sort by frequency
-    sorted_points = sorted(point_counts.items(), key=lambda x: x[1], reverse=True)
-    
-    return dict(sorted_points)
+    return point_counts
 
 
 def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_usage: Dict, output_path: str, 
