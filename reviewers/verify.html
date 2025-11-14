@@ -1120,8 +1120,8 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 3: Run Verification Script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button" style="margin-left: 15px;">View Verification Source Code</a></h2>
-            <p>The verification script compares Firestore entries with the GCS archive:</p>
+            <h2>Step 3: Download and Run Verification Script</h2>
+            <p>Download the standalone verification script (no dependencies, pure Python):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1129,7 +1129,19 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python scripts/verify_audit_consistency.py \
+                <code>curl -o verify_audit_consistency.py \
+  https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
+            </div>
+            <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
+            <p style="margin-top: 15px;">Run the verification script to compare Firestore entries with the GCS archive:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code>python verify_audit_consistency.py \
   --firestore firestore-audit.json \
   --gcs-dir ./gcs-audit</code>
             </div>
@@ -1174,8 +1186,8 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 2: Run HMAC Verification Script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/reviewers/verify.html" target="_blank" class="source-button" style="margin-left: 15px;">View Verification Source Code</a></h2>
-            <p>The verification script validates HMAC-SHA256 signatures for every trip ID in our dataset:</p>
+            <h2>Step 2: Download and Run HMAC Verification Script</h2>
+            <p>Download the standalone verification script (no dependencies, pure Python):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1183,8 +1195,24 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python scripts/verify_trip_signatures.py \
-  --firestore firestore-trips.json</code>
+                <code>curl -o verify_trip_signatures.py \
+  https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
+            </div>
+            <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
+            <p style="margin-top: 15px;">Run the verification script to validate HMAC-SHA256 signatures for every trip ID in our dataset:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code>python verify_trip_signatures.py \
+  --trips firestore-trips.json \
+  --secret-key [CONTACT_AUTHORS_FOR_KEY]</code>
+            </div>
+            <div class="note">
+                <strong>Note:</strong> The secret key is required for signature verification. Contact the study authors to obtain the key for independent verification.
             </div>
         </div>
 
