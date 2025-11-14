@@ -1160,16 +1160,32 @@
                 const wordContent = paperContent.cloneNode(true);
                 
                 // Convert Chart.js canvas to image before cloning
+                // Wait a bit for chart to be fully rendered
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
                 const originalChartCanvas = document.getElementById('liveResearchChart');
                 let chartImageData = null;
-                if (originalChartCanvas && window.researchChart) {
+                
+                // Check if chart exists and is ready
+                if (originalChartCanvas) {
                     try {
-                        // Get the chart canvas from the original DOM
-                        chartImageData = originalChartCanvas.toDataURL('image/png', 1.0);
-                        console.log('Chart captured for Word export');
+                        // Verify chart is actually rendered (canvas has content)
+                        const ctx = originalChartCanvas.getContext('2d');
+                        const imageData = ctx.getImageData(0, 0, originalChartCanvas.width, originalChartCanvas.height);
+                        const hasContent = imageData.data.some(pixel => pixel !== 0);
+                        
+                        if (hasContent) {
+                            // Get the chart canvas from the original DOM (high quality PNG)
+                            chartImageData = originalChartCanvas.toDataURL('image/png', 1.0);
+                            console.log('Chart captured for Word export - canvas size:', originalChartCanvas.width, 'x', originalChartCanvas.height);
+                        } else {
+                            console.warn('Chart canvas exists but appears empty - chart may not be rendered yet');
+                        }
                     } catch (error) {
                         console.warn('Could not capture chart canvas:', error);
                     }
+                } else {
+                    console.warn('Chart canvas not found - chart may not be loaded yet');
                 }
                 
                 // Convert images to base64 for embedding while preserving sizes
