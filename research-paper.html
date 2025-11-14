@@ -1270,34 +1270,42 @@
                         table.style.width = '480px';
                         table.style.maxWidth = '480px';
                         table.style.tableLayout = 'fixed';
-                        table.style.margin = '10px auto';
+                        table.style.margin = '5px auto';
                         table.style.borderCollapse = 'collapse';
                         table.style.borderSpacing = '0';
                         table.style.padding = '0';
+                        table.style.fontSize = '9pt';
                         // Set image row cells to 80x80px with minimal padding
                         const rows = table.querySelectorAll('tr');
                         rows.forEach((row, rowIndex) => {
+                            row.style.margin = '0';
+                            row.style.padding = '0';
+                            row.style.height = 'auto';
                             const cells = row.querySelectorAll('td');
                             const hasImage = cells[0].querySelector('img');
                             cells.forEach(cell => {
                                 cell.style.width = '80px';
                                 cell.style.border = 'none';
                                 cell.style.margin = '0';
-                                cell.style.padding = hasImage ? '2px' : '1px 2px';
+                                cell.style.lineHeight = '1';
                                 if (hasImage) {
                                     cell.style.height = '80px';
+                                    cell.style.padding = '1px';
+                                    cell.style.verticalAlign = 'middle';
                                 } else {
                                     cell.style.height = 'auto';
+                                    cell.style.padding = '0 1px';
+                                    cell.style.verticalAlign = 'top';
                                 }
                             });
-                            // Reduce paragraph spacing in label rows
+                            // Reduce paragraph spacing in label rows - very tight
                             if (!hasImage) {
                                 const paragraphs = row.querySelectorAll('p');
                                 paragraphs.forEach(p => {
-                                    p.style.margin = '2px 0';
+                                    p.style.margin = '0';
                                     p.style.padding = '0';
-                                    p.style.fontSize = '10pt';
-                                    p.style.lineHeight = '1.2';
+                                    p.style.fontSize = '9pt';
+                                    p.style.lineHeight = '1';
                                 });
                             }
                         });
@@ -1495,35 +1503,45 @@
             display: block !important;
             margin: 0 auto !important;
         }
-        /* Point images table - fixed 480px width (6 columns x 80px) - tight spacing */
+        /* Point images table - fixed 480px width (6 columns x 80px) - tight spacing for Word */
         table[style*="table-layout: fixed"] {
             width: 480px !important;
             max-width: 480px !important;
-            margin: 10px auto !important;
+            margin: 5px auto !important;
             table-layout: fixed !important;
             border-collapse: collapse !important;
             border-spacing: 0 !important;
             padding: 0 !important;
+            font-size: 9pt !important;
+        }
+        /* All table rows - remove spacing */
+        table[style*="table-layout: fixed"] tr {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
         }
         table[style*="table-layout: fixed"] td {
             width: 80px !important;
-            padding: 2px !important;
+            padding: 1px !important;
             text-align: center !important;
             vertical-align: middle !important;
             border: none !important;
             margin: 0 !important;
+            line-height: 1 !important;
         }
-        /* Image row cells - square 80x80px */
+        /* Image row cells - square 80x80px, minimal padding */
         table[style*="table-layout: fixed"] tr:has(img) td {
             width: 80px !important;
             height: 80px !important;
-            padding: 2px !important;
+            padding: 1px !important;
+            vertical-align: middle !important;
         }
-        /* Label row cells - minimal height */
+        /* Label row cells - minimal height, tight spacing */
         table[style*="table-layout: fixed"] tr:not(:has(img)) td {
             width: 80px !important;
-            padding: 1px 2px !important;
+            padding: 0 1px !important;
             height: auto !important;
+            vertical-align: top !important;
         }
         table[style*="table-layout: fixed"] img {
             width: 80px !important;
@@ -1534,15 +1552,15 @@
             min-height: 80px !important;
             object-fit: contain !important;
             display: block !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             padding: 0 !important;
         }
-        /* Reduce spacing in label paragraphs */
+        /* Reduce spacing in label paragraphs - very tight */
         table[style*="table-layout: fixed"] p {
-            margin: 2px 0 !important;
+            margin: 0 !important;
             padding: 0 !important;
-            font-size: 10pt !important;
-            line-height: 1.2 !important;
+            font-size: 9pt !important;
+            line-height: 1 !important;
         }
         /* Word-specific styles */
         @page {
