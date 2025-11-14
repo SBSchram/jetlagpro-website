@@ -1186,10 +1186,17 @@
                         let targetWidth, targetHeight;
                         let finalStyle = '';
                         
-                        if (originalClass && originalClass.includes('methods-screenshots')) {
-                            // App screenshots - keep smaller for Word
+                        // Check if image is in methods-screenshots container or is a research-photo
+                        const isMethodsScreenshot = img.closest('.methods-screenshots') || 
+                                                   img.src.includes('research-photo-1.png') || 
+                                                   img.src.includes('research-photo-2.png') || 
+                                                   img.src.includes('research-photo-4.png');
+                        
+                        if (isMethodsScreenshot) {
+                            // App screenshots - fixed 150px width, maintain aspect ratio
                             targetWidth = 150;
-                            finalStyle = 'width: 150px; height: auto; display: inline-block; margin: 5px; border: none;';
+                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 150;
+                            finalStyle = 'width: 150px; height: auto; display: block; margin: 0 auto; border: none;';
                         } else if (img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || img.src.includes('ST-36.jpg') || 
                                   img.src.includes('SP-3.jpg') || img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
                                   img.src.includes('BL-66.jpg') || img.src.includes('KI-10.jpg') || img.src.includes('KI-3.jpg') ||
@@ -1202,21 +1209,19 @@
                         } else if (img.src.includes('Wheel-Complex.jpg')) {
                             // Chinese Organ Clock - moderate size, no border
                             targetWidth = 300;
+                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 300;
                             finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                         } else {
                             // Other images - use original size or reasonable default, no border
                             if (originalWidth) {
                                 targetWidth = Math.min(parseInt(originalWidth), 400);
+                                targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * targetWidth;
                                 finalStyle = `width: ${targetWidth}px; height: auto; display: block; margin: 20px auto; border: none;`;
                             } else {
                                 targetWidth = 300;
+                                targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 300;
                                 finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
                             }
-                        }
-                        
-                        // Calculate proportional height (unless already set for square images)
-                        if (!targetHeight) {
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * targetWidth;
                         }
                         
                         // Set canvas to target size (not full resolution)
@@ -1237,6 +1242,55 @@
                         // Keep original src if embedding fails
                     }
                 }
+                
+                // Ensure tables maintain fixed widths for Word
+                const tables = wordContent.querySelectorAll('table');
+                tables.forEach(table => {
+                    // Methods screenshots table - 450px width
+                    if (table.closest('.methods-screenshots') || 
+                        (table.querySelector('img') && table.querySelector('img').src.includes('research-photo'))) {
+                        table.style.width = '450px';
+                        table.style.maxWidth = '450px';
+                        table.style.tableLayout = 'fixed';
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = 'auto';
+                        // Set cell widths to 150px
+                        const cells = table.querySelectorAll('td');
+                        cells.forEach(cell => {
+                            cell.style.width = '150px';
+                            cell.style.border = 'none';
+                        });
+                    }
+                    // Point images table - 480px width (6 columns x 80px)
+                    if (table.querySelector('img') && 
+                        (table.querySelector('img').src.includes('LU-8.jpg') || 
+                         table.querySelector('img').src.includes('LI-1.jpg'))) {
+                        table.style.width = '480px';
+                        table.style.maxWidth = '480px';
+                        table.style.tableLayout = 'fixed';
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = 'auto';
+                        // Set image row cells to 80x80px
+                        const rows = table.querySelectorAll('tr');
+                        rows.forEach((row, rowIndex) => {
+                            const cells = row.querySelectorAll('td');
+                            if (cells.length === 6 && cells[0].querySelector('img')) {
+                                // Image row - square cells
+                                cells.forEach(cell => {
+                                    cell.style.width = '80px';
+                                    cell.style.height = '80px';
+                                    cell.style.border = 'none';
+                                });
+                            } else {
+                                // Label row - 80px width cells
+                                cells.forEach(cell => {
+                                    cell.style.width = '80px';
+                                    cell.style.border = 'none';
+                                });
+                            }
+                        });
+                    }
+                });
                 
                 // Create Word-compatible HTML with embedded styles and images
                 const wordHTML = `<!DOCTYPE html>
