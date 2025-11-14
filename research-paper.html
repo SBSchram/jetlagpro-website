@@ -1261,31 +1261,43 @@
                             cell.style.border = 'none';
                         });
                     }
-                    // Point images table - 480px width (6 columns x 80px)
+                    // Point images table - 480px width (6 columns x 80px) - tight spacing
                     if (table.querySelector('img') && 
                         (table.querySelector('img').src.includes('LU-8.jpg') || 
-                         table.querySelector('img').src.includes('LI-1.jpg'))) {
+                         table.querySelector('img').src.includes('LI-1.jpg') ||
+                         table.querySelector('img').src.includes('ST-36.jpg') ||
+                         table.querySelector('img').src.includes('BL-66.jpg'))) {
                         table.style.width = '480px';
                         table.style.maxWidth = '480px';
                         table.style.tableLayout = 'fixed';
-                        table.style.marginLeft = 'auto';
-                        table.style.marginRight = 'auto';
-                        // Set image row cells to 80x80px
+                        table.style.margin = '10px auto';
+                        table.style.borderCollapse = 'collapse';
+                        table.style.borderSpacing = '0';
+                        table.style.padding = '0';
+                        // Set image row cells to 80x80px with minimal padding
                         const rows = table.querySelectorAll('tr');
                         rows.forEach((row, rowIndex) => {
                             const cells = row.querySelectorAll('td');
-                            if (cells.length === 6 && cells[0].querySelector('img')) {
-                                // Image row - square cells
-                                cells.forEach(cell => {
-                                    cell.style.width = '80px';
+                            const hasImage = cells[0].querySelector('img');
+                            cells.forEach(cell => {
+                                cell.style.width = '80px';
+                                cell.style.border = 'none';
+                                cell.style.margin = '0';
+                                cell.style.padding = hasImage ? '2px' : '1px 2px';
+                                if (hasImage) {
                                     cell.style.height = '80px';
-                                    cell.style.border = 'none';
-                                });
-                            } else {
-                                // Label row - 80px width cells
-                                cells.forEach(cell => {
-                                    cell.style.width = '80px';
-                                    cell.style.border = 'none';
+                                } else {
+                                    cell.style.height = 'auto';
+                                }
+                            });
+                            // Reduce paragraph spacing in label rows
+                            if (!hasImage) {
+                                const paragraphs = row.querySelectorAll('p');
+                                paragraphs.forEach(p => {
+                                    p.style.margin = '2px 0';
+                                    p.style.padding = '0';
+                                    p.style.fontSize = '10pt';
+                                    p.style.lineHeight = '1.2';
                                 });
                             }
                         });
@@ -1483,21 +1495,35 @@
             display: block !important;
             margin: 0 auto !important;
         }
-        /* Point images table - fixed 480px width (6 columns x 80px) */
+        /* Point images table - fixed 480px width (6 columns x 80px) - tight spacing */
         table[style*="table-layout: fixed"] {
             width: 480px !important;
             max-width: 480px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            margin: 10px auto !important;
             table-layout: fixed !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            padding: 0 !important;
         }
         table[style*="table-layout: fixed"] td {
             width: 80px !important;
-            height: 80px !important;
-            padding: 5px !important;
+            padding: 2px !important;
             text-align: center !important;
             vertical-align: middle !important;
             border: none !important;
+            margin: 0 !important;
+        }
+        /* Image row cells - square 80x80px */
+        table[style*="table-layout: fixed"] tr:has(img) td {
+            width: 80px !important;
+            height: 80px !important;
+            padding: 2px !important;
+        }
+        /* Label row cells - minimal height */
+        table[style*="table-layout: fixed"] tr:not(:has(img)) td {
+            width: 80px !important;
+            padding: 1px 2px !important;
+            height: auto !important;
         }
         table[style*="table-layout: fixed"] img {
             width: 80px !important;
@@ -1509,6 +1535,14 @@
             object-fit: contain !important;
             display: block !important;
             margin: 0 auto !important;
+            padding: 0 !important;
+        }
+        /* Reduce spacing in label paragraphs */
+        table[style*="table-layout: fixed"] p {
+            margin: 2px 0 !important;
+            padding: 0 !important;
+            font-size: 10pt !important;
+            line-height: 1.2 !important;
         }
         /* Word-specific styles */
         @page {
