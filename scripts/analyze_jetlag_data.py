@@ -6,17 +6,50 @@ Reproduces all statistical analyses shown on the JetLagPro analysis dashboard.
 This script analyzes trip completion data to assess the effectiveness of 
 chronoacupuncture for jet lag symptoms.
 
+RESEARCH CONTEXT:
+This analysis evaluates whether chronoacupuncture (acupuncture points stimulated
+according to the Chinese Organ Clock) reduces jet lag symptom severity compared
+to baseline expectations. The study uses a naturalistic observational design
+where participants self-select their level of intervention (number of acupuncture
+points stimulated) during real-world travel.
+
+RESEARCH QUESTIONS:
+1. Dose-Response: Does increasing the number of acupuncture points stimulated
+   lead to proportionally greater reduction in symptom severity?
+2. Efficacy: How effective is the intervention across different time zone
+   crossing categories?
+3. Point Usage: Which specific acupuncture points are most commonly used?
+
+STATISTICAL METHODS:
+- Aggregate Symptom Severity: Mean of all available post-travel symptom ratings
+  (sleep, fatigue, concentration, irritability, motivation, GI symptoms) on a
+  1-5 scale. Only non-null values are included in the average.
+- Standard Error of the Mean (SEM): Used for error bars to show precision of
+  mean estimates. Calculated as SD / sqrt(n).
+- Grouping: Trips are grouped by intervention level (points stimulated) and
+  time zones crossed to assess dose-response relationships.
+
+DATA FILTERING RATIONALE:
+The following exclusions ensure only valid research data is analyzed:
+- Developer test sessions: Excluded to prevent contamination from app testing
+- Test trips: Same origin/destination timezone indicates no actual travel
+- Incomplete surveys: Missing symptom data prevents severity calculation
+- Invalid signatures: HMAC signature mismatches indicate potential tampering
+
+This filtering matches the live dashboard exactly to ensure reproducibility.
+
+REPRODUCIBILITY:
+This script produces IDENTICAL results to the live dashboard at:
+https://jetlagpro.com/reviewers/analysis.html
+
+Every calculation, grouping, and filter matches the JavaScript implementation
+line-by-line. See function docstrings for specific line number references.
+
 Usage:
     python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt
 
 Requirements:
-    - Python 3.6+
-    - pandas
-    - scipy
-    - numpy
-
-Install dependencies:
-    pip install pandas scipy numpy
+    - Python 3.6+ (no external dependencies - uses only standard library)
 
 Author: Steven Schram PhD, DC, LAc
 License: MIT
@@ -80,13 +113,34 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     """
     Filter to only valid trips for analysis.
     
+    RATIONALE:
+    This function implements the data quality controls that ensure only legitimate
+    research data is included. Each exclusion criterion addresses a specific
+    validity threat:
+    
+    - Developer test sessions: Prevents contamination from app development/testing
+      activities that don't represent real user behavior
+    - Test trips (same timezone): Identifies trips where no actual travel occurred
+      (arrival timezone = origin timezone), which would invalidate jet lag analysis
+    - Incomplete surveys: Missing symptom data prevents calculation of the primary
+      outcome variable (aggregate symptom severity)
+    - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
+      data tampering or unauthorized submissions
+    
+    The timezone validation uses a three-rule system:
+    1. Legacy data (no arrivalTimeZone field): Always valid (early data collection)
+    2. Real travel (different timezones): Valid (actual jet lag scenario)
+    3. Survey fallback (same timezone + '_survey' in completionMethod): Valid
+       (offline trip data submitted via survey)
+    
     Excludes:
     - Test trips (isTest = True or same origin/destination timezone)
-    - Developer test sessions (specific device IDs)
+    - Developer test sessions (specific device IDs: 2330B376, 7482966F)
     - Incomplete trips (missing required survey data)
     - Invalid HMAC signatures (if present)
     
-    Matches filtering logic used on live dashboard.
+    Matches filtering logic used on live dashboard (analytics.js getCurrentData() +
+    TripValidator.isValidTrip()).
     """
     valid_trips = []
     
@@ -147,11 +201,30 @@ def calculate_aggregate_severity(trip: Dict) -> float:
     """
     Calculate aggregate symptom severity from survey responses.
     
+    RATIONALE:
+    Jet lag is a multi-symptom condition. Using a single symptom would miss the
+    comprehensive impact of the intervention. The aggregate severity provides a
+    composite measure that captures the overall burden of jet lag symptoms.
+    
+    METHODOLOGY:
+    - Includes all 6 post-travel symptoms: sleep disruption, fatigue, concentration
+      problems, irritability, motivation issues, and GI symptoms
+    - Each symptom is rated on a 1-5 scale (1=mild, 5=severe)
+    - Only non-null values are included (handles missing data gracefully)
+    - Simple mean of available symptoms (equal weighting)
+    
+    This approach is consistent with composite outcome measures used in other
+    jet lag research (e.g., Waterhouse et al., 2007).
+    
+    TECHNICAL:
     EXACTLY matches charts.js line 88-92:
     - Uses ALL 6 symptoms: postSleepSeverity, postFatigueSeverity, postConcentrationSeverity,
       postIrritabilitySeverity, postMotivationSeverity, postGISeverity
     - Filters to only valid (non-null) symptoms
     - Averages ALL available symptoms (not just 5)
+    
+    Returns:
+        float: Mean severity (1-5 scale) or None if no valid symptoms
     """
     # CRITICAL: Must match charts.js line 88 exactly
     symptoms = [
@@ -300,12 +373,42 @@ def basic_statistics(trips: List[Dict]) -> Dict:
 
 def dose_response_analysis(trips: List[Dict]) -> Dict:
     """
-    Analyze dose-response relationship.
+    Analyze dose-response relationship between intervention level and symptom severity.
     
+    RESEARCH QUESTION:
+    Does increasing the number of acupuncture points stimulated lead to
+    proportionally greater reduction in jet lag symptom severity?
+    
+    RATIONALE:
+    A dose-response relationship is a key indicator of intervention effectiveness.
+    If chronoacupuncture is truly effective, we would expect:
+    - Higher intervention levels (more points) → Lower symptom severity
+    - This relationship should hold across different time zone crossing categories
+    - The effect should be visible when compared to baseline (no intervention)
+    
+    METHODOLOGY:
+    - Groups trips by intervention level: 0-2 points (minimal), 3-5 (low),
+      6-8 (moderate), 9-12 (high stimulation)
+    - Groups by time zones crossed: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+
+      (individual time zones allow fine-grained analysis)
+    - Calculates mean aggregate severity for each group
+    - Computes standard error of the mean (SEM) for error bars showing precision
+    
+    INTERPRETATION:
+    Reviewers should look for:
+    - Downward trend: Higher stimulation groups show lower severity
+    - Dose-response curve: Steeper decline with more points stimulated
+    - Comparison to baseline: Intervention groups below baseline expectations
+    - Error bars: Overlapping error bars indicate non-significant differences
+    
+    TECHNICAL:
     EXACTLY matches charts.js renderDoseResponseAnalysisChart():
     - Groups by stimulation level (0-2, 3-5, 6-8, 9-12 points)
     - Groups by individual time zones (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+)
     - Calculates aggregate severity for each group
+    
+    Returns:
+        Dict: Nested dictionary with severity statistics for each group
     """
     # Group by stimulation level (matches charts.js line 39-44)
     usage_groups = {
@@ -367,12 +470,40 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
 
 def stimulation_efficacy_analysis(trips: List[Dict]) -> Dict:
     """
-    Analyze stimulation efficacy.
+    Analyze intervention efficacy across different stimulation levels and time zone categories.
     
+    RESEARCH QUESTION:
+    How effective is chronoacupuncture across different intervention levels and
+    time zone crossing scenarios?
+    
+    RATIONALE:
+    This analysis provides a comprehensive view of intervention effectiveness by:
+    - Examining efficacy at different intervention intensities (0 to 12 points)
+    - Assessing performance across time zone categories (1-3, 4-6, 7-9, 10+)
+    - Enabling comparison of intervention groups to identify optimal usage patterns
+    
+    METHODOLOGY:
+    - Groups by stimulation level: 0 points (control/no intervention), 1-3 (low),
+      4-6 (moderate), 7-9 (high), 10-12 (maximum stimulation)
+    - Groups by time zones: 1-3, 4-6, 7-9, 10+ (categorized for sufficient sample sizes)
+    - Calculates mean aggregate severity for each combination
+    - Computes standard deviation and standard error for statistical precision
+    
+    INTERPRETATION:
+    Reviewers should examine:
+    - Severity by stimulation level: Does higher stimulation reduce severity?
+    - Severity by time zones: Does intervention help more for longer flights?
+    - Interaction effects: Does intervention effectiveness vary by time zone category?
+    - Sample sizes: Larger groups provide more reliable estimates
+    
+    TECHNICAL:
     EXACTLY matches analytics.js renderStimulationEfficacy():
     - Groups by stimulation level: 0 points, 1-3, 4-6, 7-9, 10-12 (line 544-550)
     - Groups by time zones: 1-3, 4-6, 7-9, 10+ (line 611-624)
     - Calculates mean severity for each combination
+    
+    Returns:
+        Dict: Nested dictionary with severity statistics for each group combination
     """
     # Group by stimulation level (matches analytics.js line 544-550)
     stimulation_groups = {
@@ -490,7 +621,35 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
 
 def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_usage: Dict, output_path: str, 
                     total_raw_trips: int = 0, filtered_count: int = 0):
-    """Generate human-readable analysis report."""
+    """
+    Generate human-readable analysis report.
+    
+    FOR REVIEWERS:
+    This report contains all statistical analyses needed to verify the research
+    findings. Each section provides:
+    
+    1. DATA FILTERING: Shows how many trips were excluded and why. Verify that
+       exclusions are appropriate and documented.
+    
+    2. BASIC STATISTICS: Overview of the dataset. Check sample sizes, distribution
+       of intervention levels, and time zone categories.
+    
+    3. DOSE-RESPONSE ANALYSIS: Tests whether more intervention leads to better
+       outcomes. Look for downward trends (higher stimulation → lower severity).
+    
+    4. STIMULATION EFFICACY: Shows intervention effectiveness across different
+       conditions. Compare severity across stimulation levels and time zones.
+    
+    5. POINT USAGE: Identifies which acupuncture points are most commonly used.
+       Useful for understanding intervention patterns.
+    
+    VERIFICATION:
+    Compare all values in this report with the live dashboard at:
+    https://jetlagpro.com/reviewers/analysis.html
+    
+    Values should match exactly (within rounding). Any discrepancies indicate
+    a reproducibility issue that must be resolved.
+    """
     
     lines = []
     lines.append("="*70)
@@ -537,6 +696,12 @@ def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_u
     lines.append("DOSE-RESPONSE ANALYSIS")
     lines.append("-"*70)
     lines.append("Mean symptom severity by time zone and stimulation level:")
+    lines.append("")
+    lines.append("INTERPRETATION GUIDE:")
+    lines.append("  - Lower mean severity = better outcome (1-2 = mild, 3-4 = moderate, 5 = severe)")
+    lines.append("  - Look for dose-response: Higher stimulation groups should show lower severity")
+    lines.append("  - SEM (standard error) shows precision: Smaller SEM = more reliable estimate")
+    lines.append("  - Compare to baseline expectations (see research paper for baseline data)")
     lines.append("")
     
     for key, data in sorted(dose_response.items()):
@@ -599,6 +764,20 @@ Example usage:
   
   # Compare output with live dashboard at:
   https://jetlagpro.com/reviewers/analysis.html
+
+FOR REVIEWERS:
+This script reproduces the exact statistical analyses shown on the live dashboard.
+Every calculation, filter, and grouping matches the JavaScript implementation
+line-by-line to ensure 100% reproducibility.
+
+Key things to verify:
+1. Data filtering: Check that test trips and developer sessions are excluded
+2. Aggregate severity: Verify all 6 symptoms are included in calculations
+3. Grouping: Confirm stimulation and time zone categories match the paper
+4. Statistics: Mean, SD, and SEM calculations should match dashboard values
+
+The output report includes interpretation guides for each analysis section.
+See function docstrings for detailed methodology and rationale.
         """
     )
     
