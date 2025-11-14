@@ -1159,6 +1159,19 @@
                 // Clone the content to modify for Word
                 const wordContent = paperContent.cloneNode(true);
                 
+                // Convert Chart.js canvas to image before cloning
+                const originalChartCanvas = document.getElementById('liveResearchChart');
+                let chartImageData = null;
+                if (originalChartCanvas && window.researchChart) {
+                    try {
+                        // Get the chart canvas from the original DOM
+                        chartImageData = originalChartCanvas.toDataURL('image/png', 1.0);
+                        console.log('Chart captured for Word export');
+                    } catch (error) {
+                        console.warn('Could not capture chart canvas:', error);
+                    }
+                }
+                
                 // Convert images to base64 for embedding while preserving sizes
                 const images = wordContent.querySelectorAll('img');
                 for (let img of images) {
@@ -1240,6 +1253,30 @@
                     } catch (error) {
                         console.warn('Could not embed image:', img.src, error);
                         // Keep original src if embedding fails
+                    }
+                }
+                
+                // Replace chart canvas with captured image
+                if (chartImageData) {
+                    const chartContainer = wordContent.querySelector('#researchChartContainer');
+                    if (chartContainer) {
+                        // Find the canvas element in the cloned content
+                        const chartCanvas = chartContainer.querySelector('canvas');
+                        if (chartCanvas) {
+                            // Create an img element to replace the canvas
+                            const chartImg = document.createElement('img');
+                            chartImg.src = chartImageData;
+                            chartImg.alt = 'Live Research Chart - Current Data';
+                            chartImg.style.width = '100%';
+                            chartImg.style.maxWidth = '800px';
+                            chartImg.style.height = 'auto';
+                            chartImg.style.display = 'block';
+                            chartImg.style.margin = '20px auto';
+                            chartImg.style.border = 'none';
+                            // Replace canvas with image
+                            chartCanvas.parentNode.replaceChild(chartImg, chartCanvas);
+                            console.log('Chart canvas replaced with image in Word export');
+                        }
                     }
                 }
                 
