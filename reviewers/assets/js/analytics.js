@@ -887,7 +887,7 @@ function renderDoseResponseDataTable(surveys) {
     let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table dose-response-table">';
     tableHtml += '<thead><tr>';
     tableHtml += '<th>Date</th><th>Device</th><th>Origin</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
-    tableHtml += '<th>Baseline Expected</th><th>Anticipated</th><th>Actual</th>';
+    tableHtml += '<th class="wrap-header">Baseline Expected</th><th>Anticipated</th><th>Actual</th>';
     tableHtml += '<th class="wrap-header">Improvement over Expected</th><th class="wrap-header">Improvement over Anticipated</th>';
     tableHtml += '</tr></thead><tbody>';
     
