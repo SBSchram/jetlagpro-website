@@ -203,22 +203,25 @@ function renderTableRow(entry, index) {
                 <td colspan=\"9\">
                     <div class=\"expanded-content\">
                         <h4>${changeType}:</h4>
-                        <div class=\"change-list\">
-                            ${Object.entries(entry.changes).map(([field, change]) => `
-                                <div class=\"change-item\">
-                                    <span class=\"field-name\">${escapeHtml(field)}</span>
-                                    <div class=\"value-comparison\">
-                                        <div class=\"value-block\">
-                                            <span class=\"value-label\">Before:</span>
-                                            <pre class=\"value-content\">${escapeHtml(formatValue(change.before, true))}</pre>
-                                        </div>
-                                        <div class=\"value-block\">
-                                            <span class=\"value-label\">After:</span>
-                                            <pre class=\"value-content\">${escapeHtml(formatValue(change.after, true))}</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                        <div class=\"changes-table-container\">
+                            <table class=\"changes-table\">
+                                <thead>
+                                    <tr>
+                                        <th class=\"col-field\">Field Name</th>
+                                        <th class=\"col-before\">BEFORE</th>
+                                        <th class=\"col-after\">AFTER</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${Object.entries(entry.changes).map(([field, change]) => `
+                                        <tr>
+                                            <td class=\"field-name-cell\">${escapeHtml(field)}</td>
+                                            <td class=\"value-before\">${escapeHtml(formatValue(change.before, false))}</td>
+                                            <td class=\"value-after\">${escapeHtml(formatValue(change.after, false))}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </td>
@@ -300,9 +303,9 @@ function formatTimezone(tz) {
 }
 
 /**
- * Format value for display
+ * Format value for display (compact format)
  * @param {*} value - The value to format
- * @param {boolean} prettyPrint - Whether to pretty-print JSON (with indentation)
+ * @param {boolean} prettyPrint - Whether to pretty-print JSON (not used in compact mode)
  */
 function formatValue(value, prettyPrint = false) {
     if (value === null || value === undefined) return '(empty)';
@@ -316,16 +319,13 @@ function formatValue(value, prettyPrint = false) {
     }
     if (typeof value === 'object') {
         try {
-            // Pretty-print JSON with 2-space indentation
-            return JSON.stringify(value, null, 2);
+            // Compact JSON (single line, no indentation)
+            return JSON.stringify(value);
         } catch (e) {
             return String(value);
         }
     }
     if (typeof value === 'boolean') return value ? 'true' : 'false';
-    if (typeof value === 'string' && !prettyPrint && value.length > 100) {
-        return value.substring(0, 100) + '...';
-    }
     return String(value);
 }
 
