@@ -243,18 +243,8 @@ function renderTableRow(entry, index) {
                                             }
                                         }
                                         
-                                        // Handle userAgent - it's a long string, not an object to expand
-                                        // If userAgent is in the field name itself, don't try to expand it
-                                        if (field.toLowerCase() === 'useragent' || field.toLowerCase() === 'useragent') {
-                                            // Treat as regular field, not metadata to expand
-                                            return `
-                                                <tr>
-                                                    <td class=\"field-name-cell\">${escapeHtml(field)}</td>
-                                                    <td class=\"value-before\">${escapeHtml(formatValue(change.before, false))}</td>
-                                                    <td class=\"value-after\">${escapeHtml(formatValue(change.after, false))}</td>
-                                                </tr>
-                                            `;
-                                        }
+                                        // Note: userAgent inside _surveyMetadata will be handled as a regular property
+                                        // by formatMetadataField, which will show it as a single value (not expanded)
                                         
                                         // Check if either before or after is an object (after potential parsing)
                                         const beforeIsObj = typeof beforeObj === 'object' && beforeObj !== null && !Array.isArray(beforeObj);
