@@ -950,7 +950,11 @@ function renderDoseResponseDataTable(surveys) {
                 generalAnticipated: survey.generalAnticipated,
                 surveyData: survey.surveyData,
                 anticipatedSymptoms: anticipatedSymptoms,
-                calculated: anticipated
+                calculated: anticipated,
+                // Check all survey keys that might contain anticipated data
+                allKeys: Object.keys(survey).filter(k => k.toLowerCase().includes('anticipat') || k.toLowerCase().includes('expect')),
+                // Show full survey object structure
+                surveySample: Object.keys(survey).slice(0, 20)
             });
         }
         

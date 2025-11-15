@@ -134,6 +134,9 @@ class FirebaseService {
                 point11Completed: extractBoolean('point11Completed'),
                 point12Completed: extractBoolean('point12Completed'),
                 
+                // Extract general anticipated severity - handles both formats
+                generalAnticipated: extractInteger('generalAnticipated') || extractInteger('surveyData', 'generalAnticipated'),
+                
                 // Extract anticipated symptoms - handles both formats
                 anticipatedSleepSeverity: extractInteger('sleepExpectations') || extractInteger('surveyData', 'sleepExpectations'),
                 anticipatedFatigueSeverity: extractInteger('fatigueExpectations') || extractInteger('surveyData', 'fatigueExpectations'),
