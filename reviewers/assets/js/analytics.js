@@ -432,10 +432,10 @@ function renderRecentSubmissions() {
     const validCompleted = validTrips.filter(trip => trip.surveyCompleted === true);
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
-    // Update the section heading with trip count
+    // Update the section heading with trip count (only trips without surveys)
     const sectionHeading = container.parentElement.querySelector('h2');
     if (sectionHeading) {
-        sectionHeading.innerHTML = `Recent Submissions (${validTrips.length})`;
+        sectionHeading.innerHTML = `Trips Without Surveys (${validNotCompleted.length})`;
     }
 
     // Build HTML
@@ -488,22 +488,26 @@ function renderRecentSubmissions() {
         return tableHtml;
     };
     
-    // Valid Trips Section - simplified, tight layout
+    // Only show trips without surveys (moved below Point Usage section)
     html += '<div style="text-align: center; margin-bottom: 20px;">';
     
-    // Survey Completed
-    html += `<div style="margin-bottom: 15px;"><strong>Survey Completed (${validCompleted.length})</strong></div>`;
-    html += '<div style="display: inline-block;">';
-    html += renderTripTable(validCompleted, false);
-    html += '</div>';
-    
     // Survey Not Completed
-    html += `<div style="margin-top: 20px; margin-bottom: 15px;"><strong>Survey Not Completed (${validNotCompleted.length})</strong></div>`;
     html += '<div style="display: inline-block;">';
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
     html += '</div>';
+    
+    // Test Data Section (if any)
+    if (testData.length > 0) {
+        html += '<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">';
+        html += `<h3 style="color: #dc2626;">Test Data (${testData.length})</h3>`;
+        html += '<p style="color: #6b7280; font-size: 0.9rem;">These entries are from developer testing and should not be included in research analysis.</p>';
+        html += '<div style="display: inline-block;">';
+        html += renderTripTable(testData, false);
+        html += '</div>';
+        html += '</div>';
+    }
     
     container.innerHTML = html;
 }
@@ -859,7 +863,7 @@ function renderDoseResponseDataTable(surveys) {
         return new Date(dateB) - new Date(dateA);
     });
     
-    let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table" style="width: 100%;">';
+    let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table">';
     tableHtml += '<thead><tr>';
     tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
     tableHtml += '<th>Baseline</th><th>Anticipated</th><th>Actual</th>';
@@ -889,9 +893,12 @@ function renderDoseResponseDataTable(surveys) {
         const baseline = getBaselineSeverity(timezones);
         const baselineStr = baseline !== null ? baseline.toFixed(1) : 'N/A';
         
-        // Anticipated severity
-        const anticipated = survey.generalAnticipated || survey.anticipatedSleepSeverity || null;
-        const anticipatedStr = anticipated !== null ? anticipated.toFixed(1) : 'N/A';
+        // Anticipated severity - try multiple possible field names
+        const anticipated = survey.generalAnticipated || 
+                           extractValue('generalAnticipated', survey) ||
+                           extractValue('surveyData', 'generalAnticipated', survey) ||
+                           null;
+        const anticipatedStr = anticipated !== null && anticipated !== undefined ? Number(anticipated).toFixed(1) : 'N/A';
         
         // Actual severity
         const actual = calculateActualSeverity(survey);
