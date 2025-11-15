@@ -822,6 +822,50 @@ function renderAdvancedAnalytics() {
     renderDoseResponseAnalysisChart(completedSurveys);
 }
 
+// Helper function to convert airport code to city name
+function getCityName(airportCode) {
+    if (!airportCode || airportCode === 'N/A') return 'N/A';
+    
+    const code = airportCode.toUpperCase().trim();
+    
+    // Common airport codes to city names mapping
+    const airportToCity = {
+        // US airports
+        'JFK': 'New York', 'LGA': 'New York', 'EWR': 'Newark', 'NYC': 'New York',
+        'LAX': 'Los Angeles', 'SFO': 'San Francisco', 'SJC': 'San Jose',
+        'ORD': 'Chicago', 'MDW': 'Chicago', 'CHI': 'Chicago',
+        'MIA': 'Miami', 'FLL': 'Fort Lauderdale',
+        'BOS': 'Boston', 'DCA': 'Washington', 'IAD': 'Washington',
+        'ATL': 'Atlanta', 'DFW': 'Dallas', 'DEN': 'Denver',
+        'SEA': 'Seattle', 'PDX': 'Portland', 'PHX': 'Phoenix',
+        'LAS': 'Las Vegas', 'MCO': 'Orlando', 'DTW': 'Detroit',
+        'MSP': 'Minneapolis', 'PHL': 'Philadelphia', 'CLT': 'Charlotte',
+        
+        // International airports
+        'LHR': 'London', 'LGW': 'London', 'STN': 'London', 'LCY': 'London',
+        'CDG': 'Paris', 'ORY': 'Paris',
+        'FRA': 'Frankfurt', 'MUC': 'Munich', 'BER': 'Berlin',
+        'AMS': 'Amsterdam', 'BRU': 'Brussels', 'ZUR': 'Zurich',
+        'MAD': 'Madrid', 'BCN': 'Barcelona', 'FCO': 'Rome', 'MXP': 'Milan',
+        'DUB': 'Dublin', 'VIE': 'Vienna', 'CPH': 'Copenhagen',
+        'NRT': 'Tokyo', 'HND': 'Tokyo', 'NGO': 'Nagoya', 'KIX': 'Osaka',
+        'ICN': 'Seoul', 'GMP': 'Seoul',
+        'PEK': 'Beijing', 'PVG': 'Shanghai', 'CAN': 'Guangzhou', 'SZX': 'Shenzhen',
+        'HKG': 'Hong Kong', 'TPE': 'Taipei', 'SIN': 'Singapore',
+        'BKK': 'Bangkok', 'KUL': 'Kuala Lumpur', 'CGK': 'Jakarta',
+        'DXB': 'Dubai', 'AUH': 'Abu Dhabi', 'DOH': 'Doha', 'RUH': 'Riyadh',
+        'SYD': 'Sydney', 'MEL': 'Melbourne', 'BNE': 'Brisbane', 'PER': 'Perth',
+        'AKL': 'Auckland', 'WLG': 'Wellington', 'CHC': 'Christchurch',
+        'YVR': 'Vancouver', 'YYZ': 'Toronto', 'YUL': 'Montreal', 'YEG': 'Edmonton',
+        'MEX': 'Mexico City', 'CUN': 'Cancun', 'GDL': 'Guadalajara',
+        'GRU': 'Sao Paulo', 'GIG': 'Rio de Janeiro', 'EZE': 'Buenos Aires',
+        'JNB': 'Johannesburg', 'CPT': 'Cape Town', 'CAI': 'Cairo',
+        'IST': 'Istanbul', 'ATH': 'Athens', 'DXB': 'Dubai'
+    };
+    
+    return airportToCity[code] || code; // Return city name if found, otherwise return the code
+}
+
 // Helper function to get baseline severity from timezones
 function getBaselineSeverity(timezones) {
     const baselineData = [
@@ -911,7 +955,9 @@ function renderDoseResponseDataTable(surveys) {
         } else if (origin !== 'N/A') {
             origin = origin.replace(/_/g, ' '); // Replace underscores with spaces even if no "/"
         }
-        const destination = survey.destinationCode || 'N/A';
+        // Convert destination airport code to city name
+        const destinationCode = survey.destinationCode || 'N/A';
+        const destination = getCityName(destinationCode);
         
         // Travel direction
         const timezones = survey.timezonesCount || 0;
