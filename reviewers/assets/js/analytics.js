@@ -281,7 +281,6 @@ function convertFirestoreDocument(document) {
 function renderDashboard() {
     renderTripStats();
     renderAdvancedAnalytics();
-    renderStimulationEfficacy();
     renderPointStimulationAnalysis();
     renderRecentSubmissions();
 }
@@ -290,7 +289,6 @@ function renderDashboard() {
 function showLoadingState() {
     document.getElementById('tripStats').innerHTML = '<div class="loading">Loading trip stats...</div>';
     document.getElementById('advancedAnalytics').innerHTML = '<div class="loading">Loading advanced analytics...</div>';
-    document.getElementById('stimulationEfficacy').innerHTML = '<div class="loading">Loading efficacy data...</div>';
     document.getElementById('pointMappingTable').innerHTML = '<div class="loading">Loading point stimulation data...</div>';
     document.getElementById('recentSubmissions').innerHTML = '<div class="loading">Loading recent data...</div>';
 }
@@ -538,169 +536,6 @@ function renderRecentSubmissions() {
     
     container.innerHTML = html;
 }
-
-// Render stimulation efficacy analysis
-function renderStimulationEfficacy() {
-    const container = document.getElementById('stimulationEfficacy');
-    if (!container) return;
-    
-    const allData = getCurrentData();
-    
-    if (!allData || allData.length === 0) {
-        container.innerHTML = '<div class="error">No survey data available</div>';
-        return;
-    }
-    
-    // Filter to only valid trips (exclude test data)
-    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
-    
-    // Filter to only include completed surveys (ignore app exploration/testing)
-    const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
-    
-    // Update section heading with trip count
-    const efficacyHeading = document.getElementById('stimulationEfficacyHeading');
-    if (efficacyHeading) {
-        efficacyHeading.innerHTML = `Stimulation Analysis (${completedSurveys.length})`;
-    }
-    
-    if (completedSurveys.length === 0) {
-        container.innerHTML = '<div class="error">No completed surveys available for analysis</div>';
-        return;
-    }
-    
-    
-    
-
-    // Group data by stimulation level
-    const stimulationGroups = {
-        '0 points': [],
-        '1-3 points': [],
-        '4-6 points': [],
-        '7-9 points': [],
-        '10-12 points': []
-    };
-
-    completedSurveys.forEach(survey => {
-        const points = survey.pointsCompleted || 0;
-        if (points === 0) stimulationGroups['0 points'].push(survey);
-        else if (points <= 3) stimulationGroups['1-3 points'].push(survey);
-        else if (points <= 6) stimulationGroups['4-6 points'].push(survey);
-        else if (points <= 9) stimulationGroups['7-9 points'].push(survey);
-        else stimulationGroups['10-12 points'].push(survey);
-    });
-
-    // Create efficacy table - use stats-table for tight columns, centered
-    html = '<div style="text-align: center;">';
-    html += '<table class="stats-table" style="margin: 0 auto;"><thead><tr><th>Stimulation Level</th><th>Sample Size</th><th>Avg Severity</th><th>Avg TZ</th><th>Protection</th></tr></thead><tbody>';
-
-    Object.entries(stimulationGroups).forEach(([group, surveys]) => {
-        if (surveys.length === 0) return;
-
-        // Calculate post-travel severity and protection effect
-        let totalPostTravelSeverity = 0;
-        let totalTimeZones = 0;
-        let validCount = 0;
-        const timezones = [];
-
-        surveys.forEach(survey => {
-            // Focus on post-travel symptom severity (primary outcome)
-            if (survey.postSleepSeverity !== null) {
-                totalPostTravelSeverity += survey.postSleepSeverity;
-                validCount++;
-            }
-            
-            // Track time zones crossed
-            if (survey.timezonesCount) {
-                totalTimeZones += survey.timezonesCount;
-                timezones.push(survey.timezonesCount);
-            }
-        });
-
-        const avgPostTravelSeverity = validCount > 0 ? (totalPostTravelSeverity / validCount).toFixed(2) : 'N/A';
-        const avgTimeZones = timezones.length > 0 ? (totalTimeZones / timezones.length).toFixed(1) : 'N/A';
-        
-        // Calculate protection effect (lower severity relative to time zones crossed)
-        const protectionEffect = validCount > 0 && timezones.length > 0 && avgTimeZones > 0 ? 
-            (avgPostTravelSeverity / avgTimeZones).toFixed(3) : 'N/A';
-
-        html += `<tr>
-            <td><strong>${group}</strong></td>
-            <td>${surveys.length}</td>
-            <td style="color: ${avgPostTravelSeverity < 3 ? '#16a34a' : avgPostTravelSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostTravelSeverity}</td>                     
-            <td>${avgTimeZones}</td>                     
-            <td style="color: ${protectionEffect < 0.5 ? '#16a34a' : protectionEffect < 0.7 ? '#eab308' : '#dc2626'}">${protectionEffect}</td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
-    html += '</div>';
-
-    // Add Time Zone Analysis - centered, tight layout
-    html += '<div style="text-align: center; margin-top: 30px;">';
-    
-    // Group by time zone ranges
-    const tzGroups = {
-        '1-3 time zones': [],
-        '4-6 time zones': [],
-        '7-9 time zones': [],
-        '10+ time zones': []
-    };
-
-    completedSurveys.forEach(survey => {
-        const tz = survey.timezonesCount || 0;
-        if (tz <= 3) tzGroups['1-3 time zones'].push(survey);
-        else if (tz <= 6) tzGroups['4-6 time zones'].push(survey);
-        else if (tz <= 9) tzGroups['7-9 time zones'].push(survey);
-        else tzGroups['10+ time zones'].push(survey);
-    });
-
-    html += '<table class="stats-table" style="margin: 0 auto;"><thead><tr><th>Time Zone Range</th><th>Sample Size</th><th>Avg Points</th><th>Avg Severity</th></tr></thead><tbody>';
-
-    Object.entries(tzGroups).forEach(([range, surveys]) => {
-        if (surveys.length === 0) return;
-
-        const avgPoints = (surveys.reduce((sum, s) => sum + (s.pointsCompleted || 0), 0) / surveys.length).toFixed(1);
-        
-        // Calculate sleep post-travel severity only
-        const validSleepSurveys = surveys.filter(s => s.postSleepSeverity !== null);
-        let avgPostSeverity = 'N/A';
-
-        if (validSleepSurveys.length > 0) {
-            avgPostSeverity = (validSleepSurveys.reduce((sum, s) => sum + s.postSleepSeverity, 0) / validSleepSurveys.length).toFixed(2);
-        }
-
-        html += `<tr>
-            <td><strong>${range}</strong></td>
-            <td>${validSleepSurveys.length}</td>
-            <td>${avgPoints}</td>
-            <td style="color: ${avgPostSeverity < 3 ? '#16a34a' : avgPostSeverity < 4 ? '#eab308' : '#dc2626'}">${avgPostSeverity}</td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
-    html += '</div>';
-
-    // Add separator bar above All Symptoms Analysis
-    html += '<div style="margin-top: 40px; margin-bottom: 20px; border-top: 1px solid #1f2937; width: 50%; margin-left: auto; margin-right: auto;"></div>';
-
-    // Add All Symptoms Analysis - Multi-Series Chart
-    html += '<h3 style="margin-top: 20px; margin-bottom: 20px;">All Symptoms Analysis</h3>';
-    html += '<p>Interactive chart showing all jet lag symptoms: Sleep, Fatigue, Concentration, Irritability, and GI symptoms</p>';
-    html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; text-align: center;">';
-    html += '<div>Post-Travel Severity: Lower values = better outcomes (1-2 = mild, 3-4 = moderate, 5 = severe)</div>';
-    html += '</div>';
-    
-    // Chart container
-    html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
-    html += '<canvas id="symptomAnalysisChart" width="800" height="400"></canvas>';
-    html += '</div>';
-
-    container.innerHTML = html;
-    
-    // Render the symptom analysis chart
-    renderSymptomAnalysisChart(completedSurveys, tzGroups);
-}
-
 
 // Render trip stats (Trip Counts section)
 function renderTripStats() {
