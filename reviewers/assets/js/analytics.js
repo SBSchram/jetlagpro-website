@@ -428,8 +428,7 @@ function renderRecentSubmissions() {
     const validTrips = sortedSurveys.filter(trip => TripValidator.isValidTrip(trip));
     const testData = sortedSurveys.filter(trip => !TripValidator.isValidTrip(trip));
     
-    // Within valid trips, separate by survey completion status
-    const validCompleted = validTrips.filter(trip => trip.surveyCompleted === true);
+    // Only show trips without surveys (completed surveys are shown in Dose-Response Data table)
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
     // Update the section heading with trip count (only trips without surveys)
