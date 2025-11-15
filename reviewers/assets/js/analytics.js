@@ -446,7 +446,7 @@ function renderRecentSubmissions() {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
-        tableHtml += '<th>Date</th><th>Code</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
+        tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
         if (showStatus) tableHtml += '<th>Status</th>';
         tableHtml += '</tr></thead><tbody>';
 
