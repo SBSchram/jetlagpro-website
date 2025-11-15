@@ -365,7 +365,8 @@ function renderTableRow(entry, index) {
     const deleteIcon = action === 'DELETE' ? ' ⚠️' : '';
     
     // Add group class to rows for collapsing (hide DEV groups by default)
-    const groupRowClass = entry._groupId ? ` group-row${hasDev && isFirstInGroup ? ' group-collapsed' : ''}` : '';
+    // All rows in a DEV group should be collapsible, but only collapse if it's a DEV group
+    const groupRowClass = entry._groupId ? ` group-row${hasDev ? ' group-collapsed' : ''}` : '';
     
     let html = groupSeparator + `
         <tr class="${expandClass}${deleteClass}${groupRowClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}" ${rowDataGroupId}>
