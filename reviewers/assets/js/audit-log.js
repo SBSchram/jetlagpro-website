@@ -198,11 +198,12 @@ function renderTableRow(entry, index) {
 
     if (isExpandable) {
         const changeType = action === 'MODIFY' ? 'Survey Changes' : 'Console Changes';
+        const tripIdDisplay = tripId ? ` ${tripId}` : '';
         html += `
             <tr class=\"expanded-row\" id=\"expanded-${index}\">
                 <td colspan=\"9\">
                     <div class=\"expanded-content\">
-                        <h4>${changeType}:</h4>
+                        <h4>${changeType}:${tripIdDisplay}</h4>
                         <div class=\"changes-table-container\">
                             <table class=\"changes-table\">
                                 <thead>
