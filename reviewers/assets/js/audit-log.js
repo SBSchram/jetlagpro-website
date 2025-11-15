@@ -161,9 +161,11 @@ async function loadAuditLog() {
                     entry._isAfterRecreation = hasRecentDelete;
                 }
                 
-                // Store group metadata for separator display
+                // Store group metadata for separator display and collapsing
                 entry._groupHasDev = hasDevEntry;
                 entry._groupTripDate = tripDate;
+                entry._groupTripId = tripId;
+                entry._isFirstInGroup = groupIndex === 0;
                 
                 auditLogData.push(entry);
             });
@@ -313,35 +315,57 @@ function renderTableRow(entry, index) {
     let evaluation = classifyEntry(entry);
 
     // Check if this is the first entry for this trip ID (to add group separator)
-    const isFirstInGroup = index === 0 || 
-        (auditLogData[index - 1] && 
-         (auditLogData[index - 1].tripId || auditLogData[index - 1].documentId) !== tripId);
+    const isFirstInGroup = entry._isFirstInGroup || false;
+    const hasDev = entry._groupHasDev || false;
+    const tripIdForGroup = entry._groupTripId || tripId;
     
-    // Build separator text
+    // Build separator text with expand/collapse indicator
     let separatorText = '';
+    let collapseIcon = '';
+    let separatorClass = 'trip-group-separator';
+    let separatorOnclick = '';
+    
     if (isFirstInGroup) {
         const tripDate = entry._groupTripDate || '';
-        const hasDev = entry._groupHasDev || false;
+        const groupId = `group-${tripIdForGroup.replace(/[^a-zA-Z0-9]/g, '-')}`;
         
         if (tripDate) {
             if (hasDev) {
                 separatorText = `Developer Testing - Trip dated ${tripDate}`;
+                separatorClass += ' dev-group-separator group-collapsed'; // Default to collapsed
+                collapseIcon = '▶'; // Collapsed state
+                separatorOnclick = `onclick="toggleGroup('${groupId}')"`;
             } else {
                 separatorText = `Trip dated ${tripDate}`;
+                collapseIcon = '▼'; // Expanded state (always visible for non-DEV)
             }
         }
+        
+        // Add data attribute for group identification
+        entry._groupId = groupId;
     }
     
     const groupSeparator = isFirstInGroup 
-        ? `<tr class="trip-group-separator"><td colspan="9" class="separator-content">${separatorText}</td></tr>` 
+        ? `<tr class="${separatorClass}" ${separatorOnclick} data-group-id="${entry._groupId || ''}">
+            <td colspan="9" class="separator-content">
+                <span class="separator-icon">${collapseIcon}</span>
+                <span class="separator-text">${separatorText}</span>
+            </td>
+          </tr>` 
         : '';
+    
+    // Add group ID to row for collapsing
+    const rowDataGroupId = entry._groupId ? `data-group-id="${entry._groupId}"` : '';
     
     // Enhanced DELETE styling
     const deleteClass = action === 'DELETE' ? ' delete-entry' : '';
     const deleteIcon = action === 'DELETE' ? ' ⚠️' : '';
     
+    // Add group class to rows for collapsing (hide DEV groups by default)
+    const groupRowClass = entry._groupId ? ` group-row${hasDev && isFirstInGroup ? ' group-collapsed' : ''}` : '';
+    
     let html = groupSeparator + `
-        <tr class="${expandClass}${deleteClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}">
+        <tr class="${expandClass}${deleteClass}${groupRowClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}" ${rowDataGroupId}>
             <td>${timestamp}</td>
             <td class="${actionClass}">${action}${deleteIcon}${expandIcon}</td>
             <td class="${sourceClass}">${source}</td>
@@ -565,6 +589,41 @@ function toggleExpand(index) {
 }
 
 /**
+ * Toggle group collapse/expand
+ */
+function toggleGroup(groupId) {
+    const separatorRow = document.querySelector(`tr[data-group-id="${groupId}"].trip-group-separator`);
+    const groupRows = document.querySelectorAll(`tr[data-group-id="${groupId}"].group-row`);
+    const separatorIcon = separatorRow?.querySelector('.separator-icon');
+    
+    if (!separatorRow || !groupRows) return;
+    
+    // Toggle collapsed state
+    const isCollapsed = separatorRow.classList.contains('group-collapsed');
+    
+    groupRows.forEach(row => {
+        if (isCollapsed) {
+            // Expand: show rows
+            row.classList.remove('group-collapsed');
+            row.style.display = '';
+        } else {
+            // Collapse: hide rows
+            row.classList.add('group-collapsed');
+            row.style.display = 'none';
+        }
+    });
+    
+    // Update separator collapsed state and icon
+    if (isCollapsed) {
+        separatorRow.classList.remove('group-collapsed');
+        if (separatorIcon) separatorIcon.textContent = '▼';
+    } else {
+        separatorRow.classList.add('group-collapsed');
+        if (separatorIcon) separatorIcon.textContent = '▶';
+    }
+}
+
+/**
  * Format timezone (show short name)
  */
 function formatTimezone(tz) {
@@ -654,7 +713,9 @@ function updateStats() {
         creates: 0,
         updates: 0,
         validations: 0,
-        deletions: 0
+        deletions: 0,
+        dev: 0,
+        nonDev: 0
     };
     
     auditLogData.forEach(entry => {
@@ -662,9 +723,22 @@ function updateStats() {
         if (entry.operation === 'UPDATE') stats.updates++;
         if (entry.operation === 'VALIDATION') stats.validations++;
         if (entry.operation === 'DELETE') stats.deletions++;
+        
+        // Count DEV vs non-DEV entries
+        const eval = classifyEntry(entry);
+        if (eval === 'Dev' || eval === 'DEV') {
+            stats.dev++;
+        } else {
+            stats.nonDev++;
+        }
     });
     
-    document.getElementById('totalEntries').textContent = stats.total;
+    // Display total with DEV count breakdown
+    const totalText = stats.dev > 0 
+        ? `${stats.total} (Dev: ${stats.dev})`
+        : stats.total;
+    
+    document.getElementById('totalEntries').textContent = totalText;
     document.getElementById('createCount').textContent = stats.creates;
     document.getElementById('updateCount').textContent = stats.updates;
     document.getElementById('validationCount').textContent = stats.validations;

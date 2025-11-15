@@ -215,7 +215,16 @@ body {
 }
 
 .audit-table tbody tr.trip-group-separator:hover {
-    background-color: #f0f0f0;
+    background-color: #e5e5e5;
+}
+
+.audit-table tbody tr.trip-group-separator.dev-group-separator {
+    cursor: pointer;
+    background-color: #fff3cd;
+}
+
+.audit-table tbody tr.trip-group-separator.dev-group-separator:hover {
+    background-color: #ffeaa7;
 }
 
 .audit-table tbody tr.trip-group-separator td {
@@ -228,6 +237,26 @@ body {
     color: #666;
     font-weight: 500;
     font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.audit-table tbody tr.trip-group-separator .separator-icon {
+    font-size: 0.75rem;
+    color: #333;
+    display: inline-block;
+    min-width: 12px;
+    text-align: center;
+}
+
+.audit-table tbody tr.trip-group-separator .separator-text {
+    flex: 1;
+}
+
+/* Group rows - collapseable */
+.audit-table tbody tr.group-row.group-collapsed {
+    display: none;
 }
 
 .audit-table tbody tr.expandable {
