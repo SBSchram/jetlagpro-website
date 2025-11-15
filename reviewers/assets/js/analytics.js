@@ -894,9 +894,9 @@ function renderDoseResponseDataTable(surveys) {
         const baselineStr = baseline !== null ? baseline.toFixed(1) : 'N/A';
         
         // Anticipated severity - try multiple possible field names
+        // Check if it's in the survey object directly or in nested surveyData
         const anticipated = survey.generalAnticipated || 
-                           extractValue('generalAnticipated', survey) ||
-                           extractValue('surveyData', 'generalAnticipated', survey) ||
+                           (survey.surveyData && survey.surveyData.generalAnticipated) ||
                            null;
         const anticipatedStr = anticipated !== null && anticipated !== undefined ? Number(anticipated).toFixed(1) : 'N/A';
         
