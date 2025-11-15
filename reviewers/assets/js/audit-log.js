@@ -337,6 +337,7 @@ function formatTimezone(tz) {
 
 /**
  * Format metadata field with each property on its own line
+ * For _surveyMetadata, show only the property name (no prefix)
  */
 function formatMetadataField(fieldName, change) {
     const beforeObj = change.before || {};
@@ -346,9 +347,11 @@ function formatMetadataField(fieldName, change) {
     return Array.from(allKeys).map(key => {
         const beforeVal = beforeObj[key] !== undefined ? beforeObj[key] : null;
         const afterVal = afterObj[key] !== undefined ? afterObj[key] : null;
+        // For metadata fields, show only the property name (remove _surveyMetadata. prefix)
+        const displayName = fieldName.toLowerCase().includes('metadata') ? escapeHtml(key) : `${escapeHtml(fieldName)}.${escapeHtml(key)}`;
         return `
             <tr>
-                <td class=\"field-name-cell\">${escapeHtml(fieldName)}.${escapeHtml(key)}</td>
+                <td class=\"field-name-cell\">${displayName}</td>
                 <td class=\"value-before\">${escapeHtml(formatValue(beforeVal, false))}</td>
                 <td class=\"value-after\">${escapeHtml(formatValue(afterVal, false))}</td>
             </tr>
