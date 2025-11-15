@@ -174,6 +174,9 @@ async function loadAuditLog() {
         renderAuditTable();
         updateStats();
         
+        // Initialize collapsed groups after rendering
+        setTimeout(initializeCollapsedGroups, 0);
+        
     } catch (error) {
         console.error('❌ Error loading audit log:', error);
         document.getElementById('auditLog').innerHTML = `
@@ -621,6 +624,23 @@ function toggleGroup(groupId) {
         separatorRow.classList.add('group-collapsed');
         if (separatorIcon) separatorIcon.textContent = '▶';
     }
+}
+
+/**
+ * Initialize collapsed groups (DEV groups should be collapsed by default)
+ */
+function initializeCollapsedGroups() {
+    const devSeparators = document.querySelectorAll('tr.dev-group-separator.group-collapsed');
+    devSeparators.forEach(separator => {
+        const groupId = separator.getAttribute('data-group-id');
+        if (groupId) {
+            const groupRows = document.querySelectorAll(`tr[data-group-id="${groupId}"].group-row`);
+            groupRows.forEach(row => {
+                row.classList.add('group-collapsed');
+                row.style.display = 'none';
+            });
+        }
+    });
 }
 
 /**
