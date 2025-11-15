@@ -238,6 +238,9 @@ function convertFirestoreDocument(document) {
             
             // Note: Baseline/typical symptom data removed from survey - now focusing on anticipated vs post-travel
             
+            // Extract general anticipated severity - handles both formats
+            generalAnticipated: extractValue('generalAnticipated') || extractValue('surveyData', 'generalAnticipated'),
+            
             // Extract anticipated symptoms - handles both formats
             anticipatedSleepSeverity: extractValue('sleepExpectations') || extractValue('surveyData', 'sleepExpectations'),
             anticipatedFatigueSeverity: extractValue('fatigueExpectations') || extractValue('surveyData', 'fatigueExpectations'),
