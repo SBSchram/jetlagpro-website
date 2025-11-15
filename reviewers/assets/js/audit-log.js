@@ -416,6 +416,7 @@ function renderTableRow(entry, index) {
                                 </tbody>
                             </table>
                         </div>
+                        ` : ''}
                     </div>
                 </td>
             </tr>
