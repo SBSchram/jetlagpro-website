@@ -141,18 +141,26 @@ body {
     font-size: 0.85rem;
 }
 
-/* Word wrap for long column headers in dose-response table */
+/* Word wrap for long column headers in dose-response table - DRY approach */
 .dose-response-table th.wrap-header {
     white-space: normal;
     word-wrap: break-word;
-    max-width: 120px;
     line-height: 1.3;
     padding: 6px 8px;
 }
 
-/* Tighten Baseline Expected column specifically (8th column) */
-.dose-response-table th:nth-child(8) {
+/* Default width for wrapped headers */
+.dose-response-table th.wrap-header {
+    max-width: 120px;
+}
+
+/* Column-specific widths (DRY - all wrapped columns use same base styles) */
+.dose-response-table th:nth-child(8) {  /* Baseline Severity Expected */
     max-width: 90px;
+}
+
+.dose-response-table th:nth-child(9) {  /* Anticipated Severity */
+    max-width: 100px;
 }
 
 .data-section {
