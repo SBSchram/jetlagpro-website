@@ -783,12 +783,135 @@ function renderAdvancedAnalytics() {
     html += '</div>';
     html += '</div>';
     
+    // Dose-Response Data Table - all surveys used in the chart
+    html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
+    html += '<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Data</h3>';
+    html += renderDoseResponseDataTable(completedSurveys);
+    html += '</div>';
+    
     html += '</div>';
 
     container.innerHTML = html;
     
     // Render the comprehensive dose-response analysis chart
     renderDoseResponseAnalysisChart(completedSurveys);
+}
+
+// Helper function to get baseline severity from timezones
+function getBaselineSeverity(timezones) {
+    const baselineData = [
+        { timeZones: 2, severity: 1.8 },
+        { timeZones: 3, severity: 2.5 },
+        { timeZones: 4, severity: 2.5 },
+        { timeZones: 5, severity: 2.5 },
+        { timeZones: 6, severity: 3.1 },
+        { timeZones: 7, severity: 3.1 },
+        { timeZones: 8, severity: 3.1 },
+        { timeZones: 9, severity: 3.6 },
+        { timeZones: 10, severity: 3.6 },
+        { timeZones: 11, severity: 3.6 },
+        { timeZones: '12+', severity: 3.6 }
+    ];
+    
+    if (timezones >= 12) {
+        return 3.6; // 12+ uses 3.6
+    }
+    
+    const baseline = baselineData.find(b => b.timeZones === timezones);
+    return baseline ? baseline.severity : null;
+}
+
+// Helper function to calculate actual severity (average of post-travel symptoms)
+function calculateActualSeverity(survey) {
+    const symptoms = [
+        survey.postSleepSeverity,
+        survey.postFatigueSeverity,
+        survey.postConcentrationSeverity,
+        survey.postIrritabilitySeverity,
+        survey.postMotivationSeverity,
+        survey.postGISeverity
+    ];
+    
+    const validSymptoms = symptoms.filter(s => s !== null && s !== undefined);
+    if (validSymptoms.length === 0) return null;
+    
+    const sum = validSymptoms.reduce((acc, val) => acc + val, 0);
+    return sum / validSymptoms.length;
+}
+
+// Helper function to get color for points column
+function getPointsColor(points) {
+    if (points >= 0 && points <= 2) return '#dc2626'; // Red
+    if (points >= 3 && points <= 5) return '#f59e0b'; // Orange
+    if (points >= 6 && points <= 8) return '#3b82f6'; // Blue
+    if (points >= 9 && points <= 12) return '#16a34a'; // Green
+    return '#666'; // Default gray
+}
+
+// Render dose-response data table
+function renderDoseResponseDataTable(surveys) {
+    if (surveys.length === 0) return '<p><em>No survey data available</em></p>';
+    
+    // Sort by date (most recent first)
+    const sortedSurveys = surveys.sort((a, b) => {
+        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
+        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
+        return new Date(dateB) - new Date(dateA);
+    });
+    
+    let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table" style="width: 100%;">';
+    tableHtml += '<thead><tr>';
+    tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
+    tableHtml += '<th>Baseline</th><th>Anticipated</th><th>Actual</th>';
+    tableHtml += '</tr></thead><tbody>';
+    
+    sortedSurveys.forEach(survey => {
+        const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
+        const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+        
+        // Extract device ID from tripId
+        let displayCode = 'N/A';
+        if (survey.tripId) {
+            const tripIdParts = survey.tripId.split(/[-_]/);
+            displayCode = tripIdParts[0] || 'N/A';
+        }
+        
+        // Travel direction
+        const timezones = survey.timezonesCount || 0;
+        const direction = (timezones === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
+        const eastWest = direction === 'east' ? 'E' : direction === 'west' ? 'W' : 'N/A';
+        
+        // Points stimulated
+        const pointsStimulated = survey.pointsCompleted || 0;
+        const pointsColor = getPointsColor(pointsStimulated);
+        
+        // Baseline severity
+        const baseline = getBaselineSeverity(timezones);
+        const baselineStr = baseline !== null ? baseline.toFixed(1) : 'N/A';
+        
+        // Anticipated severity
+        const anticipated = survey.generalAnticipated || survey.anticipatedSleepSeverity || null;
+        const anticipatedStr = anticipated !== null ? anticipated.toFixed(1) : 'N/A';
+        
+        // Actual severity
+        const actual = calculateActualSeverity(survey);
+        const actualStr = actual !== null ? actual.toFixed(1) : 'N/A';
+        
+        tableHtml += `<tr>
+            <td>${dateStr}</td>
+            <td><code>${displayCode}</code></td>
+            <td>${survey.destinationCode || 'N/A'}</td>
+            <td>${eastWest}</td>
+            <td style="color: ${pointsColor}; font-weight: 600;">${pointsStimulated}</td>
+            <td>${timezones}</td>
+            <td>${baselineStr}</td>
+            <td>${anticipatedStr}</td>
+            <td>${actualStr}</td>
+        </tr>`;
+    });
+    
+    tableHtml += '</tbody></table></div>';
+    return tableHtml;
 }
 
 // Render point stimulation analysis table
