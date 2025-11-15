@@ -222,19 +222,38 @@ function renderTableRow(entry, index) {
                                         let afterObj = change.after;
                                         
                                         // If it's a string that looks like JSON, try to parse it
-                                        if (typeof beforeObj === 'string' && beforeObj.trim().startsWith('{')) {
-                                            try {
-                                                beforeObj = JSON.parse(beforeObj);
-                                            } catch (e) {
-                                                // Not valid JSON, keep as string
+                                        if (typeof beforeObj === 'string') {
+                                            const trimmed = beforeObj.trim();
+                                            if (trimmed.startsWith('{')) {
+                                                try {
+                                                    beforeObj = JSON.parse(beforeObj);
+                                                } catch (e) {
+                                                    // Not valid JSON, keep as string
+                                                }
                                             }
                                         }
-                                        if (typeof afterObj === 'string' && afterObj.trim().startsWith('{')) {
-                                            try {
-                                                afterObj = JSON.parse(afterObj);
-                                            } catch (e) {
-                                                // Not valid JSON, keep as string
+                                        if (typeof afterObj === 'string') {
+                                            const trimmed = afterObj.trim();
+                                            if (trimmed.startsWith('{')) {
+                                                try {
+                                                    afterObj = JSON.parse(afterObj);
+                                                } catch (e) {
+                                                    // Not valid JSON, keep as string
+                                                }
                                             }
+                                        }
+                                        
+                                        // Handle userAgent - it's a long string, not an object to expand
+                                        // If userAgent is in the field name itself, don't try to expand it
+                                        if (field.toLowerCase() === 'useragent' || field.toLowerCase() === 'useragent') {
+                                            // Treat as regular field, not metadata to expand
+                                            return `
+                                                <tr>
+                                                    <td class=\"field-name-cell\">${escapeHtml(field)}</td>
+                                                    <td class=\"value-before\">${escapeHtml(formatValue(change.before, false))}</td>
+                                                    <td class=\"value-after\">${escapeHtml(formatValue(change.after, false))}</td>
+                                                </tr>
+                                            `;
                                         }
                                         
                                         // Check if either before or after is an object (after potential parsing)
@@ -338,13 +357,33 @@ function formatTimezone(tz) {
 /**
  * Format metadata field with each property on its own line
  * For _surveyMetadata, show only the property name (no prefix)
+ * Only shows fields that actually changed
  */
 function formatMetadataField(fieldName, change) {
     const beforeObj = change.before || {};
     const afterObj = change.after || {};
     const allKeys = new Set([...Object.keys(beforeObj), ...Object.keys(afterObj)]);
     
-    return Array.from(allKeys).map(key => {
+    // Filter to only show fields that actually changed
+    const changedKeys = Array.from(allKeys).filter(key => {
+        const beforeVal = beforeObj[key] !== undefined ? beforeObj[key] : null;
+        const afterVal = afterObj[key] !== undefined ? afterObj[key] : null;
+        // Compare values (handle null/undefined)
+        if (beforeVal === null && afterVal === null) return false;
+        if (beforeVal === null || afterVal === null) return true;
+        // For objects/arrays, compare JSON strings
+        if (typeof beforeVal === 'object' || typeof afterVal === 'object') {
+            return JSON.stringify(beforeVal) !== JSON.stringify(afterVal);
+        }
+        // For primitives, direct comparison
+        return String(beforeVal) !== String(afterVal);
+    });
+    
+    if (changedKeys.length === 0) {
+        return ''; // No changes to display
+    }
+    
+    return changedKeys.map(key => {
         const beforeVal = beforeObj[key] !== undefined ? beforeObj[key] : null;
         const afterVal = afterObj[key] !== undefined ? afterObj[key] : null;
         // For metadata fields, show only the property name (remove _surveyMetadata. prefix)
