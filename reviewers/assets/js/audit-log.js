@@ -319,7 +319,7 @@ function renderTableRow(entry, index) {
     
     // Build separator text
     let separatorText = '';
-    if (isFirstInGroup && index > 0) {
+    if (isFirstInGroup) {
         const tripDate = entry._groupTripDate || '';
         const hasDev = entry._groupHasDev || false;
         
@@ -332,7 +332,7 @@ function renderTableRow(entry, index) {
         }
     }
     
-    const groupSeparator = isFirstInGroup && index > 0 
+    const groupSeparator = isFirstInGroup 
         ? `<tr class="trip-group-separator"><td colspan="9" class="separator-content">${separatorText}</td></tr>` 
         : '';
     
