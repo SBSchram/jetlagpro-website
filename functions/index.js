@@ -253,6 +253,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
     destinationCode: data.destinationCode || null,
     originTimezone: data.originTimezone || null,
     arrivalTimeZone: data.arrivalTimeZone || null,
+    travelDirection: data.travelDirection || null,
     source: source,
     // Store metadata for source verification
     metadata: {
