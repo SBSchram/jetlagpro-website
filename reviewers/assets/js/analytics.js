@@ -530,17 +530,6 @@ function renderRecentSubmissions() {
     
     html += '</div>';
     
-    // Test Data Section (if any)
-    if (testData.length > 0) {
-        html += '<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">';
-        html += `<h3 style="color: #dc2626;">Test Data (${testData.length})</h3>`;
-        html += '<p style="color: #6b7280; font-size: 0.9rem;">These entries are from developer testing and should not be included in research analysis.</p>';
-        html += '<div style="display: inline-block;">';
-        html += renderTripTable(testData, false);
-        html += '</div>';
-        html += '</div>';
-    }
-    
     container.innerHTML = html;
 }
 
@@ -899,6 +888,7 @@ function renderDoseResponseDataTable(surveys) {
     tableHtml += '<thead><tr>';
     tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
     tableHtml += '<th>Baseline</th><th>Anticipated</th><th>Actual</th>';
+    tableHtml += '<th>Improvement over Expected</th><th>Improvement over Anticipated</th>';
     tableHtml += '</tr></thead><tbody>';
     
     sortedSurveys.forEach(survey => {
@@ -952,6 +942,21 @@ function renderDoseResponseDataTable(surveys) {
         const actual = calculateActualSeverity(survey);
         const actualStr = actual !== null ? actual.toFixed(1) : 'N/A';
         
+        // Calculate improvement percentages
+        let improvementOverExpected = null;
+        let improvementOverExpectedStr = 'N/A';
+        if (baseline !== null && actual !== null) {
+            improvementOverExpected = ((baseline - actual) / baseline) * 100;
+            improvementOverExpectedStr = improvementOverExpected.toFixed(1) + '%';
+        }
+        
+        let improvementOverAnticipated = null;
+        let improvementOverAnticipatedStr = 'N/A';
+        if (anticipated !== null && actual !== null) {
+            improvementOverAnticipated = ((anticipated - actual) / anticipated) * 100;
+            improvementOverAnticipatedStr = improvementOverAnticipated.toFixed(1) + '%';
+        }
+        
         tableHtml += `<tr>
             <td>${dateStr}</td>
             <td><code>${displayCode}</code></td>
@@ -962,6 +967,8 @@ function renderDoseResponseDataTable(surveys) {
             <td>${baselineStr}</td>
             <td>${anticipatedStr}</td>
             <td>${actualStr}</td>
+            <td>${improvementOverExpectedStr}</td>
+            <td>${improvementOverAnticipatedStr}</td>
         </tr>`;
     });
     
