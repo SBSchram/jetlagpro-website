@@ -263,9 +263,9 @@ def calculate_time_zone_difference(trip: Dict) -> int:
 
 def categorize_time_zones(tz_diff: int) -> str:
     """
-    Categorize time zone difference into groups.
+    Categorize time zone difference into groups for statistics and reporting.
     
-    EXACTLY matches analytics.js line 611-624 for stimulation efficacy:
+    Categories:
     - '1-3 time zones': tz <= 3
     - '4-6 time zones': tz <= 6
     - '7-9 time zones': tz <= 9
@@ -299,29 +299,6 @@ def categorize_stimulation_dose_response(points: int) -> str:
         return "6-8"
     else:
         return "9-12"
-
-
-def categorize_stimulation_efficacy(points: int) -> str:
-    """
-    Categorize stimulation level for efficacy analysis.
-    
-    EXACTLY matches analytics.js line 544-550:
-    - '0 points': points === 0
-    - '1-3 points': points <= 3
-    - '4-6 points': points <= 6
-    - '7-9 points': points <= 9
-    - '10-12 points': points > 9
-    """
-    if points == 0:
-        return "0"
-    elif points <= 3:
-        return "1-3"
-    elif points <= 6:
-        return "4-6"
-    elif points <= 9:
-        return "7-9"
-    else:
-        return "10-12"
 
 
 def basic_statistics(trips: List[Dict]) -> Dict:
@@ -468,116 +445,6 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     return results
 
 
-def stimulation_efficacy_analysis(trips: List[Dict]) -> Dict:
-    """
-    Analyze intervention efficacy across different stimulation levels and time zone categories.
-    
-    RESEARCH QUESTION:
-    How effective is chronoacupuncture across different intervention levels and
-    time zone crossing scenarios?
-    
-    RATIONALE:
-    This analysis provides a comprehensive view of intervention effectiveness by:
-    - Examining efficacy at different intervention intensities (0 to 12 points)
-    - Assessing performance across time zone categories (1-3, 4-6, 7-9, 10+)
-    - Enabling comparison of intervention groups to identify optimal usage patterns
-    
-    METHODOLOGY:
-    - Groups by stimulation level: 0 points (control/no intervention), 1-3 (low),
-      4-6 (moderate), 7-9 (high), 10-12 (maximum stimulation)
-    - Groups by time zones: 1-3, 4-6, 7-9, 10+ (categorized for sufficient sample sizes)
-    - Calculates mean aggregate severity for each combination
-    - Computes standard deviation and standard error for statistical precision
-    
-    INTERPRETATION:
-    Reviewers should examine:
-    - Severity by stimulation level: Does higher stimulation reduce severity?
-    - Severity by time zones: Does intervention help more for longer flights?
-    - Interaction effects: Does intervention effectiveness vary by time zone category?
-    - Sample sizes: Larger groups provide more reliable estimates
-    
-    TECHNICAL:
-    EXACTLY matches analytics.js renderStimulationEfficacy():
-    - Groups by stimulation level: 0 points, 1-3, 4-6, 7-9, 10-12 (line 544-550)
-    - Groups by time zones: 1-3, 4-6, 7-9, 10+ (line 611-624)
-    - Calculates mean severity for each combination
-    
-    Returns:
-        Dict: Nested dictionary with severity statistics for each group combination
-    """
-    # Group by stimulation level (matches analytics.js line 544-550)
-    stimulation_groups = {
-        '0 points': [],
-        '1-3 points': [],
-        '4-6 points': [],
-        '7-9 points': [],
-        '10-12 points': []
-    }
-    
-    for trip in trips:
-        points = trip.get('pointsCompleted', 0)
-        if points == 0:
-            stimulation_groups['0 points'].append(trip)
-        elif points <= 3:
-            stimulation_groups['1-3 points'].append(trip)
-        elif points <= 6:
-            stimulation_groups['4-6 points'].append(trip)
-        elif points <= 9:
-            stimulation_groups['7-9 points'].append(trip)
-        else:
-            stimulation_groups['10-12 points'].append(trip)
-    
-    # Group by time zones (matches analytics.js line 611-624)
-    tz_groups = {
-        '1-3 time zones': [],
-        '4-6 time zones': [],
-        '7-9 time zones': [],
-        '10+ time zones': []
-    }
-    
-    for trip in trips:
-        tz = trip.get('timezonesCount', 0)
-        if tz <= 3:
-            tz_groups['1-3 time zones'].append(trip)
-        elif tz <= 6:
-            tz_groups['4-6 time zones'].append(trip)
-        elif tz <= 9:
-            tz_groups['7-9 time zones'].append(trip)
-        else:
-            tz_groups['10+ time zones'].append(trip)
-    
-    # Calculate statistics for each stimulation level and time zone combination
-    results = {}
-    for stim_level, stim_trips in stimulation_groups.items():
-        results[stim_level] = {}
-        for tz_range, tz_trips in tz_groups.items():
-            # Find trips that match both criteria
-            matching_trips = [t for t in stim_trips if t in tz_trips]
-            
-            if len(matching_trips) > 0:
-                # Calculate aggregate severities
-                severities = []
-                for trip in matching_trips:
-                    severity = calculate_aggregate_severity(trip)
-                    if severity is not None:
-                        severities.append(severity)
-                
-                if len(severities) > 0:
-                    mean = sum(severities) / len(severities)
-                    variance = sum((x - mean) ** 2 for x in severities) / len(severities) if len(severities) > 1 else 0
-                    std = variance ** 0.5
-                    sem = std / (len(severities) ** 0.5) if len(severities) > 1 else 0
-                    
-                    results[stim_level][tz_range] = {
-                        'n': len(severities),
-                        'mean': mean,
-                        'std': std,
-                        'sem': sem
-                    }
-    
-    return results
-
-
 def point_usage_analysis(trips: List[Dict]) -> Dict:
     """
     Analyze which acupuncture points were most commonly stimulated.
@@ -619,7 +486,7 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
     return point_counts
 
 
-def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_usage: Dict, output_path: str, 
+def generate_report(stats: Dict, dose_response: Dict, point_usage: Dict, output_path: str, 
                     total_raw_trips: int = 0, filtered_count: int = 0):
     """
     Generate human-readable analysis report.
@@ -637,10 +504,7 @@ def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_u
     3. DOSE-RESPONSE ANALYSIS: Tests whether more intervention leads to better
        outcomes. Look for downward trends (higher stimulation → lower severity).
     
-    4. STIMULATION EFFICACY: Shows intervention effectiveness across different
-       conditions. Compare severity across stimulation levels and time zones.
-    
-    5. POINT USAGE: Identifies which acupuncture points are most commonly used.
+    4. POINT USAGE: Identifies which acupuncture points are most commonly used.
        Useful for understanding intervention patterns.
     
     VERIFICATION:
@@ -710,18 +574,6 @@ def generate_report(stats: Dict, dose_response: Dict, stimulation: Dict, point_u
         lines.append(f"  mean = {data['mean']:.2f}")
         lines.append(f"  std = {data['std']:.2f}")
         lines.append(f"  sem = {data['sem']:.2f}")
-        lines.append("")
-    
-    # Stimulation Efficacy
-    lines.append("STIMULATION EFFICACY ANALYSIS")
-    lines.append("-"*70)
-    lines.append("Mean severity by stimulation level across time zones:")
-    lines.append("")
-    
-    for stim_level, tz_data in sorted(stimulation.items()):
-        lines.append(f"{stim_level.upper()}:")
-        for tz_cat, data in sorted(tz_data.items()):
-            lines.append(f"  {tz_cat} TZ: mean={data['mean']:.2f}, n={data['n']}, sem={data['sem']:.2f}")
         lines.append("")
     
     # Point Usage
@@ -825,14 +677,11 @@ See function docstrings for detailed methodology and rationale.
     dose_response = dose_response_analysis(valid_trips)
     print("✓ Dose-response analysis complete")
     
-    stimulation = stimulation_efficacy_analysis(valid_trips)
-    print("✓ Stimulation efficacy analysis complete")
-    
     point_usage = point_usage_analysis(valid_trips)
     print("✓ Point usage analysis complete")
     
     # Generate report
-    generate_report(stats, dose_response, stimulation, point_usage, args.output, 
+    generate_report(stats, dose_response, point_usage, args.output, 
                    total_raw_trips, filtered_count)
     
     print("\n✓ Analysis complete!")
