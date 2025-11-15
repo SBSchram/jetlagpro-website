@@ -163,6 +163,10 @@ body {
     max-width: 100px;
 }
 
+.dose-response-table th:nth-child(10) {  /* Actual Severity */
+    max-width: 100px;
+}
+
 .data-section {
     padding: 12px 0;
     margin-bottom: 30px;
