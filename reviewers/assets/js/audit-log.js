@@ -241,7 +241,8 @@ function renderTableRow(entry, index) {
         : '-';
 
     const hasChanges = entry.changes && Object.keys(entry.changes).length > 0;
-    const isExpandable = (source === 'FC' || action === 'MODIFY') && hasChanges;
+    const hasDeletedData = entry.operation === 'DELETE' && entry.deletedData && Object.keys(entry.deletedData).length > 0;
+    const isExpandable = (source === 'FC' || action === 'MODIFY' || action === 'DELETE') && (hasChanges || hasDeletedData);
     const expandClass = isExpandable ? 'expandable' : '';
     const onclick = isExpandable ? `onclick=\"toggleExpand(${index})\"` : '';
     const expandIcon = isExpandable ? ' <span class="expand-icon">▼</span>' : '';
@@ -294,6 +295,7 @@ function renderTableRow(entry, index) {
         
         // Enhanced message for DELETE
         let deleteContext = '';
+        let deleteDataTable = '';
         if (entry.operation === 'DELETE' && entry.deletedData) {
             const deletedFields = Object.keys(entry.deletedData).filter(k => !k.startsWith('_'));
             const surveyFields = deletedFields.filter(k => 
@@ -308,6 +310,39 @@ function renderTableRow(entry, index) {
                 ${surveyFields.length > 0 ? `<br>• Survey data: ${surveyFields.join(', ')}` : ''}
                 ${deletedFields.length > surveyFields.length ? `<br>• Trip data: ${deletedFields.filter(f => !surveyFields.includes(f)).slice(0, 5).join(', ')}${deletedFields.length - surveyFields.length > 5 ? '...' : ''}` : ''}
             </div>`;
+            
+            // Show deleted data in a table
+            const deletedDataRows = Object.entries(entry.deletedData)
+                .filter(([key]) => !key.startsWith('_'))
+                .map(([key, value]) => {
+                    const displayValue = typeof value === 'object' 
+                        ? JSON.stringify(value) 
+                        : String(value);
+                    return `
+                        <tr>
+                            <td class="field-name-cell">${escapeHtml(key)}</td>
+                            <td class="value-before" colspan="2">${escapeHtml(formatValue(value, false))}</td>
+                        </tr>
+                    `;
+                }).join('');
+            
+            if (deletedDataRows) {
+                deleteDataTable = `
+                    <div class="changes-table-container" style="margin-top: 12px;">
+                        <table class="changes-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-field">Field Name</th>
+                                    <th class="col-before" colspan="2">Deleted Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${deletedDataRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
         }
         
         html += `
@@ -317,6 +352,8 @@ function renderTableRow(entry, index) {
                         <h4>${changeType}:${tripIdDisplay}</h4>
                         ${contextNote}
                         ${deleteContext}
+                        ${deleteDataTable}
+                        ${hasChanges ? `
                         <div class=\"changes-table-container\">
                             <table class=\"changes-table\">
                                 <thead>
