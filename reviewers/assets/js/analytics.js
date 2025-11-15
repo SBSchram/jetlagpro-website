@@ -886,7 +886,7 @@ function renderDoseResponseDataTable(surveys) {
     
     let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table dose-response-table">';
     tableHtml += '<thead><tr>';
-    tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
+    tableHtml += '<th>Date</th><th>Device</th><th>Origin</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
     tableHtml += '<th>Baseline</th><th>Anticipated</th><th>Actual</th>';
     tableHtml += '<th class="wrap-header">Improvement over Expected</th><th class="wrap-header">Improvement over Anticipated</th>';
     tableHtml += '</tr></thead><tbody>';
@@ -901,6 +901,10 @@ function renderDoseResponseDataTable(surveys) {
             const tripIdParts = survey.tripId.split(/[-_]/);
             displayCode = tripIdParts[0] || 'N/A';
         }
+        
+        // Origin and destination
+        const origin = survey.originTimezone || survey.originCode || 'N/A';
+        const destination = survey.destinationCode || 'N/A';
         
         // Travel direction
         const timezones = survey.timezonesCount || 0;
@@ -999,7 +1003,8 @@ function renderDoseResponseDataTable(surveys) {
         tableHtml += `<tr>
             <td>${dateStr}</td>
             <td><code>${displayCode}</code></td>
-            <td>${survey.destinationCode || 'N/A'}</td>
+            <td>${origin}</td>
+            <td>${destination}</td>
             <td>${eastWest}</td>
             <td style="color: ${pointsColor}; font-weight: 600;">${pointsStimulated}</td>
             <td>${timezones}</td>
