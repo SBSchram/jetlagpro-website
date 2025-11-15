@@ -258,6 +258,16 @@ body {
     font-weight: 600;
 }
 
+/* Enhanced DELETE entry styling */
+.audit-table tbody tr.delete-entry {
+    background-color: #fff5f5;
+    border-left: 3px solid #cc0000;
+}
+
+.audit-table tbody tr.delete-entry:hover {
+    background-color: #ffe5e5;
+}
+
 .action-VALIDATION {
     color: #999;
     font-style: italic;
@@ -450,6 +460,37 @@ body {
 
 .new-value {
     color: #007700;
+}
+
+/* Context Notes */
+.context-note {
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.context-note.context-warning {
+    background-color: #fff8e1;
+    border-left: 4px solid #ff9800;
+    color: #e65100;
+}
+
+.context-note.context-info {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    color: #1565c0;
+}
+
+.context-note.context-error {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+    color: #c62828;
+}
+
+.context-note strong {
+    font-weight: 600;
 }
 
 /* Loading/Empty States */

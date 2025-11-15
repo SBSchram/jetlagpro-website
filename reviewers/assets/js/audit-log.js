@@ -119,9 +119,27 @@ async function loadAuditLog() {
         });
 
         // Flatten back to array, preserving group order
+        // Also add context metadata to each entry
         auditLogData = [];
         sortedGroups.forEach(tripId => {
-            auditLogData.push(...groupedByTrip[tripId]);
+            const group = groupedByTrip[tripId];
+            group.forEach((entry, groupIndex) => {
+                // Add context: check if DELETE occurred before this entry
+                const hasRecentDelete = group.slice(0, groupIndex).some(e => e.operation === 'DELETE');
+                entry._hasRecentDelete = hasRecentDelete;
+                
+                // Add context: check if this is first survey submission (no previous survey data)
+                if (entry.operation === 'UPDATE') {
+                    const hasPreviousSurvey = group.slice(0, groupIndex).some(e => 
+                        e.operation === 'UPDATE' && 
+                        (e.changes?._surveyMetadata || e.changes?.surveyCompleted)
+                    );
+                    entry._isFirstSurvey = !hasPreviousSurvey && !hasRecentDelete;
+                    entry._isAfterRecreation = hasRecentDelete;
+                }
+                
+                auditLogData.push(entry);
+            });
         });
         
         renderAuditTable();
@@ -239,10 +257,14 @@ function renderTableRow(entry, index) {
         ? '<tr class="trip-group-separator"><td colspan="9"></td></tr>' 
         : '';
     
+    // Enhanced DELETE styling
+    const deleteClass = action === 'DELETE' ? ' delete-entry' : '';
+    const deleteIcon = action === 'DELETE' ? ' ⚠️' : '';
+    
     let html = groupSeparator + `
-        <tr class="${expandClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}">
+        <tr class="${expandClass}${deleteClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}">
             <td>${timestamp}</td>
-            <td class="${actionClass}">${action}${expandIcon}</td>
+            <td class="${actionClass}">${action}${deleteIcon}${expandIcon}</td>
             <td class="${sourceClass}">${source}</td>
             <td>${surveyCode}</td>
             <td>${origin}</td>
@@ -256,11 +278,45 @@ function renderTableRow(entry, index) {
     if (isExpandable) {
         const changeType = action === 'MODIFY' ? 'Survey Changes' : 'Console Changes';
         const tripIdDisplay = tripId ? ` ${tripId}` : '';
+        
+        // Add context note for UPDATE with before: null
+        let contextNote = '';
+        if (entry.operation === 'UPDATE' && entry.changes) {
+            const hasNullBefore = Object.values(entry.changes).some(change => change.before === null || change.before === undefined);
+            if (hasNullBefore) {
+                if (entry._isAfterRecreation) {
+                    contextNote = '<div class="context-note context-warning">⚠️ Note: Trip was recreated after deletion, so previous survey data is not shown in BEFORE column.</div>';
+                } else if (entry._isFirstSurvey) {
+                    contextNote = '<div class="context-note context-info">ℹ️ Note: This is the initial survey submission for this trip.</div>';
+                }
+            }
+        }
+        
+        // Enhanced message for DELETE
+        let deleteContext = '';
+        if (entry.operation === 'DELETE' && entry.deletedData) {
+            const deletedFields = Object.keys(entry.deletedData).filter(k => !k.startsWith('_'));
+            const surveyFields = deletedFields.filter(k => 
+                k.includes('survey') || 
+                k.includes('Post') || 
+                k.includes('Anticipated') ||
+                k === 'userComment' ||
+                k === 'ageRange'
+            );
+            deleteContext = `<div class="context-note context-error">
+                <strong>⚠️ Data Lost:</strong> This deletion removed ${deletedFields.length} field(s) including:
+                ${surveyFields.length > 0 ? `<br>• Survey data: ${surveyFields.join(', ')}` : ''}
+                ${deletedFields.length > surveyFields.length ? `<br>• Trip data: ${deletedFields.filter(f => !surveyFields.includes(f)).slice(0, 5).join(', ')}${deletedFields.length - surveyFields.length > 5 ? '...' : ''}` : ''}
+            </div>`;
+        }
+        
         html += `
             <tr class=\"expanded-row\" id=\"expanded-${index}\">
                 <td colspan=\"9\">
                     <div class=\"expanded-content\">
                         <h4>${changeType}:${tripIdDisplay}</h4>
+                        ${contextNote}
+                        ${deleteContext}
                         <div class=\"changes-table-container\">
                             <table class=\"changes-table\">
                                 <thead>
