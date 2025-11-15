@@ -238,8 +238,10 @@ function renderTableRow(entry, index) {
                                         }
                                         
                                         // Check if either before or after is an object (after potential parsing)
-                                        if (isMetadata && (typeof beforeObj === 'object' && beforeObj !== null && !Array.isArray(beforeObj)) || 
-                                            (typeof afterObj === 'object' && afterObj !== null && !Array.isArray(afterObj))) {
+                                        const beforeIsObj = typeof beforeObj === 'object' && beforeObj !== null && !Array.isArray(beforeObj);
+                                        const afterIsObj = typeof afterObj === 'object' && afterObj !== null && !Array.isArray(afterObj);
+                                        
+                                        if (isMetadata && (beforeIsObj || afterIsObj)) {
                                             return formatMetadataField(field, { before: beforeObj, after: afterObj });
                                         } else {
                                             return `
