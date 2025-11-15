@@ -356,6 +356,9 @@ async function loadDashboardDataWithService() {
         isLoading = true;
         showLoadingState();
         
+        // Pre-load airport mapping (DRY - use existing airports.json)
+        await loadAirportMapping();
+        
         const data = await loadSurveyDataWithService();
         
         // Ensure data is fully loaded and processed before rendering
