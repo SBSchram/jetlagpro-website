@@ -214,12 +214,33 @@ function renderTableRow(entry, index) {
                                 </thead>
                                 <tbody>
                                     ${Object.entries(entry.changes).map(([field, change]) => {
-                                        // For _metadata fields, expand each property on its own line
-                                        const isMetadata = field.includes('_metadata') || field.includes('_Metadata');
-                                        if (isMetadata && typeof change.before === 'object' && change.before !== null) {
-                                            return formatMetadataField(field, change);
-                                        } else if (isMetadata && typeof change.after === 'object' && change.after !== null) {
-                                            return formatMetadataField(field, change);
+                                        // For metadata fields, expand each property on its own line
+                                        const isMetadata = field.toLowerCase().includes('metadata');
+                                        
+                                        // Try to parse as object (handle both object and JSON string cases)
+                                        let beforeObj = change.before;
+                                        let afterObj = change.after;
+                                        
+                                        // If it's a string that looks like JSON, try to parse it
+                                        if (typeof beforeObj === 'string' && beforeObj.trim().startsWith('{')) {
+                                            try {
+                                                beforeObj = JSON.parse(beforeObj);
+                                            } catch (e) {
+                                                // Not valid JSON, keep as string
+                                            }
+                                        }
+                                        if (typeof afterObj === 'string' && afterObj.trim().startsWith('{')) {
+                                            try {
+                                                afterObj = JSON.parse(afterObj);
+                                            } catch (e) {
+                                                // Not valid JSON, keep as string
+                                            }
+                                        }
+                                        
+                                        // Check if either before or after is an object (after potential parsing)
+                                        if (isMetadata && (typeof beforeObj === 'object' && beforeObj !== null && !Array.isArray(beforeObj)) || 
+                                            (typeof afterObj === 'object' && afterObj !== null && !Array.isArray(afterObj))) {
+                                            return formatMetadataField(field, { before: beforeObj, after: afterObj });
                                         } else {
                                             return `
                                                 <tr>
