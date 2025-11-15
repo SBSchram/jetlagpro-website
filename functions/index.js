@@ -290,12 +290,46 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   const afterData = afterSnapshot.data();
   const source = resolveSource(afterData._writeMetadata, afterData._surveyMetadata, "firebase_console");
   
+  // Helper function to normalize values for comparison
+  // Treats undefined, null, and empty string as equivalent "empty" state
+  function normalizeForComparison(value) {
+    if (value === undefined) return null;
+    if (value === null) return null;
+    if (typeof value === 'string' && value.trim() === '') return null; // Empty or whitespace-only strings
+    return value;
+  }
+  
+  // Helper function to check if two values are actually different
+  function valuesAreDifferent(before, after) {
+    const beforeNormalized = normalizeForComparison(before);
+    const afterNormalized = normalizeForComparison(after);
+    
+    // If both are null (normalized), they're the same
+    if (beforeNormalized === null && afterNormalized === null) return false;
+    
+    // If one is null and the other isn't, they're different
+    if (beforeNormalized === null || afterNormalized === null) return true;
+    
+    // For objects/arrays, use JSON.stringify comparison
+    if (typeof beforeNormalized === 'object' || typeof afterNormalized === 'object') {
+      try {
+        return JSON.stringify(beforeNormalized) !== JSON.stringify(afterNormalized);
+      } catch (e) {
+        // Fallback to string comparison if JSON.stringify fails
+        return String(beforeNormalized) !== String(afterNormalized);
+      }
+    }
+    
+    // For primitives, direct comparison
+    return beforeNormalized !== afterNormalized;
+  }
+  
   // Calculate what changed
   const changes = {};
   const allKeys = new Set([...Object.keys(beforeData), ...Object.keys(afterData)]);
   
   for (const key of allKeys) {
-    if (JSON.stringify(beforeData[key]) !== JSON.stringify(afterData[key])) {
+    if (valuesAreDifferent(beforeData[key], afterData[key])) {
       changes[key] = {
         before: beforeData[key] !== undefined ? beforeData[key] : null,
         after: afterData[key] !== undefined ? afterData[key] : null,
