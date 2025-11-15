@@ -141,6 +141,15 @@ body {
     font-size: 0.85rem;
 }
 
+/* Word wrap for long column headers in dose-response table */
+.dose-response-table th.wrap-header {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 120px;
+    line-height: 1.3;
+    padding: 6px 8px;
+}
+
 .data-section {
     padding: 12px 0;
     margin-bottom: 30px;

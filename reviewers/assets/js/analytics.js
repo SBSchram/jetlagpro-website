@@ -884,11 +884,11 @@ function renderDoseResponseDataTable(surveys) {
         return new Date(dateB) - new Date(dateA);
     });
     
-    let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table">';
+    let tableHtml = '<div style="overflow-x: auto;"><table class="stats-table dose-response-table">';
     tableHtml += '<thead><tr>';
     tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
     tableHtml += '<th>Baseline</th><th>Anticipated</th><th>Actual</th>';
-    tableHtml += '<th>Improvement over Expected</th><th>Improvement over Anticipated</th>';
+    tableHtml += '<th class="wrap-header">Improvement over Expected</th><th class="wrap-header">Improvement over Anticipated</th>';
     tableHtml += '</tr></thead><tbody>';
     
     sortedSurveys.forEach(survey => {
