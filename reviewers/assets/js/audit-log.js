@@ -207,8 +207,16 @@ function renderTableRow(entry, index) {
                             ${Object.entries(entry.changes).map(([field, change]) => `
                                 <div class=\"change-item\">
                                     <span class=\"field-name\">${escapeHtml(field)}</span>
-                                    <span class=\"old-value\">Before: ${escapeHtml(formatValue(change.before))}</span>
-                                    <span class=\"new-value\">After: ${escapeHtml(formatValue(change.after))}</span>
+                                    <div class=\"value-comparison\">
+                                        <div class=\"value-block\">
+                                            <span class=\"value-label\">Before:</span>
+                                            <pre class=\"value-content\">${escapeHtml(formatValue(change.before, true))}</pre>
+                                        </div>
+                                        <div class=\"value-block\">
+                                            <span class=\"value-label\">After:</span>
+                                            <pre class=\"value-content\">${escapeHtml(formatValue(change.after, true))}</pre>
+                                        </div>
+                                    </div>
                                 </div>
                             `).join('')}
                         </div>
@@ -293,8 +301,10 @@ function formatTimezone(tz) {
 
 /**
  * Format value for display
+ * @param {*} value - The value to format
+ * @param {boolean} prettyPrint - Whether to pretty-print JSON (with indentation)
  */
-function formatValue(value) {
+function formatValue(value, prettyPrint = false) {
     if (value === null || value === undefined) return '(empty)';
     if (typeof value === 'object' && value instanceof Date) {
         return value.toLocaleString('en-US', {
@@ -304,9 +314,16 @@ function formatValue(value) {
             minute: '2-digit'
         });
     }
-    if (typeof value === 'object') return JSON.stringify(value);
+    if (typeof value === 'object') {
+        try {
+            // Pretty-print JSON with 2-space indentation
+            return JSON.stringify(value, null, 2);
+        } catch (e) {
+            return String(value);
+        }
+    }
     if (typeof value === 'boolean') return value ? 'true' : 'false';
-    if (typeof value === 'string' && value.length > 100) {
+    if (typeof value === 'string' && !prettyPrint && value.length > 100) {
         return value.substring(0, 100) + '...';
     }
     return String(value);

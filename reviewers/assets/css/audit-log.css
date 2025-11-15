@@ -305,6 +305,13 @@ body {
     padding: 15px 20px;
     background: #fafafa;
     border-bottom: 2px solid #ddd;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.expanded-content {
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .expanded-content h4 {
@@ -322,19 +329,66 @@ body {
 }
 
 .change-item {
-    padding: 8px;
+    padding: 12px;
     background: #fff;
     border-left: 3px solid #999;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .field-name {
     font-weight: 600;
     color: #333;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
 }
 
+.value-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.value-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.value-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.value-block:first-child .value-label {
+    color: #cc0000;
+}
+
+.value-block:last-child .value-label {
+    color: #007700;
+}
+
+.value-content {
+    margin: 0;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Legacy support for old format */
 .old-value {
     color: #cc0000;
 }
