@@ -127,7 +127,7 @@ async function loadAuditLog() {
             // Check if any entry in this group has DEV evaluation
             const hasDevEntry = group.some(entry => {
                 const eval = classifyEntry(entry);
-                return eval === 'DEV';
+                return eval === 'Dev' || eval === 'DEV';
             });
             
             // Extract date from trip ID (format: YYMMDD from parts[2])
