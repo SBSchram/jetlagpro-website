@@ -4,6 +4,7 @@
 // Global variables for data
 let surveyData = [];
 let isLoading = true;
+let airportCodeToCity = null; // Cache for airport code to city mapping
 
 
 // Firebase service instance (new integration)
@@ -66,6 +67,8 @@ function getCurrentData() {
 // Initialize function (no Firebase SDK needed)
 async function initializeDashboard() {
     try {
+        // Pre-load airport mapping (DRY - use existing airports.json)
+        await loadAirportMapping();
         await loadDashboardData();
     } catch (error) {
         console.error('Dashboard initialization failed:', error);
@@ -822,48 +825,46 @@ function renderAdvancedAnalytics() {
     renderDoseResponseAnalysisChart(completedSurveys);
 }
 
-// Helper function to convert airport code to city name
+// Load airport code to city mapping from airports.json (DRY - single source of truth)
+async function loadAirportMapping() {
+    if (airportCodeToCity) return airportCodeToCity; // Return cached mapping
+    
+    try {
+        const response = await fetch('../data/airports.json');
+        if (!response.ok) {
+            console.warn('⚠️ Could not load airports.json, using airport codes as-is');
+            return {};
+        }
+        
+        const data = await response.json();
+        if (data.airports && Array.isArray(data.airports)) {
+            // Create lookup map: code -> city
+            airportCodeToCity = {};
+            data.airports.forEach(airport => {
+                if (airport.code && airport.city) {
+                    airportCodeToCity[airport.code.toUpperCase()] = airport.city;
+                }
+            });
+            console.log(`✅ Loaded ${Object.keys(airportCodeToCity).length} airport codes from airports.json`);
+            return airportCodeToCity;
+        }
+    } catch (error) {
+        console.warn('⚠️ Error loading airports.json:', error);
+        return {};
+    }
+    
+    return {};
+}
+
+// Helper function to convert airport code to city name (synchronous after pre-load)
 function getCityName(airportCode) {
     if (!airportCode || airportCode === 'N/A') return 'N/A';
     
     const code = airportCode.toUpperCase().trim();
     
-    // Common airport codes to city names mapping
-    const airportToCity = {
-        // US airports
-        'JFK': 'New York', 'LGA': 'New York', 'EWR': 'Newark', 'NYC': 'New York',
-        'LAX': 'Los Angeles', 'SFO': 'San Francisco', 'SJC': 'San Jose',
-        'ORD': 'Chicago', 'MDW': 'Chicago', 'CHI': 'Chicago',
-        'MIA': 'Miami', 'FLL': 'Fort Lauderdale',
-        'BOS': 'Boston', 'DCA': 'Washington', 'IAD': 'Washington',
-        'ATL': 'Atlanta', 'DFW': 'Dallas', 'DEN': 'Denver',
-        'SEA': 'Seattle', 'PDX': 'Portland', 'PHX': 'Phoenix',
-        'LAS': 'Las Vegas', 'MCO': 'Orlando', 'DTW': 'Detroit',
-        'MSP': 'Minneapolis', 'PHL': 'Philadelphia', 'CLT': 'Charlotte',
-        
-        // International airports
-        'LHR': 'London', 'LGW': 'London', 'STN': 'London', 'LCY': 'London',
-        'CDG': 'Paris', 'ORY': 'Paris',
-        'FRA': 'Frankfurt', 'MUC': 'Munich', 'BER': 'Berlin',
-        'AMS': 'Amsterdam', 'BRU': 'Brussels', 'ZUR': 'Zurich',
-        'MAD': 'Madrid', 'BCN': 'Barcelona', 'FCO': 'Rome', 'MXP': 'Milan',
-        'DUB': 'Dublin', 'VIE': 'Vienna', 'CPH': 'Copenhagen',
-        'NRT': 'Tokyo', 'HND': 'Tokyo', 'NGO': 'Nagoya', 'KIX': 'Osaka',
-        'ICN': 'Seoul', 'GMP': 'Seoul',
-        'PEK': 'Beijing', 'PVG': 'Shanghai', 'CAN': 'Guangzhou', 'SZX': 'Shenzhen',
-        'HKG': 'Hong Kong', 'TPE': 'Taipei', 'SIN': 'Singapore',
-        'BKK': 'Bangkok', 'KUL': 'Kuala Lumpur', 'CGK': 'Jakarta',
-        'DXB': 'Dubai', 'AUH': 'Abu Dhabi', 'DOH': 'Doha', 'RUH': 'Riyadh',
-        'SYD': 'Sydney', 'MEL': 'Melbourne', 'BNE': 'Brisbane', 'PER': 'Perth',
-        'AKL': 'Auckland', 'WLG': 'Wellington', 'CHC': 'Christchurch',
-        'YVR': 'Vancouver', 'YYZ': 'Toronto', 'YUL': 'Montreal', 'YEG': 'Edmonton',
-        'MEX': 'Mexico City', 'CUN': 'Cancun', 'GDL': 'Guadalajara',
-        'GRU': 'Sao Paulo', 'GIG': 'Rio de Janeiro', 'EZE': 'Buenos Aires',
-        'JNB': 'Johannesburg', 'CPT': 'Cape Town', 'CAI': 'Cairo',
-        'IST': 'Istanbul', 'ATH': 'Athens', 'DXB': 'Dubai'
-    };
-    
-    return airportToCity[code] || code; // Return city name if found, otherwise return the code
+    // Return city name if found, otherwise return the code
+    // Note: airportCodeToCity should be pre-loaded during initialization
+    return airportCodeToCity && airportCodeToCity[code] ? airportCodeToCity[code] : code;
 }
 
 // Helper function to get baseline severity from timezones
