@@ -87,10 +87,41 @@ async function loadAuditLog() {
             surveySource: entry.metadata?.surveyMetadata?.source
         })));
 
-        auditLogData.sort((a, b) => {
-            const aTime = a.timestamp instanceof Date ? a.timestamp.getTime() : 0;
-            const bTime = b.timestamp instanceof Date ? b.timestamp.getTime() : 0;
-            return bTime - aTime;
+        // Group entries by trip ID
+        const groupedByTrip = {};
+        auditLogData.forEach(entry => {
+            const tripId = entry.tripId || entry.documentId || 'unknown';
+            if (!groupedByTrip[tripId]) {
+                groupedByTrip[tripId] = [];
+            }
+            groupedByTrip[tripId].push(entry);
+        });
+
+        // Sort entries within each group by timestamp (newest first)
+        Object.keys(groupedByTrip).forEach(tripId => {
+            groupedByTrip[tripId].sort((a, b) => {
+                const aTime = a.timestamp instanceof Date ? a.timestamp.getTime() : 0;
+                const bTime = b.timestamp instanceof Date ? b.timestamp.getTime() : 0;
+                return bTime - aTime; // Newest first within group
+            });
+        });
+
+        // Sort groups by earliest timestamp in each group (oldest group first)
+        const sortedGroups = Object.keys(groupedByTrip).sort((tripIdA, tripIdB) => {
+            const groupA = groupedByTrip[tripIdA];
+            const groupB = groupedByTrip[tripIdB];
+            
+            // Find earliest timestamp in each group
+            const earliestA = Math.min(...groupA.map(e => e.timestamp instanceof Date ? e.timestamp.getTime() : 0));
+            const earliestB = Math.min(...groupB.map(e => e.timestamp instanceof Date ? e.timestamp.getTime() : 0));
+            
+            return earliestB - earliestA; // Oldest group first
+        });
+
+        // Flatten back to array, preserving group order
+        auditLogData = [];
+        sortedGroups.forEach(tripId => {
+            auditLogData.push(...groupedByTrip[tripId]);
         });
         
         renderAuditTable();
@@ -151,28 +182,45 @@ function renderTableRow(entry, index) {
     let origin = '-';
     let dest = '-';
     let arrival = '-';
+    let travelDirection = '-';
 
+    // Extract data from various sources based on operation type
+    let data = {};
     if (entry.operation === 'CREATE') {
-        const data = entry.dataSnapshot || {};
+        data = entry.dataSnapshot || {};
         const metaBefore = entry.beforeSnapshot || {};
         const meta = entry.metadata?.writeMetadata || {};
         origin = entry.originTimezone || data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
         dest = entry.destinationCode || data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
-    } else if (entry.operation === 'UPDATE' && entry.afterSnapshot) {
-        origin = entry.afterSnapshot.originTimezone || entry.originTimezone || '-';
-        dest = entry.afterSnapshot.destinationCode || entry.destinationCode || '-';
-        arrival = entry.afterSnapshot.arrivalTimeZone || entry.arrivalTimeZone || '-';
+        travelDirection = entry.travelDirection || data.travelDirection || metaBefore.travelDirection || meta.travelDirection || '-';
+    } else if (entry.operation === 'UPDATE') {
+        // Try afterSnapshot first, then entry properties, then changes
+        const afterSnapshot = entry.afterSnapshot || {};
+        const beforeSnapshot = entry.beforeSnapshot || {};
+        origin = afterSnapshot.originTimezone || entry.originTimezone || beforeSnapshot.originTimezone || '-';
+        dest = afterSnapshot.destinationCode || entry.destinationCode || beforeSnapshot.destinationCode || '-';
+        arrival = afterSnapshot.arrivalTimeZone || entry.arrivalTimeZone || beforeSnapshot.arrivalTimeZone || '-';
+        travelDirection = afterSnapshot.travelDirection || entry.travelDirection || beforeSnapshot.travelDirection || '-';
     } else if (entry.operation === 'DELETE') {
-        const data = entry.deletedData || {};
+        data = entry.deletedData || {};
         const meta = entry.metadata?.writeMetadata || {};
         origin = entry.originTimezone || data.originTimezone || meta.originTimezone || '-';
         dest = entry.destinationCode || data.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || meta.arrivalTimeZone || '-';
+        travelDirection = entry.travelDirection || data.travelDirection || meta.travelDirection || '-';
     }
 
     origin = formatTimezone(origin);
     arrival = formatTimezone(arrival);
+    
+    // Format destination with travel direction: "DEST - E/W"
+    const directionDisplay = travelDirection && travelDirection !== '-' 
+        ? travelDirection.charAt(0).toUpperCase() + travelDirection.slice(1).toLowerCase()
+        : '';
+    const destDisplay = dest !== '-' 
+        ? (directionDisplay ? `${dest} - ${directionDisplay}` : dest)
+        : '-';
 
     const hasChanges = entry.changes && Object.keys(entry.changes).length > 0;
     const isExpandable = (source === 'FC' || action === 'MODIFY') && hasChanges;
@@ -182,14 +230,23 @@ function renderTableRow(entry, index) {
 
     let evaluation = classifyEntry(entry);
 
-    let html = `
-        <tr class="${expandClass}" ${onclick} data-index="${index}">
+    // Check if this is the first entry for this trip ID (to add group separator)
+    const isFirstInGroup = index === 0 || 
+        (auditLogData[index - 1] && 
+         (auditLogData[index - 1].tripId || auditLogData[index - 1].documentId) !== tripId);
+    
+    const groupSeparator = isFirstInGroup && index > 0 
+        ? '<tr class="trip-group-separator"><td colspan="9"></td></tr>' 
+        : '';
+    
+    let html = groupSeparator + `
+        <tr class="${expandClass}" ${onclick} data-index="${index}" data-trip-id="${tripId}">
             <td>${timestamp}</td>
             <td class="${actionClass}">${action}${expandIcon}</td>
             <td class="${sourceClass}">${source}</td>
             <td>${surveyCode}</td>
             <td>${origin}</td>
-            <td>${dest}</td>
+            <td>${destDisplay}</td>
             <td>${arrival}</td>
             <td>${evaluation}</td>
             <td>${validStatus}</td>

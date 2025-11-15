@@ -207,6 +207,22 @@ body {
     background-color: #f9f9f9;
 }
 
+/* Trip Group Separator - visual divider between different trip IDs */
+.audit-table tbody tr.trip-group-separator {
+    height: 8px;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid #d0d0d0;
+}
+
+.audit-table tbody tr.trip-group-separator:hover {
+    background-color: #f0f0f0;
+}
+
+.audit-table tbody tr.trip-group-separator td {
+    padding: 0;
+    border: none;
+}
+
 .audit-table tbody tr.expandable {
     cursor: pointer;
 }
