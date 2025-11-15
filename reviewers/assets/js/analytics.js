@@ -903,7 +903,14 @@ function renderDoseResponseDataTable(surveys) {
         }
         
         // Origin and destination
-        const origin = survey.originTimezone || survey.originCode || 'N/A';
+        let origin = survey.originTimezone || survey.originCode || 'N/A';
+        // Format origin: use only part after "/" and replace "_" with spaces
+        if (origin !== 'N/A' && origin.includes('/')) {
+            origin = origin.split('/').pop(); // Get part after last "/"
+            origin = origin.replace(/_/g, ' '); // Replace underscores with spaces
+        } else if (origin !== 'N/A') {
+            origin = origin.replace(/_/g, ' '); // Replace underscores with spaces even if no "/"
+        }
         const destination = survey.destinationCode || 'N/A';
         
         // Travel direction
