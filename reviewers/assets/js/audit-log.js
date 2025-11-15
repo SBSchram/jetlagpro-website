@@ -213,13 +213,23 @@ function renderTableRow(entry, index) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${Object.entries(entry.changes).map(([field, change]) => `
-                                        <tr>
-                                            <td class=\"field-name-cell\">${escapeHtml(field)}</td>
-                                            <td class=\"value-before\">${escapeHtml(formatValue(change.before, false))}</td>
-                                            <td class=\"value-after\">${escapeHtml(formatValue(change.after, false))}</td>
-                                        </tr>
-                                    `).join('')}
+                                    ${Object.entries(entry.changes).map(([field, change]) => {
+                                        // For _metadata fields, expand each property on its own line
+                                        const isMetadata = field.includes('_metadata') || field.includes('_Metadata');
+                                        if (isMetadata && typeof change.before === 'object' && change.before !== null) {
+                                            return formatMetadataField(field, change);
+                                        } else if (isMetadata && typeof change.after === 'object' && change.after !== null) {
+                                            return formatMetadataField(field, change);
+                                        } else {
+                                            return `
+                                                <tr>
+                                                    <td class=\"field-name-cell\">${escapeHtml(field)}</td>
+                                                    <td class=\"value-before\">${escapeHtml(formatValue(change.before, false))}</td>
+                                                    <td class=\"value-after\">${escapeHtml(formatValue(change.after, false))}</td>
+                                                </tr>
+                                            `;
+                                        }
+                                    }).join('')}
                                 </tbody>
                             </table>
                         </div>
@@ -300,6 +310,27 @@ function formatTimezone(tz) {
     // Show just the last part (e.g. "America/New_York" -> "New_York")
     const parts = tz.split('/');
     return parts[parts.length - 1].replace(/_/g, ' ');
+}
+
+/**
+ * Format metadata field with each property on its own line
+ */
+function formatMetadataField(fieldName, change) {
+    const beforeObj = change.before || {};
+    const afterObj = change.after || {};
+    const allKeys = new Set([...Object.keys(beforeObj), ...Object.keys(afterObj)]);
+    
+    return Array.from(allKeys).map(key => {
+        const beforeVal = beforeObj[key] !== undefined ? beforeObj[key] : null;
+        const afterVal = afterObj[key] !== undefined ? afterObj[key] : null;
+        return `
+            <tr>
+                <td class=\"field-name-cell\">${escapeHtml(fieldName)}.${escapeHtml(key)}</td>
+                <td class=\"value-before\">${escapeHtml(formatValue(beforeVal, false))}</td>
+                <td class=\"value-after\">${escapeHtml(formatValue(afterVal, false))}</td>
+            </tr>
+        `;
+    }).join('');
 }
 
 /**

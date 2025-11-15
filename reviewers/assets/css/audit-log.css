@@ -352,6 +352,10 @@ body {
     white-space: nowrap;
 }
 
+.changes-table td {
+    text-align: left;
+}
+
 .changes-table th.col-field {
     width: 20%;
     min-width: 120px;
