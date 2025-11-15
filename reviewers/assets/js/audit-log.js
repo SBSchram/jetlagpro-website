@@ -146,6 +146,9 @@ async function loadAuditLog() {
                 }
             }
             
+            // Generate group ID for all entries in this group
+            const groupId = `group-${tripId.replace(/[^a-zA-Z0-9]/g, '-')}`;
+            
             group.forEach((entry, groupIndex) => {
                 // Add context: check if DELETE occurred before this entry
                 const hasRecentDelete = group.slice(0, groupIndex).some(e => e.operation === 'DELETE');
@@ -165,6 +168,7 @@ async function loadAuditLog() {
                 entry._groupHasDev = hasDevEntry;
                 entry._groupTripDate = tripDate;
                 entry._groupTripId = tripId;
+                entry._groupId = groupId; // Assign group ID to ALL entries in the group
                 entry._isFirstInGroup = groupIndex === 0;
                 
                 auditLogData.push(entry);
@@ -328,9 +332,11 @@ function renderTableRow(entry, index) {
     let separatorClass = 'trip-group-separator';
     let separatorOnclick = '';
     
+    // Use the group ID already assigned to all entries in the group
+    const groupId = entry._groupId || '';
+    
     if (isFirstInGroup) {
         const tripDate = entry._groupTripDate || '';
-        const groupId = `group-${tripIdForGroup.replace(/[^a-zA-Z0-9]/g, '-')}`;
         
         if (tripDate) {
             if (hasDev) {
@@ -343,9 +349,6 @@ function renderTableRow(entry, index) {
                 collapseIcon = '▼'; // Expanded state (always visible for non-DEV)
             }
         }
-        
-        // Add data attribute for group identification
-        entry._groupId = groupId;
     }
     
     const groupSeparator = isFirstInGroup 
