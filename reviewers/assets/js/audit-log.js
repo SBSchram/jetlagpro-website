@@ -123,6 +123,29 @@ async function loadAuditLog() {
         auditLogData = [];
         sortedGroups.forEach(tripId => {
             const group = groupedByTrip[tripId];
+            
+            // Check if any entry in this group has DEV evaluation
+            const hasDevEntry = group.some(entry => {
+                const eval = classifyEntry(entry);
+                return eval === 'DEV';
+            });
+            
+            // Extract date from trip ID (format: YYMMDD from parts[2])
+            let tripDate = '';
+            if (tripId) {
+                const parts = tripId.split('-');
+                if (parts.length >= 3) {
+                    const dateStr = parts[2]; // e.g., "251111"
+                    if (dateStr && dateStr.length === 6) {
+                        const year = '20' + dateStr.substring(0, 2);
+                        const month = parseInt(dateStr.substring(2, 4), 10);
+                        const day = parseInt(dateStr.substring(4, 6), 10);
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        tripDate = `${monthNames[month - 1]} ${day}, ${year}`;
+                    }
+                }
+            }
+            
             group.forEach((entry, groupIndex) => {
                 // Add context: check if DELETE occurred before this entry
                 const hasRecentDelete = group.slice(0, groupIndex).some(e => e.operation === 'DELETE');
@@ -137,6 +160,10 @@ async function loadAuditLog() {
                     entry._isFirstSurvey = !hasPreviousSurvey && !hasRecentDelete;
                     entry._isAfterRecreation = hasRecentDelete;
                 }
+                
+                // Store group metadata for separator display
+                entry._groupHasDev = hasDevEntry;
+                entry._groupTripDate = tripDate;
                 
                 auditLogData.push(entry);
             });
@@ -290,8 +317,23 @@ function renderTableRow(entry, index) {
         (auditLogData[index - 1] && 
          (auditLogData[index - 1].tripId || auditLogData[index - 1].documentId) !== tripId);
     
+    // Build separator text
+    let separatorText = '';
+    if (isFirstInGroup && index > 0) {
+        const tripDate = entry._groupTripDate || '';
+        const hasDev = entry._groupHasDev || false;
+        
+        if (tripDate) {
+            if (hasDev) {
+                separatorText = `Developer Testing - Trip dated ${tripDate}`;
+            } else {
+                separatorText = `Trip dated ${tripDate}`;
+            }
+        }
+    }
+    
     const groupSeparator = isFirstInGroup && index > 0 
-        ? '<tr class="trip-group-separator"><td colspan="9"></td></tr>' 
+        ? `<tr class="trip-group-separator"><td colspan="9" class="separator-content">${separatorText}</td></tr>` 
         : '';
     
     // Enhanced DELETE styling

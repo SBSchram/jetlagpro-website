@@ -209,7 +209,7 @@ body {
 
 /* Trip Group Separator - visual divider between different trip IDs */
 .audit-table tbody tr.trip-group-separator {
-    height: 8px;
+    height: auto;
     background-color: #f0f0f0;
     border-bottom: 2px solid #d0d0d0;
 }
@@ -219,8 +219,15 @@ body {
 }
 
 .audit-table tbody tr.trip-group-separator td {
-    padding: 0;
+    padding: 8px 12px;
     border: none;
+}
+
+.audit-table tbody tr.trip-group-separator td.separator-content {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+    font-style: italic;
 }
 
 .audit-table tbody tr.expandable {
