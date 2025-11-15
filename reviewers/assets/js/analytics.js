@@ -77,6 +77,11 @@ async function initializeDashboard() {
 async function loadDashboardData() {
     try {
         isLoading = true;
+        
+        // Save scroll position and hash before loading
+        const savedScrollY = window.scrollY || window.pageYOffset;
+        const savedHash = window.location.hash;
+        
         showLoadingState();
         
         await loadSurveyData();
@@ -87,6 +92,31 @@ async function loadDashboardData() {
             // Small delay to ensure DOM and TripValidator are ready
             setTimeout(() => {
                 renderDashboard();
+                
+                // Restore scroll position or navigate to hash anchor
+                if (savedHash) {
+                    // If there's a hash, scroll to that anchor (with offset for sticky nav)
+                    setTimeout(() => {
+                        const targetElement = document.querySelector(savedHash);
+                        if (targetElement) {
+                            const offset = 80; // Account for sticky nav
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'instant'
+                            });
+                        }
+                    }, 200);
+                } else if (savedScrollY > 0) {
+                    // Otherwise, restore the previous scroll position
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: savedScrollY,
+                            behavior: 'instant'
+                        });
+                    }, 200);
+                }
             }, 100);
         } else {
             console.warn('⚠️ No data loaded, showing empty state');
