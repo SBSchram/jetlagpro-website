@@ -150,6 +150,11 @@ body {
     padding: 6px 8px;
 }
 
+/* Tighten Baseline Expected column specifically (8th column) */
+.dose-response-table th:nth-child(8) {
+    max-width: 90px;
+}
+
 .data-section {
     padding: 12px 0;
     margin-bottom: 30px;
