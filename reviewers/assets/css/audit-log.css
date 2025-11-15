@@ -176,7 +176,7 @@ body {
 
 .audit-table th:nth-child(5),
 .audit-table td:nth-child(5) {
-    width: 150px;
+    width: 100px;
 }
 
 .audit-table th:nth-child(6),
