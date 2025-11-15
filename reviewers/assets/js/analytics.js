@@ -964,28 +964,35 @@ function renderDoseResponseDataTable(surveys) {
         const actual = calculateActualSeverity(survey);
         const actualStr = actual !== null ? actual.toFixed(1) : 'N/A';
         
-        // Calculate improvement percentages
+        // Calculate improvement percentages with color coding
         let improvementOverExpected = null;
         let improvementOverExpectedStr = 'N/A';
+        let improvementOverExpectedColor = '#333'; // Default
         if (baseline !== null && actual !== null) {
             improvementOverExpected = ((baseline - actual) / baseline) * 100;
             improvementOverExpectedStr = improvementOverExpected.toFixed(1) + '%';
+            // Color: green for positive, red for zero or negative
+            improvementOverExpectedColor = improvementOverExpected > 0 ? '#16a34a' : '#dc2626';
         }
         
         let improvementOverAnticipated = null;
         let improvementOverAnticipatedStr = 'N/A';
+        let improvementOverAnticipatedColor = '#333'; // Default
         if (anticipated !== null && anticipated !== undefined && !isNaN(anticipated) && 
             actual !== null && actual !== undefined && !isNaN(actual)) {
             // Handle division by zero - if anticipated is 0, improvement is undefined
             if (anticipated === 0) {
                 if (actual === 0) {
                     improvementOverAnticipatedStr = '0.0%'; // Both 0 = no change
+                    improvementOverAnticipatedColor = '#dc2626'; // Red for zero
                 } else {
                     improvementOverAnticipatedStr = 'N/A'; // Can't calculate % improvement from 0 baseline
                 }
             } else {
                 improvementOverAnticipated = ((anticipated - actual) / anticipated) * 100;
                 improvementOverAnticipatedStr = improvementOverAnticipated.toFixed(1) + '%';
+                // Color: green for positive, red for zero or negative
+                improvementOverAnticipatedColor = improvementOverAnticipated > 0 ? '#16a34a' : '#dc2626';
             }
         }
         
@@ -999,8 +1006,8 @@ function renderDoseResponseDataTable(surveys) {
             <td>${baselineStr}</td>
             <td>${anticipatedStr}</td>
             <td>${actualStr}</td>
-            <td>${improvementOverExpectedStr}</td>
-            <td>${improvementOverAnticipatedStr}</td>
+            <td style="color: ${improvementOverExpectedColor}; font-weight: 600;">${improvementOverExpectedStr}</td>
+            <td style="color: ${improvementOverAnticipatedColor}; font-weight: 600;">${improvementOverAnticipatedStr}</td>
         </tr>`;
     });
     
