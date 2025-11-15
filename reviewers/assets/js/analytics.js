@@ -922,11 +922,27 @@ function renderDoseResponseDataTable(surveys) {
         const baseline = getBaselineSeverity(timezones);
         const baselineStr = baseline !== null ? baseline.toFixed(1) : 'N/A';
         
-        // Anticipated severity - try multiple possible field names
-        // Check if it's in the survey object directly or in nested surveyData
-        const anticipated = survey.generalAnticipated || 
-                           (survey.surveyData && survey.surveyData.generalAnticipated) ||
-                           null;
+        // Anticipated severity - calculate average of individual anticipated symptoms
+        // or use generalAnticipated if available
+        const anticipatedSymptoms = [
+            survey.anticipatedSleepSeverity,
+            survey.anticipatedFatigueSeverity,
+            survey.anticipatedConcentrationSeverity,
+            survey.anticipatedIrritabilitySeverity,
+            survey.anticipatedGISeverity
+        ].filter(s => s !== null && s !== undefined);
+        
+        let anticipated = null;
+        if (survey.generalAnticipated !== null && survey.generalAnticipated !== undefined) {
+            anticipated = survey.generalAnticipated;
+        } else if (anticipatedSymptoms.length > 0) {
+            // Calculate average of individual anticipated severities
+            const sum = anticipatedSymptoms.reduce((acc, val) => acc + val, 0);
+            anticipated = sum / anticipatedSymptoms.length;
+        } else if (survey.surveyData && survey.surveyData.generalAnticipated) {
+            anticipated = survey.surveyData.generalAnticipated;
+        }
+        
         const anticipatedStr = anticipated !== null && anticipated !== undefined ? Number(anticipated).toFixed(1) : 'N/A';
         
         // Actual severity
