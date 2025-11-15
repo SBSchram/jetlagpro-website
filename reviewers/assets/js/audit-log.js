@@ -197,6 +197,22 @@ function renderTableRow(entry, index) {
     const tripId = entry.tripId || entry.documentId || '';
     const surveyCode = tripId ? tripId.split('-')[0] : '-';
 
+    // Extract travel direction from trip ID format: "deviceId-destDir-date-time-signature"
+    // destDir is "DEST" + "E" or "W" (e.g., "ISTE" = "IST" + "E")
+    let travelDirectionFromTripId = '-';
+    if (tripId) {
+        const parts = tripId.split('-');
+        if (parts.length >= 2) {
+            const destDir = parts[1]; // e.g., "ISTE"
+            if (destDir && destDir.length >= 4) {
+                const directionChar = destDir.charAt(destDir.length - 1).toUpperCase();
+                if (directionChar === 'E' || directionChar === 'W') {
+                    travelDirectionFromTripId = directionChar === 'E' ? 'East' : 'West';
+                }
+            }
+        }
+    }
+
     let origin = '-';
     let dest = '-';
     let arrival = '-';
@@ -211,7 +227,9 @@ function renderTableRow(entry, index) {
         origin = entry.originTimezone || data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
         dest = entry.destinationCode || data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
-        travelDirection = entry.travelDirection || data.travelDirection || metaBefore.travelDirection || meta.travelDirection || '-';
+        // Use trip ID direction as fallback if not in data
+        const dataDirection = entry.travelDirection || data.travelDirection || metaBefore.travelDirection || meta.travelDirection;
+        travelDirection = dataDirection || travelDirectionFromTripId;
     } else if (entry.operation === 'UPDATE') {
         // Try afterSnapshot first, then entry properties, then changes
         const afterSnapshot = entry.afterSnapshot || {};
@@ -219,23 +237,41 @@ function renderTableRow(entry, index) {
         origin = afterSnapshot.originTimezone || entry.originTimezone || beforeSnapshot.originTimezone || '-';
         dest = afterSnapshot.destinationCode || entry.destinationCode || beforeSnapshot.destinationCode || '-';
         arrival = afterSnapshot.arrivalTimeZone || entry.arrivalTimeZone || beforeSnapshot.arrivalTimeZone || '-';
-        travelDirection = afterSnapshot.travelDirection || entry.travelDirection || beforeSnapshot.travelDirection || '-';
+        // Use trip ID direction as fallback if not in data
+        const dataDirection = afterSnapshot.travelDirection || entry.travelDirection || beforeSnapshot.travelDirection;
+        travelDirection = dataDirection || travelDirectionFromTripId;
     } else if (entry.operation === 'DELETE') {
         data = entry.deletedData || {};
         const meta = entry.metadata?.writeMetadata || {};
         origin = entry.originTimezone || data.originTimezone || meta.originTimezone || '-';
         dest = entry.destinationCode || data.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || meta.arrivalTimeZone || '-';
-        travelDirection = entry.travelDirection || data.travelDirection || meta.travelDirection || '-';
+        // Use trip ID direction as fallback if not in data
+        const dataDirection = entry.travelDirection || data.travelDirection || meta.travelDirection;
+        travelDirection = dataDirection || travelDirectionFromTripId;
     }
 
     origin = formatTimezone(origin);
     arrival = formatTimezone(arrival);
     
     // Format destination with travel direction: "DEST - E/W"
-    const directionDisplay = travelDirection && travelDirection !== '-' 
-        ? travelDirection.charAt(0).toUpperCase() + travelDirection.slice(1).toLowerCase()
-        : '';
+    // Normalize direction: "east"/"East"/"E" -> "East", "west"/"West"/"W" -> "West"
+    let directionDisplay = '';
+    if (travelDirection && travelDirection !== '-') {
+        const dirLower = travelDirection.toLowerCase();
+        if (dirLower === 'e' || dirLower === 'east') {
+            directionDisplay = 'East';
+        } else if (dirLower === 'w' || dirLower === 'west') {
+            directionDisplay = 'West';
+        } else {
+            // Fallback: capitalize first letter
+            directionDisplay = travelDirection.charAt(0).toUpperCase() + travelDirection.slice(1).toLowerCase();
+        }
+    } else if (travelDirectionFromTripId !== '-') {
+        // Use direction extracted from trip ID if data doesn't have it
+        directionDisplay = travelDirectionFromTripId;
+    }
+    
     const destDisplay = dest !== '-' 
         ? (directionDisplay ? `${dest} - ${directionDisplay}` : dest)
         : '-';
