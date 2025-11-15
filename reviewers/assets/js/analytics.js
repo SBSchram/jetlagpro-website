@@ -928,14 +928,30 @@ function renderDoseResponseDataTable(surveys) {
         
         let anticipated = null;
         // Check if generalAnticipated exists (including 0 as valid)
-        if (survey.generalAnticipated !== null && survey.generalAnticipated !== undefined && !isNaN(survey.generalAnticipated)) {
-            anticipated = Number(survey.generalAnticipated);
-        } else if (survey.surveyData && survey.surveyData.generalAnticipated !== null && survey.surveyData.generalAnticipated !== undefined && !isNaN(survey.surveyData.generalAnticipated)) {
+        // Try direct access first (flat structure)
+        const generalAnticipatedValue = survey.generalAnticipated;
+        if (generalAnticipatedValue !== null && generalAnticipatedValue !== undefined && generalAnticipatedValue !== '' && !isNaN(generalAnticipatedValue)) {
+            anticipated = Number(generalAnticipatedValue);
+        } 
+        // Try nested in surveyData (old format)
+        else if (survey.surveyData && survey.surveyData.generalAnticipated !== null && survey.surveyData.generalAnticipated !== undefined && survey.surveyData.generalAnticipated !== '' && !isNaN(survey.surveyData.generalAnticipated)) {
             anticipated = Number(survey.surveyData.generalAnticipated);
-        } else if (anticipatedSymptoms.length > 0) {
+        } 
+        // Fallback to average of individual anticipated symptoms
+        else if (anticipatedSymptoms.length > 0) {
             // Calculate average of individual anticipated severities
             const sum = anticipatedSymptoms.reduce((acc, val) => acc + Number(val), 0);
             anticipated = sum / anticipatedSymptoms.length;
+        }
+        
+        // Debug: log first few surveys to see what data we have
+        if (sortedSurveys.indexOf(survey) < 3) {
+            console.log('Survey anticipated data:', {
+                generalAnticipated: survey.generalAnticipated,
+                surveyData: survey.surveyData,
+                anticipatedSymptoms: anticipatedSymptoms,
+                calculated: anticipated
+            });
         }
         
         const anticipatedStr = anticipated !== null && anticipated !== undefined && !isNaN(anticipated) ? Number(anticipated).toFixed(1) : 'N/A';
