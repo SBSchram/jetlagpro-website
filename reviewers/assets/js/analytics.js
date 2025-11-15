@@ -917,26 +917,28 @@ function renderDoseResponseDataTable(surveys) {
         
         // Anticipated severity - calculate average of individual anticipated symptoms
         // or use generalAnticipated if available
+        // Note: 0 is a valid value, so we check for null/undefined specifically
         const anticipatedSymptoms = [
             survey.anticipatedSleepSeverity,
             survey.anticipatedFatigueSeverity,
             survey.anticipatedConcentrationSeverity,
             survey.anticipatedIrritabilitySeverity,
             survey.anticipatedGISeverity
-        ].filter(s => s !== null && s !== undefined);
+        ].filter(s => s !== null && s !== undefined && !isNaN(s));
         
         let anticipated = null;
-        if (survey.generalAnticipated !== null && survey.generalAnticipated !== undefined) {
-            anticipated = survey.generalAnticipated;
+        // Check if generalAnticipated exists (including 0 as valid)
+        if (survey.generalAnticipated !== null && survey.generalAnticipated !== undefined && !isNaN(survey.generalAnticipated)) {
+            anticipated = Number(survey.generalAnticipated);
+        } else if (survey.surveyData && survey.surveyData.generalAnticipated !== null && survey.surveyData.generalAnticipated !== undefined && !isNaN(survey.surveyData.generalAnticipated)) {
+            anticipated = Number(survey.surveyData.generalAnticipated);
         } else if (anticipatedSymptoms.length > 0) {
             // Calculate average of individual anticipated severities
-            const sum = anticipatedSymptoms.reduce((acc, val) => acc + val, 0);
+            const sum = anticipatedSymptoms.reduce((acc, val) => acc + Number(val), 0);
             anticipated = sum / anticipatedSymptoms.length;
-        } else if (survey.surveyData && survey.surveyData.generalAnticipated) {
-            anticipated = survey.surveyData.generalAnticipated;
         }
         
-        const anticipatedStr = anticipated !== null && anticipated !== undefined ? Number(anticipated).toFixed(1) : 'N/A';
+        const anticipatedStr = anticipated !== null && anticipated !== undefined && !isNaN(anticipated) ? Number(anticipated).toFixed(1) : 'N/A';
         
         // Actual severity
         const actual = calculateActualSeverity(survey);
@@ -952,9 +954,19 @@ function renderDoseResponseDataTable(surveys) {
         
         let improvementOverAnticipated = null;
         let improvementOverAnticipatedStr = 'N/A';
-        if (anticipated !== null && actual !== null) {
-            improvementOverAnticipated = ((anticipated - actual) / anticipated) * 100;
-            improvementOverAnticipatedStr = improvementOverAnticipated.toFixed(1) + '%';
+        if (anticipated !== null && anticipated !== undefined && !isNaN(anticipated) && 
+            actual !== null && actual !== undefined && !isNaN(actual)) {
+            // Handle division by zero - if anticipated is 0, improvement is undefined
+            if (anticipated === 0) {
+                if (actual === 0) {
+                    improvementOverAnticipatedStr = '0.0%'; // Both 0 = no change
+                } else {
+                    improvementOverAnticipatedStr = 'N/A'; // Can't calculate % improvement from 0 baseline
+                }
+            } else {
+                improvementOverAnticipated = ((anticipated - actual) / anticipated) * 100;
+                improvementOverAnticipatedStr = improvementOverAnticipated.toFixed(1) + '%';
+            }
         }
         
         tableHtml += `<tr>
