@@ -387,6 +387,7 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 0; /* Force word wrapping in table cells */
+    text-align: left;
 }
 
 .changes-table td:last-child {
