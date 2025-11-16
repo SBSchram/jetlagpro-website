@@ -585,7 +585,9 @@ function renderTripStats() {
     const confirmedTripsText = `${validWithSurveys.length} with surveys (${validWithSurveysPercent}%)<br>${validWithoutSurveys.length} without surveys (${validWithoutSurveysPercent}%)`;
     
     // Compute verified/legacy/test summary for the top line
-    const verifiedCount = ((breakdown.real_travel || 0) + (breakdown.survey_fallback || 0));
+    const tzVerifiedCount = (breakdown.real_travel || 0);
+    const fallbackVerifiedCount = (breakdown.survey_fallback || 0);
+    const verifiedCount = (tzVerifiedCount + fallbackVerifiedCount);
     const legacyCount = (breakdown.legacy || 0);
     const testCount = (validationStats.invalid || 0);
 
@@ -594,7 +596,7 @@ function renderTripStats() {
     const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
 
     let html = '<table class="stats-table">';
-    html += `<tr><th>${validationStats.total} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test</td></tr>`;
+    html += `<tr><th>${validationStats.total} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Fallback ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
