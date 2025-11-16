@@ -123,6 +123,65 @@
             background: #1d4ed8;
         }
         
+        /* Responsive image sizing for HTML display (Word export resizes separately) */
+        .methods-screenshots {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .methods-screenshots table {
+            width: auto;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .methods-screenshots img {
+            width: 250px;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .methods-screenshots td {
+            width: auto;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+            border: none;
+        }
+        
+        /* Point images - larger for HTML display */
+        .point-images-table {
+            width: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            table-layout: auto;
+        }
+        
+        .point-images-table td {
+            width: auto;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+            border: none;
+        }
+        
+        .point-images-table img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .point-images-table tr:not(:first-child) td {
+            padding: 5px;
+            vertical-align: top;
+        }
+        
         @media (max-width: 768px) {
             .export-button-container {
                 position: static;
@@ -138,6 +197,15 @@
             
             .export-dropdown:hover .export-content {
                 display: block;
+            }
+            
+            .methods-screenshots img {
+                width: 200px;
+            }
+            
+            .point-images-table img {
+                width: 100px;
+                height: 100px;
             }
         }
 
@@ -475,27 +543,27 @@
         <h2>Methods</h2>
 		<p>The mobile application provides users with timing and instructions to stimulate specific horary points based on the destination time. Ideally starting at the airport (or anytime thereafter), users select the destination. The app immediately identifies the first active horary point matching the destination time. This process is illustrated below.</p>
 
-		<div class="methods-screenshots" style="text-align: center; margin: 30px 0;">
-            <table style="width: 450px; border-collapse: collapse; margin: 0 auto; table-layout: fixed;">
+		<div class="methods-screenshots">
+            <table>
                 <tr>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
-                        <img src="assets/images/research-photo-1.png" alt="JetLagPro App Screenshot 1" style="width: 150px; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <td>
+                        <img src="assets/images/research-photo-1.png" alt="JetLagPro App Screenshot 1">
                     </td>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
-                        <img src="assets/images/research-photo-2.png" alt="JetLagPro App Screenshot 2" style="width: 150px; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <td>
+                        <img src="assets/images/research-photo-2.png" alt="JetLagPro App Screenshot 2">
                     </td>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
-                        <img src="assets/images/research-photo-4.png" alt="JetLagPro App Screenshot 4" style="width: 150px; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <td>
+                        <img src="assets/images/research-photo-4.png" alt="JetLagPro App Screenshot 4">
                     </td>
                 </tr>
                 <tr>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 8px; font-size: 12px; color: #666; font-weight: bold;">Screen 1: Basic Instructions</p>
                     </td>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 8px; font-size: 12px; color: #666; font-weight: bold;">Screen 2: Destination Selection</p>
                     </td>
-                    <td style="width: 150px; padding: 10px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 8px; font-size: 12px; color: #666; font-weight: bold;">Screen 3: Point Stimulation</p>
                     </td>
                 </tr>
@@ -506,84 +574,84 @@
 
         <div style="text-align: center; margin: 30px 0;">
             <h2>Point Images</h2>
-            <table style="width: 480px; border-collapse: collapse; margin: 0 auto; table-layout: fixed;">
+            <table class="point-images-table">
                 <tr>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/LU-8.jpg" alt="LU-8 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/LU-8.jpg" alt="LU-8 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/LI-1.jpg" alt="LI-1 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/LI-1.jpg" alt="LI-1 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/ST-36.jpg" alt="ST-36 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/ST-36.jpg" alt="ST-36 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/SP-3.jpg" alt="SP-3 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/SP-3.jpg" alt="SP-3 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/HT-8.jpg" alt="HT-8 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/HT-8.jpg" alt="HT-8 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/SI-5.jpg" alt="SI-5 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/SI-5.jpg" alt="SI-5 Point">
                     </td>
                 </tr>
                 <tr>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">LU-8</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">LI-1</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">ST-36</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">SP-3</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">HT-8</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">SI-5</p>
                     </td>
                 </tr>
                 <tr>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/BL-66.jpg" alt="BL-66 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/BL-66.jpg" alt="BL-66 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/KI-3.jpg" alt="KI-3 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/KI-3.jpg" alt="KI-3 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/PC-8.jpg" alt="PC-8 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/PC-8.jpg" alt="PC-8 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/SJ-6.jpg" alt="SJ-6 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/SJ-6.jpg" alt="SJ-6 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/GB-41.jpg" alt="GB-41 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/GB-41.jpg" alt="GB-41 Point">
                     </td>
-                    <td style="width: 80px; height: 80px; padding: 5px; text-align: center; vertical-align: middle; border: none;">
-                        <img src="assets/images/LIV-1.jpg" alt="LIV-1 Point" style="width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto;">
+                    <td>
+                        <img src="assets/images/LIV-1.jpg" alt="LIV-1 Point">
                     </td>
                 </tr>
                 <tr>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">BL-66</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">KI-3</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">PC-8</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">SJ-6</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">GB-41</p>
                     </td>
-                    <td style="width: 80px; padding: 5px; text-align: center; vertical-align: top; border: none;">
+                    <td>
                         <p style="margin-top: 5px; font-size: 12px; font-weight: bold;">LIV-1</p>
                     </td>
                 </tr>
