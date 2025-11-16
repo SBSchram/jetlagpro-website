@@ -659,7 +659,7 @@ function renderAdvancedAnalytics() {
     
     // Dose-Response Data Table - all surveys used in the chart
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += '<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Data</h3>';
+    html += '<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Raw Data</h3>';
     html += renderDoseResponseDataTable(completedSurveys);
     html += '</div>';
     
