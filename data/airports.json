@@ -700,6 +700,169 @@
             "country": "Kenya",
             "timezone": "Africa/Nairobi"
         },
+
+        {
+            "code": "ACC",
+            "name": "Kotoka International Airport",
+            "city": "Accra",
+            "country": "Ghana",
+            "timezone": "Africa/Accra"
+        },
+        {
+            "code": "DAR",
+            "name": "Julius Nyerere International Airport",
+            "city": "Dar es Salaam",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "JRO",
+            "name": "Kilimanjaro International Airport",
+            "city": "Kilimanjaro",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "ADD",
+            "name": "Bole International Airport",
+            "city": "Addis Ababa",
+            "country": "Ethiopia",
+            "timezone": "Africa/Addis_Ababa"
+        },
+        {
+            "code": "KRT",
+            "name": "Khartoum International Airport",
+            "city": "Khartoum",
+            "country": "Sudan",
+            "timezone": "Africa/Khartoum"
+        },
+        {
+            "code": "CMN",
+            "name": "Mohammed V International Airport",
+            "city": "Casablanca",
+            "country": "Morocco",
+            "timezone": "Africa/Casablanca"
+        },
+        {
+            "code": "ALG",
+            "name": "Houari Boumediene Airport",
+            "city": "Algiers",
+            "country": "Algeria",
+            "timezone": "Africa/Algiers"
+        },
+        {
+            "code": "TUN",
+            "name": "Tunis Carthage International Airport",
+            "city": "Tunis",
+            "country": "Tunisia",
+            "timezone": "Africa/Tunis"
+        },
+        {
+            "code": "LUN",
+            "name": "Kenneth Kaunda International Airport",
+            "city": "Lusaka",
+            "country": "Zambia",
+            "timezone": "Africa/Lusaka"
+        },
+        {
+            "code": "HRE",
+            "name": "Robert Gabriel Mugabe International Airport",
+            "city": "Harare",
+            "country": "Zimbabwe",
+            "timezone": "Africa/Harare"
+        },
+        {
+            "code": "GBE",
+            "name": "Sir Seretse Khama International Airport",
+            "city": "Gaborone",
+            "country": "Botswana",
+            "timezone": "Africa/Gaborone"
+        },
+        {
+            "code": "MPM",
+            "name": "Maputo International Airport",
+            "city": "Maputo",
+            "country": "Mozambique",
+            "timezone": "Africa/Maputo"
+        },
+        {
+            "code": "FIH",
+            "name": "N'djili Airport",
+            "city": "Kinshasa",
+            "country": "Democratic Republic of the Congo",
+            "timezone": "Africa/Kinshasa"
+        },
+        {
+            "code": "SSA",
+            "name": "Salvador Bahia Airport",
+            "city": "Salvador",
+            "country": "Brazil",
+            "timezone": "America/Bahia"
+        },
+        {
+            "code": "ZNZ",
+            "name": "Zanzibar International Airport",
+            "city": "Zanzibar",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "MBA",
+            "name": "Moi International Airport",
+            "city": "Mombasa",
+            "country": "Kenya",
+            "timezone": "Africa/Nairobi"
+        },
+        {
+            "code": "SEZ",
+            "name": "Seychelles International Airport",
+            "city": "Victoria",
+            "country": "Seychelles",
+            "timezone": "Indian/Mahe"
+        },
+        {
+            "code": "MRU",
+            "name": "Mauritius International Airport",
+            "city": "Port Louis",
+            "country": "Mauritius",
+            "timezone": "Indian/Mauritius"
+        },
+        {
+            "code": "RUN",
+            "name": "Roland Garros Airport",
+            "city": "Saint-Denis",
+            "country": "Réunion",
+            "timezone": "Indian/Reunion"
+        },
+        {
+            "code": "LAD",
+            "name": "Quatro de Fevereiro Airport",
+            "city": "Luanda",
+            "country": "Angola",
+            "timezone": "Africa/Luanda"
+        },
+        {
+            "code": "LOS",
+            "name": "Murtala Muhammed International Airport",
+            "city": "Lagos",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+        {
+            "code": "ABV",
+            "name": "Nnamdi Azikiwe International Airport",
+            "city": "Abuja",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+        {
+            "code": "KAN",
+            "name": "Mallam Aminu Kano International Airport",
+            "city": "Kano",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+
         {
             "code": "TLV",
             "name": "Ben Gurion Airport",
@@ -1910,6 +2073,188 @@
             "city": "Hamilton",
             "country": "Bermuda",
             "timezone": "Atlantic/Bermuda"
+        },
+        {
+            "code": "BER",
+            "name": "Berlin Brandenburg Airport",
+            "city": "Berlin",
+            "country": "Germany",
+            "timezone": "Europe/Berlin"
+        },
+        {
+            "code": "MUC",
+            "name": "Munich Airport",
+            "city": "Munich",
+            "country": "Germany",
+            "timezone": "Europe/Berlin"
+        },
+        {
+            "code": "ORY",
+            "name": "Paris Orly Airport",
+            "city": "Paris",
+            "country": "France",
+            "timezone": "Europe/Paris"
+        },
+        {
+            "code": "LGW",
+            "name": "London Gatwick Airport",
+            "city": "London",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "STN",
+            "name": "London Stansted Airport",
+            "city": "London",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "MAN",
+            "name": "Manchester Airport",
+            "city": "Manchester",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "BHX",
+            "name": "Birmingham Airport",
+            "city": "Birmingham",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "EDI",
+            "name": "Edinburgh Airport",
+            "city": "Edinburgh",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "GLA",
+            "name": "Glasgow Airport",
+            "city": "Glasgow",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "GVA",
+            "name": "Geneva Airport",
+            "city": "Geneva",
+            "country": "Switzerland",
+            "timezone": "Europe/Zurich"
+        },
+        {
+            "code": "BSL",
+            "name": "EuroAirport Basel Mulhouse Freiburg",
+            "city": "Basel",
+            "country": "Switzerland",
+            "timezone": "Europe/Zurich"
+        },
+        {
+            "code": "IKA",
+            "name": "Imam Khomeini International Airport",
+            "city": "Tehran",
+            "country": "Iran",
+            "timezone": "Asia/Tehran"
+        },
+        {
+            "code": "AMM",
+            "name": "Queen Alia International Airport",
+            "city": "Amman",
+            "country": "Jordan",
+            "timezone": "Asia/Amman"
+        },
+        {
+            "code": "BEY",
+            "name": "Beirut-Rafic Hariri International Airport",
+            "city": "Beirut",
+            "country": "Lebanon",
+            "timezone": "Asia/Beirut"
+        },
+        {
+            "code": "DMM",
+            "name": "King Fahd International Airport",
+            "city": "Dammam",
+            "country": "Saudi Arabia",
+            "timezone": "Asia/Riyadh"
+        },
+        {
+            "code": "MED",
+            "name": "Prince Mohammad bin Abdulaziz Airport",
+            "city": "Medina",
+            "country": "Saudi Arabia",
+            "timezone": "Asia/Riyadh"
+        },
+        {
+            "code": "SHJ",
+            "name": "Sharjah International Airport",
+            "city": "Sharjah",
+            "country": "United Arab Emirates",
+            "timezone": "Asia/Dubai"
+        },
+        {
+            "code": "DWC",
+            "name": "Al Maktoum International Airport",
+            "city": "Dubai",
+            "country": "United Arab Emirates",
+            "timezone": "Asia/Dubai"
+        },
+        {
+            "code": "ALY",
+            "name": "Alexandria International Airport",
+            "city": "Alexandria",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "HRG",
+            "name": "Hurghada International Airport",
+            "city": "Hurghada",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "LXR",
+            "name": "Luxor International Airport",
+            "city": "Luxor",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "SSH",
+            "name": "Sharm El Sheikh International Airport",
+            "city": "Sharm El Sheikh",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "AKL",
+            "name": "Auckland Airport",
+            "city": "Auckland",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "WLG",
+            "name": "Wellington International Airport",
+            "city": "Wellington",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "CHC",
+            "name": "Christchurch International Airport",
+            "city": "Christchurch",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "ZQN",
+            "name": "Queenstown Airport",
+            "city": "Queenstown",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
         }
     ]
 }
