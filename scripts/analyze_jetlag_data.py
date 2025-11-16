@@ -218,8 +218,9 @@ def calculate_aggregate_severity(trip: Dict) -> float:
     
     TECHNICAL:
     EXACTLY matches charts.js line 88-92:
-    - Uses ALL 6 symptoms: postSleepSeverity, postFatigueSeverity, postConcentrationSeverity,
-      postIrritabilitySeverity, postMotivationSeverity, postGISeverity
+    - Uses ALL 6 symptoms: sleepPost, fatiguePost, concentrationPost,
+      irritabilityPost, motivationPost, giPost (Firestore field names)
+    - JavaScript transforms these to postSleepSeverity, etc. (analytics.js line 255-260)
     - Filters to only valid (non-null) symptoms
     - Averages ALL available symptoms (not just 5)
     
@@ -227,13 +228,15 @@ def calculate_aggregate_severity(trip: Dict) -> float:
         float: Mean severity (1-5 scale) or None if no valid symptoms
     """
     # CRITICAL: Must match charts.js line 88 exactly
+    # Note: JavaScript transforms Firestore field names (analytics.js line 255-260)
+    # but we read raw Firestore data, so use actual field names
     symptoms = [
-        trip.get('postSleepSeverity'),
-        trip.get('postFatigueSeverity'),
-        trip.get('postConcentrationSeverity'),
-        trip.get('postIrritabilitySeverity'),
-        trip.get('postMotivationSeverity'),
-        trip.get('postGISeverity')
+        trip.get('sleepPost'),
+        trip.get('fatiguePost'),
+        trip.get('concentrationPost'),
+        trip.get('irritabilityPost'),
+        trip.get('motivationPost'),
+        trip.get('giPost')
     ]
     
     # Filter to only valid (non-null) symptoms - matches charts.js line 89
