@@ -575,7 +575,7 @@ function renderTripStats() {
             const percentage = totalValidTrips > 0 ? ((count / totalValidTrips) * 100).toFixed(1) : '0.0';
             const label = String(direction || '').charAt(0).toUpperCase() + String(direction || '').slice(1).toLowerCase();
             return `${count} ${label} (${percentage}%)`;
-        }).join(' ');
+        }).join('<br>');
     }
     
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
