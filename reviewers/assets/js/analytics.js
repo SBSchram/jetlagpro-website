@@ -588,8 +588,13 @@ function renderTripStats() {
     const legacyCount = (breakdown.legacy || 0);
     const testCount = (validationStats.invalid || 0);
 
+    // HMAC validation status (cryptographic authentication)
+    const hmacStats = TripValidator.getHMACStats(allData);
+    const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
+
     let html = '<table class="stats-table">';
     html += `<tr><th>${validationStats.total} Trips</th><td>Verified ${verifiedCount} / Legacy ${legacyCount} / Test ${testCount}</td></tr>`;
+    html += `<tr><th>Confirmed Trips (${validationStats.valid})</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
