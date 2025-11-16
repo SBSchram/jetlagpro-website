@@ -592,7 +592,7 @@ function renderTripStats() {
     
     let html = '<table class="stats-table">';
     html += `<tr><th>Trips (Total / Confirmed / Test)</th><td>${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
-    html += `<tr><th>Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
+    html += `<tr><th>Confirmed Trips (${validationStats.valid})</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     html += `<tr><th>Data Type</th><td>${dataTypeText}</td></tr>`;
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
