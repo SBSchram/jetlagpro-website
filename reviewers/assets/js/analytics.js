@@ -594,7 +594,10 @@ function renderTripStats() {
 
     let html = '<table class="stats-table">';
     html += `<tr><th>${validationStats.total} Trips</th><td>Verified ${verifiedCount} / Legacy ${legacyCount} / Test ${testCount}</td></tr>`;
-    html += `<tr><th>Confirmed Trips (${validationStats.valid})</th><td>${confirmedTripsText}</td></tr>`;
+    // Outline breakdown for Confirmed Trips
+    html += `<tr><th>Confirmed Trips (${validationStats.valid})</th><td></td></tr>`;
+    html += `<tr><th style="padding-left: 16px; font-weight: 400;">with surveys</th><td>${validWithSurveys.length} (${validWithSurveysPercent}%)</td></tr>`;
+    html += `<tr><th style="padding-left: 16px; font-weight: 400;">without surveys</th><td>${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
