@@ -606,9 +606,15 @@ def load_airport_mapping() -> Dict[str, str]:
     """
     try:
         import os
+        # Get the directory where this script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        # Resolve the path properly (scripts/../data/airports.json -> data/airports.json)
-        airports_path = os.path.normpath(os.path.join(script_dir, '..', 'data', 'airports.json'))
+        # Go up one level from scripts/ to repo root, then into data/
+        repo_root = os.path.dirname(script_dir)
+        airports_path = os.path.join(repo_root, 'data', 'airports.json')
+        
+        # Verify the path exists
+        if not os.path.exists(airports_path):
+            raise FileNotFoundError(f"airports.json not found at: {airports_path}")
         
         with open(airports_path, 'r') as f:
             data = json.load(f)
