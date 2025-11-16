@@ -106,7 +106,8 @@
     display: block;
 }
 
-/* Dark code block variant - Used by analysis.html */
+/* Dark code block variant - DEPRECATED: No longer used (standardized on light theme)
+   Kept for reference in case needed in the future
 .code-block-dark {
     background: #1f2937;
     color: #f3f4f6;
@@ -120,13 +121,13 @@
 }
 
 .code-block-dark code {
-    background: transparent !important; /* Override base code background (#f1f5f9) */
-    padding: 0; /* Remove base code padding */
-    border-radius: 0; /* Remove base code border-radius */
+    background: transparent !important;
+    padding: 0;
+    border-radius: 0;
     color: #f3f4f6;
     white-space: pre;
     display: block;
-    font-size: 0.9rem; /* Match parent font-size */
+    font-size: 0.9rem;
 }
 
 .code-block-dark .copy-button {
@@ -134,18 +135,40 @@
     top: 8px;
     right: 8px;
     background: #374151;
-    color: white;
-    border: none;
-    padding: 6px 10px;
+    border: 1px solid #4b5563;
     border-radius: 4px;
+    padding: 6px 8px;
     cursor: pointer;
-    font-size: 0.8rem;
-    transition: background 0.2s;
+    opacity: 0.8;
+    transition: opacity 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .code-block-dark .copy-button:hover {
+    opacity: 1;
     background: #4b5563;
 }
+
+.code-block-dark .copy-button svg {
+    width: 14px;
+    height: 14px;
+    stroke: #f3f4f6;
+    fill: none;
+    stroke-width: 1.5;
+}
+
+.code-block-dark .copy-button.copied {
+    opacity: 1;
+    background: #065f46;
+    border-color: #10b981;
+}
+
+.code-block-dark .copy-button.copied svg {
+    stroke: #10b981;
+}
+*/
 
 .copy-button {
     position: absolute;

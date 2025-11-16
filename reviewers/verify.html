@@ -35,31 +35,8 @@
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="../assets/js/firebase-service.js?v=20251112-05"></script>
+    <script src="assets/js/copy-code.js"></script>
     <script>
-        function copyCode(button) {
-            const codeBlock = button.closest('.code-block');
-            const codeElement = codeBlock.querySelector('code');
-            const text = codeElement.textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                // Visual feedback
-                button.classList.add('copied');
-                const originalTitle = button.getAttribute('title');
-                button.setAttribute('title', 'Copied!');
-                
-                setTimeout(() => {
-                    button.classList.remove('copied');
-                    button.setAttribute('title', originalTitle);
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                // Fallback: select text
-                const range = document.createRange();
-                range.selectNode(codeElement);
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(range);
-            });
-        }
         
         async function runVerification() {
             const btn = document.getElementById('verifyBtn');

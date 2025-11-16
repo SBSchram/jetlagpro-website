@@ -16,12 +16,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
     <!-- External CSS and JavaScript files -->
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251116-02">
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251116-03">
     <link rel="stylesheet" href="assets/css/analytics.css">
     <script src="../assets/js/firebase-service.js"></script>
     <script src="../assets/js/trip-validator.js"></script>
     <script src="assets/js/analytics.js"></script>
     <script src="assets/js/charts.js"></script>
+    <script src="assets/js/copy-code.js"></script>
     
     <script>
         // Inline JavaScript removed - now using external files:
@@ -119,8 +120,13 @@
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 1: Download Raw Trip Data</h3>
             <p style="color: #374151; font-size: 0.95rem;">Export all trip completion records (including survey responses) from our public Firestore database:</p>
-            <div class="code-block-dark">
-                <button class="copy-button" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" \
   -o trips.json</code>
             </div>
@@ -139,8 +145,13 @@
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 2: Download Analysis Script</h3>
             <p style="color: #374151; font-size: 0.95rem;">Get the standalone Python analysis script (pure Python, minimal dependencies):</p>
-            <div class="code-block-dark">
-                <button class="copy-button" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>curl -o analyze_jetlag_data.py \
   https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
             </div>
@@ -150,8 +161,13 @@
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 3: Run the Analysis</h3>
             <p style="color: #374151; font-size: 0.95rem;">Execute the analysis script to reproduce all statistics shown on this page:</p>
-            <div class="code-block-dark">
-                <button class="copy-button" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
                 <code>python analyze_jetlag_data.py \
   --trips trips.json \
   --output analysis_report.txt</code>
