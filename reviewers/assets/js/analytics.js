@@ -603,7 +603,7 @@ function renderTripStats() {
     html += '</table>';
     html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: center;">';
     html += '<div>Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</div>';
-    html += '<div>Test Trip = Arrival TZ = Departure TZ (no actual travel occurred, used for app testing)</div>';
+    html += '<div>Test Trips: Any trip where the Departure and Arrival time zone are the same.</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
     
