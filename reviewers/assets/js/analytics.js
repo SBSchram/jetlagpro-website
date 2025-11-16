@@ -596,7 +596,7 @@ function renderTripStats() {
     const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
 
     let html = '<table class="stats-table">';
-    html += `<tr><th>${validationStats.total} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Fallback ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test</td></tr>`;
+    html += `<tr><th>${validationStats.total} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Survey ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
