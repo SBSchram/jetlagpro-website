@@ -594,14 +594,54 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
     return point_counts
 
 
-def format_trip_record(trip: Dict) -> Dict:
+def load_airport_mapping() -> Dict[str, str]:
+    """
+    Load airport code to city name mapping from airports.json.
+    
+    Matches analytics.js loadAirportMapping() line 674-700.
+    """
+    try:
+        import os
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        airports_path = os.path.join(script_dir, '..', 'data', 'airports.json')
+        
+        with open(airports_path, 'r') as f:
+            data = json.load(f)
+        
+        mapping = {}
+        if data.get('airports') and isinstance(data['airports'], list):
+            for airport in data['airports']:
+                if airport.get('code') and airport.get('city'):
+                    mapping[airport['code'].upper()] = airport['city']
+        
+        return mapping
+    except Exception as e:
+        print(f"  Warning: Could not load airports.json: {e}")
+        return {}
+
+
+def get_city_name(airport_code: str, airport_mapping: Dict[str, str]) -> str:
+    """
+    Convert airport code to city name.
+    
+    Matches analytics.js getCityName() line 705-714.
+    """
+    if not airport_code or airport_code == 'N/A':
+        return 'N/A'
+    
+    code = airport_code.upper().strip()
+    return airport_mapping.get(code, code)  # Return city name if found, otherwise code
+
+
+def format_trip_record(trip: Dict, airport_mapping: Dict[str, str]) -> Dict:
     """
     Format a trip record for the dose-response data table.
     
     Matches analytics.js renderDoseResponseDataTable() line 785-916.
+    Uses startDate (trip start date) as the significant date for display.
     """
-    # Date
-    date = trip.get('surveySubmittedAt') or trip.get('completionDate') or trip.get('created') or trip.get('timestamp')
+    # Date - use trip start date (when the trip started)
+    date = trip.get('startDate')
     if date:
         try:
             # Handle ISO format with or without timezone
@@ -611,7 +651,8 @@ def format_trip_record(trip: Dict) -> Dict:
                 dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
             else:
                 dt = datetime.fromisoformat(str(date))
-            date_str = dt.strftime('%b %d, %Y')
+            # Match dashboard format: "Nov 5, 2025" (no leading zero on day)
+            date_str = dt.strftime('%b %-d, %Y') if sys.platform != 'win32' else dt.strftime('%b %d, %Y').replace(' 0', ' ')
         except:
             date_str = str(date)
     else:
@@ -631,8 +672,9 @@ def format_trip_record(trip: Dict) -> Dict:
     elif origin != 'N/A':
         origin = origin.replace('_', ' ')
     
-    # Destination (airport code - we'll keep as code since we don't have city mapping)
-    destination = trip.get('destinationCode') or 'N/A'
+    # Destination (convert airport code to city name)
+    destination_code = trip.get('destinationCode') or 'N/A'
+    destination = get_city_name(destination_code, airport_mapping)
     
     # Travel direction
     timezones = trip.get('timezonesCount', 0)
@@ -711,6 +753,8 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     Compare all values in this report with the live dashboard at:
     https://jetlagpro.com/reviewers/analysis.html
     """
+    # Load airport mapping for city name conversion
+    airport_mapping = load_airport_mapping()
     
     # Calculate validation breakdown
     breakdown = calculate_validation_breakdown(all_trips, valid_trips)
@@ -779,9 +823,25 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     lines.append("")
     
     # Sort trips by date (most recent first)
-    sorted_trips = sorted(valid_with_surveys, key=lambda t: (
-        t.get('surveySubmittedAt') or t.get('completionDate') or t.get('created') or t.get('timestamp') or ''
-    ), reverse=True)
+    # Uses startDate (trip start date) as the significant date for sorting
+    def get_sort_date(trip):
+        """Get date for sorting - uses trip start date."""
+        date = trip.get('startDate')
+        if not date:
+            return ''
+        # Convert to sortable format (ISO string sorts correctly)
+        if isinstance(date, str):
+            # Handle ISO format
+            try:
+                if date.endswith('Z'):
+                    date = date[:-1] + '+00:00'
+                dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
+                return dt.isoformat()
+            except:
+                return str(date)
+        return str(date)
+    
+    sorted_trips = sorted(valid_with_surveys, key=get_sort_date, reverse=True)
     
     # Table header
     lines.append(f"{'Date':<12} {'Device':<12} {'Origin':<20} {'Dest':<6} {'Dir':<4} {'Points':<7} {'TZ':<4} "
@@ -790,7 +850,7 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     
     # Table rows
     for trip in sorted_trips:
-        record = format_trip_record(trip)
+        record = format_trip_record(trip, airport_mapping)
         lines.append(f"{record['date']:<12} {record['device']:<12} {record['origin'][:18]:<20} "
                     f"{record['destination']:<6} {record['direction']:<4} {record['points']:<7} "
                     f"{record['timezones']:<4} {record['baseline']:<9} {record['anticipated']:<12} "

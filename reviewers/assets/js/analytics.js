@@ -768,10 +768,10 @@ function getPointsColor(points) {
 function renderDoseResponseDataTable(surveys) {
     if (surveys.length === 0) return '<p><em>No survey data available</em></p>';
     
-    // Sort by date (most recent first)
+    // Sort by date (most recent first) - use trip start date
     const sortedSurveys = surveys.sort((a, b) => {
-        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
-        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
+        const dateA = a.startDate;
+        const dateB = b.startDate;
         return new Date(dateB) - new Date(dateA);
     });
     
@@ -783,7 +783,8 @@ function renderDoseResponseDataTable(surveys) {
     tableHtml += '</tr></thead><tbody>';
     
     sortedSurveys.forEach(survey => {
-        const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
+        // Use trip start date (when the trip started) as the significant date
+        const date = survey.startDate;
         const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
         
         // Extract device ID from tripId
