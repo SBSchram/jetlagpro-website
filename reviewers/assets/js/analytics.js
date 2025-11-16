@@ -566,15 +566,16 @@ function renderTripStats() {
         }
     });
     
-    // Format travel direction as separate lines
+    // Format travel direction as inline counts, capitalized labels
     let travelDirectionText = '';
     const totalValidTrips = validTrips.length;
     const directionEntries = Object.entries(directions).sort((a, b) => b[1] - a[1]); // Sort by count descending
     if (directionEntries.length > 0) {
         travelDirectionText = directionEntries.map(([direction, count]) => {
             const percentage = totalValidTrips > 0 ? ((count / totalValidTrips) * 100).toFixed(1) : '0.0';
-            return `${direction} ${count} (${percentage}%)`;
-        }).join('<br>');
+            const label = String(direction || '').charAt(0).toUpperCase() + String(direction || '').slice(1).toLowerCase();
+            return `${count} ${label} (${percentage}%)`;
+        }).join(' ');
     }
     
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
