@@ -602,7 +602,7 @@ function renderTripStats() {
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
     html += '</table>';
     html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: center;">';
-    html += '<div>Verified: Confirmed travel (Arrival TZ ≠ Departure TZ) or validated via survey metadata.</div>';
+    html += '<div>Verified: Confirmed travel where the departure and arrival timezone differ or validated by survey metadata.</div>';
     html += '<div>Legacy: Early data lacking time zone fields; included when survey data is present.</div>';
     html += '<div>Test Trips: Any trip where the Departure and Arrival time zone are the same.</div>';
     html += '<div>Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</div>';
