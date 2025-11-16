@@ -784,8 +784,21 @@ function renderDoseResponseDataTable(surveys) {
     
     sortedSurveys.forEach(survey => {
         // Use trip start date (when the trip started) as the significant date
+        // CONSISTENCY: Extract UTC date component to match Python script output
+        // This ensures the same date is displayed regardless of browser timezone
         const date = survey.startDate;
-        const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+        let dateStr = 'N/A';
+        if (date) {
+            try {
+                // Extract date component (YYYY-MM-DD) from ISO string
+                const datePart = date.split('T')[0];
+                const dateObj = new Date(datePart + 'T00:00:00Z'); // Parse as UTC midnight
+                // Format as "Nov 5, 2025" (no leading zero on day)
+                dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+            } catch (e) {
+                dateStr = date; // Fallback to raw value
+            }
+        }
         
         // Extract device ID from tripId
         let displayCode = 'N/A';

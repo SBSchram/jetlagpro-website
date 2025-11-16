@@ -646,23 +646,24 @@ def format_trip_record(trip: Dict, airport_mapping: Dict[str, str]) -> Dict:
     Uses startDate (trip start date) as the significant date for display.
     """
     # Date - use trip start date (when the trip started)
-    # CRITICAL: JavaScript toLocaleDateString() converts UTC to browser's local timezone.
-    # To match exactly, we need to use the same date that JavaScript would show.
-    # JavaScript: new Date("2025-10-23T00:31:07Z").toLocaleDateString() 
-    #   converts to local timezone (e.g., if UTC-5, becomes Oct 22 19:31, shows "Oct 22, 2025")
-    # For reproducibility, we use the date component from the ISO string directly.
+    # CONSISTENCY: Both script and dashboard use the UTC date component for consistency.
+    # This ensures the same date is displayed regardless of timezone, providing
+    # reproducible results for reviewers in different timezones.
+    # The date component (YYYY-MM-DD) is extracted from the ISO string and formatted.
     date = trip.get('startDate')
     if date:
         try:
-            # Parse the date string
+            # Extract date component (YYYY-MM-DD) from ISO string
+            # This uses the UTC date, ensuring consistency across all timezones
             if isinstance(date, str):
-                # Extract date component (YYYY-MM-DD) before timezone conversion
-                # This ensures we use the actual date, not shifted by timezone
                 date_part = date.split('T')[0] if 'T' in date else date.split(' ')[0]
-                # Parse just the date part to avoid timezone issues
-                dt = datetime.fromisoformat(date_part)
             else:
-                dt = datetime.fromisoformat(str(date).split('T')[0] if 'T' in str(date) else str(date))
+                date_str_full = str(date)
+                date_part = date_str_full.split('T')[0] if 'T' in date_str_full else date_str_full.split(' ')[0]
+            
+            # Parse just the date part (no time, no timezone)
+            dt = datetime.fromisoformat(date_part)
+            
             # Format: "Nov 5, 2025" (no leading zero on day)
             date_str = dt.strftime('%b %-d, %Y') if sys.platform != 'win32' else dt.strftime('%b %d, %Y').replace(' 0', ' ')
         except:
