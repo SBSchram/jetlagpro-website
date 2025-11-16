@@ -607,7 +607,7 @@ function renderTripStats() {
     html += '<div>Verified: Confirmed travel where the departure and arrival timezone differ or validated by survey metadata.</div>';
     html += '<div>Legacy: Early data lacking time zone fields but included when a user survey data is present.</div>';
     html += '<div>Test Trips: Any trip where the Departure and Arrival time zone are the same or a trip from a developer device</div>';
-    html += '<div>Confirmed = Early data (no TZ fields) or travel where Arrival TZ ≠ Departure TZ</div>';
+    html += '<div>Confirmed: Early data (no TZ fields) or travel where Destination and Arrival timezones differ</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
     
