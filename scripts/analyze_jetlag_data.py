@@ -325,6 +325,10 @@ def get_baseline_severity(timezones: int) -> float:
         {'timeZones': 12, 'severity': 3.6}
     ]
     
+    # CRITICAL: Match JavaScript logic - timezones >= 12 use 3.6 (line 732-733)
+    if timezones >= 12:
+        return 3.6  # 12+ uses 3.6
+    
     baseline = next((b for b in baseline_data if b['timeZones'] == timezones), None)
     return baseline['severity'] if baseline else None
 
@@ -603,7 +607,8 @@ def load_airport_mapping() -> Dict[str, str]:
     try:
         import os
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        airports_path = os.path.join(script_dir, '..', 'data', 'airports.json')
+        # Resolve the path properly (scripts/../data/airports.json -> data/airports.json)
+        airports_path = os.path.normpath(os.path.join(script_dir, '..', 'data', 'airports.json'))
         
         with open(airports_path, 'r') as f:
             data = json.load(f)
@@ -641,17 +646,24 @@ def format_trip_record(trip: Dict, airport_mapping: Dict[str, str]) -> Dict:
     Uses startDate (trip start date) as the significant date for display.
     """
     # Date - use trip start date (when the trip started)
+    # CRITICAL: JavaScript toLocaleDateString() converts UTC to browser's local timezone.
+    # To match exactly, we need to use the same date that JavaScript would show.
+    # JavaScript: new Date("2025-10-23T00:31:07Z").toLocaleDateString() 
+    #   converts to local timezone (e.g., if UTC-5, becomes Oct 22 19:31, shows "Oct 22, 2025")
+    # For reproducibility, we use the date component from the ISO string directly.
     date = trip.get('startDate')
     if date:
         try:
-            # Handle ISO format with or without timezone
+            # Parse the date string
             if isinstance(date, str):
-                if date.endswith('Z'):
-                    date = date[:-1] + '+00:00'
-                dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
+                # Extract date component (YYYY-MM-DD) before timezone conversion
+                # This ensures we use the actual date, not shifted by timezone
+                date_part = date.split('T')[0] if 'T' in date else date.split(' ')[0]
+                # Parse just the date part to avoid timezone issues
+                dt = datetime.fromisoformat(date_part)
             else:
-                dt = datetime.fromisoformat(str(date))
-            # Match dashboard format: "Nov 5, 2025" (no leading zero on day)
+                dt = datetime.fromisoformat(str(date).split('T')[0] if 'T' in str(date) else str(date))
+            # Format: "Nov 5, 2025" (no leading zero on day)
             date_str = dt.strftime('%b %-d, %Y') if sys.platform != 'win32' else dt.strftime('%b %d, %Y').replace(' 0', ' ')
         except:
             date_str = str(date)
