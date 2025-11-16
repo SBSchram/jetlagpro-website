@@ -56,6 +56,8 @@ if [ -d "reviewers" ]; then
     echo "Updating reviewers HTML files..."
     # Update load-common-head.js (from parent directory)
     sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    # Update load-nav.js (local reviewer navigation loader)
+    sed -i '' "s/\(load-nav\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
     # Update firebase-service.js (from parent assets)
     sed -i '' "s/\(\.\.\/assets\/js\/firebase-service\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
     # Update reviewer-specific CSS files (local paths)
