@@ -10,18 +10,26 @@
         /* Container override for verify page - narrower for readability */
         .container {
             max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 20px 20px 40px;
         }
         /* Header override for verify page - centered instead of flex */
         .header {
+            padding: 0;
+            margin-bottom: 15px;
             text-align: center;
+            display: block; /* Override flex from reviewers.css */
         }
         .header h1 {
             font-size: 1.8rem;
             font-weight: 600;
+            color: #1f2937;
             margin: 0 0 5px 0;
         }
         .header p {
             font-size: 0.95rem;
+            color: #6b7280;
+            margin: 0;
         }
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
