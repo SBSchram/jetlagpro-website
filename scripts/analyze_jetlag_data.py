@@ -58,6 +58,7 @@ Repository: https://github.com/SBSchram/jetlagpro-website
 
 import json
 import sys
+import re
 from datetime import datetime
 from typing import Dict, List, Tuple
 import argparse
@@ -304,6 +305,110 @@ def categorize_stimulation_dose_response(points: int) -> str:
         return "9-12"
 
 
+def get_baseline_severity(timezones: int) -> float:
+    """
+    Get baseline severity from Waterhouse study data.
+    
+    Matches analytics.js getBaselineSeverity() line 717-738.
+    """
+    baseline_data = [
+        {'timeZones': 2, 'severity': 1.8},
+        {'timeZones': 3, 'severity': 2.5},
+        {'timeZones': 4, 'severity': 2.5},
+        {'timeZones': 5, 'severity': 2.5},
+        {'timeZones': 6, 'severity': 3.1},
+        {'timeZones': 7, 'severity': 3.1},
+        {'timeZones': 8, 'severity': 3.1},
+        {'timeZones': 9, 'severity': 3.6},
+        {'timeZones': 10, 'severity': 3.6},
+        {'timeZones': 11, 'severity': 3.6},
+        {'timeZones': 12, 'severity': 3.6}
+    ]
+    
+    baseline = next((b for b in baseline_data if b['timeZones'] == timezones), None)
+    return baseline['severity'] if baseline else None
+
+
+def get_anticipated_severity(trip: Dict) -> float:
+    """
+    Calculate anticipated severity from survey data.
+    
+    Matches analytics.js renderDoseResponseDataTable() line 822-849.
+    Uses generalAnticipated if available, otherwise averages individual anticipated symptoms.
+    """
+    # Try generalAnticipated first
+    general_anticipated = trip.get('generalAnticipated')
+    if general_anticipated is not None and general_anticipated != '':
+        try:
+            return float(general_anticipated)
+        except (ValueError, TypeError):
+            pass
+    
+    # Fallback to average of individual anticipated symptoms
+    anticipated_symptoms = [
+        trip.get('sleepExpectations'),
+        trip.get('fatigueExpectations'),
+        trip.get('concentrationExpectations'),
+        trip.get('irritabilityExpectations'),
+        trip.get('giExpectations')
+    ]
+    
+    valid_symptoms = [s for s in anticipated_symptoms if s is not None and not (isinstance(s, str) and s == '')]
+    
+    if len(valid_symptoms) > 0:
+        return sum(float(s) for s in valid_symptoms) / len(valid_symptoms)
+    
+    return None
+
+
+def calculate_validation_breakdown(all_trips: List[Dict], valid_trips: List[Dict]) -> Dict:
+    """
+    Calculate validation breakdown (verified/legacy/test).
+    
+    Simplified version matching dashboard display format.
+    """
+    total = len(all_trips)
+    valid_count = len(valid_trips)
+    invalid_count = total - valid_count
+    
+    # Count legacy trips (no arrivalTimeZone field)
+    legacy_count = sum(1 for trip in valid_trips if not trip.get('arrivalTimeZone'))
+    
+    # Count verified trips (have timezone data and different timezones, or survey fallback)
+    verified_count = 0
+    tz_verified = 0
+    survey_verified = 0
+    
+    for trip in valid_trips:
+        arrival_tz = trip.get('arrivalTimeZone')
+        origin_tz = trip.get('originTimezone')
+        completion_method = trip.get('completionMethod', '')
+        
+        if arrival_tz and origin_tz:
+            if arrival_tz != origin_tz:
+                tz_verified += 1
+                verified_count += 1
+            elif '_survey' in completion_method:
+                survey_verified += 1
+                verified_count += 1
+    
+    # Count HMAC signatures
+    hmac_authenticated = sum(1 for trip in all_trips if trip.get('hmacSignature'))
+    hmac_legacy = total - hmac_authenticated
+    
+    return {
+        'total': total,
+        'valid': valid_count,
+        'invalid': invalid_count,
+        'verified': verified_count,
+        'tz_verified': tz_verified,
+        'survey_verified': survey_verified,
+        'legacy': legacy_count,
+        'hmac_authenticated': hmac_authenticated,
+        'hmac_legacy': hmac_legacy
+    }
+
+
 def basic_statistics(trips: List[Dict]) -> Dict:
     """Calculate basic trip statistics."""
     stats = {
@@ -489,103 +594,218 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
     return point_counts
 
 
-def generate_report(stats: Dict, dose_response: Dict, point_usage: Dict, output_path: str, 
-                    total_raw_trips: int = 0, filtered_count: int = 0):
+def format_trip_record(trip: Dict) -> Dict:
     """
-    Generate human-readable analysis report.
+    Format a trip record for the dose-response data table.
     
-    FOR REVIEWERS:
-    This report contains all statistical analyses needed to verify the research
-    findings. Each section provides:
+    Matches analytics.js renderDoseResponseDataTable() line 785-916.
+    """
+    # Date
+    date = trip.get('surveySubmittedAt') or trip.get('completionDate') or trip.get('created') or trip.get('timestamp')
+    if date:
+        try:
+            # Handle ISO format with or without timezone
+            if isinstance(date, str):
+                if date.endswith('Z'):
+                    date = date[:-1] + '+00:00'
+                dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
+            else:
+                dt = datetime.fromisoformat(str(date))
+            date_str = dt.strftime('%b %d, %Y')
+        except:
+            date_str = str(date)
+    else:
+        date_str = 'N/A'
     
-    1. DATA FILTERING: Shows how many trips were excluded and why. Verify that
-       exclusions are appropriate and documented.
+    # Device ID (extract from tripId)
+    trip_id = trip.get('tripId', '')
+    device_id = 'N/A'
+    if trip_id:
+        parts = re.split(r'[-_]', trip_id) if '/' not in trip_id else trip_id.split('/')
+        device_id = parts[0] if parts else 'N/A'
     
-    2. BASIC STATISTICS: Overview of the dataset. Check sample sizes, distribution
-       of intervention levels, and time zone categories.
+    # Origin
+    origin = trip.get('originTimezone') or trip.get('originCode') or 'N/A'
+    if origin != 'N/A' and '/' in origin:
+        origin = origin.split('/')[-1].replace('_', ' ')
+    elif origin != 'N/A':
+        origin = origin.replace('_', ' ')
     
-    3. DOSE-RESPONSE ANALYSIS: Tests whether more intervention leads to better
-       outcomes. Look for downward trends (higher stimulation → lower severity).
+    # Destination (airport code - we'll keep as code since we don't have city mapping)
+    destination = trip.get('destinationCode') or 'N/A'
     
-    4. POINT USAGE: Identifies which acupuncture points are most commonly used.
-       Useful for understanding intervention patterns.
+    # Travel direction
+    timezones = trip.get('timezonesCount', 0)
+    direction = trip.get('travelDirection', 'N/A')
+    if timezones == 0:
+        direction_display = 'N/A'
+    elif direction == 'east':
+        direction_display = 'E'
+    elif direction == 'west':
+        direction_display = 'W'
+    else:
+        direction_display = 'N/A'
+    
+    # Points stimulated
+    points = trip.get('pointsCompleted', 0)
+    
+    # Baseline severity
+    baseline = get_baseline_severity(timezones)
+    baseline_str = f"{baseline:.1f}" if baseline is not None else 'N/A'
+    
+    # Anticipated severity
+    anticipated = get_anticipated_severity(trip)
+    anticipated_str = f"{anticipated:.1f}" if anticipated is not None else 'N/A'
+    
+    # Actual severity
+    actual = calculate_aggregate_severity(trip)
+    actual_str = f"{actual:.1f}" if actual is not None else 'N/A'
+    
+    # Improvement over expected
+    improvement_expected = None
+    improvement_expected_str = 'N/A'
+    if baseline is not None and actual is not None:
+        improvement_expected = ((baseline - actual) / baseline) * 100
+        improvement_expected_str = f"{improvement_expected:.1f}%"
+    
+    # Improvement over anticipated
+    improvement_anticipated = None
+    improvement_anticipated_str = 'N/A'
+    if anticipated is not None and actual is not None:
+        if anticipated == 0:
+            if actual == 0:
+                improvement_anticipated_str = '0.0%'
+            else:
+                improvement_anticipated_str = 'N/A'
+        else:
+            improvement_anticipated = ((anticipated - actual) / anticipated) * 100
+            improvement_anticipated_str = f"{improvement_anticipated:.1f}%"
+    
+    return {
+        'date': date_str,
+        'device': device_id,
+        'origin': origin,
+        'destination': destination,
+        'direction': direction_display,
+        'points': points,
+        'timezones': timezones,
+        'baseline': baseline_str,
+        'anticipated': anticipated_str,
+        'actual': actual_str,
+        'improvement_expected': improvement_expected_str,
+        'improvement_anticipated': improvement_anticipated_str
+    }
+
+
+def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage: Dict, 
+                    output_path: str, total_raw_trips: int = 0, filtered_count: int = 0):
+    """
+    Generate human-readable analysis report matching dashboard format.
+    
+    Matches what's actually displayed on the live dashboard:
+    - Trip Stats: Validation breakdown, confirmed trips, travel direction, HMAC status
+    - Dose-Response Data Table: Individual trip records with severities
+    - Point Usage: Point stimulation counts
     
     VERIFICATION:
     Compare all values in this report with the live dashboard at:
     https://jetlagpro.com/reviewers/analysis.html
-    
-    Values should match exactly (within rounding). Any discrepancies indicate
-    a reproducibility issue that must be resolved.
     """
+    
+    # Calculate validation breakdown
+    breakdown = calculate_validation_breakdown(all_trips, valid_trips)
+    
+    # Calculate travel direction distribution
+    directions = {}
+    for trip in valid_trips:
+        direction = trip.get('travelDirection')
+        if direction:
+            directions[direction] = directions.get(direction, 0) + 1
+    
+    # Calculate confirmed trips (with/without surveys)
+    valid_with_surveys = [t for t in valid_trips if t.get('surveyCompleted', False)]
+    valid_without_surveys = [t for t in valid_trips if not t.get('surveyCompleted', False)]
     
     lines = []
     lines.append("="*70)
     lines.append("JETLAGPRO DATA ANALYSIS REPORT")
     lines.append("="*70)
     lines.append("")
+    lines.append("This report matches the format displayed on the live dashboard.")
+    lines.append("Compare values with: https://jetlagpro.com/reviewers/analysis.html")
+    lines.append("")
     
-    # Data Filtering Info
-    if total_raw_trips > 0:
-        lines.append("DATA FILTERING")
-        lines.append("-"*70)
-        lines.append(f"Raw trip records downloaded: {total_raw_trips}")
-        lines.append(f"Valid trips for analysis: {stats['total_trips']}")
-        lines.append(f"Filtered out (test/invalid): {filtered_count}")
-        lines.append("")
-        lines.append("Exclusion criteria:")
-        lines.append("  - Developer test sessions (device IDs: 2330B376, 7482966F)")
-        lines.append("  - Test trips (same origin/destination timezone without survey)")
-        lines.append("  - Incomplete trips (missing survey responses)")
-        lines.append("  - Invalid HMAC signatures (if present)")
-        lines.append("")
-    
-    # Basic Statistics
-    lines.append("BASIC STATISTICS")
+    # Trip Stats (matches dashboard renderTripStats)
+    lines.append("TRIP STATS")
     lines.append("-"*70)
-    lines.append(f"Total valid trips: {stats['total_trips']}")
-    lines.append(f"Trips with HMAC signatures: {stats['trips_with_signatures']}")
-    lines.append(f"Legacy trips (no signature): {stats['legacy_trips']}")
-    lines.append(f"Average points stimulated: {stats['avg_points_stimulated']:.2f}")
-    lines.append(f"Average post-travel severity: {stats['avg_severity']:.2f}")
+    lines.append(f"{breakdown['total']} Trips")
+    verified_text = f"{breakdown['verified']} Verified"
+    if breakdown['tz_verified'] or breakdown['survey_verified']:
+        verified_text += f" (TZ {breakdown['tz_verified']}, Survey {breakdown['survey_verified']})"
+    lines.append(f"  {verified_text}")
+    lines.append(f"  {breakdown['legacy']} Legacy")
+    lines.append(f"  {breakdown['invalid']} Test")
     lines.append("")
     
-    lines.append("Time Zone Distribution:")
-    for tz_cat, count in sorted(stats['time_zone_distribution'].items()):
-        lines.append(f"  {tz_cat} time zones: {count} trips")
+    lines.append(f"{breakdown['valid']} Confirmed Trips")
+    with_surveys_pct = int((len(valid_with_surveys) / breakdown['valid'] * 100)) if breakdown['valid'] > 0 else 0
+    without_surveys_pct = int((len(valid_without_surveys) / breakdown['valid'] * 100)) if breakdown['valid'] > 0 else 0
+    lines.append(f"  {len(valid_with_surveys)} with surveys ({with_surveys_pct}%)")
+    lines.append(f"  {len(valid_without_surveys)} without surveys ({without_surveys_pct}%)")
     lines.append("")
     
-    lines.append("Stimulation Level Distribution:")
-    for stim_cat, count in sorted(stats['stimulation_distribution'].items()):
-        lines.append(f"  {stim_cat}: {count} trips")
+    # Travel Direction
+    lines.append("Travel Direction")
+    if directions:
+        direction_entries = sorted(directions.items(), key=lambda x: x[1], reverse=True)
+        for direction, count in direction_entries:
+            pct = (count / breakdown['valid'] * 100) if breakdown['valid'] > 0 else 0
+            direction_label = direction.capitalize() if direction else 'N/A'
+            lines.append(f"  {count} {direction_label} ({pct:.1f}%)")
+    else:
+        lines.append("  N/A")
     lines.append("")
     
-    # Dose-Response Analysis
-    lines.append("DOSE-RESPONSE ANALYSIS")
+    # Cryptographic Status
+    lines.append("Cryptographic Status")
+    lines.append(f"  Authenticated: {breakdown['hmac_authenticated']}")
+    lines.append(f"  Legacy (no signature): {breakdown['hmac_legacy']}")
+    lines.append("")
+    
+    # Dose-Response Data Table (matches dashboard renderDoseResponseDataTable)
+    lines.append("DOSE-RESPONSE DATA TABLE")
     lines.append("-"*70)
-    lines.append("Mean symptom severity by time zone and stimulation level:")
-    lines.append("")
-    lines.append("INTERPRETATION GUIDE:")
-    lines.append("  - Lower mean severity = better outcome (1-2 = mild, 3-4 = moderate, 5 = severe)")
-    lines.append("  - Look for dose-response: Higher stimulation groups should show lower severity")
-    lines.append("  - SEM (standard error) shows precision: Smaller SEM = more reliable estimate")
-    lines.append("  - Compare to baseline expectations (see research paper for baseline data)")
+    lines.append(f"Showing {len(valid_with_surveys)} trips with completed surveys")
     lines.append("")
     
-    for key, data in sorted(dose_response.items()):
-        lines.append(f"{key}:")
-        lines.append(f"  n = {data['n']}")
-        lines.append(f"  mean = {data['mean']:.2f}")
-        lines.append(f"  std = {data['std']:.2f}")
-        lines.append(f"  sem = {data['sem']:.2f}")
-        lines.append("")
+    # Sort trips by date (most recent first)
+    sorted_trips = sorted(valid_with_surveys, key=lambda t: (
+        t.get('surveySubmittedAt') or t.get('completionDate') or t.get('created') or t.get('timestamp') or ''
+    ), reverse=True)
     
-    # Point Usage
-    lines.append("POINT USAGE ANALYSIS")
+    # Table header
+    lines.append(f"{'Date':<12} {'Device':<12} {'Origin':<20} {'Dest':<6} {'Dir':<4} {'Points':<7} {'TZ':<4} "
+                 f"{'Baseline':<9} {'Anticipated':<12} {'Actual':<8} {'Imp vs Exp':<12} {'Imp vs Ant':<12}")
+    lines.append("-" * 70)
+    
+    # Table rows
+    for trip in sorted_trips:
+        record = format_trip_record(trip)
+        lines.append(f"{record['date']:<12} {record['device']:<12} {record['origin'][:18]:<20} "
+                    f"{record['destination']:<6} {record['direction']:<4} {record['points']:<7} "
+                    f"{record['timezones']:<4} {record['baseline']:<9} {record['anticipated']:<12} "
+                    f"{record['actual']:<8} {record['improvement_expected']:<12} {record['improvement_anticipated']:<12}")
+    lines.append("")
+    
+    # Point Usage (matches dashboard renderPointStimulationAnalysis)
+    lines.append("POINT USAGE")
     lines.append("-"*70)
-    lines.append("Most frequently stimulated acupuncture points:")
+    lines.append(f"Point stimulation counts from {breakdown['valid']} valid trips")
     lines.append("")
     
-    for point, count in list(point_usage.items())[:15]:  # Top 15
+    # Sort points by count (descending)
+    sorted_points = sorted(point_usage.items(), key=lambda x: x[1], reverse=True)
+    for point, count in sorted_points:
         lines.append(f"  {point}: {count} times")
     lines.append("")
     
@@ -674,17 +894,11 @@ See function docstrings for detailed methodology and rationale.
     print("\nRunning analyses...")
     print("-" * 70)
     
-    stats = basic_statistics(valid_trips)
-    print("✓ Basic statistics calculated")
-    
-    dose_response = dose_response_analysis(valid_trips)
-    print("✓ Dose-response analysis complete")
-    
     point_usage = point_usage_analysis(valid_trips)
     print("✓ Point usage analysis complete")
     
-    # Generate report
-    generate_report(stats, dose_response, point_usage, args.output, 
+    # Generate report (matches dashboard format)
+    generate_report(trips, valid_trips, point_usage, args.output, 
                    total_raw_trips, filtered_count)
     
     print("\n✓ Analysis complete!")
