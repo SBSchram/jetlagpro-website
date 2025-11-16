@@ -87,7 +87,7 @@
     opacity: 0.6;
 }
 
-/* Common Code Block Styles - Used by verify.html */
+/* Common Code Block Styles - Used by verify.html and analysis.html */
 .code-block {
     background: #f9fafb;
     border: 1px solid #e5e7eb;
@@ -104,6 +104,43 @@
     color: #1f2937;
     white-space: pre;
     display: block;
+}
+
+/* Dark code block variant - Used by analysis.html */
+.code-block-dark {
+    background: #1f2937;
+    color: #f3f4f6;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    margin: 10px 0;
+    position: relative;
+}
+
+.code-block-dark code {
+    color: #f3f4f6;
+    white-space: pre;
+    display: block;
+}
+
+.code-block-dark .copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #374151;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.code-block-dark .copy-button:hover {
+    background: #4b5563;
 }
 
 .copy-button {
