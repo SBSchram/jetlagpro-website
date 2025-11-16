@@ -606,15 +606,40 @@ def load_airport_mapping() -> Dict[str, str]:
     """
     try:
         import os
-        # Get the directory where this script is located
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        # Go up one level from scripts/ to repo root, then into data/
-        repo_root = os.path.dirname(script_dir)
-        airports_path = os.path.join(repo_root, 'data', 'airports.json')
+        # Find airports.json relative to the jetlagpro-website repo root
+        # Try multiple approaches to find the repo root
         
-        # Verify the path exists
-        if not os.path.exists(airports_path):
-            raise FileNotFoundError(f"airports.json not found at: {airports_path}")
+        # Approach 1: Use __file__ to find script location, then go up to repo root
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        repo_root_from_script = os.path.dirname(script_dir)
+        airports_path_1 = os.path.join(repo_root_from_script, 'data', 'airports.json')
+        
+        # Approach 2: Look for data/ directory relative to current working directory
+        cwd = os.getcwd()
+        airports_path_2 = os.path.join(cwd, 'data', 'airports.json')
+        
+        # Try both paths
+        airports_path = None
+        if os.path.exists(airports_path_1):
+            airports_path = airports_path_1
+        elif os.path.exists(airports_path_2):
+            airports_path = airports_path_2
+        else:
+            # Last resort: try to find repo root by looking for data/ directory
+            # Walk up from current directory
+            search_dir = cwd
+            for _ in range(5):  # Don't go too far up
+                test_path = os.path.join(search_dir, 'data', 'airports.json')
+                if os.path.exists(test_path):
+                    airports_path = test_path
+                    break
+                parent = os.path.dirname(search_dir)
+                if parent == search_dir:  # Reached filesystem root
+                    break
+                search_dir = parent
+        
+        if not airports_path or not os.path.exists(airports_path):
+            raise FileNotFoundError(f"airports.json not found. Tried: {airports_path_1}, {airports_path_2}")
         
         with open(airports_path, 'r') as f:
             data = json.load(f)
