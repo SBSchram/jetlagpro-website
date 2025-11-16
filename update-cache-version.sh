@@ -51,17 +51,35 @@ if [ -d "demo" ]; then
     sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" demo/*.html
 fi
 
+# Update reviewers directory (with ../ paths for parent assets, local paths for reviewer assets)
+if [ -d "reviewers" ]; then
+    echo "Updating reviewers HTML files..."
+    # Update load-common-head.js (from parent directory)
+    sed -i '' "s/\(\.\.\/load-common-head\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    # Update firebase-service.js (from parent assets)
+    sed -i '' "s/\(\.\.\/assets\/js\/firebase-service\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    # Update reviewer-specific CSS files (local paths)
+    sed -i '' "s/\(assets\/css\/reviewers\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    sed -i '' "s/\(assets\/css\/audit-log\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    sed -i '' "s/\(assets\/css\/analytics\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    # Update reviewer-specific JS files (local paths)
+    sed -i '' "s/\(assets\/js\/audit-log\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    sed -i '' "s/\(assets\/js\/analytics\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    sed -i '' "s/\(assets\/js\/charts\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+fi
+
 # Clean up any double version parameters (safety check)
 echo "Cleaning up any duplicate version parameters..."
-sed -i '' "s/\?v=$VERSION\?v=$VERSION/?v=$VERSION/g" *.html blog/*.html demo/*.html 2>/dev/null || true
+sed -i '' "s/\?v=$VERSION\?v=$VERSION/?v=$VERSION/g" *.html blog/*.html demo/*.html reviewers/*.html 2>/dev/null || true
 
 echo "✅ Cache version updated to: $VERSION"
 echo ""
 echo "Files updated:"
-echo "- head-template.html (affects ALL pages via DRY)"
+echo "- head-template.html (affects ALL pages via DRY - includes meta tags, Cloudflare localStorage version, asset versions)"
 echo "- All *.html files in root directory"
 echo "- All blog/*.html files"
 echo "- All demo/*.html files"
+echo "- All reviewers/*.html files (including reviewer-specific CSS/JS assets)"
 echo ""
 echo "Next steps:"
 echo "1. Test the website to ensure all assets load correctly"
