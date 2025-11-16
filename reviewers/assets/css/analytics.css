@@ -21,41 +21,10 @@ body {
     overflow-x: auto; /* Allow horizontal scroll on very small screens, but layout stays desktop */
 }
 
+/* Container override for analytics page - wider for data tables */
 .container {
     max-width: 1600px;
-    margin: 0 auto;
-    padding: 20px 20px 20px 40px; /* More left padding for white space */
     min-width: 1200px; /* Ensure desktop minimum width */
-}
-
-/* Common Reviewer Navigation */
-.reviewer-nav {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.reviewer-nav a {
-    color: #374151;
-    text-decoration: none;
-    margin-right: 8px;
-}
-
-.reviewer-nav a:hover {
-    color: #1f2937;
-    text-decoration: underline;
-}
-
-.reviewer-nav a.active {
-    color: #1f2937;
-    font-weight: 600;
-}
-
-.reviewer-nav span {
-    color: #d1d5db;
-    margin: 0 8px;
 }
 
 /* Analysis Page Sub-Menu */
@@ -83,28 +52,7 @@ body {
     text-decoration: underline;
 }
 
-.header {
-    padding: 0;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px; /* Space between heading and button */
-}
-
-.header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0;
-    text-align: left;
-}
-
-.header p {
-    font-size: 1.1rem;
-    color: #6b7280;
-    text-align: center;
-}
+/* Header styles moved to reviewers.css - override only if needed */
 
 /* Stats section - simple table layout, no decorative cards */
 .stats-table {
@@ -264,22 +212,7 @@ body {
     margin: 20px 0;
 }
 
-.refresh-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    margin: 0;
-}
-
-.refresh-btn:hover {
-    background: #2563eb;
-}
+/* Refresh button styles moved to reviewers.css */
 
 /* Data Toggle Styles */
 .data-toggle {

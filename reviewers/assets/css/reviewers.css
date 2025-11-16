@@ -1,3 +1,280 @@
+/* ===================================
+   SHARED REVIEWER SECTION STYLES
+   Common styles for all reviewer pages
+   =================================== */
+
+/* Common Reviewer Navigation - Used by all reviewer pages */
+.reviewer-nav {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.reviewer-nav a {
+    color: #374151;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.reviewer-nav a:hover {
+    color: #1f2937;
+    text-decoration: underline;
+}
+
+.reviewer-nav a.active {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.reviewer-nav span {
+    color: #d1d5db;
+    margin: 0 8px;
+}
+
+/* Common Container Base - Pages can override max-width */
+.container {
+    margin: 0 auto;
+    padding: 20px 20px 20px 40px; /* More left padding for white space */
+}
+
+/* Common Header Styles - Used by multiple pages */
+.header {
+    padding: 0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Space between heading and button */
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+    text-align: left;
+}
+
+.header p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* Common Refresh Button - Used by multiple pages */
+.refresh-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin: 0;
+}
+
+.refresh-btn:hover {
+    background: #2563eb;
+}
+
+.refresh-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Common Code Block Styles - Used by verify.html */
+.code-block {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+    overflow-x: auto;
+    position: relative;
+}
+
+.code-block code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #1f2937;
+    white-space: pre;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-button:hover {
+    opacity: 1;
+    background: #f3f4f6;
+}
+
+.copy-button svg {
+    width: 14px;
+    height: 14px;
+    stroke: #374151;
+    fill: none;
+    stroke-width: 1.5;
+}
+
+.copy-button.copied {
+    opacity: 1;
+    background: #d1fae5;
+    border-color: #10b981;
+}
+
+.copy-button.copied svg {
+    stroke: #10b981;
+}
+
+/* Common Section Styles - Used by verify.html */
+.section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 10px 0;
+}
+
+.section p {
+    color: #374151;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+/* Common Utility Styles */
+.example-output {
+    background: #f0f9ff;
+    border-left: 3px solid #3b82f6;
+    padding: 12px 15px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #1e40af;
+}
+
+.note {
+    background: #f9fafb;
+    border-left: 2px solid #d1d5db;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: #1f2937;
+}
+
+/* Common Button Styles - Used by verify.html */
+.verify-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-right: 10px;
+}
+
+.verify-button:hover {
+    background: #2563eb;
+}
+
+.verify-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.source-button {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.3s ease;
+}
+
+.source-button:hover {
+    background: #4b5563;
+}
+
+/* Verification Results - Used by verify.html */
+.verification-results {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.verification-results.success {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #166534;
+}
+
+.verification-results.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.verification-results.warning {
+    background: #fef3c7;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.verification-results pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Legacy styles for reviewers index page (if it exists) */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #ffffff;
@@ -5,11 +282,6 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 30px;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 header h1 {
@@ -47,11 +319,3 @@ section h2 {
 .resource-list a:hover {
     text-decoration: underline;
 }
-
-code {
-    background: #f1f5f9;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-

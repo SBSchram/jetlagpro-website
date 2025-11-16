@@ -64,6 +64,7 @@ if [ -d "reviewers" ]; then
     sed -i '' "s/\(assets\/css\/reviewers\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
     sed -i '' "s/\(assets\/css\/audit-log\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
     sed -i '' "s/\(assets\/css\/analytics\.css\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
+    # Note: reviewers.css is now the shared stylesheet loaded by all reviewer pages
     # Update reviewer-specific JS files (local paths)
     sed -i '' "s/\(assets\/js\/audit-log\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
     sed -i '' "s/\(assets\/js\/analytics\.js\?\)v=[^\"&>]*/\1v=$VERSION/g" reviewers/*.html
