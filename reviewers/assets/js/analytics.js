@@ -580,8 +580,8 @@ function renderTripStats() {
     const validWithSurveysPercent = validationStats.valid > 0 ? Math.round((validWithSurveys.length / validationStats.valid) * 100) : 0;
     const validWithoutSurveysPercent = validationStats.valid > 0 ? Math.round((validWithoutSurveys.length / validationStats.valid) * 100) : 0;
     
-    // Format confirmed trips with survey status
-    const confirmedTripsText = `with surveys ${validWithSurveys.length} (${validWithSurveysPercent}%)<br>without surveys ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)`;
+    // Format confirmed trips with survey status (number first)
+    const confirmedTripsText = `${validWithSurveys.length} with surveys (${validWithSurveysPercent}%)<br>${validWithoutSurveys.length} without surveys (${validWithoutSurveysPercent}%)`;
     
     // Compute verified/legacy/test summary for the top line
     const verifiedCount = ((breakdown.real_travel || 0) + (breakdown.survey_fallback || 0));
