@@ -583,18 +583,15 @@ function renderTripStats() {
     // Format confirmed trips with survey status
     const confirmedTripsText = `with surveys ${validWithSurveys.length} (${validWithSurveysPercent}%)<br>without surveys ${validWithoutSurveys.length} (${validWithoutSurveysPercent}%)`;
     
-    // Format data type on separate lines
-    const dataTypeText = `Early Data (${breakdown.legacy})<br>Confirmed Travel (${breakdown.real_travel + breakdown.survey_fallback})`;
-    
-    // Add HMAC validation stats (cryptographic authentication)
-    const hmacStats = TripValidator.getHMACStats(allData);
-    const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
-    
+    // Compute verified/legacy/test summary for the top line
+    const verifiedCount = ((breakdown.real_travel || 0) + (breakdown.survey_fallback || 0));
+    const legacyCount = (breakdown.legacy || 0);
+    const testCount = (validationStats.invalid || 0);
+
     let html = '<table class="stats-table">';
-    html += `<tr><th>Trips (Total / Confirmed / Test)</th><td>${validationStats.total} / ${validationStats.valid} / ${validationStats.invalid}</td></tr>`;
-    html += `<tr><th>Confirmed Trips (${validationStats.valid})</th><td>${confirmedTripsText}</td></tr>`;
+    html += `<tr><th>${validationStats.total} Trips</th><td>Verified ${verifiedCount} / Legacy ${legacyCount} / Test ${testCount}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
-    html += `<tr><th>Data Type</th><td>${dataTypeText}</td></tr>`;
+    // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
     html += '</table>';
     html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: center;">';
