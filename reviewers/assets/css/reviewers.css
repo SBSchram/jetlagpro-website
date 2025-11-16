@@ -311,6 +311,94 @@ code {
     word-wrap: break-word;
 }
 
+/* Info Boxes - Used by analysis.html and verify.html */
+.info-box {
+    background: #f0f9ff;
+    border-left: 3px solid #3b82f6;
+    padding: 12px 15px;
+    margin: 15px 0;
+    font-size: 0.85rem;
+    color: #1e40af;
+}
+
+.warning-box {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 4px;
+}
+
+.warning-box p {
+    color: #92400e;
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.note-box {
+    background: #dbeafe;
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 4px;
+}
+
+.note-box p {
+    color: #1e40af;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.note-box a {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+/* Section Container - Used by analysis.html */
+.section-container {
+    background: #f9fafb;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 40px;
+}
+
+.section-container h2 {
+    color: #1e40af;
+    margin-top: 0;
+}
+
+/* Inline Code Styling - Used in multiple places */
+code.inline {
+    background: #e5e7eb;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* GitHub Button - Used by analysis.html */
+.github-button {
+    display: inline-block;
+    background: #6b7280;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.github-button:hover {
+    background: #4b5563;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
 /* Legacy styles for reviewers index page (if it exists) */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

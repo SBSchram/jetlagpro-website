@@ -111,8 +111,8 @@
             <div id="recentSubmissions" class="loading">Loading recent data...</div>
         </div>
 
-        <div class="data-section" id="reproduce-analysis" style="background: #f9fafb; border: 2px solid #3b82f6; border-radius: 8px; padding: 25px; margin-top: 40px;">
-            <h2 style="color: #1e40af; margin-top: 0;">Reproduce This Analysis</h2>
+        <div class="data-section section-container" id="reproduce-analysis">
+            <h2>Reproduce This Analysis</h2>
             <p style="color: #374151; font-size: 1rem; line-height: 1.6;">
                 All analyses shown on this page can be independently reproduced. Download the raw data and analysis script to verify our statistical methods and results.
             </p>
@@ -124,7 +124,7 @@
                 <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" \
   -o trips.json</code>
             </div>
-            <div style="background: #f0f9ff; border-left: 3px solid #3b82f6; padding: 12px 15px; margin: 15px 0; font-size: 0.85rem; color: #1e40af;">
+            <div class="info-box">
                 <strong>Data Included:</strong> Each trip record contains:
                 <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
                     <li><strong>Trip details</strong>: ID, dates, airports, time zones, direction</li>
@@ -134,7 +134,7 @@
                 </ul>
             </div>
             <p style="color: #6b7280; font-size: 0.85rem; margin-top: 10px;">
-                <strong>Note:</strong> If the response includes <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">"nextPageToken"</code>, repeat the call with <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">&pageToken=...</code> to retrieve all pages.
+                <strong>Note:</strong> If the response includes <code class="inline">"nextPageToken"</code>, repeat the call with <code class="inline">&pageToken=...</code> to retrieve all pages.
             </p>
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 2: Download Analysis Script</h3>
@@ -145,7 +145,7 @@
   https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
             </div>
             <p style="margin-top: 15px;">
-                <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank" style="display: inline-block; background: #6b7280; color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 0.9rem; font-weight: 500;">View Source Code on GitHub</a>
+                <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank" class="github-button">View Source Code on GitHub</a>
             </p>
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 3: Run the Analysis</h3>
@@ -159,7 +159,7 @@
 
             <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 4: Compare Results</h3>
             <p style="color: #374151; font-size: 0.95rem;">
-                The script will generate a detailed report (<code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">analysis_report.txt</code>) containing:
+                The script will generate a detailed report (<code class="inline">analysis_report.txt</code>) containing:
             </p>
             <ul style="color: #374151; line-height: 1.8; margin-left: 20px;">
                 <li><strong>Basic Statistics</strong> – Trip counts, average points stimulated, average severity</li>
@@ -170,15 +170,15 @@
                 Compare the output with the live data displayed on this page. Values should match (within rounding).
             </p>
 
-            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-top: 20px; border-radius: 4px;">
-                <p style="color: #92400e; font-size: 0.9rem; margin: 0; font-weight: 500;">
+            <div class="warning-box">
+                <p>
                     <strong>📊 Requirements:</strong> The analysis script requires Python 3.6+ with no external dependencies. All calculations use pure Python for transparency and reproducibility.
                 </p>
             </div>
 
-            <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 15px; margin-top: 15px; border-radius: 4px;">
-                <p style="color: #1e40af; font-size: 0.9rem; margin: 0;">
-                    <strong>🔍 Transparency Note:</strong> This analysis uses the exact same data and calculations as the live dashboard. No data is hidden or filtered beyond what is documented in the <a href="../research-paper.html" style="color: #1e40af; text-decoration: underline;">research paper</a>.
+            <div class="note-box">
+                <p>
+                    <strong>🔍 Transparency Note:</strong> This analysis uses the exact same data and calculations as the live dashboard. No data is hidden or filtered beyond what is documented in the <a href="../research-paper.html">research paper</a>.
                 </p>
             </div>
         </div>
