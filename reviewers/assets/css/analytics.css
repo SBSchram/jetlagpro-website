@@ -210,6 +210,12 @@ body {
     margin: 0 auto; /* Center the table */
 }
 
+/* Left-align second column specifically in Trip Stats */
+#trip-stats .stats-table th:nth-child(2),
+#trip-stats .stats-table td:nth-child(2) {
+    text-align: left;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
