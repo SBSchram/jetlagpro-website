@@ -120,9 +120,13 @@
 }
 
 .code-block-dark code {
+    background: transparent !important; /* Override base code background (#f1f5f9) */
+    padding: 0; /* Remove base code padding */
+    border-radius: 0; /* Remove base code border-radius */
     color: #f3f4f6;
     white-space: pre;
     display: block;
+    font-size: 0.9rem; /* Match parent font-size */
 }
 
 .code-block-dark .copy-button {
