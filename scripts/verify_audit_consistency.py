@@ -525,7 +525,7 @@ def print_report(report: Dict) -> int:
     
     print("\nDATA SOURCES")
     print(f"Firestore audit entries:    {total_firestore}")
-    print(f"  - Pre-GCS archiving:      {pre_gcs_count}  (before GCS deployed)")
+    print(f"  - Pre-GCS archiving:      {pre_gcs_count}")
     print(f"  - GCS archived:          {gcs_count}")
     
     print("\nVERIFICATION RESULTS")
