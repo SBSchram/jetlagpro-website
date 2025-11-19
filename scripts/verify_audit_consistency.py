@@ -218,52 +218,165 @@ KNOWN_VALIDATION_FAILURES = {
 }
 
 
+def extract_firestore_value(value):
+    """
+    Recursively extract Firestore REST API values to plain Python types.
+    
+    Matches verify.html extractFirestoreValue() function (lines 624-686).
+    Handles all Firestore value types recursively, including nested maps and arrays.
+    """
+    if value is None:
+        return None
+    
+    # If not a dict, return as-is (but handle timestamp strings)
+    if not isinstance(value, dict):
+        return value
+    
+    # Handle Firestore value wrappers (check these first before recursing)
+    if 'timestampValue' in value:
+        return value['timestampValue']  # Keep as-is, will normalize later
+    if 'stringValue' in value:
+        return value['stringValue']
+    if 'integerValue' in value:
+        return int(value['integerValue'])
+    if 'doubleValue' in value:
+        return float(value['doubleValue'])
+    if 'booleanValue' in value:
+        bool_val = value['booleanValue']
+        return bool_val == 'true' or bool_val is True
+    if 'nullValue' in value:
+        return None
+    if 'arrayValue' in value and 'values' in value['arrayValue']:
+        return [extract_firestore_value(v) for v in value['arrayValue']['values']]
+    if 'mapValue' in value and 'fields' in value['mapValue']:
+        # Recursively extract nested map - CRITICAL for metadata normalization
+        nested = {}
+        for k, v in value['mapValue']['fields'].items():
+            nested[k] = extract_firestore_value(v)
+        return nested
+    
+    # Handle Firestore Timestamp objects (from Admin SDK, not REST API)
+    if '_seconds' in value:
+        return value  # Keep as-is, will normalize later
+    
+    # Plain object or array - recurse on all values
+    if isinstance(value, list):
+        return [extract_firestore_value(v) for v in value]
+    
+    # Plain dict - recurse on all values
+    result = {}
+    for k, v in value.items():
+        result[k] = extract_firestore_value(v)
+    return result
+
+
 def normalize_entry(entry: Dict) -> Dict:
     """
     Normalize an audit entry to a canonical format for comparison.
     
     RATIONALE:
     Firestore REST API and GCS JSON files use different formats for the same data.
-    This function extracts the core fields and normalizes them to a common structure
+    This function extracts all fields and normalizes them to a common structure
     so entries can be compared regardless of source format.
     
     METHODOLOGY:
-    - Extracts core audit fields: tripId, operation, timestamp, documentId, etc.
-    - Handles Firestore REST API format (nested 'fields' with type wrappers)
-    - Handles GCS JSON format (flat structure)
+    - Iterates over all keys in the entry (matches verify.html line 434)
+    - Skips Firestore document metadata (name, createTime, updateTime, id, _raw)
+    - Recursively extracts Firestore REST API format values
+    - Recursively sorts nested object keys for consistent comparison
     - Returns normalized dictionary with consistent structure
     
     This normalization is critical for accurate comparison - without it, format
     differences would cause false positives (entries appearing different when
     they're actually the same).
+    
+    EXACTLY matches verify.html normalizeEntry() function (lines 418-559).
     """
     normalized = {}
     
-    # Extract core fields (order-independent)
-    fields_to_extract = [
-        'tripId', 'operation', 'timestamp', 'documentId', 
-        'source', 'metadata', 'changes', 'snapshot'
-    ]
+    # Fields to skip (Firestore document metadata, not part of audit data)
+    skip_fields = {'name', 'createTime', 'updateTime', 'id', '_raw'}
     
-    for field in fields_to_extract:
-        if field in entry:
-            normalized[field] = entry[field]
-        elif 'fields' in entry and field in entry['fields']:
-            # Firestore REST API format: extract from nested fields
-            value = entry['fields'][field]
-            if isinstance(value, dict):
-                if 'stringValue' in value:
-                    normalized[field] = value['stringValue']
-                elif 'integerValue' in value:
-                    normalized[field] = int(value['integerValue'])
-                elif 'timestampValue' in value:
-                    normalized[field] = value['timestampValue']
-                elif 'mapValue' in value:
-                    normalized[field] = value['mapValue']
-            else:
-                normalized[field] = value
+    # Handle Firestore REST API format: if entry has 'fields', extract from there
+    # Otherwise, entry is already in plain format (GCS or already extracted)
+    if 'fields' in entry and isinstance(entry['fields'], dict):
+        # Firestore REST API format: extract from 'fields'
+        source_entry = entry['fields']
+    else:
+        # Already in plain format (GCS or already extracted)
+        source_entry = entry
+    
+    # Get all keys from source entry (matches verify.html line 434)
+    keys = sorted(source_entry.keys())
+    
+    for key in keys:
+        # Skip Firestore document metadata
+        if key in skip_fields:
+            continue
+        
+        # Extract value (recursively extracts Firestore REST API format)
+        # Matches verify.html line 445: value = extractFirestoreValue(value)
+        value = extract_firestore_value(source_entry[key])
+        
+        # Recursively sort nested object keys for consistent comparison
+        # Matches verify.html line 468-470
+        if isinstance(value, dict) and not isinstance(value, list):
+            value = _sort_object_keys(value)
+        
+        normalized[key] = value
+    
+    # Ensure critical fields exist (set to null if missing for consistent comparison)
+    # Matches verify.html lines 475-509
+    if 'source' not in normalized:
+        normalized['source'] = None
+    elif normalized['source'] is not None and not isinstance(normalized['source'], str):
+        normalized['source'] = str(normalized['source']) if normalized['source'] else None
+    
+    if 'changedFields' not in normalized:
+        normalized['changedFields'] = None
+    elif normalized['changedFields'] is not None:
+        if not isinstance(normalized['changedFields'], list):
+            normalized['changedFields'] = []
+        else:
+            normalized['changedFields'] = sorted(normalized['changedFields'])
+    
+    if 'changes' not in normalized:
+        normalized['changes'] = None
+    elif normalized['changes'] is not None and not isinstance(normalized['changes'], dict):
+        normalized['changes'] = None
+    
+    if 'deletedData' not in normalized:
+        normalized['deletedData'] = None
+    
+    # Sort all keys in the normalized result
+    normalized = _sort_object_keys(normalized)
     
     return normalized
+
+
+def _sort_object_keys(obj):
+    """
+    Recursively sort object keys for consistent comparison.
+    
+    Matches verify.html sortObjectKeys() function (lines 561-594).
+    """
+    if obj is None or not isinstance(obj, dict):
+        return obj
+    
+    if isinstance(obj, list):
+        return [_sort_object_keys(item) for item in obj]
+    
+    sorted_obj = {}
+    for key in sorted(obj.keys()):
+        value = obj[key]
+        if isinstance(value, dict):
+            sorted_obj[key] = _sort_object_keys(value)
+        elif isinstance(value, list):
+            sorted_obj[key] = [_sort_object_keys(item) for item in value]
+        else:
+            sorted_obj[key] = value
+    
+    return sorted_obj
 
 
 def compute_entry_hash(entry: Dict) -> str:
