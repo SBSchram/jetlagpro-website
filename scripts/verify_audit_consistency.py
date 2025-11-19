@@ -117,25 +117,25 @@ critical component and is implemented exactly as in the JavaScript.
 KNOWN EXCEPTIONS (Documented Validation Failures)
 ================================================================================
 
-The following audit entries have EXPECTED discrepancies where GCS shows the
-original operation (CREATE) but Firestore shows a validation failure
-(METADATA_VALIDATION_FAILED). This occurs when the Cloud Function detects
-metadata issues AFTER the trip was written.
+During testing, some audit entries show discrepancies where GCS records the
+original operation (CREATE) while Firestore records a validation failure
+(METADATA_VALIDATION_FAILED). This occurs when Cloud Function validation runs
+after the write completes.
 
-These are NOT evidence of tampering. They demonstrate the validation system
-working correctly by flagging data quality issues during testing.
+These entries represent the validation system functioning correctly - catching
+metadata format issues during the testing phase.
 
-IMPORTANT FOR AUDITORS:
-- This exception list is HARDCODED in this script (visible to all)
-- Git history shows when/why each exception was added
-- Each exception has a documented, legitimate reason
-- Exceptions are for historical issues only (before fixes were deployed)
+AUDITOR VERIFICATION:
+- Exception list is hardcoded below (line ~180) for transparency
+- Git history shows when each exception was added and why
+- Each exception includes full documentation and resolution details
+- Exceptions are limited to historical testing issues (before fixes deployed)
 
-An independent auditor can verify this list by:
-1. Reading this source code (exceptions are visible)
-2. Checking git history of this file
-3. Comparing against published version at jetlagpro.com/scripts/
-4. Verifying the reasons match the actual audit entries in Firestore/GCS
+Independent auditors can verify by:
+1. Reviewing the hardcoded exception list in source code
+2. Checking git commit history for this file
+3. Downloading and comparing actual Firestore/GCS entries
+4. Running verification with their own data download
 
 EXCEPTION LIST:
 See KNOWN_VALIDATION_FAILURES dictionary below (line ~180)
@@ -191,42 +191,41 @@ from typing import Dict, List, Set
 # KNOWN EXCEPTIONS - Hardcoded for Transparency
 # ============================================================================
 # 
-# These audit entries have EXPECTED discrepancies due to validation failures
-# that occurred AFTER the trip was written. Each exception is documented with
-# full details for auditor verification.
+# Audit entries with documented discrepancies due to validation failures that
+# occurred after the trip write completed. Each exception includes full details
+# for independent verification.
 #
-# WHY THESE EXIST:
-# Testing revealed edge cases where metadata validation failed post-write.
-# Rather than hide these (which would be tampering), we document them openly.
-# This demonstrates the validation system working correctly.
+# CONTEXT:
+# Testing revealed edge cases in metadata validation. These entries show the
+# validation system catching format issues during the development phase.
 #
-# AUDITOR VERIFICATION:
-# 1. This list is visible in source code (not hidden)
-# 2. Git history shows when/why each exception was added
-# 3. Each exception has documented reason and resolution
-# 4. Exceptions are for historical issues only (before fixes deployed)
+# VERIFICATION:
+# 1. List is hardcoded in source (visible to all auditors)
+# 2. Git history documents when/why each exception was added
+# 3. Each entry includes reason, resolution, and commit references
+# 4. Limited to historical testing issues (before production deployment)
 #
 KNOWN_VALIDATION_FAILURES = {
     'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590': {
         'tripId': '23DB54B0-ISTE-251109-2205-931e1d71',
         'date_detected': '2025-11-18T18:29:50Z',
-        'reason': 'Developer test trip with non-standard device ID format',
+        'reason': 'Test trip with 16-character hex device ID format',
         'device_id': '40f196837f25f348',
-        'device_id_issue': 'Length 16 chars, expected 36-char UUID or 8-char hash',
+        'device_id_issue': 'Length 16 hex chars (validation expected UUID or 8-char hash)',
         'gcs_operation': 'CREATE',
         'firestore_operation': 'METADATA_VALIDATION_FAILED',
         'validation_issue': 'invalid_device_id_format',
-        'when_created': '2025-11-18 (before Cloud Function relaxed validation)',
-        'resolution': 'Cloud Function updated 2025-11-19 to accept hex strings 16-36 chars',
+        'when_created': '2025-11-18 (before validation update)',
+        'resolution': 'Cloud Function updated 2025-11-19 to accept 16-36 char hex strings',
         'fix_commit': 'da4a7af',
-        'data_status': 'Valid test data, legitimate developer trip to Istanbul',
-        'tamper_risk': 'NONE - validation system working as designed',
-        'documentation': 'See scripts/DEVICE_ID_FORMAT_CHANGE.md',
+        'data_status': 'Valid test trip (Istanbul)',
+        'impact': 'Validation system functioning correctly',
+        'documentation': 'scripts/DEVICE_ID_FORMAT_CHANGE.md',
         'added_to_exceptions': '2025-11-19',
-        'added_by': 'Steven Schram (testing phase)',
+        'added_by': 'Steven Schram',
         'expires': False,
-        'notes': 'This test revealed device ID validation was too strict. '
-                 'Led to Cloud Function update and improved device ID architecture.'
+        'notes': 'Test revealed overly strict validation. Led to updated Cloud Function '
+                 'and improved device ID architecture supporting multiple formats.'
     }
 }
 
@@ -547,10 +546,10 @@ def print_report(report: Dict) -> int:
     # Print known exceptions section if any exist
     if report.get('known_exceptions'):
         print("\n" + "="*70)
-        print("KNOWN EXCEPTIONS (Expected Discrepancies)")
+        print("KNOWN EXCEPTIONS (Documented Discrepancies)")
         print("="*70)
-        print("\nThese entries have documented reasons for showing discrepancies.")
-        print("They are NOT evidence of tampering - they show validation working.\n")
+        print("\nValidation caught these metadata issues during testing.")
+        print("Full details documented for independent verification.\n")
         
         for exc in report['known_exceptions']:
             info = exc['info']
@@ -561,15 +560,16 @@ def print_report(report: Dict) -> int:
             print(f"  Issue:      {info['validation_issue']}")
             print(f"  Resolution: {info['resolution']}")
             print(f"  Status:     {info['data_status']}")
-            print(f"  Risk:       {info['tamper_risk']}")
+            print(f"  Impact:     {info['impact']}")
             print(f"  Docs:       {info['documentation']}")
             print()
     
     if report['discrepancies'] == 0:
         print("\n✅ VERIFICATION PASSED")
         print("All Firestore entries match GCS archive.")
-        print("(Excluding documented known exceptions)")
-        print("No evidence of tampering detected.")
+        if report.get('known_exceptions'):
+            print(f"({len(report['known_exceptions'])} documented exception(s) filtered)")
+        print("Data integrity confirmed.")
         return 0
     else:
         print("\n✗ VERIFICATION FAILED")
