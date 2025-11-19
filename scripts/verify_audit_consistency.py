@@ -126,6 +126,22 @@ Additionally, timestamps are normalized to {} because:
 This approach balances strictness (catches real tampering) with flexibility
 (doesn't fail on expected format differences between Firestore and GCS).
 
+WHAT THIS VERIFICATION PROTECTS:
+The audit trail verifies DATABASE OPERATIONS (create, update, delete) are recorded
+consistently. The actual RESEARCH DATA (timezones crossed, points stimulated, survey
+responses) is protected by this audit system - any tampering with those values would
+show up as content mismatches.
+
+Critical research fields that must remain tamper-proof:
+- timezonesCount: Number of time zones crossed (primary independent variable)
+- pointsCompleted, point1Completed...point12Completed: Treatment adherence data
+- Survey responses: generalPre, generalPost, sleepPre, sleepPost, etc. (outcomes)
+- Trip metadata: startDate, completionDate, travelDirection, originTimezone, etc.
+
+The audit verification ensures these values in the live database match the immutable
+archive. Even though we normalize metadata and timestamps to {} for comparison, the
+RESEARCH DATA fields are compared at full precision.
+
 This Python implementation uses a simplified normalization that extracts core fields
 and handles basic Firestore format conversion. The key matching (eventId) is the
 critical component and is implemented exactly as in the JavaScript.
