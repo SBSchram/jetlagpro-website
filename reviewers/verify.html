@@ -334,6 +334,25 @@ Discrepancies:              ${comparison.discrepancies}
             let matchedCount = 0;
             const allKeys = new Set([...firestoreMap.keys(), ...gcsMap.keys()]);
             
+            // DEBUG: Log first entry normalization
+            const firstKey = Array.from(allKeys)[0];
+            if (firstKey) {
+                console.log('=== DEBUG: First Entry Normalization ===');
+                console.log('Key:', firstKey);
+                const fsEntry = firestoreMap.get(firstKey);
+                const gcsEntry = gcsMap.get(firstKey);
+                if (fsEntry && gcsEntry) {
+                    const fsNorm = normalizeEntry(fsEntry);
+                    const gcsNorm = normalizeEntry(gcsEntry);
+                    console.log('Firestore normalized:', JSON.stringify(fsNorm, null, 2));
+                    console.log('GCS normalized:', JSON.stringify(gcsNorm, null, 2));
+                    console.log('Firestore hash:', hashEntry(fsEntry));
+                    console.log('GCS hash:', hashEntry(gcsEntry));
+                    console.log('Match:', hashEntry(fsEntry) === hashEntry(gcsEntry));
+                }
+                console.log('=== END DEBUG ===');
+            }
+            
             allKeys.forEach(key => {
                 const firestoreEntry = firestoreMap.get(key);
                 const gcsEntry = gcsMap.get(key);
