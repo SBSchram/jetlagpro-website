@@ -143,21 +143,21 @@ This script enables independent verification - reviewers can:
 USAGE
 ================================================================================
 
-Example workflow (Option 1 - Automatic download, no gsutil required):
+Example workflow (recommended - automatic download):
   1. Download Firestore audit data:
      curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
-  2. Run verification (downloads GCS files automatically):
-     python verify_audit_consistency.py --firestore firestore-audit.json --download-gcs
+  2. Run verification (automatically downloads GCS files, no gsutil required):
+     python verify_audit_consistency.py --firestore firestore-audit.json
 
-Example workflow (Option 2 - Manual download with gsutil):
+Example workflow (advanced - manual download with gsutil):
   1. Download Firestore audit data:
      curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
-  2. Download GCS archive:
+  2. Download GCS archive manually:
      gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit
   
-  3. Run verification:
+  3. Run verification with local directory:
      python verify_audit_consistency.py --firestore firestore-audit.json --gcs-dir ./gcs-audit
 
 Requirements:
@@ -634,23 +634,21 @@ def main():
         description='Verify JetLagPro audit trail consistency',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Example usage:
-
-Option 1 - Automatic download (no gsutil required):
+Example usage (automatic download - recommended):
   # Download Firestore data
   curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
-  # Run verification (downloads GCS files automatically)
-  python verify_audit_consistency.py --firestore firestore-audit.json --download-gcs
+  # Run verification (automatically downloads GCS files, no gsutil required)
+  python verify_audit_consistency.py --firestore firestore-audit.json
 
-Option 2 - Manual download with gsutil:
+Advanced usage (manual download with gsutil):
   # Download Firestore data
   curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
-  # Download GCS archive
+  # Download GCS archive manually
   gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit
   
-  # Run verification
+  # Run verification with local directory
   python verify_audit_consistency.py --firestore firestore-audit.json --gcs-dir ./gcs-audit
         """
     )
@@ -663,12 +661,12 @@ Option 2 - Manual download with gsutil:
     parser.add_argument(
         '--gcs-dir',
         required=False,
-        help='Path to directory containing GCS archive JSON files (if not using --download-gcs)'
+        help='Path to directory containing GCS archive JSON files (optional, uses automatic download if not provided)'
     )
     parser.add_argument(
         '--download-gcs',
         action='store_true',
-        help='Automatically download GCS files via HTTP (no gsutil required)'
+        help='Automatically download GCS files via HTTP (default behavior, no gsutil required)'
     )
     
     args = parser.parse_args()
@@ -678,14 +676,17 @@ Option 2 - Manual download with gsutil:
         print(f"ERROR: Firestore file not found: {args.firestore}")
         return 1
     
-    # Check that either --gcs-dir or --download-gcs is provided
-    if not args.download_gcs and not args.gcs_dir:
-        print("ERROR: Must provide either --gcs-dir or --download-gcs")
-        return 1
-    
+    # Default to automatic download if neither option specified
+    # If both specified, error
     if args.download_gcs and args.gcs_dir:
         print("ERROR: Cannot use both --gcs-dir and --download-gcs. Choose one.")
         return 1
+    
+    # If neither specified, default to automatic download (simplest for reviewers)
+    if not args.download_gcs and not args.gcs_dir:
+        args.download_gcs = True
+        print("Note: Using automatic GCS download (no gsutil required)")
+        print()
     
     # Load data
     try:

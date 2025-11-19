@@ -927,7 +927,8 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 2: Download Immutable GCS Archive using <code>gsutil</code></h2>
+            <h2>Step 2: Download Immutable GCS Archive <span style="color: #666; font-size: 0.8em; font-weight: normal;">(Optional - Skip to Step 3)</span></h2>
+            <p style="margin-bottom: 10px; color: #666; font-size: 0.95em;"><strong>Note:</strong> Step 2 is optional. The verification script in Step 3 will automatically download GCS files for you. Only use this step if you prefer manual control with gsutil.</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -937,7 +938,7 @@ HMAC Validation Results:
                 </button>
                 <code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code>
             </div>
-            <div class="note">
+            <div class="note" style="margin-top: 10px;">
                 <strong>Prerequisite:</strong> <code>gsutil</code> is part of the Google Cloud SDK. If not installed:
                 <ul style="margin: 8px 0 0 0; padding-left: 20px; line-height: 1.6;">
                     <li><strong>macOS (Homebrew):</strong> <code>brew install google-cloud-sdk</code></li>
@@ -945,7 +946,7 @@ HMAC Validation Results:
                 </ul>
                 After installation, run <code>gcloud init</code> and <code>gcloud auth login</code>. The bucket is publicly readable, so no special permissions are required.
             </div>
-            <p>Each JSON file in the archive is a single audit event, version-locked for 10 years.</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Each JSON file in the archive is a single audit event, version-locked for 10 years.</p>
         </div>
 
         <div class="section">
@@ -962,8 +963,7 @@ HMAC Validation Results:
   https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
             </div>
             <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
-            <p style="margin-top: 15px;">Run the verification script to compare Firestore entries with the GCS archive:</p>
-            <p><strong>Option A - Automatic download (recommended, no gsutil required):</strong></p>
+            <p style="margin-top: 15px;">Run the verification script. It will automatically download GCS files (no gsutil required):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -971,22 +971,16 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python verify_audit_consistency.py \
-  --firestore firestore-audit.json \
-  --download-gcs</code>
+                <code>python verify_audit_consistency.py --firestore firestore-audit.json</code>
             </div>
-            <p><strong>Option B - Manual download (requires gsutil from Step 2):</strong></p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>python verify_audit_consistency.py \
-  --firestore firestore-audit.json \
-  --gcs-dir ./gcs-audit</code>
-            </div>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads GCS files and verifies consistency. No gsutil, no manual downloads, no complex setup.</p>
+            <details style="margin-top: 15px;">
+                <summary style="cursor: pointer; color: #0066cc; font-size: 0.9em;">Advanced: Use manual gsutil download (optional)</summary>
+                <p style="margin-top: 10px; font-size: 0.9em;">If you prefer to use gsutil from Step 2:</p>
+                <div class="code-block" style="margin-top: 8px;">
+                    <code>python verify_audit_consistency.py --firestore firestore-audit.json --gcs-dir ./gcs-audit</code>
+                </div>
+            </details>
         </div>
 
         <div class="section">
