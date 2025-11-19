@@ -143,7 +143,14 @@ This script enables independent verification - reviewers can:
 USAGE
 ================================================================================
 
-Example workflow:
+Example workflow (Option 1 - Automatic download, no gsutil required):
+  1. Download Firestore audit data:
+     curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
+  
+  2. Run verification (downloads GCS files automatically):
+     python verify_audit_consistency.py --firestore firestore-audit.json --download-gcs
+
+Example workflow (Option 2 - Manual download with gsutil):
   1. Download Firestore audit data:
      curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
@@ -166,6 +173,8 @@ import json
 import os
 import sys
 import hashlib
+import urllib.request
+import urllib.error
 from pathlib import Path
 from typing import Dict, List, Set
 
@@ -298,6 +307,59 @@ def load_firestore_entries(firestore_path: str) -> List[Dict]:
     
     print(f"  Loaded {len(normalized)} Firestore entries")
     return normalized
+
+
+def download_gcs_entries() -> List[Dict]:
+    """
+    Download GCS audit entries directly via HTTP (no gsutil required).
+    
+    Uses the same GCS JSON API as verify.html for consistency.
+    """
+    print("Downloading GCS archive via HTTP...")
+    
+    entries = []
+    
+    try:
+        # Step 1: List files in GCS bucket (same as verify.html line 166)
+        list_url = 'https://storage.googleapis.com/storage/v1/b/jetlagpro-audit-logs/o?prefix=audit-logs/&maxResults=10000'
+        
+        with urllib.request.urlopen(list_url) as response:
+            data = json.loads(response.read())
+            files = data.get('items', [])
+        
+        # Filter to only JSON files
+        json_files = [f for f in files if f.get('name', '').endswith('.json')]
+        print(f"  Found {len(json_files)} JSON files in GCS")
+        
+        # Step 2: Download each JSON file
+        for file_info in json_files:
+            try:
+                # Use mediaLink or construct direct URL (same as verify.html line 210)
+                file_url = file_info.get('mediaLink') or f"https://storage.googleapis.com/jetlagpro-audit-logs/{file_info['name']}"
+                
+                with urllib.request.urlopen(file_url) as file_response:
+                    entry = json.load(file_response)
+                    entries.append(normalize_entry(entry))
+                    
+            except Exception as e:
+                print(f"  WARNING: Could not download {file_info.get('name', 'unknown')}: {e}")
+        
+        print(f"  Loaded {len(entries)} GCS entries")
+        
+    except urllib.error.HTTPError as e:
+        if e.code == 403:
+            print(f"  ERROR: GCS bucket not publicly readable (403 Forbidden)")
+            print(f"  You may need to download files manually using gsutil")
+        elif e.code == 404:
+            print(f"  ERROR: GCS bucket not found (404 Not Found)")
+        else:
+            print(f"  ERROR: HTTP {e.code} - {e.reason}")
+        return []
+    except Exception as e:
+        print(f"  ERROR: Failed to download GCS entries: {e}")
+        return []
+    
+    return entries
 
 
 def load_gcs_entries(gcs_dir: str) -> List[Dict]:
@@ -573,6 +635,15 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Example usage:
+
+Option 1 - Automatic download (no gsutil required):
+  # Download Firestore data
+  curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
+  
+  # Run verification (downloads GCS files automatically)
+  python verify_audit_consistency.py --firestore firestore-audit.json --download-gcs
+
+Option 2 - Manual download with gsutil:
   # Download Firestore data
   curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" -o firestore-audit.json
   
@@ -591,8 +662,13 @@ Example usage:
     )
     parser.add_argument(
         '--gcs-dir',
-        required=True,
-        help='Path to directory containing GCS archive JSON files'
+        required=False,
+        help='Path to directory containing GCS archive JSON files (if not using --download-gcs)'
+    )
+    parser.add_argument(
+        '--download-gcs',
+        action='store_true',
+        help='Automatically download GCS files via HTTP (no gsutil required)'
     )
     
     args = parser.parse_args()
@@ -602,14 +678,26 @@ Example usage:
         print(f"ERROR: Firestore file not found: {args.firestore}")
         return 1
     
-    if not os.path.exists(args.gcs_dir):
-        print(f"ERROR: GCS directory not found: {args.gcs_dir}")
+    # Check that either --gcs-dir or --download-gcs is provided
+    if not args.download_gcs and not args.gcs_dir:
+        print("ERROR: Must provide either --gcs-dir or --download-gcs")
+        return 1
+    
+    if args.download_gcs and args.gcs_dir:
+        print("ERROR: Cannot use both --gcs-dir and --download-gcs. Choose one.")
         return 1
     
     # Load data
     try:
         firestore_entries = load_firestore_entries(args.firestore)
-        gcs_entries = load_gcs_entries(args.gcs_dir)
+        
+        if args.download_gcs:
+            gcs_entries = download_gcs_entries()
+        else:
+            if not os.path.exists(args.gcs_dir):
+                print(f"ERROR: GCS directory not found: {args.gcs_dir}")
+                return 1
+            gcs_entries = load_gcs_entries(args.gcs_dir)
     except Exception as e:
         print(f"ERROR: Failed to load data: {e}")
         return 1
