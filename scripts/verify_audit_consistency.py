@@ -18,13 +18,6 @@ The GCS archive cannot be modified by anyone (including study authors), providin
 an independent, tamper-evident record. This verification ensures the live database
 used for analysis matches the permanent archive.
 
-WHY THIS VERIFICATION MATTERS:
-- Prevents data manipulation: Any tampering would create discrepancies
-- Enables independent verification: Reviewers can verify data integrity themselves
-- Provides audit trail: Complete history of all database changes
-- Builds trust: Demonstrates confidence in data integrity
-- Research validity: Ensures published results are based on untampered data
-
 ================================================================================
 VERIFICATION METHODOLOGY
 ================================================================================
