@@ -194,9 +194,15 @@ function validateMetadata(metadata) {
   }
   
   // Validate device ID format (if present)
+  // Accept both full UUID (legacy) and 8-char device hash (new format)
   if (metadata.deviceId) {
     const uuidRegex = /^[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}$/i;
-    if (!uuidRegex.test(metadata.deviceId)) {
+    const hashRegex = /^[A-F0-9]{8}$/i;
+    const hexStringRegex = /^[a-f0-9]{16,36}$/i; // Legacy test data (16-36 hex chars)
+    
+    if (!uuidRegex.test(metadata.deviceId) && 
+        !hashRegex.test(metadata.deviceId) && 
+        !hexStringRegex.test(metadata.deviceId)) {
       issues.push("invalid_device_id_format");
     }
   }
