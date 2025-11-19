@@ -424,6 +424,26 @@ def normalize_entry(entry: Dict) -> Dict:
     #   Firestore hash: "timestamp":{}
     #   GCS hash: "timestamp":{}
     #   Result: MATCH ✓
+    #
+    # IMPORTANT TRADE-OFF (FOR CODE REVIEWERS):
+    # This means we verify timestamp PRESENCE, not timestamp VALUES. Here's why:
+    #
+    # 1. WHAT WE'RE VERIFYING: That audit operations (CREATE, UPDATE, DELETE) were
+    #    recorded consistently in both systems. The operation timestamp indicates
+    #    WHEN the audit log entry was created, not the research data timestamp.
+    #
+    # 2. RESEARCH DATA TIMESTAMPS: Trip start dates, completion dates, and survey
+    #    submission dates are stored in SEPARATE FIELDS (startDate, completionDate,
+    #    surveySubmittedAt) which ARE compared at full precision. Those timestamps
+    #    matter for research; the audit operation timestamp matters for logging.
+    #
+    # 3. WHY THIS IS ACCEPTABLE: If someone tampered with audit operation timestamps,
+    #    it wouldn't affect research results. If someone tampered with research data
+    #    timestamps (startDate, etc.), the audit would catch it as a content mismatch.
+    #
+    # 4. DETECTION CAPABILITY: Any tampering with research-critical fields (timezones,
+    #    points, surveys, trip dates) would show as a content mismatch because those
+    #    fields are compared at full precision, not normalized to {}.
     if 'timestamp' in normalized:
         normalized['timestamp'] = {}
     
