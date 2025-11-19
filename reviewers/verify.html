@@ -101,7 +101,7 @@ Comparing entries...</pre>`;
 
 DATA SOURCES
 Firestore audit entries:    ${comparison.totalFirestoreEntries}
-  - Pre-GCS archiving:      ${comparison.preDeploymentCount}  (before GCS deployed)
+  - Pre-GCS archiving:      ${comparison.preDeploymentCount}
   - GCS archived:          ${comparison.gcsCount}
 
 VERIFICATION RESULTS
@@ -115,9 +115,7 @@ Discrepancies:              ${comparison.discrepancies}
                 
                 if (comparison.discrepancies === 0) {
                     output += 'Status: ✅ All entries match immutable archive\n';
-                    output += '======================================================================\n\n';
-                    output += 'Note: Audit logging tracks database operations since 2025-11-11.\n';
-                    output += 'This verifies the audit system integrity, not trip completion data.';
+                    output += '======================================================================';
                     resultsDiv.className = 'verification-results success';
                 } else {
                     output += 'DISCREPANCIES FOUND:\n\n';
