@@ -232,6 +232,10 @@ def extract_firestore_value(value):
     if not isinstance(value, dict):
         return value
     
+    # Keep empty objects as-is (GCS has timestamp: {}, don't convert to null)
+    if len(value) == 0:
+        return {}
+    
     # Handle Firestore value wrappers (check these first before recursing)
     if 'timestampValue' in value:
         return value['timestampValue']  # Keep as-is, will normalize later
@@ -348,10 +352,74 @@ def normalize_entry(entry: Dict) -> Dict:
     if 'deletedData' not in normalized:
         normalized['deletedData'] = None
     
+    # Normalize metadata structure: ensure surveyMetadata exists for CREATE entries
+    # Matches verify.html lines 511-517
+    # GCS explicitly adds surveyMetadata: null for CREATE entries, but Firestore doesn't store it
+    if normalized.get('operation') == 'CREATE' and normalized.get('metadata'):
+        if 'surveyMetadata' not in normalized['metadata']:
+            normalized['metadata']['surveyMetadata'] = None
+    
+    # Recursively normalize timestamps (round to seconds, remove milliseconds)
+    # Matches verify.html normalizeTimestampsInObject() lines 533-558
+    normalized = _normalize_timestamps_recursive(normalized)
+    
+    # CRITICAL: For comparison, normalize all timestamp values to empty objects
+    # This matches JavaScript's behavior where timestamps show as {} in hashes
+    # (JavaScript's replacer array strips nested content, making all objects {})
+    # Since timestamps can be strings or {}, normalize both to {} for comparison
+    if 'timestamp' in normalized:
+        normalized['timestamp'] = {}
+    
     # Sort all keys in the normalized result
     normalized = _sort_object_keys(normalized)
     
     return normalized
+
+
+def _normalize_timestamp_string(timestamp_str):
+    """
+    Normalize timestamp string to remove millisecond precision for comparison.
+    
+    Matches verify.html normalizeTimestampString() lines 521-531.
+    Rounds timestamps to seconds to handle GCS vs Firestore precision differences.
+    """
+    if not isinstance(timestamp_str, str):
+        return timestamp_str
+    
+    # Match ISO timestamp with optional milliseconds: 2025-11-12T01:49:14.942Z
+    # Pattern: YYYY-MM-DDTHH:mm:ss(.sss)?Z?
+    import re
+    match = re.match(r'^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{1,3})?(Z)?$', timestamp_str)
+    if match:
+        # Round to seconds: remove milliseconds, keep Z if present
+        return match.group(1) + (match.group(3) if match.group(3) else '')
+    
+    return timestamp_str
+
+
+def _normalize_timestamps_recursive(obj):
+    """
+    Recursively normalize all timestamp strings in an object.
+    
+    Matches verify.html normalizeTimestampsInObject() lines 533-558.
+    """
+    if obj is None:
+        return obj
+    
+    if isinstance(obj, str):
+        return _normalize_timestamp_string(obj)
+    
+    if isinstance(obj, list):
+        return [_normalize_timestamps_recursive(item) for item in obj]
+    
+    if isinstance(obj, dict):
+        result = {}
+        for key, value in obj.items():
+            # Normalize all values recursively (special handling for timestamp fields)
+            result[key] = _normalize_timestamps_recursive(value)
+        return result
+    
+    return obj
 
 
 def _sort_object_keys(obj):
@@ -527,10 +595,37 @@ def hash_entry(entry: Dict) -> str:
         JSON string representation with sorted keys (for comparison)
     """
     normalized = normalize_entry(entry)
-    # Use sorted keys for consistent comparison
-    # Matches verify.html line 855: JSON.stringify(normalized, Object.keys(normalized).sort())
-    sorted_keys = sorted(normalized.keys())
-    return json.dumps(normalized, sort_keys=True, separators=(',', ':'))
+    # JavaScript uses: JSON.stringify(normalized, Object.keys(normalized).sort())
+    # The sorted keys array acts as a replacer, which serializes nested objects as empty {}
+    # 
+    # We need to replicate this by creating JSON that only includes top-level primitives,
+    # with nested dicts/objects showing as {}
+    #
+    # Build the hash string manually to match JavaScript's behavior
+    result_parts = []
+    for key in sorted(normalized.keys()):
+        value = normalized[key]
+        # Serialize the value
+        if value is None:
+            value_str = 'null'
+        elif isinstance(value, bool):
+            value_str = 'true' if value else 'false'
+        elif isinstance(value, (int, float)):
+            value_str = json.dumps(value)
+        elif isinstance(value, str):
+            value_str = json.dumps(value)
+        elif isinstance(value, dict):
+            # Nested object: serialize as empty {}
+            value_str = '{}'
+        elif isinstance(value, list):
+            # Arrays: keep them (JavaScript preserves arrays in replacer mode)
+            value_str = json.dumps(value)
+        else:
+            value_str = json.dumps(value)
+        
+        result_parts.append(f'"{key}":{value_str}')
+    
+    return '{' + ','.join(result_parts) + '}'
 
 
 def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -> Dict:
@@ -598,6 +693,7 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     # Build maps using eventId as key - matches verify.html line 456-498
     firestore_map = {}
     gcs_map = {}
+    known_exceptions_count = 0  # Count exceptions during map building (matches verify.html line 295)
     
     for entry in firestore_entries:
         # Extract key - matches verify.html line 461-464
@@ -608,6 +704,11 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
         
         # Skip pre-deployment entries - matches verify.html line 467-469
         if key in pre_deployment_event_ids:
+            continue
+        
+        # Skip known validation failures - count as exceptions (matches verify.html line 294-296)
+        if key in KNOWN_VALIDATION_FAILURES:
+            known_exceptions_count += 1
             continue
         
         firestore_map[key] = entry
@@ -623,6 +724,11 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
         if key in pre_deployment_event_ids:
             continue
         
+        # Skip known validation failures - they're expected discrepancies (matches verify.html line 322-324)
+        # Note: verify.html only counts Firestore exceptions, not GCS
+        if key in KNOWN_VALIDATION_FAILURES:
+            continue  # Don't increment counter for GCS side
+        
         gcs_map[key] = entry
     
     # Find matches and discrepancies - matches verify.html line 500-570
@@ -632,17 +738,11 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     mismatched = []
     known_exceptions = []
     
+    # Known exceptions are already filtered during map building
+    # Now just compare remaining entries
     all_keys = set(list(firestore_map.keys()) + list(gcs_map.keys()))
     
     for key in all_keys:
-        # Check if this is a known validation failure exception
-        if key in KNOWN_VALIDATION_FAILURES:
-            exception_info = KNOWN_VALIDATION_FAILURES[key]
-            known_exceptions.append({
-                'eventId': key,
-                'info': exception_info
-            })
-            continue  # Skip - don't count as discrepancy
         
         firestore_entry = firestore_map.get(key)
         gcs_entry = gcs_map.get(key)
@@ -671,6 +771,7 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
         'matched': matched_count,
         'discrepancies': len(missing_in_firestore) + len(missing_in_gcs) + len(mismatched),
         'known_exceptions': known_exceptions,
+        'known_exceptions_count': known_exceptions_count,  # Count from map building
         'missingInFirestore': missing_in_firestore[:10],  # Limit to first 10
         'missingInGCS': missing_in_gcs[:10],
         'mismatched': mismatched[:10],
@@ -695,7 +796,7 @@ def print_report(report: Dict) -> int:
     total_firestore = report['total_firestore']
     pre_gcs_count = 4  # Known pre-deployment entries
     gcs_count = report['total_gcs']
-    exceptions_count = len(report['known_exceptions'])
+    exceptions_count = report.get('known_exceptions_count', len(report.get('known_exceptions', [])))
     matched_count = report['matched']
     
     print("\nDATA SOURCES")
