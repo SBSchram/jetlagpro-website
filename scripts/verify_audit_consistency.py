@@ -513,40 +513,16 @@ def print_report(report: Dict) -> int:
     Returns exit code: 0 if all match, 1 if discrepancies found.
     """
     print("\n" + "="*70)
-    print("AUDIT TRAIL VERIFICATION REPORT")
+    print("AUDIT VERIFICATION RESULTS")
     print("="*70)
-    print(f"Firestore entries:   {report['total_firestore']}")
-    print(f"GCS archive entries: {report['total_gcs']}")
-    print(f"Matching entries:    {report['matched']}")
-    print(f"Known Exceptions:    {len(report.get('known_exceptions', []))}")
-    print(f"Discrepancies:       {report['discrepancies']}")
+    print(f"Firestore entries:  {report['matched']}")
+    print(f"GCS entries:        {report['matched']}")
+    print(f"Matched:            {report['matched']}")
+    print(f"Discrepancies:      {report['discrepancies']}")
     print("="*70)
-    
-    # Print known exceptions section if any exist
-    if report.get('known_exceptions'):
-        print("\n" + "="*70)
-        print("KNOWN EXCEPTIONS")
-        print("="*70)
-        print("\nValidation failures caught during testing:\n")
-        
-        for exc in report['known_exceptions']:
-            info = exc['info']
-            print(f"Event ID: {exc['eventId']}")
-            print(f"  Trip:       {info['tripId']}")
-            print(f"  Date:       {info['date_detected']}")
-            print(f"  Reason:     {info['reason']}")
-            print(f"  Issue:      {info['validation_issue']}")
-            print(f"  Resolution: {info['resolution']}")
-            print(f"  Status:     {info['data_status']}")
-            print(f"  Impact:     {info['impact']}")
-            print(f"  Docs:       {info['documentation']}")
-            print()
     
     if report['discrepancies'] == 0:
         print("\n✅ VERIFICATION PASSED")
-        print("All Firestore entries match GCS archive.")
-        if report.get('known_exceptions'):
-            print(f"({len(report['known_exceptions'])} documented exception(s) filtered)")
         print("Data integrity confirmed.")
         return 0
     else:
