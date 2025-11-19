@@ -537,7 +537,7 @@ def print_report(report: Dict) -> int:
     print()
     
     if report['discrepancies'] == 0:
-        print("Status: ✅ All entries match immutable archive")
+        print("Status: ✅ Data records match as expected")
         print("="*70)
         print("\nNote: Audit logging tracks database operations since 2025-11-11.")
         print("This verifies the audit system integrity, not trip completion data.")
