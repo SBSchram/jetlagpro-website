@@ -96,15 +96,28 @@ Comparing entries...</pre>`;
                 const comparison = compareEntries(firestoreEntries, gcsEntries);
                 
                 // Step 4: Display results
-                let output = `Firestore entries: ${firestoreEntries.length}
-GCS entries:       ${gcsEntries.length}
-Matched:           ${comparison.matched}
-Discrepancies:     ${comparison.discrepancies}
+                let output = `AUDIT TRAIL VERIFICATION
+======================================================================
+
+DATA SOURCES
+Firestore audit entries:    ${comparison.totalFirestoreEntries}
+  - Pre-GCS archiving:      ${comparison.preDeploymentCount}  (before GCS deployed)
+  - GCS archived:          ${comparison.gcsCount}
+
+VERIFICATION RESULTS
+GCS entries:               ${comparison.gcsCount}
+  Exceptions:               ${comparison.knownExceptionsCount}  (validation failures, documented)
+  Matches:                 ${comparison.matched}
+
+Discrepancies:              ${comparison.discrepancies}
 
 `;
                 
                 if (comparison.discrepancies === 0) {
-                    output += 'Audit verification complete: all records match.';
+                    output += 'Status: ✅ All entries match immutable archive\n';
+                    output += '======================================================================\n\n';
+                    output += 'Note: Audit logging tracks database operations since 2025-11-11.\n';
+                    output += 'This verifies the audit system integrity, not trip completion data.';
                     resultsDiv.className = 'verification-results success';
                 } else {
                     output += 'DISCREPANCIES FOUND:\n\n';
@@ -237,6 +250,11 @@ Discrepancies:     ${comparison.discrepancies}
             const missingInGCS = [];
             const mismatched = [];
             
+            // Track counts for reporting
+            const totalFirestoreEntries = firestoreEntries.length;
+            let preDeploymentCount = 0;
+            let knownExceptionsCount = 0;
+            
             // Known pre-deployment entries: These 4 audit entries were created before the 
             // immutable GCS archive was deployed (2025-11-11). They exist only in Firestore
             // and are expected to be missing from GCS. We filter them out for verification
@@ -270,11 +288,13 @@ Discrepancies:     ${comparison.discrepancies}
                 
                 // Skip pre-deployment entries - they're expected to be missing from GCS
                 if (preDeploymentEventIds.has(key)) {
+                    preDeploymentCount++;
                     return;
                 }
                 
                 // Skip known validation failures - they're expected discrepancies
                 if (knownValidationFailures.has(key)) {
+                    knownExceptionsCount++;
                     return;
                 }
                 
@@ -389,7 +409,11 @@ Discrepancies:     ${comparison.discrepancies}
                 discrepancies: missingInFirestore.length + missingInGCS.length + mismatched.length,
                 missingInFirestore: missingInFirestore.slice(0, 10), // Limit to first 10
                 missingInGCS: missingInGCS.slice(0, 10),
-                mismatched: mismatched.slice(0, 10)
+                mismatched: mismatched.slice(0, 10),
+                totalFirestoreEntries: totalFirestoreEntries,
+                preDeploymentCount: preDeploymentCount,
+                knownExceptionsCount: knownExceptionsCount,
+                gcsCount: gcsEntries.length
             };
         }
         

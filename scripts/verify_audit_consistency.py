@@ -513,17 +513,34 @@ def print_report(report: Dict) -> int:
     Returns exit code: 0 if all match, 1 if discrepancies found.
     """
     print("\n" + "="*70)
-    print("AUDIT VERIFICATION RESULTS")
-    print("="*70)
-    print(f"Firestore entries:  {report['matched']}")
-    print(f"GCS entries:        {report['matched']}")
-    print(f"Matched:            {report['matched']}")
-    print(f"Discrepancies:      {report['discrepancies']}")
+    print("AUDIT TRAIL VERIFICATION")
     print("="*70)
     
+    # Calculate counts
+    total_firestore = report['total_firestore']
+    pre_gcs_count = 4  # Known pre-deployment entries
+    gcs_count = report['total_gcs']
+    exceptions_count = len(report['known_exceptions'])
+    matched_count = report['matched']
+    
+    print("\nDATA SOURCES")
+    print(f"Firestore audit entries:    {total_firestore}")
+    print(f"  - Pre-GCS archiving:      {pre_gcs_count}  (before GCS deployed)")
+    print(f"  - GCS archived:          {gcs_count}")
+    
+    print("\nVERIFICATION RESULTS")
+    print(f"GCS entries:               {gcs_count}")
+    print(f"  Exceptions:               {exceptions_count}  (validation failures, documented)")
+    print(f"  Matches:                 {matched_count}")
+    print()
+    print(f"Discrepancies:              {report['discrepancies']}")
+    print()
+    
     if report['discrepancies'] == 0:
-        print("\n✅ VERIFICATION PASSED")
-        print("Data integrity confirmed.")
+        print("Status: ✅ All entries match immutable archive")
+        print("="*70)
+        print("\nNote: Audit logging tracks database operations since 2025-11-11.")
+        print("This verifies the audit system integrity, not trip completion data.")
         return 0
     else:
         print("\n✗ VERIFICATION FAILED")
