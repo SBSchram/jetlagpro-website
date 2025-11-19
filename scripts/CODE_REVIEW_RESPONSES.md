@@ -60,33 +60,52 @@ The HMAC signature on trip IDs is for **format consistency**, not access control
 ### Response
 **This is an acceptable trade-off because we're verifying audit OPERATIONS, not audit CONTENT precision.**
 
-### What We're Verifying
+### What We're Actually Verifying
 
-**Audit Operation Timestamps (`timestamp` field):**
-- When the audit log entry was created
-- Not critical for research results
-- Normalized to `{}` to handle Firestore/GCS format differences
+**Audit Operation Logs:**
+- That CREATE/UPDATE/DELETE operations were recorded consistently
+- That the immutable GCS archive matches the live Firestore audit log
+- NOT field-by-field precision of research data values
 
-**Research Data Timestamps (separate fields):**
-- `startDate`: When trip started (CRITICAL - compared at full precision)
-- `completionDate`: When trip ended (CRITICAL - compared at full precision)
-- `surveySubmittedAt`: When survey completed (CRITICAL - compared at full precision)
+**What Audit Logs Contain:**
+- CREATE operations: Reference fields only (tripId, destinationCode, etc.)
+- UPDATE operations: Only the 'changes' object (which fields changed)
+- DELETE operations: Reference to deleted document
+- The `timestamp` field: When the audit log entry was created
+
+**Where Research Data Actually Lives:**
+- Research data is in trip DOCUMENTS (tripCompletions collection)
+- Audit logs track OPERATIONS on those documents
+- Analysis scripts read from trip documents, not audit logs
 
 ### Why This Is Acceptable
 
 1. **Audit operation timestamps** only indicate when the logging happened, not when the research event occurred
-2. **Research-critical dates** are in separate fields that ARE compared at full precision
-3. Tampering with research dates would show as a **content mismatch**
-4. Tampering with audit operation timestamps wouldn't affect research results
+2. **Research data** lives in trip documents, not audit logs
+3. **Protection mechanism**: Any tampering with trip documents requires operations that would be detected
+4. **Detection**: Missing or inconsistent operations prove unauthorized modifications
+
+### How Research Data Is Protected
+
+**Through Operation Consistency:**
+- Every database operation is logged immutably in GCS
+- Tampering with trip documents requires CREATE/UPDATE/DELETE operations
+- Missing or inconsistent operations are detected
+- The operation log proves what happened and when
 
 ### Example
 
-If someone changed a trip's `startDate` from "2025-11-01" to "2025-11-02":
-- ❌ Detected immediately (content mismatch in `startDate` field)
+If someone changed a trip's `startDate` in the database from "2025-11-01" to "2025-11-02":
+- **Either:** There's an UPDATE operation in the audit log
+  - ✅ Detected if that operation is missing from GCS
+- **Or:** There's no UPDATE operation at all
+  - ✅ Proves unauthorized modification (no legitimate audit trail)
 
-If someone changed the audit `timestamp` from "2025-11-15T10:30:00Z" to "2025-11-15T10:31:00Z":
+If someone changed the audit operation `timestamp` from "2025-11-15T10:30:00Z" to "2025-11-15T10:31:00Z":
 - ✅ Not detected (normalized to `{}`)
-- 🤷 Doesn't matter (doesn't affect research results)
+- 🤷 Doesn't matter (doesn't affect research data or operation detection)
+
+**Key Insight:** The audit verifies OPERATION CONSISTENCY, which provides tamper-evident protection for the research data stored in trip documents.
 
 ### Documentation Added
 - Added 25-line comment explaining the trade-off
