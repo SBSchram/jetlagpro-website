@@ -122,20 +122,10 @@ original operation (CREATE) while Firestore records a validation failure
 (METADATA_VALIDATION_FAILED). This occurs when Cloud Function validation runs
 after the write completes.
 
-These entries represent the validation system functioning correctly - catching
-metadata format issues during the testing phase.
-
 AUDITOR VERIFICATION:
-- Exception list is hardcoded below (line ~180) for transparency
+- Exception list is hardcoded below (line ~180)
 - Git history shows when each exception was added and why
-- Each exception includes full documentation and resolution details
-- Exceptions are limited to historical testing issues (before fixes deployed)
-
-Independent auditors can verify by:
-1. Reviewing the hardcoded exception list in source code
-2. Checking git commit history for this file
-3. Downloading and comparing actual Firestore/GCS entries
-4. Running verification with their own data download
+- Each exception includes reason, resolution, and commit references
 
 EXCEPTION LIST:
 See KNOWN_VALIDATION_FAILURES dictionary below (line ~180)
@@ -188,22 +178,18 @@ from typing import Dict, List, Set
 
 
 # ============================================================================
-# KNOWN EXCEPTIONS - Hardcoded for Transparency
+# KNOWN EXCEPTIONS
 # ============================================================================
 # 
-# Audit entries with documented discrepancies due to validation failures that
-# occurred after the trip write completed. Each exception includes full details
-# for independent verification.
+# Audit entries with discrepancies due to validation failures that occurred
+# after the trip write completed.
 #
 # CONTEXT:
-# Testing revealed edge cases in metadata validation. These entries show the
-# validation system catching format issues during the development phase.
+# Testing revealed edge cases in metadata validation. Fixed in subsequent
+# Cloud Function updates.
 #
 # VERIFICATION:
-# 1. List is hardcoded in source (visible to all auditors)
-# 2. Git history documents when/why each exception was added
-# 3. Each entry includes reason, resolution, and commit references
-# 4. Limited to historical testing issues (before production deployment)
+# Git history shows when/why each exception was added.
 #
 KNOWN_VALIDATION_FAILURES = {
     'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590': {
@@ -546,10 +532,9 @@ def print_report(report: Dict) -> int:
     # Print known exceptions section if any exist
     if report.get('known_exceptions'):
         print("\n" + "="*70)
-        print("KNOWN EXCEPTIONS (Documented Discrepancies)")
+        print("KNOWN EXCEPTIONS")
         print("="*70)
-        print("\nValidation caught these metadata issues during testing.")
-        print("Full details documented for independent verification.\n")
+        print("\nValidation failures caught during testing:\n")
         
         for exc in report['known_exceptions']:
             info = exc['info']

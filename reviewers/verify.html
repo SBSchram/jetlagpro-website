@@ -249,10 +249,9 @@ Discrepancies:     ${comparison.discrepancies}
                 '4253d2be-9d13-466f-b535-f55ade5b5dec'
             ]);
             
-            // Known validation failures: Audit entries where validation caught metadata format
-            // issues during testing. GCS shows CREATE (original write) while Firestore shows
-            // METADATA_VALIDATION_FAILED (validation result). Documented for transparency.
-            // Full details in verify_audit_consistency.py
+            // Known validation failures: Validation caught metadata format issues during
+            // testing. GCS shows CREATE (original write), Firestore shows validation failure.
+            // See verify_audit_consistency.py for details.
             const knownValidationFailures = new Set([
                 'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590'  // Test trip 23DB54B0, 16-char hex device ID
             ]);
