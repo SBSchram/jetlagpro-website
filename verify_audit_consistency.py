@@ -102,67 +102,6 @@ normalization including:
 - Array sorting for changedFields
 - Special handling for source, metadata, changes, deletedData fields
 
-This Python script EXACTLY replicates that normalization to ensure consistent
-verification results between the web interface and command-line tool.
-
-HASH COMPARISON QUIRK (IMPORTANT FOR CODE REVIEWERS):
-JavaScript's JSON.stringify(obj, ['key1', 'key2']) with a replacer array has a
-quirky behavior: nested objects serialize as empty {}. This means:
-  
-  Full object: {"metadata": {"deviceId": "ABC", "version": "1.0"}}
-  In hash: {"metadata":{}}
-  
-This is intentional! It allows us to verify:
-1. The correct top-level fields exist
-2. Nested objects are present (not missing)
-3. Without being overly sensitive to minor nested content differences
-
-Additionally, timestamps are normalized to {} because:
-- Firestore entries have timestamp as STRING: "2025-11-17T15:26:46Z"
-- GCS entries have timestamp as EMPTY OBJECT: {}
-- Both are valid (different serialization formats)
-- Normalizing both to {} ensures they match in the hash comparison
-
-This approach balances strictness (catches real tampering) with flexibility
-(doesn't fail on expected format differences between Firestore and GCS).
-
-WHAT THIS VERIFICATION PROTECTS:
-The audit trail verifies DATABASE OPERATIONS (create, update, delete) are recorded
-consistently in both the live database and immutable archive. This provides tamper-
-evident protection for research data through operation tracking.
-
-IMPORTANT DISTINCTION - What Audit Logs Contain:
-- Audit logs DO NOT contain full trip documents
-- CREATE operations: Reference fields only (tripId, destinationCode, originTimezone)
-- UPDATE operations: Only the 'changes' object (which fields changed, before/after)
-- DELETE operations: Reference to deleted document
-
-Where Research Data Actually Lives:
-- Research data is in trip DOCUMENTS (tripCompletions collection)
-- Analysis scripts read from these trip documents, not audit logs
-- Audit logs track OPERATIONS on those documents
-
-How This Protects Research Data:
-The audit verification ensures that:
-1. Every database operation (CREATE/UPDATE/DELETE) is recorded immutably in GCS
-2. The operation log cannot be tampered with (GCS is immutable, Firestore audit matches it)
-3. Any tampering with trip documents would require operations that would be detected
-4. Missing or inconsistent operations prove unauthorized modifications
-
-Critical research fields protected by this system:
-- timezonesCount: Number of time zones crossed (primary independent variable)
-- pointsCompleted, point1Completed...point12Completed: Treatment adherence data
-- Survey responses: generalPre, generalPost, sleepPre, sleepPost, etc. (outcomes)
-- Trip metadata: startDate, completionDate, travelDirection, originTimezone, etc.
-
-Detection Capability:
-- Someone deleting a trip → Missing DELETE operation (detected)
-- Someone modifying research data → Missing UPDATE operation (detected)
-- Someone adding fake trips → Missing CREATE operation (detected)
-
-The audit verifies OPERATION CONSISTENCY, which provides tamper-evident protection
-for the research data stored in trip documents.
-
 This Python implementation uses a simplified normalization that extracts core fields
 and handles basic Firestore format conversion. The key matching (eventId) is the
 critical component and is implemented exactly as in the JavaScript.
@@ -424,74 +363,10 @@ def normalize_entry(entry: Dict) -> Dict:
     # Matches verify.html normalizeTimestampsInObject() lines 533-558
     normalized = _normalize_timestamps_recursive(normalized)
     
-    # CRITICAL: Normalize timestamps to empty objects for hash comparison
-    # 
-    # WHY: Firestore entries have timestamp as a string (e.g., "2025-11-17T15:26:46Z")
-    #      GCS entries have timestamp as an empty object ({})
-    #      
-    # JavaScript's hashEntry() uses JSON.stringify with a replacer array, which
-    # strips all nested object content, making them serialize as {}.
-    # 
-    # Since we manually build hashes that show nested objects as {} (line 619),
-    # both string and {} timestamps would appear different in the final hash.
-    # To ensure both match, we normalize all timestamps to {} before hashing.
-    #
-    # Without this normalization:
-    #   Firestore hash: "timestamp":"2025-11-17T15:26:46Z"
-    #   GCS hash: "timestamp":{}
-    #   Result: MISMATCH (even though both entries are valid)
-    #
-    # With this normalization:
-    #   Firestore hash: "timestamp":{}
-    #   GCS hash: "timestamp":{}
-    #   Result: MATCH ✓
-    #
-    # IMPORTANT TRADE-OFF (FOR CODE REVIEWERS):
-    # This means we verify timestamp PRESENCE, not timestamp VALUES. Here's why this
-    # is acceptable and what it actually protects:
-    #
-    # 1. WHAT AUDIT LOGS CONTAIN:
-    #    - CREATE operations: Reference fields only (tripId, destinationCode, etc.)
-    #    - UPDATE operations: Only the 'changes' object (which fields changed)
-    #    - DELETE operations: Reference to deleted document
-    #    - The 'timestamp' field: When the audit log entry was created (not research data)
-    #
-    # 2. WHAT WE'RE ACTUALLY VERIFYING:
-    #    - That audit OPERATIONS (CREATE/UPDATE/DELETE) were recorded consistently
-    #    - That the immutable GCS archive matches the live Firestore audit log
-    #    - NOT field-by-field precision of research data values
-    #
-    # 3. WHERE RESEARCH DATA ACTUALLY LIVES:
-    #    - Research data (timezones, points, surveys, trip dates) is in trip DOCUMENTS
-    #    - Audit logs track OPERATIONS on those documents (not the documents themselves)
-    #    - Analysis scripts read from trip documents in the tripCompletions collection
-    #
-    # 4. HOW THIS PROTECTS RESEARCH DATA:
-    #    - Every CREATE/UPDATE/DELETE operation is logged immutably in GCS
-    #    - Tampering with trip documents would require UPDATE operations
-    #    - Missing or inconsistent UPDATE entries would be detected
-    #    - The audit trail proves what operations occurred and when
-    #
-    # 5. WHAT WOULD BE DETECTED:
-    #    - Someone deleting a trip document (DELETE operation missing or inconsistent)
-    #    - Someone modifying research data (UPDATE operation missing or inconsistent)
-    #    - Someone adding fake trips (CREATE operation missing or inconsistent)
-    #
-    # 6. WHY TIMESTAMP NORMALIZATION IS ACCEPTABLE:
-    #    - The 'timestamp' field only indicates when the audit log entry was created
-    #    - Research data timestamps (startDate, completionDate) are in trip documents
-    #    - If those appear in audit UPDATE changes, they go through same normalization
-    #    - The protection comes from OPERATION consistency, not field value precision
-    #
-    # EXAMPLE:
-    # If someone changed a trip's startDate in the database:
-    #   - Either there's an UPDATE operation in the audit (detected if missing from GCS)
-    #   - Or there's no UPDATE operation (proves unauthorized modification)
-    #   - Either way, tampering is detectable through operation consistency
-    #
-    # The audit verifies the OPERATION LOG is tamper-proof, which indirectly protects
-    # research data by making any modifications detectable through missing/inconsistent
-    # operation records.
+    # CRITICAL: For comparison, normalize all timestamp values to empty objects
+    # This matches JavaScript's behavior where timestamps show as {} in hashes
+    # (JavaScript's replacer array strips nested content, making all objects {})
+    # Since timestamps can be strings or {}, normalize both to {} for comparison
     if 'timestamp' in normalized:
         normalized['timestamp'] = {}
     
@@ -720,27 +595,13 @@ def hash_entry(entry: Dict) -> str:
         JSON string representation with sorted keys (for comparison)
     """
     normalized = normalize_entry(entry)
-    
-    # CRITICAL: JavaScript uses JSON.stringify(normalized, Object.keys(normalized).sort())
+    # JavaScript uses: JSON.stringify(normalized, Object.keys(normalized).sort())
+    # The sorted keys array acts as a replacer, which serializes nested objects as empty {}
     # 
-    # The second parameter (sorted keys array) acts as a "replacer" in JavaScript.
-    # This causes a quirky behavior: nested objects serialize as empty {}.
+    # We need to replicate this by creating JSON that only includes top-level primitives,
+    # with nested dicts/objects showing as {}
     #
-    # Example:
-    #   Input: {"name": "test", "metadata": {"deviceId": "ABC", "version": "1.0"}}
-    #   JavaScript output: {"metadata":{},"name":"test"}
-    #                      ^^^^^^^^^^^^ nested object becomes empty!
-    #
-    # This is NOT a bug - it's intentional behavior we must replicate for consistency.
-    # 
-    # WHY THIS MATTERS:
-    # - Firestore entries have rich nested metadata
-    # - GCS entries have the same nested metadata
-    # - If we compared full content, tiny differences would cause false mismatches
-    # - By comparing only top-level keys + nested object presence, we verify structure
-    #   without being overly sensitive to nested content differences
-    #
-    # We manually build the hash string to match JavaScript's replacer array behavior:
+    # Build the hash string manually to match JavaScript's behavior
     result_parts = []
     for key in sorted(normalized.keys()):
         value = normalized[key]
@@ -754,8 +615,7 @@ def hash_entry(entry: Dict) -> str:
         elif isinstance(value, str):
             value_str = json.dumps(value)
         elif isinstance(value, dict):
-            # Nested object: serialize as empty {} to match JavaScript replacer behavior
-            # This includes metadata, timestamp (when normalized to {}), and any other nested objects
+            # Nested object: serialize as empty {}
             value_str = '{}'
         elif isinstance(value, list):
             # Arrays: keep them (JavaScript preserves arrays in replacer mode)
