@@ -249,17 +249,13 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   const source = resolveSource(data._writeMetadata, data._surveyMetadata, "firebase_console");
   
   // Create audit log entry (minimal - full data is in tripCompletions)
+  // Only include fields that exist (don't default to null - Firestore omits null values)
   const auditEntry = {
     operation: "CREATE",
     collection: "tripCompletions",
     documentId: tripId,
     tripId: tripId,
     timestamp: FieldValue.serverTimestamp(),
-    // Store key trip info for quick reference
-    destinationCode: data.destinationCode || null,
-    originTimezone: data.originTimezone || null,
-    arrivalTimeZone: data.arrivalTimeZone || null,
-    travelDirection: data.travelDirection || null,
     source: source,
     // Store metadata for source verification
     metadata: {
@@ -270,6 +266,12 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
     message: `Trip ${tripId} created`,
     eventId: event.id,
   };
+  
+  // Only add fields if they exist (prevents Firestore from omitting them)
+  if (data.destinationCode !== undefined) auditEntry.destinationCode = data.destinationCode;
+  if (data.originTimezone !== undefined) auditEntry.originTimezone = data.originTimezone;
+  if (data.arrivalTimeZone !== undefined) auditEntry.arrivalTimeZone = data.arrivalTimeZone;
+  if (data.travelDirection !== undefined) auditEntry.travelDirection = data.travelDirection;
   
   try {
     await writeAuditEntry(auditEntry);

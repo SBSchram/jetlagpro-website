@@ -272,6 +272,14 @@ Discrepancies:              ${comparison.discrepancies}
                 'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590'  // Test trip 23DB54B0, 16-char hex device ID
             ]);
             
+            // Known field mismatch exceptions: Firestore Admin SDK omits null values when writing,
+            // but GCS preserves them. This causes discrepancies where Firestore is missing fields
+            // that GCS has. Fixed in Cloud Functions (Nov 20, 2025) - only include fields that exist.
+            // These entries are expected discrepancies from before the fix.
+            const knownFieldMismatches = new Set([
+                '4b073475-b82b-4768-9ad8-57d2056307ca'  // travelDirection missing in Firestore (Nov 20, 2025)
+            ]);
+            
             // Create maps for quick lookup using eventId (unique identifier for each audit event)
             // Also store raw entries for inspection
             const firestoreMap = new Map();
@@ -292,6 +300,13 @@ Discrepancies:              ${comparison.discrepancies}
                 
                 // Skip known validation failures - they're expected discrepancies
                 if (knownValidationFailures.has(key)) {
+                    knownExceptionsCount++;
+                    return;
+                }
+                
+                // Skip known field mismatches - Firestore omits null values, GCS preserves them
+                // Fixed in Cloud Functions (Nov 20, 2025) - these are pre-fix entries
+                if (knownFieldMismatches.has(key)) {
                     knownExceptionsCount++;
                     return;
                 }
@@ -320,6 +335,11 @@ Discrepancies:              ${comparison.discrepancies}
                 
                 // Skip known validation failures - they're expected discrepancies
                 if (knownValidationFailures.has(key)) {
+                    return;
+                }
+                
+                // Skip known field mismatches - Firestore omits null values, GCS preserves them
+                if (knownFieldMismatches.has(key)) {
                     return;
                 }
                 
@@ -369,6 +389,12 @@ Discrepancies:              ${comparison.discrepancies}
                     if (firestoreHash === gcsHash) {
                         matchedCount++;
                     } else {
+                        // Skip known field mismatches (already filtered above, but double-check here)
+                        if (knownFieldMismatches.has(key)) {
+                            knownExceptionsCount++;
+                            return;
+                        }
+                        
                         // For debugging, show what fields differ
                         const firestoreNorm = normalizeEntry(firestoreEntry);
                         const gcsNorm = normalizeEntry(gcsEntry);
