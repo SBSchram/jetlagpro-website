@@ -1,329 +1,383 @@
-# Data Integrity Implementation - Master Document
+# Data Integrity Implementation
 
 **Last Updated:** November 12, 2025  
-**Purpose:** Single source of truth for all data integrity safeguards implementation
+**Purpose:** Practical guide for verifying data integrity safeguards
 
 ---
 
-## 📊 Implementation Status Overview
+## Overview
 
-| Phase | Status | Deployment Date | Documentation |
-|-------|--------|------------------|---------------|
-| **Phase 1: Write Source Authentication** | ✅ **DEPLOYED** | November 2025 | [Deployment Guide](PHASE1-DEPLOYMENT-GUIDE.md) |
-| **Phase 2: Audit Logging & HMAC Validation** | ✅ **DEPLOYED** | November 11, 2025 | [Deployment Guide](PHASE2-DEPLOYMENT-GUIDE.md) |
-| **Phase 2.5: Immutable Audit Logs (GCS)** | 📋 **READY FOR DEPLOYMENT** | Pending | [Deployment Guide](PHASE2.5-IMMUTABLE-AUDIT-LOGS.md) |
+All research data is written to Firestore `tripCompletions` collection. Cloud Functions automatically log every operation to both Firestore `auditLog` (real-time viewing) and Google Cloud Storage `jetlagpro-audit-logs` (immutable archive). This dual-write system enables independent verification that the live database matches the permanent archive.
+
+**Status:** All systems deployed and operational as of November 11, 2025.
 
 ---
 
-## Phase 1: Write Source Authentication ✅ DEPLOYED
+## Data Flow
 
-### What It Does
-Prevents unauthorized Firebase Console writes by requiring metadata on all database operations. Only legitimate app and web survey writes are allowed.
+### 1. iOS App Writes
 
-### Key Components
+iOS app writes trip completion data directly to Firestore `tripCompletions` collection.
 
-**1. Web Survey Code (`survey.js`)**
-- Added `_surveyMetadata` to all survey submissions
-- Includes: source, version, browser info, timestamp
-- No cryptographic hashing (Apple compliance friendly)
+**What gets written:**
+- Trip data (destination, dates, points completed, etc.)
+- `_writeMetadata` object:
+  ```json
+  {
+    "source": "ios_app",
+    "sourceVersion": "1.2.0",
+    "appBuild": "6",
+    "deviceId": "2330B376",
+    "platform": "iOS 17.1",
+    "timestamp": "2025-11-11T10:00:00.000Z"
+  }
+  ```
 
-**2. Firebase Security Rules (`firestore.rules`)**
-- Blocks creates without proper `_writeMetadata`
-- Blocks updates after survey completed
-- Blocks ALL deletes (prevents data loss)
-- Only allows writes from `ios_app` or `web_survey` sources
+**Example trip ID:** `2330B376-MXPE-251111-1622-A7F3C9E2`
+- Device ID: `2330B376`
+- Destination: `MXPE` (Mexico City, Eastbound)
+- Date: `251111` (Nov 11, 2025)
+- Time: `1622` (4:22 PM)
+- HMAC signature: `A7F3C9E2` (cryptographic validation)
 
-**3. iOS/React Native Apps**
-- Emit `_writeMetadata` on all writes
-- Includes: source, sourceVersion, appBuild, deviceId, platform, timestamp
-- Tested and deployed (Build 6+)
+### 2. Web Survey Writes
 
-### Security Model
-- ✅ Unauthorized console writes blocked
-- ✅ Research data can't be manually altered
-- ✅ All writes tagged with source and timestamp
-- ✅ Completed surveys can't be modified outside allowed fields
-- ✅ Deletes are never allowed
+Web survey updates the existing `tripCompletions` document (does not create new document).
 
-### Key Decisions
-- **No Cryptographic Hashing:** Avoids Apple App Store compliance questions
-- **Server-Side Timestamps:** Client can't manipulate timestamps
-- **Source-Based Authentication:** Proves write came from legitimate application
+**What gets written:**
+- Survey responses (symptom ratings, comments)
+- `surveyCompleted: true`
+- `surveySubmittedAt: timestamp`
+- `_surveyMetadata` object (preserves original `_writeMetadata`):
+  ```json
+  {
+    "source": "web_survey",
+    "sourceVersion": "1.0.0",
+    "timestamp": "2025-11-12T14:30:00.000Z",
+    "userAgent": "Mozilla/5.0...",
+    "browserInfo": "MacIntel; en-US"
+  }
+  ```
 
-### Files Created/Modified
-- `survey.js` - Added write metadata
-- `firestore.rules` - Firebase Security Rules
-- `iOS-WriteMetadata-Template.swift` - iOS implementation guide
+### 3. Cloud Functions Automatic Logging
 
-**For detailed deployment steps:** See [PHASE1-DEPLOYMENT-GUIDE.md](PHASE1-DEPLOYMENT-GUIDE.md)
+When any write occurs to `tripCompletions`, Cloud Functions automatically trigger and write audit entries to both systems.
+
+**Functions deployed:**
+1. **auditLoggerCreate** - Logs document creation
+2. **auditLoggerUpdate** - Logs document updates (including survey submissions)
+3. **auditLoggerDelete** - Logs document deletions
+4. **hmacValidator** - Validates HMAC signatures in trip IDs
+5. **metadataValidator** - Validates metadata consistency
+
+**Dual-write system:**
+- **Firestore `auditLog` collection:** Real-time viewing, queryable, mutable
+- **GCS `jetlagpro-audit-logs` bucket:** Immutable, 10-year retention, publicly readable
+
+**Example audit entry:**
+```json
+{
+  "operation": "CREATE",
+  "collection": "tripCompletions",
+  "documentId": "2330B376-MXPE-251111-1622-A7F3C9E2",
+  "tripId": "2330B376-MXPE-251111-1622-A7F3C9E2",
+  "timestamp": "2025-11-11T10:00:01.234Z",
+  "source": "ios_app",
+  "metadata": {
+    "writeMetadata": { "source": "ios_app", ... },
+    "surveyMetadata": null
+  },
+  "eventId": "abc123..."
+}
+```
 
 ---
 
-## Phase 2: Audit Logging & HMAC Validation ✅ DEPLOYED
+## Verification Tools
 
-**Deployment Date:** November 11, 2025  
+Two web-based tools are available to help you verify the integrity of the system. These tools run entirely in your browser—no installation or command-line tools required. They provide a straightforward way to inspect the audit logs and confirm that the live database matches the immutable archive.
+
+### Audit Log Viewer
+
+**URL:** `https://jetlagpro.com/reviewers/audit-log.html`
+
+The audit log viewer provides a real-time interface to explore all database operations. You can see every trip creation, survey submission, and any other changes to the database. This tool connects directly to the Firestore database, so it shows current data as it exists now.
+
+**What it shows:**
+- Real-time view of all audit log entries
+- All CREATE, UPDATE, DELETE operations with timestamps
+- Source identification for each operation (ios_app, web_survey, firebase_console)
+- HMAC signature validation results
+- Metadata validation results
+
+**How to use:**
+1. Open the URL in your browser
+2. Browse the timeline of all operations (most recent first)
+3. Use the filter options to focus on specific:
+   - Operation types (CREATE, UPDATE, DELETE)
+   - Sources (iOS app, web survey, console)
+   - Date ranges
+4. Click on any entry to see full details
+5. Export to CSV if you want to analyze the data offline
+
+**What to look for:**
+- Trip creations should show `source: "ios_app"` or `source: "web_survey"`
+- You should not see unauthorized `source: "firebase_console"` entries (except known test data from before deployment)
+- HMAC validation should show `valid: true` for all trip IDs created after Build 6
+- Updates should show clear `changes` fields indicating which survey fields were added
+
+This viewer helps you understand the flow of data—when trips were created by the app, when surveys were completed, and that all operations are properly logged.
+
+### Verification Tool
+
+**URL:** `https://jetlagpro.com/reviewers/verify.html`
+
+The verification tool compares the live Firestore audit log against the immutable GCS archive. Since GCS files cannot be deleted or modified (due to the 10-year retention policy), comparing these two systems confirms whether the live database has been tampered with. The tool runs entirely in your browser—it downloads both data sources and performs the comparison automatically.
+
+**What it does:**
+- Downloads audit entries from both Firestore and GCS
+- Compares entries to detect any discrepancies
+- Identifies missing entries, content mismatches, or potential tampering
+- No gsutil or command-line tools required—everything runs in your browser
+
+**How to use:**
+1. Open the URL in your browser
+2. Click "Run Verification"
+3. Wait for the tool to download and compare entries (this may take a minute)
+4. Review the results:
+   - **Matched:** Firestore and GCS entries are identical (expected for post-deployment entries)
+   - **Missing in GCS:** Pre-deployment entries that exist only in Firestore (expected, as GCS archiving started Nov 11, 2025)
+   - **Missing in Firestore:** Entries in GCS but not Firestore (unexpected—would indicate data deletion)
+   - **Mismatched:** Entries exist in both but content differs (unexpected—would indicate data modification)
+
+**Expected results:**
+- All post-deployment entries (after Nov 11, 2025) should show as "Matched"
+- Pre-deployment entries (before Nov 11, 2025) may show as "Missing in GCS" (this is expected)
+- Zero discrepancies (mismatched or missing in Firestore) for post-deployment data
+
+If you see discrepancies in post-deployment entries, that would indicate potential issues that should be investigated further.
+
+**Manual verification (optional):**
+
+If you prefer to run the verification yourself using command-line tools, you can:
+
+```bash
+# Download Firestore audit data
+curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" \
+  -o firestore-audit.json
+
+# Download GCS archive
+gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit
+
+# Run verification script
+python scripts/verify_audit_consistency.py \
+  --firestore firestore-audit.json \
+  --gcs-dir ./gcs-audit
+```
+
+However, the web-based tool performs the same verification automatically and is recommended for most reviewers.
+
+---
+
+## Verification Checklist
+
+This section guides you through verifying the key integrity safeguards. Each check confirms that a specific protection mechanism is working correctly. The verification tools make these checks straightforward—you don't need deep technical knowledge to confirm the system is functioning as designed.
+
+### 1. Data Provenance
+
+Every trip completion includes metadata that identifies its source. This allows you to verify that data came from legitimate sources (the iOS app or web survey) rather than manual console writes. This is important because it provides a chain of custody for each data point.
+
+**What to verify:** Every trip has identifiable source metadata showing it came from the app or survey.
+
+**How to verify:**
+- Open `audit-log.html`
+- Filter by operation: CREATE
+- You should see entries showing `source: "ios_app"` or `source: "web_survey"`
+- You should not see entries with `source: "firebase_console"` (except documented test data from before deployment)
+
+**What you'll see:**
+```
+Trip ID: 2330B376-MXPE-251111-1622-A7F3C9E2
+Source: ios_app
+Device ID: 2330B376
+App Version: 1.2.0 (Build 6)
+Timestamp: 2025-11-11T10:00:00.000Z
+```
+
+This tells you the trip was created by the iOS app (version 1.2.0, build 6) running on device 2330B376 at the specified timestamp.
+
+### 2. HMAC Signature Validation
+
+Trip IDs include a cryptographic signature that prevents forgery. This signature is automatically validated when trips are created, ensuring that trip IDs cannot be fabricated without access to the app's secret key. This protects against someone creating fake trip records.
+
+**What to verify:** All trip IDs have valid cryptographic signatures that confirm authenticity.
+
+**How to verify:**
+- Open `audit-log.html`
+- Filter by operation: VALIDATION
+- You should see entries showing `valid: true` or `reason: "legacy_format"` (for trips created before Build 6, which is expected)
+- You should not see entries with `valid: false` and `reason: "signature_mismatch"`
+
+**What HMAC validates:**
+Trip IDs follow the format: `DEVICEID-DEST-DATE-TIME-SIGNATURE`. The signature is a cryptographic hash of the first four parts, calculated using a secret key only available in the deployed app. If any part of the trip ID is modified, the signature won't match, indicating the trip ID was fabricated.
+
+### 3. Immutable Archive Consistency
+
+The dual-write system logs every operation to both Firestore (for real-time viewing) and Google Cloud Storage (for immutable archiving). The verification tool compares these two systems to ensure they match. Since GCS files cannot be deleted or modified (due to the 10-year retention policy), any discrepancies would indicate tampering with the Firestore records.
+
+**What to verify:** Firestore audit log matches the GCS immutable archive.
+
+**How to verify:**
+- Open `verify.html`
+- Click "Run Verification"
+- The tool will compare entries from both systems
+- For post-deployment entries (after Nov 11, 2025), the discrepancy count should be 0
+- The "Missing in GCS" list should only contain pre-deployment entries (which is expected, as GCS archiving started on Nov 11, 2025)
+
+**What this confirms:**
+- No audit entries have been deleted from Firestore
+- No audit entries have been modified
+- The GCS archive is the authoritative source of truth
+
+If you see discrepancies in post-deployment entries, that would indicate potential tampering with Firestore records, which should be investigated further.
+
+### 4. Survey Data Integrity
+
+When participants complete surveys, their responses update the existing trip record. The system preserves the original trip creation metadata while adding survey-specific metadata. This allows you to trace both when the trip was completed (from the app) and when the survey was submitted (from the web).
+
+**What to verify:** Survey submissions are properly logged and traceable to their source.
+
+**How to verify:**
+- Open `audit-log.html`
+- Filter by operation: UPDATE
+- You should see updates showing `source: "web_survey"` in the `_surveyMetadata` field
+- The `changes` field should show survey-related fields being added (e.g., `surveyCompleted`, `sleepPost`, `fatiguePost`, etc.)
+- The original `_writeMetadata` should be preserved (not overwritten), showing the trip was originally created by the iOS app
+
+**What you'll see:**
+```
+Trip ID: 2330B376-MXPE-251111-1622-A7F3C9E2
+Operation: UPDATE
+Source: web_survey
+Changed Fields: surveyCompleted, surveySubmittedAt, sleepPost, fatiguePost, ...
+Original Source: ios_app (preserved in _writeMetadata)
+```
+
+This shows the trip was created by the iOS app, and later updated with survey data from the web survey. Both metadata objects are preserved, providing a complete audit trail.
+
+### 5. GCS Archive Accessibility
+
+The GCS bucket is configured for public read access, allowing anyone to download and verify the immutable archive. The retention policy is locked, meaning files cannot be deleted for 10 years, even by the project owner. This makes the GCS archive the definitive record of all operations.
+
+**What to verify:** The GCS bucket is publicly accessible and contains the expected audit log files.
+
+**How to verify:**
+
+If you have `gsutil` installed (part of Google Cloud SDK), you can verify directly:
+
+```bash
+# List files in GCS bucket
+gsutil ls gs://jetlagpro-audit-logs/audit-logs/ | head -10
+
+# Download a sample file to inspect
+gsutil cp gs://jetlagpro-audit-logs/audit-logs/[filename].json ./sample.json
+
+# Verify retention policy is locked
+gsutil retention get gs://jetlagpro-audit-logs
+# Should show: Retention Policy (LOCKED)
+```
+
+**What you should find:**
+- Files are publicly readable (no authentication required)
+- Files are JSON format containing complete audit entry data
+- Retention policy shows as LOCKED (confirming files cannot be deleted for 10 years)
+
+If you don't have `gsutil` installed, you can still verify accessibility using the web-based verification tool at `verify.html`, which downloads and compares GCS files automatically. The fact that the tool successfully accesses GCS files confirms the bucket is publicly readable.
+
+---
+
+## Technical Details
+
+### Cloud Functions
+
+**Location:** `functions/index.js`  
 **Region:** us-east1  
 **Runtime:** Node.js 22 (2nd Gen)
 
-### What It Does
-Server-side Cloud Functions automatically log all Firestore writes to create an immutable audit trail, validate HMAC signatures on trip creation, and check metadata consistency.
+**Functions:**
+- `auditLoggerCreate` - Triggers on `tripCompletions` document creation
+- `auditLoggerUpdate` - Triggers on `tripCompletions` document update
+- `auditLoggerDelete` - Triggers on `tripCompletions` document deletion
+- `hmacValidator` - Validates trip ID signatures
+- `metadataValidator` - Validates metadata consistency
 
-### Cloud Functions Deployed (4 total)
-
-**1. auditLoggerCreate**
-- **Trigger:** Document created in `tripCompletions`
-- **Action:** Logs full snapshot to `auditLog` collection
-- **Data:** Complete trip data, metadata, timestamp, event ID
-
-**2. auditLoggerUpdate**
-- **Trigger:** Document updated in `tripCompletions`
-- **Action:** Logs before/after snapshots and changed fields
-- **Data:** What changed, who changed it, when
-
-**3. hmacValidator**
-- **Trigger:** Document created in `tripCompletions`
-- **Action:** Validates HMAC signature in trip ID
-- **Result:** Logs validation outcome; flags invalid signatures
-
-**4. metadataValidator**
-- **Trigger:** Document created in `tripCompletions`
-- **Action:** Validates `_writeMetadata` consistency
-- **Checks:** Device ID format, build numbers, source validity
-
-### Audit Trail Flow
-```
-User Action (iOS/RN/Web)
-    ↓
-Firestore Write to tripCompletions
-    ↓
-Cloud Functions Triggered Automatically
-    ↓
-Audit Log Written to auditLog Collection
+**Dual-write implementation:**
+```javascript
+async function writeAuditEntry(auditEntry) {
+  // Write to Firestore (real-time)
+  const firestoreRef = await db.collection("auditLog").add(auditEntry);
+  
+  // Write to GCS (immutable)
+  const fileName = `${timestamp}-${operation}-${tripId}.json`;
+  const file = auditBucket.file(`audit-logs/${fileName}`);
+  await file.save(JSON.stringify(auditEntry, null, 2));
+}
 ```
 
-### What Gets Logged
-Every `auditLog` entry includes:
-- **operation:** CREATE, UPDATE, or validation result
-- **documentId:** The trip ID
-- **timestamp:** Server timestamp (immutable)
-- **dataSnapshot:** Full before/after data
-- **metadata:** `_writeMetadata` and `_surveyMetadata`
-- **eventId:** Unique event identifier
-- **changes:** What fields changed (for updates)
+### GCS Bucket Configuration
 
-### Viewing Audit Logs
-- **Web Interface:** `https://jetlagpro.com/reviewers/audit-log.html`
-- **Firebase Console:** `auditLog` collection
-- **Export:** CSV export available in web interface
+**Bucket:** `gs://jetlagpro-audit-logs`  
+**Location:** us-east1  
+**Retention Policy:** 10 years (LOCKED)  
+**Access:** Public read (`allUsers:objectViewer`)  
+**Versioning:** Enabled  
+**Uniform Bucket-Level Access:** Enabled
 
-**For detailed deployment information:** See [PHASE2-DEPLOYMENT-GUIDE.md](PHASE2-DEPLOYMENT-GUIDE.md)
+**File naming:** `{timestamp}-{operation}-{tripId}.json`
 
----
+**Example:** `1699718401234-CREATE-2330B376-MXPE-251111-1622-A7F3C9E2.json`
 
-## Phase 2.5: Immutable Audit Logs (GCS) 📋 READY FOR DEPLOYMENT
+### Firebase Security Rules
 
-**Status:** Code ready - awaiting deployment  
-**Date Created:** November 11, 2025
+**File:** `firestore.rules`
 
-### The Problem Identified
-Phase 2 audit logs stored in Firestore can be deleted via Firebase Console. Researcher with admin access could tamper with audit trail, relying on trust rather than technical enforcement.
-
-### The Solution
-**Dual-write system** to Google Cloud Storage with legally-binding 10-year retention policy:
-- **Firestore (auditLog):** Fast queries, real-time viewing, developer-friendly
-- **GCS (jetlagpro-audit-logs):** Immutable 10-year retention, public verification, authoritative source
-
-### Architecture
-```
-Trip Event (CREATE/UPDATE/DELETE)
-    ↓
-Cloud Function Triggered
-    ↓
-    ├─→ Write to Firestore (auditLog collection)
-    │   └─→ For real-time viewing
-    │   └─→ Can be queried quickly
-    │   └─→ Can be deleted (not authoritative)
-    │
-    └─→ Write to GCS (jetlagpro-audit-logs bucket)
-        └─→ IMMUTABLE - cannot be deleted for 10 years
-        └─→ Publicly readable for reviewer verification
-        └─→ Authoritative source of truth
-```
-
-### Key Features
-- ✅ **Truly Immutable:** GCS retention policy prevents deletion (even by project owner)
-- ✅ **Legally Binding:** Same technology as HIPAA compliance, SEC financial records
-- ✅ **Publicly Verifiable:** GCS bucket publicly readable, reviewers can download files
-- ✅ **Cost-Effective:** ~$0.06/year for 100 trips/month
-- ✅ **Transparent Testing:** Test audit logs kept for transparency
-
-### Files Changed
-- `research-paper.html` - Updated Data Integrity section with GCS details
-- `functions/index.js` - Added dual-write to Firestore + GCS for all audit operations
-- `PHASE2.5-IMMUTABLE-AUDIT-LOGS.md` - Comprehensive deployment guide (400+ lines)
-
-### Deployment Steps (When Ready)
-
-**Phase 1: Setup & Testing (Week 1)**
-1. Install `@google-cloud/storage` SDK
-2. Create GCS bucket (unlocked for testing)
-3. Deploy updated Cloud Functions
-4. Test for 48+ hours
-
-**Phase 2: Lock Retention (Week 2)**
-- ⚠️ **IRREVERSIBLE** - Test thoroughly first
-- Lock retention policy: `gsutil retention lock gs://jetlagpro-audit-logs`
-- After locking: Files protected for 10 years, cannot undo
-
-### Cost Analysis
-- **100 trips/month:** ~$0.06/year
-- Storage: 120 MB over 10 years = $0.0024/month
-- Write operations: 500/month = $0.0025/month
-- **Verdict:** Essentially free
-
-### What This Means for Research Integrity
-
-**Before Phase 2.5:**
-- Reviewer: "How do I know you didn't tamper with the audit log?"
-- You: "Well, I didn't, I promise."
-- Reviewer: "But you _could have_, right?"
-- You: "...yes."
-
-**After Phase 2.5:**
-- Reviewer: "How do I know you didn't tamper with the audit log?"
-- You: "It's technically impossible. The files are in GCS with a locked 10-year retention policy."
-- Reviewer: "Could you have deleted them?"
-- You: "No. Even I can't delete them. Even Google can't override the retention lock."
-- Reviewer: "Can I verify this?"
-- You: "Yes. The bucket is public at gs://jetlagpro-audit-logs/. Download the files yourself."
-
-**This is the gold standard for research data integrity.**
-
-**For detailed deployment steps:** See [PHASE2.5-IMMUTABLE-AUDIT-LOGS.md](PHASE2.5-IMMUTABLE-AUDIT-LOGS.md)
+**Key rules:**
+- Blocks creates without `_writeMetadata`
+- Blocks updates after `surveyCompleted: true` (except allowed fields)
+- Blocks ALL deletes
+- Only allows writes from `ios_app` or `web_survey` sources
 
 ---
 
 ## Implementation Timeline
 
-| Date | Phase | Action |
-|------|-------|--------|
-| November 2025 | Phase 1 | Write source authentication deployed |
-| November 11, 2025 | Phase 2 | Audit logging & HMAC validation deployed |
-| November 11, 2025 | Phase 2.5 | Code ready, awaiting deployment |
+| Date | Feature | Status |
+|------|---------|--------|
+| November 2025 | Write Source Authentication | Deployed |
+| November 11, 2025 | Audit Logging & HMAC Validation | Deployed |
+| November 11, 2025 | Immutable Audit Logs (GCS) | Deployed |
 
 ---
-
-## Cost Summary
-
-| Phase | Monthly Cost | Annual Cost |
-|-------|--------------|-------------|
-| Phase 1 | $0 | $0 |
-| Phase 2 | ~$0.50-1.00 | ~$6-12 |
-| Phase 2.5 | ~$0.005 | ~$0.06 |
-| **Total** | **~$0.50-1.00** | **~$6-12** |
-
----
-
-## Key Decisions & Rationale
-
-### Phase 1 Decisions
-1. **No Cryptographic Hashing:** Avoids Apple App Store cryptography compliance questions
-2. **Server-Side Timestamps:** Client can't manipulate timestamps
-3. **Source-Based Authentication:** Proves write came from legitimate application
-
-### Phase 2 Decisions
-1. **Cloud Functions:** Automatic, server-side logging ensures no writes are missed
-2. **HMAC Validation:** Cryptographic signatures on trip IDs for authenticity
-3. **Metadata Validation:** Consistency checks catch suspicious patterns
-
-### Phase 2.5 Decisions
-1. **Dual-Write System:** Best of both worlds (speed + security)
-2. **10-Year Retention:** Industry standard for research data integrity
-3. **Public Read Access:** Enables independent reviewer verification
-4. **Keep Test Logs:** Transparency shows testing process
-
----
-
-## Research Integrity Guarantees
-
-### What's Protected
-- ✅ Unauthorized console writes blocked (Phase 1)
-- ✅ All writes logged with full audit trail (Phase 2)
-- ✅ HMAC signatures validate trip authenticity (Phase 2)
-- ✅ Immutable archive prevents tampering (Phase 2.5)
-- ✅ Public verification enables independent review (Phase 2.5)
-
-### What Reviewers Can Verify
-1. **Write Provenance:** Every write tagged with source and timestamp
-2. **Audit Trail:** Complete log of all database operations
-3. **HMAC Signatures:** Cryptographic proof of trip authenticity
-4. **Immutable Archive:** GCS files cannot be deleted or modified
-5. **Public Access:** Reviewers can download and verify independently
-
----
-
-## Next Steps
-
-### Immediate
-- [ ] Deploy Phase 2.5 (GCS immutable audit logs)
-- [ ] Test dual-write system for 48+ hours
-- [ ] Lock GCS retention policy (irreversible)
-
-### Future Considerations
-- Monitor audit log growth and costs
-- Consider automated verification scripts
-- Update research paper with final deployment dates
-
----
-
-## Audit Log Viewer
-
-**URL:** `https://jetlagpro.com/reviewers/audit-log.html`
-
-**Features:**
-- Timeline view of all operations (CREATE/UPDATE/VALIDATION)
-- Filtering by operation type, severity, trip ID, date range
-- CSV export for analysis
-- Real-time updates from Firestore
-
-**What Gets Logged:**
-- All writes to research data (app, web survey, manual)
-- HMAC validation results
-- Metadata consistency checks
-- Complete change history
-
-**For Reviewers:**
-- View at URL above (Firestore real-time)
-- Download from `gs://jetlagpro-audit-logs/` (GCS immutable archive)
-- CSV export available in viewer
 
 ## Resources
 
-### Documentation
-- [Phase 2.5 Deployment Guide](PHASE2.5-IMMUTABLE-AUDIT-LOGS.md)
+**Verification Tools:**
+- Audit Log Viewer: `https://jetlagpro.com/reviewers/audit-log.html`
+- Verification Tool: `https://jetlagpro.com/reviewers/verify.html`
 
-### External Resources
-- [GCS Retention Policies](https://cloud.google.com/storage/docs/bucket-lock)
-- [HIPAA Compliance on GCP](https://cloud.google.com/security/compliance/hipaa)
-- [Firebase Security Rules](https://firebase.google.com/docs/firestore/security/get-started)
+**GCS Archive:**
+- Public bucket: `gs://jetlagpro-audit-logs/audit-logs/`
+- Direct access: `https://storage.googleapis.com/jetlagpro-audit-logs/audit-logs/`
 
----
+**Source Code:**
+- Cloud Functions: `https://github.com/SBSchram/jetlagpro-website/tree/main/functions`
+- Verification Script: `https://github.com/SBSchram/jetlagpro-website/tree/main/scripts`
 
-## Questions & Support
-
-**For Implementation Issues:**
-- Review relevant phase deployment guide
-- Check troubleshooting sections
-- Monitor Firebase Console for errors
-
-**For Research Paper:**
-- Update deployment dates after each phase
-- Cite GitHub repository for transparency
-- Include audit log viewer link for reviewers
+**Documentation:**
+- Research Paper Appendix: `https://jetlagpro.com/research-paper.html#appendix-data-integrity`
 
 ---
 
 **Last Updated:** November 12, 2025  
 **Maintained By:** Steven Schram PhD, DC, LAc  
 **Repository:** https://github.com/SBSchram/jetlagpro-website
-
