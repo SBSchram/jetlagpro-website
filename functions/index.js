@@ -347,6 +347,7 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   }
   
   // Create audit log entry (store only what changed - not full snapshots)
+  // Only include metadata fields that exist (prevents Firestore from omitting null values)
   const auditEntry = {
     operation: "UPDATE",
     collection: "tripCompletions",
@@ -356,15 +357,18 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
     changes: changes, // Only the fields that changed
     changedFields: Object.keys(changes), // Field names for easy filtering
     source: source,
-    // Store metadata to identify source (app vs survey vs console)
-    metadata: {
-      writeMetadata: afterData._writeMetadata || null,
-      surveyMetadata: afterData._surveyMetadata || null,
-    },
     severity: "INFO",
     message: `Trip ${tripId} updated (${Object.keys(changes).length} fields changed)`,
     eventId: event.id,
   };
+  
+  // Only add metadata fields if they exist
+  const metadata = {};
+  if (afterData._writeMetadata !== undefined) metadata.writeMetadata = afterData._writeMetadata;
+  if (afterData._surveyMetadata !== undefined) metadata.surveyMetadata = afterData._surveyMetadata;
+  if (Object.keys(metadata).length > 0) {
+    auditEntry.metadata = metadata;
+  }
   
   try {
     await writeAuditEntry(auditEntry);
