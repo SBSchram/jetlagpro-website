@@ -447,23 +447,32 @@ function renderRecentSubmissions() {
     const container = document.getElementById('recentSubmissions');
     if (!container) return;
     
-    const data = getCurrentData();
+    // Use raw data (before developer filter) to identify test trips
+    const rawData = surveyData || [];
+    const data = getCurrentData(); // Filtered data for valid trips
     
-    if (!data || data.length === 0) {
+    if (!rawData || rawData.length === 0) {
         container.innerHTML = '<div class="error">No submission data available</div>';
         return;
     }
 
-    // Sort by date (most recent first)
+    // Sort raw data by date (most recent first) for test trip identification
+    const sortedRawSurveys = rawData.sort((a, b) => {
+        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
+        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
+        return new Date(dateB) - new Date(dateA); // Most recent first
+    });
+
+    // Sort filtered data by date for valid trips
     const sortedSurveys = data.sort((a, b) => {
         const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
         const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
-    // Separate into valid trips and test data
+    // Separate into valid trips and test data (use raw data to catch all test trips)
     const validTrips = sortedSurveys.filter(trip => TripValidator.isValidTrip(trip));
-    const testData = sortedSurveys.filter(trip => !TripValidator.isValidTrip(trip));
+    const testData = sortedRawSurveys.filter(trip => !TripValidator.isValidTrip(trip));
     
     // Only show trips without surveys (completed surveys are shown in Dose-Response Data table)
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
@@ -524,13 +533,22 @@ function renderRecentSubmissions() {
         return tableHtml;
     };
     
-    // Only show trips without surveys (moved below Point Usage section)
+    // Show trips without surveys and test trips
     html += '<div style="text-align: center; margin-bottom: 20px;">';
     
     // Survey Not Completed
-    html += '<div style="display: inline-block;">';
+    html += '<div style="display: inline-block; margin-bottom: 30px;">';
+    html += '<h3 style="margin-bottom: 10px; color: #1f2937;">Trips Without Surveys</h3>';
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
+    
+    // Test Trips (if any)
+    if (testData.length > 0) {
+        html += '<div style="display: inline-block;">';
+        html += '<h3 style="margin-bottom: 10px; color: #dc2626;">Test Trips</h3>';
+        html += renderTripTable(testData, false);
+        html += '</div>';
+    }
     
     html += '</div>';
     
@@ -1028,3 +1046,4 @@ function renderPointStimulationAnalysis() {
 
     container.innerHTML = html;
 }
+
