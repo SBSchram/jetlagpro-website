@@ -51,17 +51,25 @@ function getValidationStats(trips) {
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
 
-// Get current data source (with developer ID filtering)
+// Developer device IDs (for categorization, not exclusion)
+const DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F'];
+
+// Check if a trip is from a developer device
+function isDeveloperTrip(trip) {
+    const tripId = trip.tripId || '';
+    return DEVELOPER_DEVICE_IDS.some(devId => tripId.startsWith(devId));
+}
+
+// Get all data (unfiltered - includes developer trips)
+function getAllData() {
+    return surveyData || [];
+}
+
+// Get current data source (with developer ID filtering - for research analysis only
 function getCurrentData() {
-    const data = surveyData || [];
-    
-    // Filter out developer trip IDs - exclude from all analysis
-    const developerTripIds = ['2330B376', '7482966F'];
-    return data.filter(trip => {
-        const tripId = trip.tripId || '';
-        // Check if tripId starts with any developer ID (handles both exact match and extended IDs)
-        return !developerTripIds.some(devId => tripId.startsWith(devId));
-    });
+    const data = getAllData();
+    // Filter out developer trip IDs - exclude from research analysis
+    return data.filter(trip => !isDeveloperTrip(trip));
 }
 
 // Initialize function (no Firebase SDK needed)
@@ -560,19 +568,24 @@ function renderTripStats() {
     const container = document.getElementById('tripStats');
     if (!container) return;
     
-    const allData = getCurrentData();
+    // Use ALL data (including developer trips) for total count and breakdown
+    const allData = getAllData();
     
     if (!allData || allData.length === 0) {
         container.innerHTML = '<div class="error">No survey data available</div>';
         return;
     }
     
-    // Get validation statistics (based on all data, including test trips)
-    const validationStats = getValidationStats(allData);
-    const breakdown = TripValidator.getValidationBreakdown(allData);
+    // Separate developer trips from research trips
+    const developerTrips = allData.filter(trip => isDeveloperTrip(trip));
+    const researchData = allData.filter(trip => !isDeveloperTrip(trip));
     
-    // Calculate detailed breakdown
-    const validTrips = allData.filter(trip => TripValidator.isValidTrip(trip));
+    // Get validation statistics (based on research data only, excluding developer trips)
+    const validationStats = getValidationStats(researchData);
+    const breakdown = TripValidator.getValidationBreakdown(researchData);
+    
+    // Calculate detailed breakdown (research trips only)
+    const validTrips = researchData.filter(trip => TripValidator.isValidTrip(trip));
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
     
@@ -602,19 +615,23 @@ function renderTripStats() {
     // Format confirmed trips with survey status (number first)
     const confirmedTripsText = `${validWithSurveys.length} with surveys (${validWithSurveysPercent}%)<br>${validWithoutSurveys.length} without surveys (${validWithoutSurveysPercent}%)`;
     
-    // Compute verified/legacy/test summary for the top line
+    // Compute verified/legacy/test summary for the top line (research trips only)
     const tzVerifiedCount = (breakdown.real_travel || 0);
     const fallbackVerifiedCount = (breakdown.survey_fallback || 0);
     const verifiedCount = (tzVerifiedCount + fallbackVerifiedCount);
     const legacyCount = (breakdown.legacy || 0);
     const testCount = (validationStats.invalid || 0);
+    const developerCount = developerTrips.length;
 
-    // HMAC validation status (cryptographic authentication)
+    // HMAC validation status (cryptographic authentication) - use ALL data for HMAC stats
     const hmacStats = TripValidator.getHMACStats(allData);
     const hmacStatusText = `Authenticated: ${hmacStats.authenticated}<br>Legacy (no signature): ${hmacStats.legacy}${hmacStats.invalid > 0 ? `<br><span style="color: #dc2626;">Invalid Signatures: ${hmacStats.invalid}</span>` : ''}`;
 
+    // Total trips count includes all trips (research + developer)
+    const totalTrips = allData.length;
+
     let html = '<table class="stats-table">';
-    html += `<tr><th>${validationStats.total} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Survey ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test</td></tr>`;
+    html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Survey ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
