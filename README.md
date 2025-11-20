@@ -11,13 +11,19 @@ JetLagPro is an iOS app that uses traditional Chinese acupressure techniques to 
 To run this website locally:
 
 1. Clone the repository
-2. Open `index.html` in your web browser
-3. Or use a local server:
+2. Start the development server:
+   ```bash
+   ./dev-server.sh
+   ```
+   Or use a simple HTTP server:
    ```bash
    python -m http.server 8000
    # or
    npx serve .
    ```
+3. Open `http://localhost:8000` in your browser
+
+**Editing:** Edit HTML files directly (no conversion needed). Changes appear on refresh.
 
 ## Deployment
 
