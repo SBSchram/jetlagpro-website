@@ -280,6 +280,13 @@ Discrepancies:              ${comparison.discrepancies}
                 '4b073475-b82b-4768-9ad8-57d2056307ca'  // travelDirection missing in Firestore (Nov 20, 2025)
             ]);
             
+            // Known eventId collision exceptions: Before fix (Nov 21, 2025), validation functions
+            // used same eventId as auditLoggerCreate, causing mismatches. Fixed by using unique
+            // eventIds (eventId-validation, eventId-hmac). These entries are expected discrepancies.
+            const knownEventIdCollisions = new Set([
+                '3d246ec1-be67-43e1-8984-533b07856afd'  // CREATE vs METADATA_VALIDATION_FAILED collision (Nov 21, 2025)
+            ]);
+            
             // Create maps for quick lookup using eventId (unique identifier for each audit event)
             // Also store raw entries for inspection
             const firestoreMap = new Map();
@@ -340,6 +347,11 @@ Discrepancies:              ${comparison.discrepancies}
                 
                 // Skip known field mismatches - Firestore omits null values, GCS preserves them
                 if (knownFieldMismatches.has(key)) {
+                    return;
+                }
+                
+                // Skip known eventId collisions - validation functions used same eventId as CREATE
+                if (knownEventIdCollisions.has(key)) {
                     return;
                 }
                 
