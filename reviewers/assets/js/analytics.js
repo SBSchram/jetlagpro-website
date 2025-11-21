@@ -514,14 +514,17 @@ function renderRecentSubmissions() {
             // Points stimulated
             const pointsStimulated = survey.pointsCompleted || 0;
             
-            // Combine Dest, Dir, Points, TZ into one column
-            const dest = survey.destinationCode || 'N/A';
-            const tripDetails = `${dest} ${eastWest} ${pointsStimulated}pts ${timezones}TZ`;
+            // Combine Dest, Dir, Points, TZ into one column with fixed-width padding for alignment
+            const dest = (survey.destinationCode || 'N/A').padEnd(3, ' '); // 3 chars (codes are 3, N/A is 3)
+            const dir = eastWest.padEnd(3, ' '); // 3 chars (E/W is 1, N/A is 3)
+            const points = String(pointsStimulated).padStart(2, ' ') + 'pts'; // 5 chars total ( 2pts, 10pts)
+            const tz = String(timezones).padStart(2, ' ') + 'TZ'; // 4 chars total ( 8TZ, 18TZ)
+            const tripDetails = `${dest} ${dir} ${points} ${tz}`;
 
             tableHtml += `<tr>
                 <td>${dateStr}</td>
                 <td><code>${displayCode}</code></td>
-                <td>${tripDetails}</td>`;
+                <td><code style="font-family: monospace;">${tripDetails}</code></td>`;
             if (showStatus) tableHtml += `<td style="color: ${statusColor}">${status}</td>`;
             tableHtml += `</tr>`;
         });
