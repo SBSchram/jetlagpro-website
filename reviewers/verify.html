@@ -307,7 +307,7 @@ Discrepancies:              ${comparison.discrepancies}
                 const key = `${operation}-${documentId}-${eventId}`;
                 
                 // Check exclusions by eventId (for backward compatibility with known entries)
-                const eventId = entry.eventId || entry._raw?.eventId;
+                // eventId already extracted above for key generation
                 
                 // Skip pre-deployment entries - they're expected to be missing from GCS
                 if (eventId && preDeploymentEventIds.has(eventId)) {
