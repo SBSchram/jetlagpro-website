@@ -257,15 +257,17 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
     tripId: tripId,
     timestamp: FieldValue.serverTimestamp(),
     source: source,
-    // Store metadata for source verification
-    metadata: {
-      writeMetadata: data._writeMetadata || null,
-      surveyMetadata: data._surveyMetadata || null,
-    },
     severity: "INFO",
     message: `Trip ${tripId} created`,
     eventId: event.id,
   };
+
+  const metadata = {};
+  if (data._writeMetadata !== undefined) metadata.writeMetadata = data._writeMetadata;
+  if (data._surveyMetadata !== undefined) metadata.surveyMetadata = data._surveyMetadata;
+  if (Object.keys(metadata).length > 0) {
+    auditEntry.metadata = metadata;
+  }
   
   // Only add fields if they exist (prevents Firestore from omitting them)
   if (data.destinationCode !== undefined) auditEntry.destinationCode = data.destinationCode;
