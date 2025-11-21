@@ -269,6 +269,7 @@ class FirebaseService {
             if (fields.originTimezone?.stringValue) entry.originTimezone = fields.originTimezone.stringValue;
             if (fields.destinationCode?.stringValue) entry.destinationCode = fields.destinationCode.stringValue;
             if (fields.arrivalTimeZone?.stringValue) entry.arrivalTimeZone = fields.arrivalTimeZone.stringValue;
+            if (fields.travelDirection?.stringValue) entry.travelDirection = fields.travelDirection.stringValue;
 
             // Extract arrays
             if (fields.changedFields?.arrayValue?.values) {
@@ -280,21 +281,30 @@ class FirebaseService {
 
             // Extract metadata for provenance
             if (fields.metadata?.mapValue?.fields) {
-                entry.metadata = {};
                 const metadataFields = fields.metadata.mapValue.fields;
+                const metadataResult = {};
 
                 if (metadataFields.writeMetadata?.mapValue?.fields) {
-                    entry.metadata.writeMetadata = {};
+                    metadataResult.writeMetadata = {};
                     Object.entries(metadataFields.writeMetadata.mapValue.fields).forEach(([key, value]) => {
-                        entry.metadata.writeMetadata[key] = this.extractValue(value);
+                        metadataResult.writeMetadata[key] = this.extractValue(value);
                     });
                 }
 
                 if (metadataFields.surveyMetadata?.mapValue?.fields) {
-                    entry.metadata.surveyMetadata = {};
+                    metadataResult.surveyMetadata = {};
                     Object.entries(metadataFields.surveyMetadata.mapValue.fields).forEach(([key, value]) => {
-                        entry.metadata.surveyMetadata[key] = this.extractValue(value);
+                        metadataResult.surveyMetadata[key] = this.extractValue(value);
                     });
+                }
+
+                Object.entries(metadataFields).forEach(([key, value]) => {
+                    if (key === 'writeMetadata' || key === 'surveyMetadata') return;
+                    metadataResult[key] = this.extractValue(value);
+                });
+
+                if (Object.keys(metadataResult).length > 0) {
+                    entry.metadata = metadataResult;
                 }
             }
 
