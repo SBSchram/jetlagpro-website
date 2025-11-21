@@ -776,7 +776,7 @@ Discrepancies:              ${comparison.discrepancies}
         }
         
         function removeNullishFields(obj) {
-            // Recursively remove fields that are null, undefined, or empty objects/arrays
+            // Recursively remove fields that are null, undefined, or empty objects
             // This normalizes the difference between Firestore (omits nulls) and GCS (preserves nulls)
             if (obj === null || obj === undefined) {
                 return null;
@@ -801,8 +801,8 @@ Discrepancies:              ${comparison.discrepancies}
                 // Handle nested objects
                 if (typeof value === 'object' && !Array.isArray(value)) {
                     const cleanedValue = removeNullishFields(value);
-                    // Skip empty objects {}
-                    if (Object.keys(cleanedValue).length === 0) {
+                    // Skip empty objects {} - check BEFORE adding to cleaned
+                    if (cleanedValue === null || (typeof cleanedValue === 'object' && Object.keys(cleanedValue).length === 0)) {
                         continue;
                     }
                     cleaned[key] = cleanedValue;
