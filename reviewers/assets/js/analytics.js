@@ -482,18 +482,19 @@ function renderRecentSubmissions() {
     const validTrips = sortedSurveys.filter(trip => TripValidator.isValidTrip(trip));
     const testData = sortedRawSurveys.filter(trip => !TripValidator.isValidTrip(trip));
     
-    // Only show trips without surveys (completed surveys are shown in Dose-Response Data table)
+    // Separate valid trips by survey completion status
+    const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
     // Build HTML
     let html = '';
     
-    // Helper function to render a trip table - use stats-table for tight columns
+    // Helper function to render a trip table - combine Dest, Dir, Points, TZ into Trip Details column
     const renderTripTable = (trips, showStatus = true) => {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
-        tableHtml += '<th>Date</th><th>Device</th><th>Dest</th><th>Dir</th><th>Points</th><th>TZ</th>';
+        tableHtml += '<th>Date</th><th>Device</th><th>Trip Details</th>';
         if (showStatus) tableHtml += '<th>Status</th>';
         tableHtml += '</tr></thead><tbody>';
 
@@ -519,14 +520,15 @@ function renderRecentSubmissions() {
 
             // Points stimulated
             const pointsStimulated = survey.pointsCompleted || 0;
+            
+            // Combine Dest, Dir, Points, TZ into one column
+            const dest = survey.destinationCode || 'N/A';
+            const tripDetails = `${dest} ${eastWest} ${pointsStimulated}pts ${timezones}TZ`;
 
             tableHtml += `<tr>
                 <td>${dateStr}</td>
                 <td><code>${displayCode}</code></td>
-                <td>${survey.destinationCode || 'N/A'}</td>
-                <td>${eastWest}</td>
-                <td>${pointsStimulated}</td>
-                <td>${timezones}</td>`;
+                <td>${tripDetails}</td>`;
             if (showStatus) tableHtml += `<td style="color: ${statusColor}">${status}</td>`;
             tableHtml += `</tr>`;
         });
@@ -535,16 +537,24 @@ function renderRecentSubmissions() {
         return tableHtml;
     };
     
-    // Show trips without surveys and test trips
+    // Show all three categories: trips with surveys, trips without surveys, and test trips
     html += '<div style="text-align: center; margin-bottom: 20px;">';
     
-    // Survey Not Completed
-    html += '<div style="display: inline-block; margin-bottom: 30px;">';
+    // Trips With Surveys (real trips with completed surveys)
+    if (validWithSurveys.length > 0) {
+        html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
+        html += `<h3 style="margin-bottom: 10px; color: #16a34a;">Trips With Surveys (${validWithSurveys.length})</h3>`;
+        html += renderTripTable(validWithSurveys, false);
+        html += '</div>';
+    }
+    
+    // Trips Without Surveys (real trips missing surveys)
+    html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
     html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Trips Without Surveys (${validNotCompleted.length})</h3>`;
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
-    // Test Trips (if any)
+    // Test Trips (invalid/excluded trips)
     if (testData.length > 0) {
         html += '<div style="display: inline-block;">';
         html += `<h3 style="margin-bottom: 10px; color: #dc2626;">Test Trips (${testData.length})</h3>`;
