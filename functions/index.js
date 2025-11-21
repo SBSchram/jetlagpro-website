@@ -502,16 +502,21 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
     });
     
     // Log to audit trail
-    await writeAuditEntry({
+    // Only include metadata if it exists (prevents Firestore from omitting null values)
+    const auditEntry = {
       operation: "METADATA_VALIDATION_FAILED",
       collection: "tripCompletions",
       documentId: tripId,
       timestamp: FieldValue.serverTimestamp(),
       source: resolveSource(metadata, data._surveyMetadata, metadata?.source || null),
       issues: validation.issues,
-      metadata: metadata || null, // Handle undefined metadata
       eventId: event.id, // eventId links related entries from same source event
-    });
+    };
+    // Only add metadata if it exists (don't default to null - Firestore omits null values)
+    if (metadata !== undefined && metadata !== null) {
+      auditEntry.metadata = metadata;
+    }
+    await writeAuditEntry(auditEntry);
   } else {
     logger.info(`✅ Metadata valid for trip ${tripId}`, {tripId});
   }

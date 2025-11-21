@@ -296,11 +296,15 @@ Discrepancies:              ${comparison.discrepancies}
             const firestoreMap = new Map();
             const firestoreRawMap = new Map();
             firestoreEntries.forEach(entry => {
-                // Use composite key: operation + documentId
-                // This uniquely identifies each audit entry (one operation per document per audit entry)
+                // Use composite key: operation + documentId + eventId
+                // This uniquely identifies each audit entry:
+                // - CREATE/VALIDATION entries can share eventId (same source event), so operation distinguishes them
+                // - UPDATE entries have unique eventId per update, so eventId distinguishes them
+                // - Using all three ensures uniqueness for all entry types
                 const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = `${operation}-${documentId}`;
+                const eventId = entry.eventId || entry._raw?.eventId || '';
+                const key = `${operation}-${documentId}-${eventId}`;
                 
                 // Check exclusions by eventId (for backward compatibility with known entries)
                 const eventId = entry.eventId || entry._raw?.eventId;
@@ -340,13 +344,11 @@ Discrepancies:              ${comparison.discrepancies}
             const gcsMap = new Map();
             const gcsRawMap = new Map();
             gcsEntries.forEach(entry => {
-                // Use composite key: operation + documentId (matches Firestore key generation)
+                // Use composite key: operation + documentId + eventId (matches Firestore key generation)
                 const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = `${operation}-${documentId}`;
-                
-                // Check exclusions by eventId (for backward compatibility with known entries)
-                const eventId = entry.eventId || entry._raw?.eventId;
+                const eventId = entry.eventId || entry._raw?.eventId || '';
+                const key = `${operation}-${documentId}-${eventId}`;
                 
                 // Skip pre-deployment entries (they shouldn't be in GCS, but filter just in case)
                 if (eventId && preDeploymentEventIds.has(eventId)) {

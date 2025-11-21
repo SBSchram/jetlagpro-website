@@ -845,13 +845,15 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     known_exceptions_count = 0  # Count exceptions during map building (matches verify.html line 254)
     
     for entry in firestore_entries:
-        # Use composite key: operation + documentId - matches verify.html line 299-303
+        # Use composite key: operation + documentId + eventId - matches verify.html
+        # This uniquely identifies each audit entry:
+        # - CREATE/VALIDATION entries can share eventId (same source event), so operation distinguishes them
+        # - UPDATE entries have unique eventId per update, so eventId distinguishes them
+        # - Using all three ensures uniqueness for all entry types
         document_id = entry.get('documentId') or entry.get('tripId') or ''
         operation = entry.get('operation') or 'UNKNOWN'
-        key = f"{operation}-{document_id}"
-        
-        # Check exclusions by eventId (for backward compatibility with known entries)
-        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
+        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId') or ''
+        key = f"{operation}-{document_id}-{event_id}"
         
         # Skip pre-deployment entries - matches verify.html line 309-312
         if event_id and event_id in pre_deployment_event_ids:
@@ -866,14 +868,11 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
         firestore_map[key] = entry
     
     for entry in gcs_entries:
-        # Use composite key: operation + documentId (matches Firestore key generation)
-        # Matches verify.html line 343-347
+        # Use composite key: operation + documentId + eventId (matches Firestore key generation)
         document_id = entry.get('documentId') or entry.get('tripId') or ''
         operation = entry.get('operation') or 'UNKNOWN'
-        key = f"{operation}-{document_id}"
-        
-        # Check exclusions by eventId (for backward compatibility with known entries)
-        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
+        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId') or ''
+        key = f"{operation}-{document_id}-{event_id}"
         
         # Skip pre-deployment entries - matches verify.html line 352-355
         if event_id and event_id in pre_deployment_event_ids:
