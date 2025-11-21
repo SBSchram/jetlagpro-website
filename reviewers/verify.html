@@ -280,47 +280,52 @@ Discrepancies:              ${comparison.discrepancies}
                 '4b073475-b82b-4768-9ad8-57d2056307ca'  // travelDirection missing in Firestore (Nov 20, 2025)
             ]);
             
-            // Known eventId collision exceptions: Before fix (Nov 21, 2025), validation functions
-            // used same eventId as auditLoggerCreate, causing mismatches. Fixed by using unique
-            // eventIds (eventId-validation, eventId-hmac). These entries are expected discrepancies.
+            // Known eventId collision exceptions: No longer needed - we now use composite keys
+            // (operation-documentId) instead of eventId for matching, so multiple entries from the
+            // same event are properly handled. Kept for backward compatibility with legacy exclusions.
             const knownEventIdCollisions = new Set([
-                '3d246ec1-be67-43e1-8984-533b07856afd'  // CREATE vs METADATA_VALIDATION_FAILED collision (Nov 21, 2025)
+                // Legacy: No longer needed with composite key matching (Nov 21, 2025)
             ]);
             
-            // Create maps for quick lookup using eventId (unique identifier for each audit event)
+            // Create maps for quick lookup using composite key (operation + documentId)
+            // This ensures each audit entry is uniquely identified, even when multiple entries
+            // share the same eventId (e.g., CREATE and VALIDATION_FAILED from same document creation)
+            // The real problem: eventId identifies the source event, not the audit entry.
+            // Multiple audit entries can share the same eventId, so we use operation+documentId instead.
             // Also store raw entries for inspection
             const firestoreMap = new Map();
             const firestoreRawMap = new Map();
             firestoreEntries.forEach(entry => {
-                // Use eventId as the key (unique per audit event)
-                // Fallback to operation-tripId if eventId is missing
-                const eventId = entry.eventId || entry._raw?.eventId;
-                const tripId = entry.tripId || entry.documentId || '';
+                // Use composite key: operation + documentId
+                // This uniquely identifies each audit entry (one operation per document per audit entry)
+                const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = eventId || `${operation}-${tripId}`;
+                const key = `${operation}-${documentId}`;
+                
+                // Check exclusions by eventId (for backward compatibility with known entries)
+                const eventId = entry.eventId || entry._raw?.eventId;
                 
                 // Skip pre-deployment entries - they're expected to be missing from GCS
-                if (preDeploymentEventIds.has(key)) {
+                if (eventId && preDeploymentEventIds.has(eventId)) {
                     preDeploymentCount++;
                     return;
                 }
                 
                 // Skip known validation failures - they're expected discrepancies
-                if (knownValidationFailures.has(key)) {
+                if (eventId && knownValidationFailures.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
                 
                 // Skip known field mismatches - Firestore omits null values, GCS preserves them
                 // Fixed in Cloud Functions (Nov 20, 2025) - these are pre-fix entries
-                if (knownFieldMismatches.has(key)) {
+                if (eventId && knownFieldMismatches.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
                 
-                // Skip known eventId collisions - validation functions used same eventId as CREATE
-                // Fixed in Cloud Functions (Nov 21, 2025) - these are pre-fix entries
-                if (knownEventIdCollisions.has(key)) {
+                // Skip known eventId collisions - no longer needed with composite key, but kept for legacy
+                if (eventId && knownEventIdCollisions.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
@@ -335,30 +340,31 @@ Discrepancies:              ${comparison.discrepancies}
             const gcsMap = new Map();
             const gcsRawMap = new Map();
             gcsEntries.forEach(entry => {
-                // Use eventId as the key (unique per audit event)
-                // Fallback to operation-tripId if eventId is missing
-                const eventId = entry.eventId || entry._raw?.eventId;
-                const tripId = entry.tripId || entry.documentId || '';
+                // Use composite key: operation + documentId (matches Firestore key generation)
+                const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
-                const key = eventId || `${operation}-${tripId}`;
+                const key = `${operation}-${documentId}`;
+                
+                // Check exclusions by eventId (for backward compatibility with known entries)
+                const eventId = entry.eventId || entry._raw?.eventId;
                 
                 // Skip pre-deployment entries (they shouldn't be in GCS, but filter just in case)
-                if (preDeploymentEventIds.has(key)) {
+                if (eventId && preDeploymentEventIds.has(eventId)) {
                     return;
                 }
                 
                 // Skip known validation failures - they're expected discrepancies
-                if (knownValidationFailures.has(key)) {
+                if (eventId && knownValidationFailures.has(eventId)) {
                     return;
                 }
                 
                 // Skip known field mismatches - Firestore omits null values, GCS preserves them
-                if (knownFieldMismatches.has(key)) {
+                if (eventId && knownFieldMismatches.has(eventId)) {
                     return;
                 }
                 
-                // Skip known eventId collisions - validation functions used same eventId as CREATE
-                if (knownEventIdCollisions.has(key)) {
+                // Skip known eventId collisions - no longer needed with composite key, but kept for legacy
+                if (eventId && knownEventIdCollisions.has(eventId)) {
                     return;
                 }
                 
@@ -408,8 +414,13 @@ Discrepancies:              ${comparison.discrepancies}
                     if (firestoreHash === gcsHash) {
                         matchedCount++;
                     } else {
+                        // Check exclusions by eventId (for backward compatibility)
+                        const fsEventId = firestoreEntry.eventId || firestoreEntry._raw?.eventId;
+                        const gcsEventId = gcsEntry.eventId || gcsEntry._raw?.eventId;
+                        const eventId = fsEventId || gcsEventId;
+                        
                         // Skip known field mismatches and eventId collisions (already filtered above, but double-check here)
-                        if (knownFieldMismatches.has(key) || knownEventIdCollisions.has(key)) {
+                        if (eventId && (knownFieldMismatches.has(eventId) || knownEventIdCollisions.has(eventId))) {
                             knownExceptionsCount++;
                             return;
                         }
