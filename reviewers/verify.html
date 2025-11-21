@@ -34,12 +34,23 @@
             color: #6b7280;
             margin: 0;
         }
+        .build-info {
+            font-size: 0.85rem;
+            color: #4b5563;
+            margin-top: 6px;
+        }
+        .build-info code {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #111827;
+        }
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="../assets/js/firebase-service.js?v=20251119114529"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
+        const VERIFIER_BUILD = '2025-11-21 05:55 UTC · commit 68911c3';
         
         async function runVerification() {
             const btn = document.getElementById('verifyBtn');
@@ -1021,6 +1032,13 @@ HMAC Validation Results:
                 btn.textContent = 'Run Trip Verification';
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const buildEl = document.getElementById('verifierBuild');
+            if (buildEl) {
+                buildEl.textContent = VERIFIER_BUILD;
+            }
+        });
     </script>
 </head>
 <body>
@@ -1030,6 +1048,7 @@ HMAC Validation Results:
 
         <div class="header">
             <h1>Trust but Verify</h1>
+            <p class="build-info">Verifier build <code id="verifierBuild">loading…</code></p>
         </div>
 
         <div class="section">

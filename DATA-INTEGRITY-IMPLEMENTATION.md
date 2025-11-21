@@ -1,6 +1,6 @@
 # Data Integrity Implementation
 
-**Last Updated:** November 12, 2025  
+**Last Updated:** November 21, 2025  
 **Purpose:** Practical guide for verifying data integrity safeguards
 
 ---
@@ -240,6 +240,16 @@ The verification tool uses a composite key (`operation-documentId`) to match ent
 - These entries share the same `eventId` (which identifies the source event, not the audit entry)
 - Using `operation-documentId` ensures each audit entry is matched independently
 - For example: `CREATE-{tripId}` matches the CREATE entry, while `METADATA_VALIDATION_FAILED-{tripId}` matches the validation entry
+
+**What this confirms:**
+**Normalization safeguards:**
+Before hashing, both Firestore and GCS entries are normalized by stripping null / undefined fields and empty metadata objects. This eliminates false mismatches caused by Firestore omitting optional values (for example, `travelDirection` or `_writeMetadata` fields set to null) while still surfacing real differences.
+
+**If you see a discrepancy (post–Nov 21, 2025 verifier build):**
+1. Check the verifier build label on `verify.html` and confirm it matches the latest commit noted in the release notes.
+2. Re-run the tool after a hard refresh (Cmd/Ctrl + Shift + R) to ensure cached code isn’t being used.
+3. If the mismatch references a trip before Nov 20, 2025, consult the “Known Exceptions” list—those legacy entries are documented.
+4. For new data mismatches, capture the trip ID and raw Firestore/GCS payloads from the tool output and contact the research team; this indicates an actual data integrity issue.
 
 **What this confirms:**
 - No audit entries have been deleted from Firestore
