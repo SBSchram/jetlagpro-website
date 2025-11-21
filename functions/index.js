@@ -502,7 +502,6 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
     });
     
     // Log to audit trail
-    // Use unique eventId to avoid collision with auditLoggerCreate (both triggered by same event)
     await writeAuditEntry({
       operation: "METADATA_VALIDATION_FAILED",
       collection: "tripCompletions",
@@ -511,7 +510,7 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
       source: resolveSource(metadata, data._surveyMetadata, metadata?.source || null),
       issues: validation.issues,
       metadata: metadata || null, // Handle undefined metadata
-      eventId: `${event.id}-validation`, // Unique eventId to avoid collision with CREATE entry
+      eventId: event.id, // eventId links related entries from same source event
     });
   } else {
     logger.info(`✅ Metadata valid for trip ${tripId}`, {tripId});
