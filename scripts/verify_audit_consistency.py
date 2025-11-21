@@ -24,10 +24,12 @@ VERIFICATION METHODOLOGY
 
 This script EXACTLY replicates the verification logic in verify.html (lines 435-579):
 
-1. KEY MATCHING (verify.html lines 461-498):
-   - Uses eventId as the unique identifier for each audit event
-   - Falls back to "operation-tripId" if eventId is missing
-   - Filters out 4 known pre-deployment entries (created before GCS archive was deployed)
+1. KEY MATCHING (verify.html lines 296-370):
+   - Uses composite key: "operation-documentId" to uniquely identify each audit entry
+   - This is critical: eventId identifies the source event, not the audit entry
+   - Multiple audit entries can share the same eventId (CREATE, VALIDATION_FAILED, etc.)
+   - Composite key ensures each entry is matched independently
+   - Filters out known pre-deployment entries (created before GCS archive was deployed)
    - These pre-deployment entries are expected to exist only in Firestore
 
 2. ENTRY NORMALIZATION (verify.html lines 581-722):
@@ -89,9 +91,11 @@ indicate a real problem:
   - 4253d2be-9d13-466f-b535-f55ade5b5dec
 
 KEY MATCHING LOGIC:
-- Primary key: eventId (unique identifier generated for each audit event)
-- Fallback key: "operation-tripId" (if eventId is missing)
-- This ensures every audit event can be uniquely identified and matched
+- Composite key: "operation-documentId" (uniquely identifies each audit entry)
+- Why not eventId? eventId identifies the source event (document creation), not the audit entry
+- Multiple audit entries can share the same eventId (CREATE, METADATA_VALIDATION_FAILED, HMAC_VALIDATION_FAILED)
+- Using operation-documentId ensures each entry is matched independently
+- Exclusions still use eventId for backward compatibility with known entries
 
 NORMALIZATION COMPLEXITY:
 The JavaScript implementation (verify.html normalizeEntry) performs extensive
@@ -772,9 +776,11 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     """
     Verify that Firestore entries match GCS archive.
     
-    EXACTLY matches verify.html compareEntries() line 435-579:
-    - Uses eventId as key (with fallback to operation-tripId)
-    - Filters out 4 pre-deployment event IDs
+    EXACTLY matches verify.html compareEntries() line 296-410:
+    - Uses composite key: "operation-documentId" to uniquely identify each audit entry
+    - This is critical: eventId identifies the source event, not the audit entry
+    - Multiple audit entries can share the same eventId (CREATE, VALIDATION_FAILED, etc.)
+    - Filters out known pre-deployment entries (by eventId for backward compatibility)
     - Compares normalized entries using hashEntry()
     - Returns matching count and discrepancy lists
     
@@ -782,22 +788,23 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     This is the core verification function that compares the live database
     (Firestore) with the immutable archive (GCS):
     
-    1. KEY EXTRACTION (verify.html lines 461-464, 483-486):
-       - Primary key: eventId (unique identifier for each audit event)
-       - Fallback key: "operation-tripId" (if eventId is missing)
-       - This ensures every audit event can be uniquely identified
+    1. KEY EXTRACTION (verify.html lines 299-303, 343-347):
+       - Composite key: "operation-documentId" (uniquely identifies each audit entry)
+       - Why not eventId? eventId identifies the source event (document creation), not the audit entry
+       - Multiple audit entries can share the same eventId (CREATE, METADATA_VALIDATION_FAILED, etc.)
+       - Using operation-documentId ensures each entry is matched independently
     
-    2. PRE-DEPLOYMENT FILTERING (verify.html lines 467-469, 489-491):
-       - Filters out 4 known pre-deployment entries
+    2. PRE-DEPLOYMENT FILTERING (verify.html lines 309-312, 352-355):
+       - Filters out known pre-deployment entries (checked by eventId for backward compatibility)
        - These were created before GCS archive was deployed (2025-11-11)
        - Expected to exist only in Firestore (not in GCS)
     
-    3. ENTRY MATCHING (verify.html lines 504-518):
-       - Builds maps using eventId as key
+    3. ENTRY MATCHING (verify.html lines 401-409):
+       - Builds maps using composite key (operation-documentId)
        - Identifies entries present in one but not the other
        - Compares content using hashEntry() for entries present in both
     
-    4. CONTENT COMPARISON (verify.html lines 514-518):
+    4. CONTENT COMPARISON (verify.html lines 410-415):
        - Normalizes each entry using normalizeEntry()
        - Creates hash using JSON.stringify with sorted keys
        - Compares hashes to detect content mismatches
@@ -805,13 +812,13 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
     5. DISCREPANCY REPORTING:
        - Missing in Firestore: Entry in GCS but not in live database
        - Missing in GCS: Entry in Firestore but not in archive (unexpected)
-       - Mismatched: Same eventId but different content (potential tampering)
+       - Mismatched: Same operation-documentId but different content (potential tampering)
     
     INTERPRETATION:
     - matched: Number of entries that exist in both and have identical content
     - missingInFirestore: Entries in GCS but not in Firestore (GCS is authoritative)
     - missingInGCS: Entries in Firestore but not in GCS (unexpected for post-deployment)
-    - mismatched: Entries with same eventId but different content (potential tampering)
+    - mismatched: Entries with same operation-documentId but different content (potential tampering)
     
     Args:
         firestore_entries: List of audit entries from Firestore (live database)
@@ -830,43 +837,51 @@ def verify_consistency(firestore_entries: List[Dict], gcs_entries: List[Dict]) -
         '4253d2be-9d13-466f-b535-f55ade5b5dec'
     }
     
-    # Build maps using eventId as key - matches verify.html line 456-498
+    # Build maps using composite key (operation-documentId) - matches verify.html line 296-370
+    # This ensures each audit entry is uniquely identified, even when multiple entries
+    # share the same eventId (e.g., CREATE and VALIDATION_FAILED from same document creation)
     firestore_map = {}
     gcs_map = {}
-    known_exceptions_count = 0  # Count exceptions during map building (matches verify.html line 295)
+    known_exceptions_count = 0  # Count exceptions during map building (matches verify.html line 254)
     
     for entry in firestore_entries:
-        # Extract key - matches verify.html line 461-464
-        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
-        trip_id = entry.get('tripId') or entry.get('documentId') or ''
+        # Use composite key: operation + documentId - matches verify.html line 299-303
+        document_id = entry.get('documentId') or entry.get('tripId') or ''
         operation = entry.get('operation') or 'UNKNOWN'
-        key = event_id or f"{operation}-{trip_id}"
+        key = f"{operation}-{document_id}"
         
-        # Skip pre-deployment entries - matches verify.html line 467-469
-        if key in pre_deployment_event_ids:
+        # Check exclusions by eventId (for backward compatibility with known entries)
+        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
+        
+        # Skip pre-deployment entries - matches verify.html line 309-312
+        if event_id and event_id in pre_deployment_event_ids:
+            known_exceptions_count += 1
             continue
         
-        # Skip known validation failures - count as exceptions (matches verify.html line 294-296)
-        if key in KNOWN_VALIDATION_FAILURES:
+        # Skip known validation failures - count as exceptions (matches verify.html line 315-318)
+        if event_id and event_id in KNOWN_VALIDATION_FAILURES:
             known_exceptions_count += 1
             continue
         
         firestore_map[key] = entry
     
     for entry in gcs_entries:
-        # Extract key - matches verify.html line 483-486
-        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
-        trip_id = entry.get('tripId') or entry.get('documentId') or ''
+        # Use composite key: operation + documentId (matches Firestore key generation)
+        # Matches verify.html line 343-347
+        document_id = entry.get('documentId') or entry.get('tripId') or ''
         operation = entry.get('operation') or 'UNKNOWN'
-        key = event_id or f"{operation}-{trip_id}"
+        key = f"{operation}-{document_id}"
         
-        # Skip pre-deployment entries - matches verify.html line 489-491
-        if key in pre_deployment_event_ids:
+        # Check exclusions by eventId (for backward compatibility with known entries)
+        event_id = entry.get('eventId') or entry.get('_raw', {}).get('eventId')
+        
+        # Skip pre-deployment entries - matches verify.html line 352-355
+        if event_id and event_id in pre_deployment_event_ids:
             continue
         
-        # Skip known validation failures - they're expected discrepancies (matches verify.html line 322-324)
+        # Skip known validation failures - they're expected discrepancies (matches verify.html line 357-360)
         # Note: verify.html only counts Firestore exceptions, not GCS
-        if key in KNOWN_VALIDATION_FAILURES:
+        if event_id and event_id in KNOWN_VALIDATION_FAILURES:
             continue  # Don't increment counter for GCS side
         
         gcs_map[key] = entry

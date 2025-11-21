@@ -234,6 +234,13 @@ The dual-write system logs every operation to both Firestore (for real-time view
 - For post-deployment entries (after Nov 11, 2025), the discrepancy count should be 0
 - The "Missing in GCS" list should only contain pre-deployment entries (which is expected, as GCS archiving started on Nov 11, 2025)
 
+**How matching works:**
+The verification tool uses a composite key (`operation-documentId`) to match entries between Firestore and GCS. This is important because:
+- One document creation event can produce multiple audit entries (CREATE, METADATA_VALIDATION_FAILED, HMAC_VALIDATION_FAILED)
+- These entries share the same `eventId` (which identifies the source event, not the audit entry)
+- Using `operation-documentId` ensures each audit entry is matched independently
+- For example: `CREATE-{tripId}` matches the CREATE entry, while `METADATA_VALIDATION_FAILED-{tripId}` matches the validation entry
+
 **What this confirms:**
 - No audit entries have been deleted from Firestore
 - No audit entries have been modified
