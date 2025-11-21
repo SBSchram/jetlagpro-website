@@ -765,8 +765,52 @@ Discrepancies:              ${comparison.discrepancies}
         function hashEntry(entry) {
             // Normalize the entry and create a hash
             const normalized = normalizeEntry(entry);
+            // Remove fields that are undefined, null, or empty objects/arrays
+            // This handles Firestore's behavior of omitting null values
+            const cleanEntry = removeNullishFields(normalized);
             // Use JSON.stringify with sorted keys for consistent hashing
-            return JSON.stringify(normalized, Object.keys(normalized).sort());
+            return JSON.stringify(cleanEntry, Object.keys(cleanEntry).sort());
+        }
+        
+        function removeNullishFields(obj) {
+            // Recursively remove fields that are null, undefined, or empty objects/arrays
+            // This normalizes the difference between Firestore (omits nulls) and GCS (preserves nulls)
+            if (obj === null || obj === undefined) {
+                return null;
+            }
+            
+            if (Array.isArray(obj)) {
+                // Keep arrays, but clean their contents
+                return obj.map(item => removeNullishFields(item));
+            }
+            
+            if (typeof obj !== 'object') {
+                return obj;
+            }
+            
+            const cleaned = {};
+            for (const [key, value] of Object.entries(obj)) {
+                // Skip null, undefined
+                if (value === null || value === undefined) {
+                    continue;
+                }
+                
+                // Handle nested objects
+                if (typeof value === 'object' && !Array.isArray(value)) {
+                    const cleanedValue = removeNullishFields(value);
+                    // Skip empty objects {}
+                    if (Object.keys(cleanedValue).length === 0) {
+                        continue;
+                    }
+                    cleaned[key] = cleanedValue;
+                } else if (Array.isArray(value)) {
+                    // Keep arrays even if empty (they're semantically different from missing)
+                    cleaned[key] = removeNullishFields(value);
+                } else {
+                    cleaned[key] = value;
+                }
+            }
+            return cleaned;
         }
         
         // HMAC-SHA256 secret key (same as in iOS app and trip-validator.js)
