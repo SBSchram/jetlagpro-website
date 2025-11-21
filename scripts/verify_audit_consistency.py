@@ -960,7 +960,7 @@ def print_report(report: Dict) -> int:
     
     print("\nVERIFICATION RESULTS")
     print(f"GCS entries:               {gcs_count}")
-    print(f"  Exceptions:               {exceptions_count}  (validation failures, documented)")
+    print(f"  Exceptions:               {exceptions_count}  (development test entries, documented)")
     print(f"  Matches:                 {matched_count}")
     print()
     print(f"Discrepancies:              {report['discrepancies']}")
