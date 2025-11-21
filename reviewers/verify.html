@@ -318,6 +318,13 @@ Discrepancies:              ${comparison.discrepancies}
                     return;
                 }
                 
+                // Skip known eventId collisions - validation functions used same eventId as CREATE
+                // Fixed in Cloud Functions (Nov 21, 2025) - these are pre-fix entries
+                if (knownEventIdCollisions.has(key)) {
+                    knownExceptionsCount++;
+                    return;
+                }
+                
                 firestoreMap.set(key, entry);
                 // Store raw entry if available
                 if (entry._raw) {
@@ -401,8 +408,8 @@ Discrepancies:              ${comparison.discrepancies}
                     if (firestoreHash === gcsHash) {
                         matchedCount++;
                     } else {
-                        // Skip known field mismatches (already filtered above, but double-check here)
-                        if (knownFieldMismatches.has(key)) {
+                        // Skip known field mismatches and eventId collisions (already filtered above, but double-check here)
+                        if (knownFieldMismatches.has(key) || knownEventIdCollisions.has(key)) {
                             knownExceptionsCount++;
                             return;
                         }
