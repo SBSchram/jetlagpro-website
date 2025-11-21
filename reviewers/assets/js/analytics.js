@@ -464,22 +464,15 @@ function renderRecentSubmissions() {
         return;
     }
 
-    // Sort raw data by date (most recent first) for test trip identification
+    // Sort raw data by date (most recent first) - use raw data for all trips to show complete picture
     const sortedRawSurveys = rawData.sort((a, b) => {
         const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
         const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
-    // Sort filtered data by date for valid trips
-    const sortedSurveys = data.sort((a, b) => {
-        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
-        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
-        return new Date(dateB) - new Date(dateA); // Most recent first
-    });
-
-    // Separate into valid trips and test data (use raw data to catch all test trips)
-    const validTrips = sortedSurveys.filter(trip => TripValidator.isValidTrip(trip));
+    // Separate into valid trips and test data (use raw data for both to show ALL submissions)
+    const validTrips = sortedRawSurveys.filter(trip => TripValidator.isValidTrip(trip));
     const testData = sortedRawSurveys.filter(trip => !TripValidator.isValidTrip(trip));
     
     // Separate valid trips by survey completion status
