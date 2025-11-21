@@ -485,12 +485,6 @@ function renderRecentSubmissions() {
     // Only show trips without surveys (completed surveys are shown in Dose-Response Data table)
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
-    // Update the section heading with trip count (only trips without surveys)
-    const sectionHeading = container.parentElement.querySelector('h2');
-    if (sectionHeading) {
-        sectionHeading.innerHTML = `Trips Without Surveys (${validNotCompleted.length})`;
-    }
-
     // Build HTML
     let html = '';
     
@@ -546,14 +540,14 @@ function renderRecentSubmissions() {
     
     // Survey Not Completed
     html += '<div style="display: inline-block; margin-bottom: 30px;">';
-    html += '<h3 style="margin-bottom: 10px; color: #1f2937;">Trips Without Surveys</h3>';
+    html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Trips Without Surveys (${validNotCompleted.length})</h3>`;
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
     // Test Trips (if any)
     if (testData.length > 0) {
         html += '<div style="display: inline-block;">';
-        html += '<h3 style="margin-bottom: 10px; color: #dc2626;">Test Trips</h3>';
+        html += `<h3 style="margin-bottom: 10px; color: #dc2626;">Test Trips (${testData.length})</h3>`;
         html += renderTripTable(testData, false);
         html += '</div>';
     }
