@@ -471,11 +471,17 @@ function renderRecentSubmissions() {
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
-    // Separate into valid trips and test data (use raw data for both to show ALL submissions)
-    const validTrips = sortedRawSurveys.filter(trip => TripValidator.isValidTrip(trip));
-    const testData = sortedRawSurveys.filter(trip => !TripValidator.isValidTrip(trip));
+    // Separate into valid research trips and test data (use raw data for both to show ALL submissions)
+    // Valid trips: must pass isValidTrip() AND must NOT be developer trips
+    // Test trips: either fail isValidTrip() OR are developer trips (all developer trips are test trips)
+    const validTrips = sortedRawSurveys.filter(trip => 
+        TripValidator.isValidTrip(trip) && !isDeveloperTrip(trip)
+    );
+    const testData = sortedRawSurveys.filter(trip => 
+        !TripValidator.isValidTrip(trip) || isDeveloperTrip(trip)
+    );
     
-    // Separate valid trips by survey completion status
+    // Separate valid research trips by survey completion status
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
