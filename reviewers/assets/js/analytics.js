@@ -488,13 +488,13 @@ function renderRecentSubmissions() {
     // Build HTML
     let html = '';
     
-    // Helper function to render a trip table - combine Dest, Dir, Points, TZ into Trip Details column
+    // Helper function to render a trip table - combine Dest, Dir, Points, TZ into Details column
     // Developer trips are automatically styled with gray strikeout
     const renderTripTable = (trips, showStatus = true) => {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
-        tableHtml += '<th>Date</th><th>Device</th><th>Trip Details</th>';
+        tableHtml += '<th>Date</th><th>Device</th><th>Details</th>';
         if (showStatus) tableHtml += '<th>Status</th>';
         tableHtml += '</tr></thead><tbody>';
 
@@ -550,14 +550,14 @@ function renderRecentSubmissions() {
     // Trips With Surveys (real trips with completed surveys)
     if (validWithSurveys.length > 0) {
         html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
-        html += `<h3 style="margin-bottom: 10px; color: #16a34a;">Trips With Surveys (${validWithSurveys.length})</h3>`;
+        html += `<h3 style="margin-bottom: 10px; color: #16a34a;">With Surveys (${validWithSurveys.length})</h3>`;
         html += renderTripTable(validWithSurveys, false);
         html += '</div>';
     }
     
     // Trips Without Surveys (real trips missing surveys)
     html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
-    html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Trips Without Surveys (${validNotCompleted.length})</h3>`;
+    html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Without Surveys (${validNotCompleted.length})</h3>`;
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
@@ -569,10 +569,10 @@ function renderRecentSubmissions() {
     if (testData.length > 0) {
         html += '<div style="display: inline-block;">';
         
-        // Build heading with Test (gray) and Developer (gray with strikeout)
+        // Build heading with Test (black) and Developer (gray with strikeout)
         let headingParts = [];
         if (testTrips.length > 0) {
-            headingParts.push(`<span style="color: #9ca3af;">Test (${testTrips.length})</span>`);
+            headingParts.push(`<span style="color: #000000;">Test (${testTrips.length})</span>`);
         }
         if (developerTrips.length > 0) {
             headingParts.push(`<span style="color: #9ca3af; text-decoration: line-through;">Developer (${developerTrips.length})</span>`);
