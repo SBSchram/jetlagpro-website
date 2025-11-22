@@ -489,10 +489,9 @@ function renderRecentSubmissions() {
     let html = '';
     
     // Helper function to render a trip table - combine Dest, Dir, Points, TZ into Trip Details column
-    const renderTripTable = (trips, showStatus = true, isDeveloper = false) => {
+    // Developer trips are automatically styled with gray strikeout
+    const renderTripTable = (trips, showStatus = true) => {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
-        
-        const rowStyle = isDeveloper ? 'style="color: #9ca3af; text-decoration: line-through;"' : '';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
         tableHtml += '<th>Date</th><th>Device</th><th>Trip Details</th>';
@@ -500,6 +499,10 @@ function renderRecentSubmissions() {
         tableHtml += '</tr></thead><tbody>';
 
         trips.forEach(survey => {
+            // Check if this trip is a developer trip and style accordingly
+            const tripIsDeveloper = isDeveloperTrip(survey);
+            const rowStyle = tripIsDeveloper ? 'style="color: #9ca3af; text-decoration: line-through;"' : '';
+            
             const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
             const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
             const isComplete = survey.surveyCompleted;
@@ -558,18 +561,18 @@ function renderRecentSubmissions() {
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
-    // Test Trips (invalid/excluded trips) - split into Test and Developer
-    // Separate test trips (invalid but not developer) from developer trips
+    // Test Trips (invalid/excluded trips) - split into Test and Developer for heading
+    // Separate test trips (invalid but not developer) from developer trips for counts
     const testTrips = testData.filter(trip => !isDeveloperTrip(trip));
     const developerTrips = testData.filter(trip => isDeveloperTrip(trip));
     
-    if (testTrips.length > 0 || developerTrips.length > 0) {
+    if (testData.length > 0) {
         html += '<div style="display: inline-block;">';
         
-        // Build heading with Test (red) and Developer (gray with strikeout)
+        // Build heading with Test (gray) and Developer (gray with strikeout)
         let headingParts = [];
         if (testTrips.length > 0) {
-            headingParts.push(`<span style="color: #dc2626;">Test (${testTrips.length})</span>`);
+            headingParts.push(`<span style="color: #9ca3af;">Test (${testTrips.length})</span>`);
         }
         if (developerTrips.length > 0) {
             headingParts.push(`<span style="color: #9ca3af; text-decoration: line-through;">Developer (${developerTrips.length})</span>`);
@@ -577,15 +580,10 @@ function renderRecentSubmissions() {
         
         html += `<h3 style="margin-bottom: 10px;">${headingParts.join(' ')}</h3>`;
         
-        // Render test trips table
-        if (testTrips.length > 0) {
-            html += renderTripTable(testTrips, false, false);
-        }
-        
-        // Render developer trips table (with strikeout styling)
-        if (developerTrips.length > 0) {
-            html += renderTripTable(developerTrips, false, true);
-        }
+        // Render single table with all test data (developer trips will be styled with strikeout)
+        // Sort to show test trips first, then developer trips
+        const sortedTestData = [...testTrips, ...developerTrips];
+        html += renderTripTable(sortedTestData, false);
         
         html += '</div>';
     }
