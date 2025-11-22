@@ -489,8 +489,10 @@ function renderRecentSubmissions() {
     let html = '';
     
     // Helper function to render a trip table - combine Dest, Dir, Points, TZ into Trip Details column
-    const renderTripTable = (trips, showStatus = true) => {
+    const renderTripTable = (trips, showStatus = true, isDeveloper = false) => {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
+        
+        const rowStyle = isDeveloper ? 'style="color: #9ca3af; text-decoration: line-through;"' : '';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
         tableHtml += '<th>Date</th><th>Device</th><th>Trip Details</th>';
@@ -527,7 +529,7 @@ function renderRecentSubmissions() {
             const tz = String(timezones).padStart(2, ' ') + 'TZ'; // 4 chars total ( 8TZ, 18TZ)
             const tripDetails = `${dest} ${dir} ${points} ${tz}`;
 
-            tableHtml += `<tr>
+            tableHtml += `<tr ${rowStyle}>
                 <td>${dateStr}</td>
                 <td><code>${displayCode}</code></td>
                 <td><code style="font-family: monospace;">${tripDetails}</code></td>`;
@@ -556,11 +558,35 @@ function renderRecentSubmissions() {
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
     
-    // Test Trips (invalid/excluded trips)
-    if (testData.length > 0) {
+    // Test Trips (invalid/excluded trips) - split into Test and Developer
+    // Separate test trips (invalid but not developer) from developer trips
+    const testTrips = testData.filter(trip => !isDeveloperTrip(trip));
+    const developerTrips = testData.filter(trip => isDeveloperTrip(trip));
+    
+    if (testTrips.length > 0 || developerTrips.length > 0) {
         html += '<div style="display: inline-block;">';
-        html += `<h3 style="margin-bottom: 10px; color: #dc2626;">Test Trips (${testData.length})</h3>`;
-        html += renderTripTable(testData, false);
+        
+        // Build heading with Test (red) and Developer (gray with strikeout)
+        let headingParts = [];
+        if (testTrips.length > 0) {
+            headingParts.push(`<span style="color: #dc2626;">Test (${testTrips.length})</span>`);
+        }
+        if (developerTrips.length > 0) {
+            headingParts.push(`<span style="color: #9ca3af; text-decoration: line-through;">Developer (${developerTrips.length})</span>`);
+        }
+        
+        html += `<h3 style="margin-bottom: 10px;">${headingParts.join(' ')}</h3>`;
+        
+        // Render test trips table
+        if (testTrips.length > 0) {
+            html += renderTripTable(testTrips, false, false);
+        }
+        
+        // Render developer trips table (with strikeout styling)
+        if (developerTrips.length > 0) {
+            html += renderTripTable(developerTrips, false, true);
+        }
+        
         html += '</div>';
     }
     
@@ -647,7 +673,8 @@ function renderTripStats() {
     html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: center;">';
     html += '<div>Verified: Confirmed travel where the departure and arrival timezone differ or validated by survey metadata.</div>';
     html += '<div>Legacy: Early data lacking time zone fields but included when a user survey data is present.</div>';
-    html += '<div>Test Trips: Any trip where the Departure and Arrival time zone are the same or a trip from a developer device</div>';
+    html += '<div>Test: Any trip where the Departure and Arrival time zone are the same</div>';
+    html += '<div>Developer: Any trip from a developer device</div>';
     html += '<div>Confirmed: Early data (no TZ fields) or travel where Destination and Arrival timezones differ</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
