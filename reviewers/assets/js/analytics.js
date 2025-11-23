@@ -512,7 +512,7 @@ function renderRecentSubmissions() {
         if (trips.length === 0) return '<p><em>No trips in this category</em></p>';
         
         let tableHtml = '<table class="stats-table"><thead><tr>';
-        tableHtml += '<th>Date</th><th>Device</th><th>Details</th>';
+        tableHtml += '<th>Date</th><th>Device</th><th>Route & Data</th>';
         if (showStatus) tableHtml += '<th>Status</th>';
         tableHtml += '</tr></thead><tbody>';
 
@@ -521,7 +521,8 @@ function renderRecentSubmissions() {
             const tripIsDeveloper = isDeveloperTrip(survey);
             const rowStyle = tripIsDeveloper ? 'style="color: #9ca3af; text-decoration: line-through;"' : '';
             
-            const date = survey.surveySubmittedAt || survey.completionDate || survey.created || survey.timestamp;
+            // Use trip start date (when trip actually occurred), not survey submission date
+            const date = survey.startDate || survey.completionDate || survey.created || survey.timestamp;
             const dateStr = date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
             const isComplete = survey.surveyCompleted;
             const status = isComplete ? 'Complete' : 'Partial';
@@ -544,10 +545,19 @@ function renderRecentSubmissions() {
             const pointsStimulated = survey.pointsCompleted || 0;
             
             // Build trip route display: Origin → Dest [→ Arrival if different]
+            // Date-based legacy detection: timezone fields added Oct 24, 2025
+            const TIMEZONE_FEATURE_DATE = new Date('2025-10-24T00:00:00Z');
+            const tripStartDate = survey.startDate ? new Date(survey.startDate) : null;
+            const isDateBasedLegacy = tripStartDate && tripStartDate < TIMEZONE_FEATURE_DATE;
+            
             let routeDisplay = '';
             
-            if (survey.originTimezone && survey.arrivalTimeZone) {
-                // Extract city names from timezones
+            // Treat as legacy if trip started before timezone feature was added
+            if (isDateBasedLegacy || (!survey.originTimezone && !survey.arrivalTimeZone)) {
+                // Legacy: no timezone data or trip predates timezone feature
+                routeDisplay = `${survey.destinationCode || 'N/A'} (Legacy)`;
+            } else if (survey.originTimezone && survey.arrivalTimeZone) {
+                // Modern trip with timezone data
                 const originCity = survey.originTimezone.split('/').pop().replace(/_/g, ' ');
                 const arrivalCity = survey.arrivalTimeZone.split('/').pop().replace(/_/g, ' ');
                 const destCode = survey.destinationCode || 'N/A';
@@ -559,14 +569,13 @@ function renderRecentSubmissions() {
                     routeDisplay = `${originCity} → ${destCode}`;
                 }
             } else {
-                // Legacy: no timezone data, just show destination with label
-                routeDisplay = `${survey.destinationCode || 'N/A'} (Legacy)`;
+                // Fallback: missing data
+                routeDisplay = `${survey.destinationCode || 'N/A'}`;
             }
             
-            const dir = eastWest.padEnd(3, ' ');
             const points = String(pointsStimulated).padStart(2, ' ') + 'pts';
             const tz = String(timezones).padStart(2, ' ') + 'TZ';
-            const tripDetails = `${routeDisplay} ${dir} ${points} ${tz}`;
+            const tripDetails = `${routeDisplay} ${points} ${tz}`;
 
             tableHtml += `<tr ${rowStyle}>
                 <td>${dateStr}</td>
