@@ -121,8 +121,8 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     
     - Developer test sessions: Prevents contamination from app development/testing
       activities that don't represent real user behavior
-    - Test trips (timezonesCount=0 OR arrival=origin): PRIMARY test indicator is 
-      timezonesCount=0; additionally arrival=origin timezone indicates no travel occurred
+    - Test trips: timezonesCount=0 (checked first) OR arrival=origin timezone - both 
+      indicate no actual travel occurred
     - Incomplete surveys: Missing symptom data prevents calculation of the primary
       outcome variable (aggregate symptom severity)
     - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
@@ -136,7 +136,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
        (offline trip data submitted via survey)
     
     Excludes:
-    - Test trips (isTest = True or timezonesCount=0 or arrival=origin timezone)
+    - Test trips (isTest = True or timezonesCount=0 or same origin/destination timezone)
     - Developer test sessions (specific device IDs: 2330B376, 7482966F)
     - Incomplete trips (missing required survey data)
     - Invalid HMAC signatures (if present)
