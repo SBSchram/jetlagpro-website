@@ -163,9 +163,10 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         
         # Skip test trips (timezone validation)
         # Rule 1: Test trip if timezonesCount === 0 - ALWAYS invalid (local test, no travel)
-        # Rule 2: Legacy data (timezonesCount > 0 but no arrivalTimeZone field) - valid
-        # Rule 3: Real travel (different timezones AND timezonesCount > 0) - valid
-        # Rule 4: Survey fallback (same timezone but survey completion) - valid
+        # Rule 2: Date-based legacy (trip before Oct 24, 2025) - valid, ignore timezone fields
+        # Rule 3: Field-based legacy (no arrivalTimeZone but timezonesCount > 0) - valid
+        # Rule 4: Real travel (different timezones AND timezonesCount > 0) - valid
+        # Rule 5: Survey fallback (same timezone but survey completion) - valid
         # Invalid: Same timezone without survey fallback = test data
         arrival_tz = trip.get('arrivalTimeZone')
         origin_tz = trip.get('originTimezone')
@@ -177,15 +178,31 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         if timezones_count == 0:
             continue
         
-        # Rule 2: Legacy data (no arrivalTimeZone but timezonesCount > 0) - valid
+        # Rule 2: Date-based legacy detection
+        # Timezone fields were added Oct 24, 2025 - trips before this are legacy
+        # even if they have timezone fields (may be incorrect/retrofitted via late surveys)
+        from datetime import datetime
+        TIMEZONE_FEATURE_DATE = datetime(2025, 10, 24, tzinfo=datetime.now().astimezone().tzinfo)
+        start_date_str = trip.get('startDate')
+        is_date_based_legacy = False
+        if start_date_str:
+            try:
+                start_date = datetime.fromisoformat(start_date_str.replace('Z', '+00:00'))
+                if start_date < TIMEZONE_FEATURE_DATE:
+                    # Trip predates timezone feature - treat as legacy
+                    is_date_based_legacy = True
+            except (ValueError, AttributeError):
+                pass  # Invalid date, continue with other checks
+        
+        # Rule 3: Field-based legacy data (no arrivalTimeZone but timezonesCount > 0) - valid
         # These are early trips before we added timezone fields
-        if not arrival_tz:
+        if is_date_based_legacy or not arrival_tz:
             # Legacy data with actual travel - valid, continue to next checks
             pass
         else:
             # Has timezone data - apply modern validation rules
             
-            # Rule 3/4: Check if same timezone
+            # Rule 4/5: Check if same timezone
             if arrival_tz and origin_tz:
                 # Has timezone data - check if same timezone
                 if arrival_tz == origin_tz:
