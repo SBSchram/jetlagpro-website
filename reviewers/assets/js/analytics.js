@@ -482,10 +482,10 @@ function renderRecentSubmissions() {
         return;
     }
 
-    // Sort raw data by date (most recent first) - use raw data for all trips to show complete picture
+    // Sort raw data by date (most recent first) - use trip start date
     const sortedRawSurveys = rawData.sort((a, b) => {
-        const dateA = a.surveySubmittedAt || a.completionDate || a.created || a.timestamp;
-        const dateB = b.surveySubmittedAt || b.completionDate || b.created || b.timestamp;
+        const dateA = a.startDate || a.completionDate || a.created || a.timestamp;
+        const dateB = b.startDate || b.completionDate || b.created || b.timestamp;
         return new Date(dateB) - new Date(dateA); // Most recent first
     });
 
