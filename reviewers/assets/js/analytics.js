@@ -226,7 +226,13 @@ function convertFirestoreDocument(document) {
             platform: extractValue('platform') || extractValue('tripData', 'platform'),
             appVersion: extractValue('appVersion') || extractValue('tripData', 'appVersion'),
             destinationCode: extractValue('destinationCode') || extractValue('tripData', 'destinationCode'),
-            timezonesCount: extractValue('timezonesCount') ?? extractValue('tripData', 'timezonesCount'),
+            timezonesCount: (() => {
+                const val1 = extractValue('timezonesCount');
+                const val2 = extractValue('tripData', 'timezonesCount');
+                const result = val1 ?? val2;
+                console.log('[EXTRACT timezonesCount] val1:', val1, 'val2:', val2, 'result:', result);
+                return result;
+            })(),
             travelDirection: extractValue('travelDirection') || extractValue('tripData', 'travelDirection'),
             pointsCompleted: extractValue('pointsCompleted') ?? extractValue('tripData', 'pointsCompleted'),
             startDate: extractValue('startDate') || extractValue('tripData', 'startDate'),
