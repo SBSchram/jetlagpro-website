@@ -230,7 +230,24 @@ class TripValidator {
             return details;
         }
         
-        // Rule 2: Legacy data (no arrivalTimeZone but timezonesCount > 0)
+        // Rule 2: Date-based legacy detection
+        // Timezone fields were added Oct 24, 2025 - trips before this are legacy
+        const TIMEZONE_FEATURE_DATE = new Date('2025-10-24T00:00:00Z');
+        if (trip.startDate) {
+            try {
+                const tripStartDate = new Date(trip.startDate);
+                if (tripStartDate < TIMEZONE_FEATURE_DATE) {
+                    details.isValid = true;
+                    details.reason = 'Legacy data (trip predates timezone feature)';
+                    details.rule = 'legacy';
+                    return details;
+                }
+            } catch (e) {
+                // Invalid date, continue with other checks
+            }
+        }
+        
+        // Rule 3: Field-based legacy data (no arrivalTimeZone but timezonesCount > 0)
         if (!trip.arrivalTimeZone) {
             console.log('[VALIDATOR] Trip', trip.tripId, 'is LEGACY (no arrivalTimeZone). timezonesCount:', trip.timezonesCount, 'Type:', typeof trip.timezonesCount);
             details.isValid = true;
@@ -239,7 +256,7 @@ class TripValidator {
             return details;
         }
         
-        // Rule 3: Real travel (different timezones AND timezonesCount > 0)
+        // Rule 4: Real travel (different timezones AND timezonesCount > 0)
         if (trip.arrivalTimeZone !== trip.originTimezone && 
             trip.timezonesCount && trip.timezonesCount > 0) {
             details.isValid = true;
@@ -248,7 +265,7 @@ class TripValidator {
             return details;
         }
         
-        // Rule 4: Survey fallback
+        // Rule 5: Survey fallback
         if (trip.arrivalTimeZone === trip.originTimezone && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {
