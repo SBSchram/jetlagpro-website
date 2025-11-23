@@ -552,9 +552,13 @@ function renderRecentSubmissions() {
             
             let routeDisplay = '';
             
-            // Treat as legacy if trip started before timezone feature was added
-            if (isDateBasedLegacy || (!survey.originTimezone && !survey.arrivalTimeZone)) {
-                // Legacy: no timezone data or trip predates timezone feature
+            // Rule 1: Check timezonesCount FIRST (primary test indicator)
+            // Test trips with timezonesCount=0 should not show (Legacy) label
+            if (survey.timezonesCount === 0) {
+                // Test trip - just show destination without confusing labels
+                routeDisplay = survey.destinationCode || 'N/A';
+            } else if (isDateBasedLegacy || (!survey.originTimezone && !survey.arrivalTimeZone)) {
+                // Legacy: trip predates timezone feature OR missing timezone fields
                 routeDisplay = `${survey.destinationCode || 'N/A'} (Legacy)`;
             } else if (survey.originTimezone && survey.arrivalTimeZone) {
                 // Modern trip with timezone data
