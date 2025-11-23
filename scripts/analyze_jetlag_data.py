@@ -3,8 +3,6 @@
 JetLagPro Data Analysis Script
 
 Reproduces all statistical analyses shown on the JetLagPro analysis dashboard.
-This script analyzes trip completion data to assess the effectiveness of 
-chronoacupuncture for jet lag symptoms.
 
 RESEARCH CONTEXT:
 This analysis evaluates whether chronoacupuncture (acupuncture points stimulated
@@ -18,7 +16,6 @@ RESEARCH QUESTIONS:
    lead to proportionally greater reduction in symptom severity?
 2. Efficacy: How effective is the intervention across different time zone
    crossing categories?
-3. Point Usage: Which specific acupuncture points are most commonly used?
 
 STATISTICAL METHODS:
 - Aggregate Symptom Severity: Mean of all available post-travel symptom ratings
@@ -27,23 +24,20 @@ STATISTICAL METHODS:
 - Standard Error of the Mean (SEM): Used for error bars to show precision of
   mean estimates. Calculated as SD / sqrt(n).
 - Grouping: Trips are grouped by intervention level (points stimulated) and
-  time zones crossed to assess dose-response relationships.
+  time zones crossed.
 
-DATA FILTERING RATIONALE:
-The following exclusions ensure only valid research data is analyzed:
-- Developer test sessions: Excluded to prevent contamination from app testing
-- Test trips: Same origin/destination timezone indicates no actual travel
-- Incomplete surveys: Missing symptom data prevents severity calculation
-- Invalid signatures: HMAC signature mismatches indicate potential tampering
-
-This filtering matches the live dashboard exactly to ensure reproducibility.
+DATA FILTERING:
+The following exclusions remove test or developer data:
+- Developer test sessions
+- Test trips: Same origin/destination timezone
+- Incomplete surveys: Missing symptom data
+- Invalid HMAC signatures
 
 REPRODUCIBILITY:
-This script produces IDENTICAL results to the live dashboard at:
+Matches the live dashboard at:
 https://jetlagpro.com/reviewers/analysis.html
 
-Every calculation, grouping, and filter matches the JavaScript implementation
-line-by-line. See function docstrings for specific line number references.
+All calculations match the JavaScript implementation in analysis.html.
 
 Usage:
     python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt
@@ -126,13 +120,12 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     3. Different timezones + timezonesCount > 0: Verified travel
     4. Same timezone + survey completion: Survey verified
     
-    Matches filtering logic in analytics.js and TripValidator.isValidTrip().
     Returns list of valid trips.
     """
     valid_trips = []
     
     # Developer device IDs to exclude (test sessions)
-    # CRITICAL: Must match live dashboard at reviewers/assets/js/analytics.js:58
+    # Matches live dashboard at reviewers/assets/js/analytics.js:58
     developer_device_ids = ['2330B376', '7482966F']
     
     for trip in trips:
@@ -237,7 +230,7 @@ def calculate_aggregate_severity(trip: Dict) -> float:
     jet lag research (e.g., Waterhouse et al., 2007).
     
     TECHNICAL:
-    EXACTLY matches charts.js line 88-92:
+    Matches charts.js line 88-92:
     - Uses ALL 6 symptoms: sleepPost, fatiguePost, concentrationPost,
       irritabilityPost, motivationPost, giPost (Firestore field names)
     - JavaScript transforms these to postSleepSeverity, etc. (analytics.js line 255-260)
@@ -247,7 +240,7 @@ def calculate_aggregate_severity(trip: Dict) -> float:
     Returns:
         float: Mean severity (1-5 scale) or None if no valid symptoms
     """
-    # CRITICAL: Must match charts.js line 88 exactly
+    # Matches charts.js line 88
     # Note: JavaScript transforms Firestore field names (analytics.js line 255-260)
     # but we read raw Firestore data, so use actual field names
     symptoms = [
@@ -308,7 +301,7 @@ def categorize_stimulation_dose_response(points: int) -> str:
     """
     Categorize stimulation level for dose-response analysis.
     
-    EXACTLY matches charts.js line 40-43:
+    Matches charts.js line 40-43:
     - '0-2 points': points >= 0 && points <= 2
     - '3-5 points': points >= 3 && points <= 5
     - '6-8 points': points >= 6 && points <= 8
@@ -344,7 +337,7 @@ def get_baseline_severity(timezones: int) -> float:
         {'timeZones': 12, 'severity': 3.6}
     ]
     
-    # CRITICAL: Match JavaScript logic - timezones >= 12 use 3.6 (line 732-733)
+    # Matches JavaScript logic - timezones >= 12 use 3.6 (line 732-733)
     if timezones >= 12:
         return 3.6  # 12+ uses 3.6
     
@@ -509,13 +502,6 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     Does increasing the number of acupuncture points stimulated lead to
     proportionally greater reduction in jet lag symptom severity?
     
-    RATIONALE:
-    A dose-response relationship is a key indicator of intervention effectiveness.
-    If chronoacupuncture is truly effective, we would expect:
-    - Higher intervention levels (more points) → Lower symptom severity
-    - This relationship should hold across different time zone crossing categories
-    - The effect should be visible when compared to baseline (no intervention)
-    
     METHODOLOGY:
     - Groups trips by intervention level: 0-2 points (minimal), 3-5 (low),
       6-8 (moderate), 9-12 (high stimulation)
@@ -524,15 +510,8 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     - Calculates mean aggregate severity for each group
     - Computes standard error of the mean (SEM) for error bars showing precision
     
-    INTERPRETATION:
-    Reviewers should look for:
-    - Downward trend: Higher stimulation groups show lower severity
-    - Dose-response curve: Steeper decline with more points stimulated
-    - Comparison to baseline: Intervention groups below baseline expectations
-    - Error bars: Overlapping error bars indicate non-significant differences
-    
     TECHNICAL:
-    EXACTLY matches charts.js renderDoseResponseAnalysisChart():
+    Matches charts.js renderDoseResponseAnalysisChart():
     - Groups by stimulation level (0-2, 3-5, 6-8, 9-12 points)
     - Groups by individual time zones (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+)
     - Calculates aggregate severity for each group
@@ -602,7 +581,7 @@ def point_usage_analysis(trips: List[Dict]) -> Dict:
     """
     Analyze which acupuncture points were most commonly stimulated.
     
-    EXACTLY matches analytics.js renderPointStimulationAnalysis() line 821-858:
+    Matches analytics.js renderPointStimulationAnalysis() line 821-858:
     - Uses point1Completed, point2Completed, etc. boolean fields
     - Maps to point names: LU-8, LI-1, ST-36, etc.
     - Counts only trips with surveyCompleted === true
@@ -719,8 +698,7 @@ def format_trip_record(trip: Dict, airport_mapping: Dict[str, str]) -> Dict:
     """
     # Date - use trip start date (when the trip started)
     # CONSISTENCY: Both script and dashboard use the UTC date component for consistency.
-    # This ensures the same date is displayed regardless of timezone, providing
-    # reproducible results for reviewers in different timezones.
+    # This ensures the same date is displayed regardless of timezone.
     # The date component (YYYY-MM-DD) is extracted from the ISO string and formatted.
     date = trip.get('startDate')
     if date:
@@ -1022,15 +1000,14 @@ Example usage:
   https://jetlagpro.com/reviewers/analysis.html
 
 FOR REVIEWERS:
-This script reproduces the exact statistical analyses shown on the live dashboard.
-Every calculation, filter, and grouping matches the JavaScript implementation
-line-by-line to ensure 100% reproducibility.
+This script reproduces the statistical analyses shown on the live dashboard.
+All calculations match the JavaScript implementation in analysis.html.
 
 Key things to verify:
-1. Data filtering: Check that test trips and developer sessions are excluded
-2. Aggregate severity: Verify all 6 symptoms are included in calculations
-3. Grouping: Confirm stimulation and time zone categories match the paper
-4. Statistics: Mean, SD, and SEM calculations should match dashboard values
+1. Data filtering: Test trips and developer sessions are excluded
+2. Aggregate severity: All 6 symptoms are included in calculations
+3. Grouping: Stimulation and time zone categories match the paper
+4. Statistics: Mean, SD, and SEM calculations match dashboard values
 
 The output report includes interpretation guides for each analysis section.
 See function docstrings for detailed methodology and rationale.
