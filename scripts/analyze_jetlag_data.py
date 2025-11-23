@@ -121,24 +121,22 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     
     - Developer test sessions: Prevents contamination from app development/testing
       activities that don't represent real user behavior
-    - Test trips (timezonesCount=0): Definitive indicator of local testing where no 
-      actual travel occurred, regardless of timezone fields
-    - Test trips (same timezone): Identifies trips where arrival timezone = origin 
-      timezone, which would invalidate jet lag analysis
+    - Test trips (timezonesCount=0): PRIMARY test indicator - any trip with 
+      timezonesCount=0 is definitively a test trip, regardless of timezone fields
     - Incomplete surveys: Missing symptom data prevents calculation of the primary
       outcome variable (aggregate symptom severity)
     - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
       data tampering or unauthorized submissions
     
     The timezone validation uses a four-rule system:
-    1. Test trip (timezonesCount=0): ALWAYS invalid (local test, no travel)
+    1. Test trip (timezonesCount=0): PRIMARY test indicator - ALWAYS invalid (no travel occurred)
     2. Legacy data (timezonesCount > 0 but no arrivalTimeZone field): Valid (early data collection)
     3. Real travel (different timezones AND timezonesCount > 0): Valid (actual jet lag scenario)
     4. Survey fallback (same timezone + '_survey' in completionMethod): Valid
        (offline trip data submitted via survey)
     
     Excludes:
-    - Test trips (isTest = True or timezonesCount=0 or same origin/destination timezone)
+    - Test trips (isTest = True or timezonesCount=0)
     - Developer test sessions (specific device IDs: 2330B376, 7482966F)
     - Incomplete trips (missing required survey data)
     - Invalid HMAC signatures (if present)
