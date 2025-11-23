@@ -559,8 +559,8 @@ function renderRecentSubmissions() {
                     routeDisplay = `${originCity} → ${destCode}`;
                 }
             } else {
-                // Legacy: no timezone data, just show destination
-                routeDisplay = survey.destinationCode || 'N/A';
+                // Legacy: no timezone data, just show destination with label
+                routeDisplay = `${survey.destinationCode || 'N/A'} (Legacy)`;
             }
             
             const dir = eastWest.padEnd(3, ' ');
