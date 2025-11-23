@@ -121,23 +121,24 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     
     - Developer test sessions: Prevents contamination from app development/testing
       activities that don't represent real user behavior
-    - Test trips (same timezone or timezonesCount=0): Identifies trips where no actual 
-      travel occurred (arrival timezone = origin timezone OR timezonesCount=0), which 
-      would invalidate jet lag analysis
+    - Test trips (timezonesCount=0): Definitive indicator of local testing where no 
+      actual travel occurred, regardless of timezone fields
+    - Test trips (same timezone): Identifies trips where arrival timezone = origin 
+      timezone, which would invalidate jet lag analysis
     - Incomplete surveys: Missing symptom data prevents calculation of the primary
       outcome variable (aggregate symptom severity)
     - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
       data tampering or unauthorized submissions
     
     The timezone validation uses a four-rule system:
-    1. Legacy data (no arrivalTimeZone field): Always valid (early data collection)
-    2. Test trip (timezonesCount=0): Invalid (local test, no travel)
+    1. Test trip (timezonesCount=0): ALWAYS invalid (local test, no travel)
+    2. Legacy data (timezonesCount > 0 but no arrivalTimeZone field): Valid (early data collection)
     3. Real travel (different timezones AND timezonesCount > 0): Valid (actual jet lag scenario)
     4. Survey fallback (same timezone + '_survey' in completionMethod): Valid
        (offline trip data submitted via survey)
     
     Excludes:
-    - Test trips (isTest = True or same origin/destination timezone or timezonesCount=0)
+    - Test trips (isTest = True or timezonesCount=0 or same origin/destination timezone)
     - Developer test sessions (specific device IDs: 2330B376, 7482966F)
     - Incomplete trips (missing required survey data)
     - Invalid HMAC signatures (if present)
@@ -162,9 +163,9 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         if any(trip_id.startswith(dev_id) for dev_id in developer_device_ids):
             continue
         
-        # Skip test trips (same timezone validation)
-        # Rule 1: Legacy data (no arrivalTimeZone field) - always valid
-        # Rule 2: Test trip if timezonesCount === 0 - invalid
+        # Skip test trips (timezone validation)
+        # Rule 1: Test trip if timezonesCount === 0 - ALWAYS invalid (local test, no travel)
+        # Rule 2: Legacy data (timezonesCount > 0 but no arrivalTimeZone field) - valid
         # Rule 3: Real travel (different timezones AND timezonesCount > 0) - valid
         # Rule 4: Survey fallback (same timezone but survey completion) - valid
         # Invalid: Same timezone without survey fallback = test data
@@ -173,17 +174,18 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         timezones_count = trip.get('timezonesCount', 0)
         completion_method = trip.get('completionMethod', '')
         
-        # Rule 1: Legacy data (no arrivalTimeZone field) - always valid, skip further checks
-        # This must be checked FIRST because legacy trips may also have timezonesCount=0
+        # Rule 1: Test trip if timezonesCount === 0 (definitive test indicator)
+        # This is ALWAYS a test trip, regardless of timezone fields
+        if timezones_count == 0:
+            continue
+        
+        # Rule 2: Legacy data (no arrivalTimeZone but timezonesCount > 0) - valid
+        # These are early trips before we added timezone fields
         if not arrival_tz:
-            # Legacy data - valid, continue to next checks
+            # Legacy data with actual travel - valid, continue to next checks
             pass
         else:
             # Has timezone data - apply modern validation rules
-            
-            # Rule 2: Test trip if timezonesCount === 0 (local test trip)
-            if timezones_count == 0:
-                continue
             
             # Rule 3/4: Check if same timezone
             if arrival_tz and origin_tz:

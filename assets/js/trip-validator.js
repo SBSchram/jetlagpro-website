@@ -170,20 +170,22 @@ class TripValidator {
      * @returns {boolean} - true if valid trip, false if test data
      */
     static isValidTrip(trip) {
-        // Rule 1: Legacy data (no arrivalTimeZone field) - always valid
+        // Rule 1: Test trip if timezonesCount === 0 - ALWAYS invalid (local test, no travel)
+        // This is the definitive indicator of a test trip
+        if (trip.timezonesCount === 0) {
+            return false;
+        }
+        
+        // Rule 2: Legacy data (timezonesCount > 0 but no arrivalTimeZone field) - valid
+        // These are early trips before we added timezone fields
         if (!trip.arrivalTimeZone) {
             return true;
         }
         
-        // Rule 2: Real travel (different timezones AND timezonesCount > 0)
+        // Rule 3: Real travel (different timezones AND timezonesCount > 0)
         if (trip.arrivalTimeZone !== trip.originTimezone && 
             trip.timezonesCount && trip.timezonesCount > 0) {
             return true;
-        }
-        
-        // Rule 3: Test trip if timezonesCount === 0 (same timezone, local test)
-        if (trip.timezonesCount === 0) {
-            return false;
         }
         
         // Rule 4: Survey fallback (same timezone but survey completion)
@@ -219,19 +221,19 @@ class TripValidator {
             }
         };
         
-        // Rule 1: Legacy data
-        if (!trip.arrivalTimeZone) {
-            details.isValid = true;
-            details.reason = 'Legacy data (no arrivalTimeZone field)';
-            details.rule = 'legacy';
-            return details;
-        }
-        
-        // Rule 2: Test trip if timezonesCount === 0
+        // Rule 1: Test trip if timezonesCount === 0 (definitive test indicator)
         if (trip.timezonesCount === 0) {
             details.isValid = false;
             details.reason = 'Test data (timezonesCount is 0)';
             details.rule = 'test_data';
+            return details;
+        }
+        
+        // Rule 2: Legacy data (no arrivalTimeZone but timezonesCount > 0)
+        if (!trip.arrivalTimeZone) {
+            details.isValid = true;
+            details.reason = 'Legacy data (no arrivalTimeZone field)';
+            details.rule = 'legacy';
             return details;
         }
         
