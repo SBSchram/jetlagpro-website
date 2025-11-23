@@ -121,21 +121,23 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     
     - Developer test sessions: Prevents contamination from app development/testing
       activities that don't represent real user behavior
-    - Test trips (same timezone): Identifies trips where no actual travel occurred
-      (arrival timezone = origin timezone), which would invalidate jet lag analysis
+    - Test trips (same timezone or timezonesCount=0): Identifies trips where no actual 
+      travel occurred (arrival timezone = origin timezone OR timezonesCount=0), which 
+      would invalidate jet lag analysis
     - Incomplete surveys: Missing symptom data prevents calculation of the primary
       outcome variable (aggregate symptom severity)
     - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
       data tampering or unauthorized submissions
     
-    The timezone validation uses a three-rule system:
+    The timezone validation uses a four-rule system:
     1. Legacy data (no arrivalTimeZone field): Always valid (early data collection)
-    2. Real travel (different timezones): Valid (actual jet lag scenario)
-    3. Survey fallback (same timezone + '_survey' in completionMethod): Valid
+    2. Test trip (timezonesCount=0): Invalid (local test, no travel)
+    3. Real travel (different timezones AND timezonesCount > 0): Valid (actual jet lag scenario)
+    4. Survey fallback (same timezone + '_survey' in completionMethod): Valid
        (offline trip data submitted via survey)
     
     Excludes:
-    - Test trips (isTest = True or same origin/destination timezone)
+    - Test trips (isTest = True or same origin/destination timezone or timezonesCount=0)
     - Developer test sessions (specific device IDs: 2330B376, 7482966F)
     - Incomplete trips (missing required survey data)
     - Invalid HMAC signatures (if present)
@@ -162,12 +164,18 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         
         # Skip test trips (same timezone validation)
         # Rule 1: Legacy data (no arrivalTimeZone field) - always valid
-        # Rule 2: Real travel (different timezones) - valid
-        # Rule 3: Survey fallback (same timezone but survey completion) - valid
+        # Rule 2: Test trip if timezonesCount === 0 - invalid
+        # Rule 3: Real travel (different timezones AND timezonesCount > 0) - valid
+        # Rule 4: Survey fallback (same timezone but survey completion) - valid
         # Invalid: Same timezone without survey fallback = test data
         arrival_tz = trip.get('arrivalTimeZone')
         origin_tz = trip.get('originTimezone')
+        timezones_count = trip.get('timezonesCount', 0)
         completion_method = trip.get('completionMethod', '')
+        
+        # Rule 2: Test trip if timezonesCount === 0 (local test trip)
+        if timezones_count == 0:
+            continue
         
         if arrival_tz and origin_tz:
             # Has timezone data - check if same timezone
