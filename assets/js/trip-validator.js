@@ -223,6 +223,7 @@ class TripValidator {
         
         // Rule 1: Test trip if timezonesCount === 0 (definitive test indicator)
         if (trip.timezonesCount === 0) {
+            console.log('[VALIDATOR] Trip', trip.tripId, 'is TEST (timezonesCount=0). Value:', trip.timezonesCount, 'Type:', typeof trip.timezonesCount);
             details.isValid = false;
             details.reason = 'Test data (timezonesCount is 0)';
             details.rule = 'test_data';
@@ -231,6 +232,7 @@ class TripValidator {
         
         // Rule 2: Legacy data (no arrivalTimeZone but timezonesCount > 0)
         if (!trip.arrivalTimeZone) {
+            console.log('[VALIDATOR] Trip', trip.tripId, 'is LEGACY (no arrivalTimeZone). timezonesCount:', trip.timezonesCount, 'Type:', typeof trip.timezonesCount);
             details.isValid = true;
             details.reason = 'Legacy data (no arrivalTimeZone field)';
             details.rule = 'legacy';

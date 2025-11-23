@@ -206,7 +206,11 @@ function convertFirestoreDocument(document) {
             
             // Handle direct values (new format)
             if (field.stringValue !== undefined) return field.stringValue;
-            if (field.integerValue !== undefined) return parseInt(field.integerValue);
+            if (field.integerValue !== undefined) {
+                const parsed = parseInt(field.integerValue);
+                console.log('[EXTRACT] Field', fieldName, 'integerValue:', field.integerValue, '→ parsed:', parsed, 'type:', typeof parsed);
+                return parsed;
+            }
             if (field.booleanValue !== undefined) return field.booleanValue;
             if (field.timestampValue !== undefined) return new Date(field.timestampValue);
             
@@ -227,6 +231,17 @@ function convertFirestoreDocument(document) {
             pointsCompleted: extractValue('pointsCompleted') ?? extractValue('tripData', 'pointsCompleted'),
             startDate: extractValue('startDate') || extractValue('tripData', 'startDate'),
             completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
+        };
+        
+        // DEBUG: Log timezonesCount for every trip
+        if (flatData.tripId && flatData.tripId.includes('23DB4E06')) {
+            console.log('[DEBUG] YOUR TRIP 23DB4E06:');
+            console.log('  timezonesCount:', flatData.timezonesCount, 'Type:', typeof flatData.timezonesCount);
+            console.log('  arrivalTimeZone:', flatData.arrivalTimeZone);
+            console.log('  originTimezone:', flatData.originTimezone);
+        }
+        
+        return flatData;
             completionMethod: extractValue('completionMethod') || extractValue('tripData', 'completionMethod'),
             arrivalTimeZone: extractValue('arrivalTimeZone') || extractValue('tripData', 'arrivalTimeZone') || extractValue('arrivalTimeZone'),
             originTimezone: extractValue('originTimezone') || extractValue('tripData', 'originTimezone') || extractValue('originTimezone'),
