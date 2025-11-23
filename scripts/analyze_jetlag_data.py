@@ -405,19 +405,41 @@ def calculate_validation_breakdown(all_trips: List[Dict], valid_trips: List[Dict
     
     Simplified version matching dashboard display format.
     """
+    from datetime import datetime
+    
     total = len(all_trips)
     valid_count = len(valid_trips)
     invalid_count = total - valid_count
     
-    # Count legacy trips (no arrivalTimeZone field)
-    legacy_count = sum(1 for trip in valid_trips if not trip.get('arrivalTimeZone'))
+    # Timezone feature launch date
+    TIMEZONE_FEATURE_DATE = datetime(2025, 10, 24, tzinfo=datetime.now().astimezone().tzinfo)
+    
+    # Helper function to check if trip is date-based legacy
+    def is_date_based_legacy(trip):
+        start_date_str = trip.get('startDate')
+        if start_date_str:
+            try:
+                start_date = datetime.fromisoformat(start_date_str.replace('Z', '+00:00'))
+                return start_date < TIMEZONE_FEATURE_DATE
+            except (ValueError, AttributeError):
+                pass
+        return False
+    
+    # Count legacy trips (date-based OR no arrivalTimeZone field)
+    legacy_count = sum(1 for trip in valid_trips 
+                      if is_date_based_legacy(trip) or not trip.get('arrivalTimeZone'))
     
     # Count verified trips (have timezone data and different timezones, or survey fallback)
+    # BUT exclude date-based legacy trips from verified count
     verified_count = 0
     tz_verified = 0
     survey_verified = 0
     
     for trip in valid_trips:
+        # Skip if this is a legacy trip (date-based or field-based)
+        if is_date_based_legacy(trip) or not trip.get('arrivalTimeZone'):
+            continue
+            
         arrival_tz = trip.get('arrivalTimeZone')
         origin_tz = trip.get('originTimezone')
         completion_method = trip.get('completionMethod', '')
