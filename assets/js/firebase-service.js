@@ -109,9 +109,9 @@ class FirebaseService {
                 platform: extractString('platform') || extractString('tripData', 'platform'),
                 appVersion: extractString('appVersion') || extractString('tripData', 'appVersion'),
                 destinationCode: extractString('destinationCode') || extractString('tripData', 'destinationCode'),
-                timezonesCount: extractInteger('timezonesCount') || extractInteger('tripData', 'timezonesCount'),
+                timezonesCount: extractInteger('timezonesCount') ?? extractInteger('tripData', 'timezonesCount'),
                 travelDirection: extractString('travelDirection') || extractString('tripData', 'travelDirection'),
-                pointsCompleted: extractInteger('pointsCompleted') || extractInteger('tripData', 'pointsCompleted'),
+                pointsCompleted: extractInteger('pointsCompleted') ?? extractInteger('tripData', 'pointsCompleted'),
                 startDate: extractTimestamp('startDate') || extractTimestamp('tripData', 'startDate'),
                 completionDate: extractTimestamp('completionDate') || extractTimestamp('tripData', 'completionDate'),
                 completionMethod: extractString('completionMethod') || extractString('tripData', 'completionMethod'),
@@ -135,22 +135,22 @@ class FirebaseService {
                 point12Completed: extractBoolean('point12Completed'),
                 
                 // Extract general anticipated severity - handles both formats
-                generalAnticipated: extractInteger('generalAnticipated') || extractInteger('surveyData', 'generalAnticipated'),
+                generalAnticipated: extractInteger('generalAnticipated') ?? extractInteger('surveyData', 'generalAnticipated'),
                 
                 // Extract anticipated symptoms - handles both formats
-                anticipatedSleepSeverity: extractInteger('sleepExpectations') || extractInteger('surveyData', 'sleepExpectations'),
-                anticipatedFatigueSeverity: extractInteger('fatigueExpectations') || extractInteger('surveyData', 'fatigueExpectations'),
-                anticipatedConcentrationSeverity: extractInteger('concentrationExpectations') || extractInteger('surveyData', 'concentrationExpectations'),
-                anticipatedIrritabilitySeverity: extractInteger('irritabilityExpectations') || extractInteger('surveyData', 'irritabilityExpectations'),
-                anticipatedGISeverity: extractInteger('giExpectations') || extractInteger('surveyData', 'giExpectations'),
+                anticipatedSleepSeverity: extractInteger('sleepExpectations') ?? extractInteger('surveyData', 'sleepExpectations'),
+                anticipatedFatigueSeverity: extractInteger('fatigueExpectations') ?? extractInteger('surveyData', 'fatigueExpectations'),
+                anticipatedConcentrationSeverity: extractInteger('concentrationExpectations') ?? extractInteger('surveyData', 'concentrationExpectations'),
+                anticipatedIrritabilitySeverity: extractInteger('irritabilityExpectations') ?? extractInteger('surveyData', 'irritabilityExpectations'),
+                anticipatedGISeverity: extractInteger('giExpectations') ?? extractInteger('surveyData', 'giExpectations'),
                 
                 // Extract post-travel symptoms - handles both formats
-                postSleepSeverity: extractInteger('sleepPost') || extractInteger('surveyData', 'sleepPost'),
-                postFatigueSeverity: extractInteger('fatiguePost') || extractInteger('surveyData', 'fatiguePost'),
-                postConcentrationSeverity: extractInteger('concentrationPost') || extractInteger('surveyData', 'concentrationPost'),
-                postIrritabilitySeverity: extractInteger('irritabilityPost') || extractInteger('surveyData', 'irritabilityPost'),
-                postMotivationSeverity: extractInteger('motivationPost') || extractInteger('surveyData', 'motivationPost'),
-                postGISeverity: extractInteger('giPost') || extractInteger('surveyData', 'giPost'),
+                postSleepSeverity: extractInteger('sleepPost') ?? extractInteger('surveyData', 'sleepPost'),
+                postFatigueSeverity: extractInteger('fatiguePost') ?? extractInteger('surveyData', 'fatiguePost'),
+                postConcentrationSeverity: extractInteger('concentrationPost') ?? extractInteger('surveyData', 'concentrationPost'),
+                postIrritabilitySeverity: extractInteger('irritabilityPost') ?? extractInteger('surveyData', 'irritabilityPost'),
+                postMotivationSeverity: extractInteger('motivationPost') ?? extractInteger('surveyData', 'motivationPost'),
+                postGISeverity: extractInteger('giPost') ?? extractInteger('surveyData', 'giPost'),
                 
                 // Extract demographics - only age (gender and travel experience removed)
                 age: extractString('age') || extractString('ageRange'),
@@ -158,7 +158,7 @@ class FirebaseService {
                 
                 // For compatibility with existing dashboard logic - handles both formats
                 timestamp: extractTimestamp('completionDate') || extractTimestamp('created') || extractTimestamp('tripData', 'completionDate'),
-                timezones_count: extractInteger('timezonesCount') || extractInteger('tripData', 'timezonesCount'),
+                timezones_count: extractInteger('timezonesCount') ?? extractInteger('tripData', 'timezonesCount'),
                 travel_direction: extractString('travelDirection') || extractString('tripData', 'travelDirection'),
                 surveyCode: extractString('surveyCode') || extractString('tripData', 'surveyCode')
             };
