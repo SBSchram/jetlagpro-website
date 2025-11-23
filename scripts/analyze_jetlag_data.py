@@ -112,37 +112,22 @@ def load_trips(trips_path: str) -> List[Dict]:
 
 def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     """
-    Filter to only valid trips for analysis.
+    Filter trips for analysis.
     
-    RATIONALE:
-    This function implements the data quality controls that ensure only legitimate
-    research data is included. Each exclusion criterion addresses a specific
-    validity threat:
+    EXCLUDED:
+    - Developer test sessions: Device IDs 2330B376, 7482966F
+    - Test trips: timezonesCount=0 or same timezone without survey
+    - Incomplete surveys: Missing symptom severity data
+    - Invalid HMAC: Signature mismatch (if signature present)
     
-    - Developer test sessions: Prevents contamination from app development/testing
-      activities that don't represent real user behavior
-    - Test trips: timezonesCount=0 (checked first) OR arrival=origin timezone - both 
-      indicate no actual travel occurred
-    - Incomplete surveys: Missing symptom data prevents calculation of the primary
-      outcome variable (aggregate symptom severity)
-    - Invalid HMAC signatures: Cryptographic signature mismatches indicate potential
-      data tampering or unauthorized submissions
+    TIMEZONE VALIDATION RULES:
+    1. timezonesCount=0: Test trip
+    2. Pre-Oct 24, 2025 or no arrivalTimeZone: Legacy data
+    3. Different timezones + timezonesCount > 0: Verified travel
+    4. Same timezone + survey completion: Survey verified
     
-    The timezone validation uses a four-rule system:
-    1. Test trip (timezonesCount=0): PRIMARY test indicator - ALWAYS invalid (no travel occurred)
-    2. Legacy data (timezonesCount > 0 but no arrivalTimeZone field): Valid (early data collection)
-    3. Real travel (different timezones AND timezonesCount > 0): Valid (actual jet lag scenario)
-    4. Survey fallback (same timezone + '_survey' in completionMethod): Valid
-       (offline trip data submitted via survey)
-    
-    Excludes:
-    - Test trips (isTest = True or timezonesCount=0 or same origin/destination timezone)
-    - Developer test sessions (specific device IDs: 2330B376, 7482966F)
-    - Incomplete trips (missing required survey data)
-    - Invalid HMAC signatures (if present)
-    
-    Matches filtering logic used on live dashboard (analytics.js getCurrentData() +
-    TripValidator.isValidTrip()).
+    Matches filtering logic in analytics.js and TripValidator.isValidTrip().
+    Returns list of valid trips.
     """
     valid_trips = []
     
@@ -887,38 +872,32 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     lines.append("DATA VALIDATION METHODOLOGY")
     lines.append("-"*70)
     lines.append("")
-    lines.append("All trip submissions are categorized using the following criteria to ensure")
-    lines.append("data quality and scientific validity:")
+    lines.append("Trip categorization rules:")
     lines.append("")
     
-    lines.append("TEST TRIPS (Excluded from analysis)")
-    lines.append("  Criteria for exclusion:")
-    lines.append("  • timezonesCount = 0 (primary indicator - no actual travel occurred)")
-    lines.append("  • arrival timezone = origin timezone WITHOUT survey completion")
-    lines.append("  • Explicit isTest flag or developer device IDs (2330B376, 7482966F)")
+    lines.append("TEST TRIPS (Excluded)")
+    lines.append("  • timezonesCount = 0")
+    lines.append("  • arrival timezone = origin timezone (without survey completion)")
+    lines.append("  • Developer device IDs: 2330B376, 7482966F")
+    lines.append("  • Explicit isTest flag")
     lines.append("")
-    lines.append("  Rationale: These represent local testing, development sessions, or")
-    lines.append("  same-timezone trips without validation data.")
-    lines.append("")
-    
-    lines.append("LEGACY TRIPS (Included in analysis, flagged separately)")
-    lines.append("  Criteria for inclusion:")
-    lines.append("  • Trip startDate before October 24, 2025 (date-based)")
-    lines.append("  • Missing arrivalTimeZone or originTimezone fields (field-based)")
-    lines.append("")
-    lines.append("  Rationale: Valid research data collected before timezone tracking was")
-    lines.append("  implemented. Included to maximize sample size while maintaining")
-    lines.append("  transparency about data completeness.")
+    lines.append("  Rationale: Local testing, development sessions, or same-timezone")
+    lines.append("  trips without validation data.")
     lines.append("")
     
-    lines.append("VERIFIED TRIPS (Primary analysis cohort)")
+    lines.append("LEGACY TRIPS (Included, flagged separately)")
+    lines.append("  • Trip startDate before October 24, 2025")
+    lines.append("  • Missing arrivalTimeZone or originTimezone fields")
+    lines.append("")
+    lines.append("  Rationale: Data collected before timezone tracking was implemented.")
+    lines.append("")
+    
+    lines.append("VERIFIED TRIPS (Primary cohort)")
     lines.append("  • TZ Verified: arrivalTimeZone ≠ originTimezone AND timezonesCount > 0")
-    lines.append("    (Confirmed cross-timezone travel with complete metadata)")
     lines.append("  • Survey Verified: arrivalTimeZone = originTimezone AND survey completion")
-    lines.append("    (Offline trip data validated by survey metadata)")
     lines.append("")
-    lines.append("  Rationale: Highest confidence trips with complete timezone tracking")
-    lines.append("  and confirmed travel or survey validation.")
+    lines.append("  Rationale: Cross-timezone travel with complete metadata, or")
+    lines.append("  survey-validated trip data.")
     lines.append("")
     
     # Trip Stats (matches dashboard renderTripStats)
