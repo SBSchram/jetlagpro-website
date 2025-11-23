@@ -173,17 +173,26 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         timezones_count = trip.get('timezonesCount', 0)
         completion_method = trip.get('completionMethod', '')
         
-        # Rule 2: Test trip if timezonesCount === 0 (local test trip)
-        if timezones_count == 0:
-            continue
-        
-        if arrival_tz and origin_tz:
-            # Has timezone data - check if same timezone
-            if arrival_tz == origin_tz:
-                # Same timezone - only valid if survey fallback
-                if '_survey' not in completion_method:
-                    # Test data (same timezone, no survey fallback)
-                    continue
+        # Rule 1: Legacy data (no arrivalTimeZone field) - always valid, skip further checks
+        # This must be checked FIRST because legacy trips may also have timezonesCount=0
+        if not arrival_tz:
+            # Legacy data - valid, continue to next checks
+            pass
+        else:
+            # Has timezone data - apply modern validation rules
+            
+            # Rule 2: Test trip if timezonesCount === 0 (local test trip)
+            if timezones_count == 0:
+                continue
+            
+            # Rule 3/4: Check if same timezone
+            if arrival_tz and origin_tz:
+                # Has timezone data - check if same timezone
+                if arrival_tz == origin_tz:
+                    # Same timezone - only valid if survey fallback
+                    if '_survey' not in completion_method:
+                        # Test data (same timezone, no survey fallback)
+                        continue
         
         # Skip if survey not completed
         # Match live dashboard logic: survey.surveyCompleted === true
