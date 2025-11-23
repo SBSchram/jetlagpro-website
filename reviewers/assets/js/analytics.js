@@ -196,19 +196,19 @@ function convertFirestoreDocument(document) {
             if (nestedPath && field.mapValue && field.mapValue.fields) {
                 const nestedField = field.mapValue.fields[nestedPath];
                 if (nestedField) {
-                    if (nestedField.stringValue) return nestedField.stringValue;
-                    if (nestedField.integerValue) return parseInt(nestedField.integerValue);
+                    if (nestedField.stringValue !== undefined) return nestedField.stringValue;
+                    if (nestedField.integerValue !== undefined) return parseInt(nestedField.integerValue);
                     if (nestedField.booleanValue !== undefined) return nestedField.booleanValue;
-                    if (nestedField.timestampValue) return new Date(nestedField.timestampValue);
+                    if (nestedField.timestampValue !== undefined) return new Date(nestedField.timestampValue);
                 }
                 return null;
             }
             
             // Handle direct values (new format)
-            if (field.stringValue) return field.stringValue;
-            if (field.integerValue) return parseInt(field.integerValue);
+            if (field.stringValue !== undefined) return field.stringValue;
+            if (field.integerValue !== undefined) return parseInt(field.integerValue);
             if (field.booleanValue !== undefined) return field.booleanValue;
-            if (field.timestampValue) return new Date(field.timestampValue);
+            if (field.timestampValue !== undefined) return new Date(field.timestampValue);
             
             return null;
         };
