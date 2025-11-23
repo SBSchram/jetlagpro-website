@@ -543,12 +543,30 @@ function renderRecentSubmissions() {
             // Points stimulated
             const pointsStimulated = survey.pointsCompleted || 0;
             
-            // Combine Dest, Dir, Points, TZ into one column with fixed-width padding for alignment
-            const dest = (survey.destinationCode || 'N/A').padEnd(3, ' '); // 3 chars (codes are 3, N/A is 3)
-            const dir = eastWest.padEnd(3, ' '); // 3 chars (E/W is 1, N/A is 3)
-            const points = String(pointsStimulated).padStart(2, ' ') + 'pts'; // 5 chars total ( 2pts, 10pts)
-            const tz = String(timezones).padStart(2, ' ') + 'TZ'; // 4 chars total ( 8TZ, 18TZ)
-            const tripDetails = `${dest} ${dir} ${points} ${tz}`;
+            // Build trip route display: Origin → Dest [→ Arrival if different]
+            let routeDisplay = '';
+            
+            if (survey.originTimezone && survey.arrivalTimeZone) {
+                // Extract city names from timezones
+                const originCity = survey.originTimezone.split('/').pop().replace(/_/g, ' ');
+                const arrivalCity = survey.arrivalTimeZone.split('/').pop().replace(/_/g, ' ');
+                const destCode = survey.destinationCode || 'N/A';
+                
+                // Show arrival only if origin=arrival (test trip indicator)
+                if (survey.originTimezone === survey.arrivalTimeZone) {
+                    routeDisplay = `${originCity} → ${destCode} → ${arrivalCity}`;
+                } else {
+                    routeDisplay = `${originCity} → ${destCode}`;
+                }
+            } else {
+                // Legacy: no timezone data, just show destination
+                routeDisplay = survey.destinationCode || 'N/A';
+            }
+            
+            const dir = eastWest.padEnd(3, ' ');
+            const points = String(pointsStimulated).padStart(2, ' ') + 'pts';
+            const tz = String(timezones).padStart(2, ' ') + 'TZ';
+            const tripDetails = `${routeDisplay} ${dir} ${points} ${tz}`;
 
             tableHtml += `<tr ${rowStyle}>
                 <td>${dateStr}</td>
