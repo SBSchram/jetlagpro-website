@@ -175,12 +175,18 @@ class TripValidator {
             return true;
         }
         
-        // Rule 2: Real travel (different timezones)
-        if (trip.arrivalTimeZone !== trip.originTimezone) {
+        // Rule 2: Real travel (different timezones AND timezonesCount > 0)
+        if (trip.arrivalTimeZone !== trip.originTimezone && 
+            trip.timezonesCount && trip.timezonesCount > 0) {
             return true;
         }
         
-        // Rule 3: Survey fallback (same timezone but survey completion)
+        // Rule 3: Test trip if timezonesCount === 0 (same timezone, local test)
+        if (trip.timezonesCount === 0) {
+            return false;
+        }
+        
+        // Rule 4: Survey fallback (same timezone but survey completion)
         if (trip.arrivalTimeZone === trip.originTimezone && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {
@@ -206,6 +212,7 @@ class TripValidator {
                 hasArrivalTimeZone: !!trip.arrivalTimeZone,
                 arrivalTimeZone: trip.arrivalTimeZone,
                 originTimezone: trip.originTimezone,
+                timezonesCount: trip.timezonesCount,
                 completionMethod: trip.completionMethod,
                 timezonesMatch: trip.arrivalTimeZone === trip.originTimezone,
                 hasSurveyFallback: trip.completionMethod && trip.completionMethod.includes('_survey')
@@ -220,15 +227,24 @@ class TripValidator {
             return details;
         }
         
-        // Rule 2: Real travel
-        if (trip.arrivalTimeZone !== trip.originTimezone) {
+        // Rule 2: Test trip if timezonesCount === 0
+        if (trip.timezonesCount === 0) {
+            details.isValid = false;
+            details.reason = 'Test data (timezonesCount is 0)';
+            details.rule = 'test_data';
+            return details;
+        }
+        
+        // Rule 3: Real travel (different timezones AND timezonesCount > 0)
+        if (trip.arrivalTimeZone !== trip.originTimezone && 
+            trip.timezonesCount && trip.timezonesCount > 0) {
             details.isValid = true;
             details.reason = 'Real travel (different timezones)';
             details.rule = 'real_travel';
             return details;
         }
         
-        // Rule 3: Survey fallback
+        // Rule 4: Survey fallback
         if (trip.arrivalTimeZone === trip.originTimezone && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {
