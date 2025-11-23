@@ -222,9 +222,9 @@ function convertFirestoreDocument(document) {
             platform: extractValue('platform') || extractValue('tripData', 'platform'),
             appVersion: extractValue('appVersion') || extractValue('tripData', 'appVersion'),
             destinationCode: extractValue('destinationCode') || extractValue('tripData', 'destinationCode'),
-            timezonesCount: extractValue('timezonesCount') || extractValue('tripData', 'timezonesCount'),
+            timezonesCount: extractValue('timezonesCount') ?? extractValue('tripData', 'timezonesCount'),
             travelDirection: extractValue('travelDirection') || extractValue('tripData', 'travelDirection'),
-            pointsCompleted: extractValue('pointsCompleted') || extractValue('tripData', 'pointsCompleted'),
+            pointsCompleted: extractValue('pointsCompleted') ?? extractValue('tripData', 'pointsCompleted'),
             startDate: extractValue('startDate') || extractValue('tripData', 'startDate'),
             completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
             completionMethod: extractValue('completionMethod') || extractValue('tripData', 'completionMethod'),
@@ -250,30 +250,30 @@ function convertFirestoreDocument(document) {
             // Note: Baseline/typical symptom data removed from survey - now focusing on anticipated vs post-travel
             
             // Extract general anticipated severity - handles both formats
-            generalAnticipated: extractValue('generalAnticipated') || extractValue('surveyData', 'generalAnticipated'),
+            generalAnticipated: extractValue('generalAnticipated') ?? extractValue('surveyData', 'generalAnticipated'),
             
             // Extract anticipated symptoms - handles both formats
-            anticipatedSleepSeverity: extractValue('sleepExpectations') || extractValue('surveyData', 'sleepExpectations'),
-            anticipatedFatigueSeverity: extractValue('fatigueExpectations') || extractValue('surveyData', 'fatigueExpectations'),
-            anticipatedConcentrationSeverity: extractValue('concentrationExpectations') || extractValue('surveyData', 'concentrationExpectations'),
-            anticipatedIrritabilitySeverity: extractValue('irritabilityExpectations') || extractValue('surveyData', 'irritabilityExpectations'),
-            anticipatedGISeverity: extractValue('giExpectations') || extractValue('surveyData', 'giExpectations'),
+            anticipatedSleepSeverity: extractValue('sleepExpectations') ?? extractValue('surveyData', 'sleepExpectations'),
+            anticipatedFatigueSeverity: extractValue('fatigueExpectations') ?? extractValue('surveyData', 'fatigueExpectations'),
+            anticipatedConcentrationSeverity: extractValue('concentrationExpectations') ?? extractValue('surveyData', 'concentrationExpectations'),
+            anticipatedIrritabilitySeverity: extractValue('irritabilityExpectations') ?? extractValue('surveyData', 'irritabilityExpectations'),
+            anticipatedGISeverity: extractValue('giExpectations') ?? extractValue('surveyData', 'giExpectations'),
             
             // Extract post-travel symptoms - handles both formats
-            postSleepSeverity: extractValue('sleepPost') || extractValue('surveyData', 'sleepPost'),
-            postFatigueSeverity: extractValue('fatiguePost') || extractValue('surveyData', 'fatiguePost'),
-            postConcentrationSeverity: extractValue('concentrationPost') || extractValue('surveyData', 'concentrationPost'),
-            postIrritabilitySeverity: extractValue('irritabilityPost') || extractValue('surveyData', 'irritabilityPost'),
-            postMotivationSeverity: extractValue('motivationPost') || extractValue('surveyData', 'motivationPost'),
-            postGISeverity: extractValue('giPost') || extractValue('surveyData', 'giPost'),
+            postSleepSeverity: extractValue('sleepPost') ?? extractValue('surveyData', 'sleepPost'),
+            postFatigueSeverity: extractValue('fatiguePost') ?? extractValue('surveyData', 'fatiguePost'),
+            postConcentrationSeverity: extractValue('concentrationPost') ?? extractValue('surveyData', 'concentrationPost'),
+            postIrritabilitySeverity: extractValue('irritabilityPost') ?? extractValue('surveyData', 'irritabilityPost'),
+            postMotivationSeverity: extractValue('motivationPost') ?? extractValue('surveyData', 'motivationPost'),
+            postGISeverity: extractValue('giPost') ?? extractValue('surveyData', 'giPost'),
             
             // Extract demographics - only age (gender and travel experience removed)
-            age: extractValue('age') || extractValue('ageRange'),
+            age: extractValue('age') ?? extractValue('ageRange'),
             region: extractValue('region'),
             
             // For compatibility with existing dashboard logic - handles both formats
             timestamp: extractValue('completionDate') || extractValue('created') || extractValue('tripData', 'completionDate'),
-            timezones_count: extractValue('timezonesCount') || extractValue('tripData', 'timezonesCount'),
+            timezones_count: extractValue('timezonesCount') ?? extractValue('tripData', 'timezonesCount'),
             travel_direction: extractValue('travelDirection') || extractValue('tripData', 'travelDirection')
         };
         
