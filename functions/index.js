@@ -1,23 +1,22 @@
 /**
- * JetLagPro Cloud Functions - Phase 2.5: Immutable Audit Logging
+ * JetLagPro Cloud Functions
  * 
  * Functions:
  * 1. auditLoggerCreate/Update/Delete - Logs all tripCompletions writes to both Firestore and GCS
  * 2. hmacValidator - Validates HMAC signatures on trip creation
  * 3. metadataValidator - Checks metadata consistency (device IDs, timestamps, builds)
- * 
- * Phase 2.5 Addition: Dual-write system
- * - Firestore (auditLog collection) for real-time viewing
- * - GCS (jetlagpro-audit-logs bucket) for immutable 10-year retention
+ * 4. hourlyDigestNotification - Sends hourly email digest of new Firebase entries via Gmail
  */
 
 const {setGlobalOptions} = require("firebase-functions/v2");
 const {onDocumentCreated, onDocumentUpdated, onDocumentDeleted} = require("firebase-functions/v2/firestore");
+const {onSchedule} = require("firebase-functions/v2/scheduler");
 const {initializeApp} = require("firebase-admin/app");
-const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const {getFirestore, FieldValue, Timestamp} = require("firebase-admin/firestore");
 const {Storage} = require("@google-cloud/storage");
 const logger = require("firebase-functions/logger");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 // Initialize Firebase Admin
 initializeApp();
@@ -36,6 +35,32 @@ setGlobalOptions({
 // HMAC Secret Key (same as iOS/RN apps)
 // TODO: Move to environment variable before production deployment
 const HMAC_SECRET = "7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a";
+
+// Email Notification Configuration
+const NOTIFICATION_EMAIL = "sbschram@gmail.com";
+const NOTIFICATION_SETTINGS_DOC = "notificationSettings";
+const NOTIFICATION_SETTINGS_COLLECTION = "_system";
+
+// Gmail Email Transporter (requires app-specific password with 2FA enabled)
+let emailTransporter = null;
+
+function getEmailTransporter() {
+  if (emailTransporter) return emailTransporter;
+
+  const gmailPassword = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailPassword) {
+    logger.warn("⚠️ Gmail app password not set. Set GMAIL_APP_PASSWORD environment variable.");
+    return null;
+  }
+
+  const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+  emailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: gmailUser, pass: gmailPassword },
+  });
+  
+  return emailTransporter;
+}
 
 /**
  * Writes audit entry to both Firestore (real-time) and GCS (immutable).
@@ -521,5 +546,136 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
     await writeAuditEntry(auditEntry);
   } else {
     logger.info(`✅ Metadata valid for trip ${tripId}`, {tripId});
+  }
+});
+
+/**
+ * Hourly Digest Notification - Sends email of new Firebase entries
+ * Runs every hour via Cloud Scheduler
+ */
+exports.hourlyDigestNotification = onSchedule({
+  schedule: "0 * * * *", // Every hour at minute 0
+  timeZone: "America/New_York",
+  region: "us-east1",
+}, async (event) => {
+  try {
+    logger.info("🔄 Starting hourly digest notification check...");
+
+    // Get last notification timestamp from Firestore
+    const settingsRef = db.collection(NOTIFICATION_SETTINGS_COLLECTION).doc(NOTIFICATION_SETTINGS_DOC);
+    const settingsDoc = await settingsRef.get();
+    
+    let lastNotificationTime = null;
+    if (settingsDoc.exists) {
+      const data = settingsDoc.data();
+      lastNotificationTime = data.lastNotificationTime;
+      logger.info(`📅 Last notification time: ${lastNotificationTime}`);
+    } else {
+      // First run - check entries from last 1 hour
+      lastNotificationTime = Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
+      logger.info("📅 First run - checking last 1 hour of entries");
+    }
+
+    const cutoffTime = lastNotificationTime || Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
+    const cutoffMillis = cutoffTime.toMillis ? cutoffTime.toMillis() : cutoffTime._seconds * 1000;
+    
+    const snapshot = await db.collection("auditLog")
+      .where("operation", "==", "CREATE")
+      .orderBy("timestamp", "desc")
+      .limit(100)
+      .get();
+    
+    const newTrips = [];
+    const seenTripIds = new Set();
+    
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const tripId = data.tripId || data.documentId;
+      if (!tripId || seenTripIds.has(tripId)) return;
+      
+      const entryTime = data.timestamp?.toMillis ? data.timestamp.toMillis() : 
+                       (data.timestamp?._seconds ? data.timestamp._seconds * 1000 : 0);
+      
+      if (entryTime > cutoffMillis) {
+        seenTripIds.add(tripId);
+        newTrips.push({ tripId, createdAt: data.timestamp });
+      }
+    });
+    
+    newTrips.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : a.createdAt?._seconds * 1000 || 0;
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : b.createdAt?._seconds * 1000 || 0;
+      return timeB - timeA;
+    });
+
+    logger.info(`📊 Found ${newTrips.length} new trip(s) since last notification`);
+
+    // Only send email if there are new trips
+    if (newTrips.length > 0) {
+      // Build email content with trip IDs
+      const tripIds = newTrips.map(trip => trip.tripId).join("\n");
+      const emailBody = `New JetLagPro entries detected:
+
+${tripIds}
+
+Total: ${newTrips.length} trip(s)
+
+---
+JetLagPro Research Analytics
+Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
+
+      const transporter = getEmailTransporter();
+      if (!transporter) {
+        throw new Error("Gmail transporter not initialized. Set GMAIL_APP_PASSWORD environment variable.");
+      }
+
+      const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+      await transporter.sendMail({
+        from: gmailUser,
+        to: NOTIFICATION_EMAIL,
+        subject: `JetLagPro: ${newTrips.length} New Trip${newTrips.length > 1 ? "s" : ""} Added`,
+        text: emailBody,
+      });
+      
+      logger.info(`✅ Email sent successfully to ${NOTIFICATION_EMAIL} with ${newTrips.length} trip ID(s)`);
+    } else {
+      logger.info("📭 No new trips - skipping email");
+    }
+
+    // Update last notification timestamp to now
+    const currentTime = FieldValue.serverTimestamp();
+    await settingsRef.set({
+      lastNotificationTime: currentTime,
+      lastCheckTime: currentTime,
+      lastCheckCount: newTrips.length,
+    }, { merge: true });
+
+    logger.info("✅ Hourly digest notification check completed");
+
+    return { success: true, newTripsCount: newTrips.length };
+  } catch (error) {
+    logger.error("❌ Error in hourly digest notification:", error);
+    
+    // Try to send error notification email
+    const transporter = getEmailTransporter();
+    if (transporter) {
+      try {
+        const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+        await transporter.sendMail({
+          from: gmailUser,
+          to: NOTIFICATION_EMAIL,
+          subject: "JetLagPro Notification Error",
+          text: `An error occurred while checking for new Firebase entries:
+
+${error.message}
+
+${error.stack || ""}`,
+        });
+      } catch (emailError) {
+        logger.error("❌ Failed to send error notification email:", emailError);
+      }
+    }
+    
+    throw error;
   }
 });
