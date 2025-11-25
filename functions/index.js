@@ -48,13 +48,25 @@ let emailTransporter = null;
 function getEmailTransporter() {
   if (emailTransporter) return emailTransporter;
 
-  const gmailPassword = functions.config().gmail?.password;
+  // Try to get from functions.config() first (for compatibility), then fall back to process.env
+  let gmailPassword;
+  let gmailUser;
+  
+  try {
+    gmailPassword = functions.config().gmail?.password;
+    gmailUser = functions.config().gmail?.user;
+  } catch (e) {
+    // functions.config() not available in v2, use process.env
+    gmailPassword = process.env.GMAIL_PASSWORD;
+    gmailUser = process.env.GMAIL_USER;
+  }
+  
   if (!gmailPassword) {
     logger.warn("⚠️ Gmail app password not set. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
     return null;
   }
 
-  const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+  gmailUser = gmailUser || "sbschram@gmail.com";
   emailTransporter = nodemailer.createTransport({
     service: "gmail",
     auth: { user: gmailUser, pass: gmailPassword },
@@ -587,7 +599,12 @@ ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
       return;
     }
 
-    const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+    let gmailUser = "sbschram@gmail.com";
+    try {
+      gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+    } catch (e) {
+      gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+    }
     
     await transporter.sendMail({
       from: gmailUser,
@@ -662,7 +679,12 @@ ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
       return;
     }
 
-    const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+    let gmailUser = "sbschram@gmail.com";
+    try {
+      gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+    } catch (e) {
+      gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+    }
     
     await transporter.sendMail({
       from: gmailUser,
