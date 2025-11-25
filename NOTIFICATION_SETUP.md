@@ -2,13 +2,13 @@
 
 ## Overview
 
-This system sends hourly email digests when new entries are added to Firebase Firestore `tripCompletions` collection. It uses Gmail SMTP for email delivery via Nodemailer.
+This system sends **real-time email notifications** when entries are added or updated in Firebase Firestore `tripCompletions` collection. It uses Gmail SMTP for email delivery via Nodemailer.
 
 ## Configuration
 
 - **Email Recipient:** sbschram@gmail.com
-- **Frequency:** Hourly (batched digest)
-- **Content:** Trip IDs for new trips AND survey completions
+- **Frequency:** Real-time (immediate notification per event)
+- **Content:** Trip details for new trips AND survey completions/edits
 - **Email Provider:** Gmail
 
 ## Setup Steps
@@ -81,52 +81,53 @@ Please deploy your functions for the change to take effect
 firebase functions:config:set gmail.user="sbschram@gmail.com"
 ```
 
-### 5. Deploy Cloud Function
-
-```bash
-firebase deploy --only functions:hourlyDigestNotification
-```
-
-Or deploy all functions:
+### 5. Deploy Cloud Functions
 
 ```bash
 firebase deploy --only functions
 ```
 
+Or deploy specific notification functions:
+
+```bash
+firebase deploy --only functions:realtimeTripNotification,realtimeSurveyNotification
+```
+
 ### 6. Verify Deployment
 
 1. Check Firebase Console → Functions
-2. Confirm `hourlyDigestNotification` is deployed
-3. Check Cloud Scheduler (Google Cloud Console) - it should create the schedule automatically
+2. Confirm both functions are deployed:
+   - `realtimeTripNotification` - Triggers on new trip creation
+   - `realtimeSurveyNotification` - Triggers on survey completion/edit
 
 ## Testing
 
 ### Test Email Delivery
 
-1. Create a test entry in Firebase `tripCompletions` collection
-2. Wait for the next hourly run (or manually trigger)
-3. Check sbschram@gmail.com for the digest email
+**For New Trip Notification:**
+1. Complete a trip in the JetLagPro app (creates new document in `tripCompletions`)
+2. Email should arrive immediately at sbschram@gmail.com
+3. Subject: `JetLagPro: New Trip - [DESTINATION]`
+
+**For Survey Notification:**
+1. Complete or edit a survey via survey.html
+2. Email should arrive immediately at sbschram@gmail.com
+3. Subject: `JetLagPro: Survey Completed - [TRIP_ID]` or `Survey Edited - [TRIP_ID]`
 
 ## Monitoring
 
 ### Check Function Logs
 
 ```bash
-firebase functions:log --only hourlyDigestNotification
+firebase functions:log --only realtimeTripNotification
+firebase functions:log --only realtimeSurveyNotification
 ```
 
-Or view in Firebase Console → Functions → hourlyDigestNotification → Logs
+Or view in Firebase Console → Functions → [function name] → Logs
 
-### Check Notification Settings
+### Monitor Activity
 
-The function stores last notification time in:
-- Collection: `_system`
-- Document: `notificationSettings`
-
-View in Firebase Console → Firestore to see:
-- `lastNotificationTime`: Timestamp of last notification
-- `lastCheckTime`: Timestamp of last check
-- `lastCheckCount`: Number of trips found in last check
+Check the `auditLog` collection in Firestore to see all CREATE and UPDATE operations that trigger notifications.
 
 ## Troubleshooting
 
@@ -153,12 +154,13 @@ View in Firebase Console → Firestore to see:
 ### Emails Not Sending
 
 1. **Check Gmail credentials:**
-   - Verify `GMAIL_APP_PASSWORD` secret is set correctly
+   - Verify `gmail.password` config is set correctly
    - Verify app password is valid (try generating a new one)
 
 2. **Check function logs:**
    ```bash
-   firebase functions:log --only hourlyDigestNotification
+   firebase functions:log --only realtimeTripNotification
+   firebase functions:log --only realtimeSurveyNotification
    ```
    Look for error messages
 
@@ -166,65 +168,90 @@ View in Firebase Console → Firestore to see:
    - Try logging in with app password at https://mail.google.com
    - Verify app password still works
 
-### No New Trips Detected
+### No Notifications Received
 
 1. **Check auditLog Collection:**
-   - Ensure `auditLoggerCreate` function is working
-   - Verify CREATE operations are being logged
-
-2. **Check Notification Settings:**
-   - View `_system/notificationSettings` in Firestore
-   - Verify `lastNotificationTime` is set correctly
-
-3. **Check Function Schedule:**
-   - Verify Cloud Scheduler job exists
-   - Check schedule: `0 * * * *` (every hour)
-
-### Function Not Running
-
-1. **Check Cloud Scheduler:**
-   - Go to Google Cloud Console → Cloud Scheduler
-   - Verify job exists and is enabled
-   - Check last execution time
+   - Ensure `auditLoggerCreate` and `auditLoggerUpdate` functions are working
+   - Verify CREATE and UPDATE operations are being logged
 
 2. **Check Function Status:**
    - Firebase Console → Functions
-   - Verify function is deployed and active
+   - Verify both notification functions are deployed and active
+   - Check function execution logs for errors
+
+3. **Test trigger:**
+   - Create a new trip or edit a survey
+   - Check auditLog to verify the operation was logged
+   - Check function logs to see if trigger fired
 
 ## Gmail Limits
 
 - **Daily sending limit:** ~500 emails/day
 - **Rate limit:** ~100 emails/hour per user
-- **For research data volume:** Free tier is sufficient
+- **For research data volume:** Real-time notifications should stay well within limits
 
 ## Cost Considerations
 
 - **Gmail:** Free
 - **Firebase Cloud Functions:** Free tier includes 2 million invocations/month
-- **Cloud Scheduler:** Free tier includes 3 jobs
-- **Estimated Cost:** $0/month (within free tiers)
+- **Real-time triggers:** 2 function invocations per trip (create + survey) = ~1,000 trips/month within free tier
+- **Estimated Cost:** $0/month (within free tiers for typical research volume)
 
-## Email Template Example
+## Email Template Examples
 
-You'll receive emails in this format:
+### New Trip Notification
 
 ```
-Subject: JetLagPro: 2 Trips, 3 Surveys Added
+Subject: JetLagPro: New Trip - MXPE
 
-New JetLagPro entries detected:
+New trip created:
 
-NEW TRIPS (2):
-67CC2497-MXPE-251029-1622-A7F3C9E2
-8A3B5C9D-LFGE-251124-1045-B2D4E6F8
-
-SURVEY COMPLETIONS (3):
-2AEB770E-LAXW-251106-1332-11ad2ccf
-E7F4A825-FCOE-251009-2315-5b7c8d9e
-9B2C4D6E-JFKE-251115-0845-3a5c7e9f
-
-Total: 2 trip(s), 3 survey(s)
+Trip ID: 67CC2497-MXPE-251029-1622-A7F3C9E2
+Destination: MXPE
+Direction: Eastbound
+Points Completed: 8/12
+Timezone Count: 3
+Survey: No
 
 ---
 JetLagPro Research Analytics
-Generated: 11/25/2025, 3:00:00 PM
+11/25/2025, 3:15:42 PM
+```
+
+### Survey Completion Notification
+
+```
+Subject: JetLagPro: Survey Completed - 2AEB770E
+
+Survey completed:
+
+Trip ID: 2AEB770E-LAXW-251106-1332-11ad2ccf
+Destination: LAXW
+Direction: Westbound
+Action: First-time submission
+
+Changed fields: surveyCompleted, postFatigueSeverity, postIndigestionSeverity, ageRange, userComment
+
+---
+JetLagPro Research Analytics
+11/25/2025, 4:22:18 PM
+```
+
+### Survey Edit Notification
+
+```
+Subject: JetLagPro: Survey Edited - 2330B376
+
+Survey edited:
+
+Trip ID: 2330B376-ISTE-251123-1544-7f579858
+Destination: ISTE
+Direction: Eastbound
+Action: Survey edited/retaken
+
+Changed fields: userComment, _surveyMetadata, generalAnticipated, surveySubmittedAt
+
+---
+JetLagPro Research Analytics
+11/25/2025, 2:37:29 PM
 ```
