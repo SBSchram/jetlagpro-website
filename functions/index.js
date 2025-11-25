@@ -17,6 +17,7 @@ const {Storage} = require("@google-cloud/storage");
 const logger = require("firebase-functions/logger");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const functions = require("firebase-functions");
 
 // Initialize Firebase Admin
 initializeApp();
@@ -47,7 +48,6 @@ let emailTransporter = null;
 function getEmailTransporter() {
   if (emailTransporter) return emailTransporter;
 
-  const functions = require("firebase-functions");
   const gmailPassword = functions.config().gmail?.password;
   if (!gmailPassword) {
     logger.warn("⚠️ Gmail app password not set. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
@@ -663,7 +663,6 @@ exports.hourlyDigestNotification = onSchedule({
         throw new Error("Gmail transporter not initialized. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
       }
 
-      const functions = require("firebase-functions");
       const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
       
       const subjectParts = [];
@@ -702,7 +701,6 @@ exports.hourlyDigestNotification = onSchedule({
     const transporter = getEmailTransporter();
     if (transporter) {
       try {
-        const functions = require("firebase-functions");
         const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
         await transporter.sendMail({
           from: gmailUser,
