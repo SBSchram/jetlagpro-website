@@ -566,7 +566,10 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
  * Real-Time Trip Notification - Sends email immediately when trip is created
  * Triggers on new document in tripCompletions collection
  */
-exports.realtimeTripNotification = onDocumentCreated("tripCompletions/{tripId}", async (event) => {
+exports.realtimeTripNotification = onDocumentCreated({
+  document: "tripCompletions/{tripId}",
+  secrets: ["GMAIL_PASSWORD", "GMAIL_USER"],
+}, async (event) => {
   const snapshot = event.data;
   const tripId = event.params.tripId;
   
@@ -623,7 +626,10 @@ ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
  * Real-Time Survey Notification - Sends email immediately when survey is completed/edited
  * Triggers on document update in tripCompletions collection
  */
-exports.realtimeSurveyNotification = onDocumentUpdated("tripCompletions/{tripId}", async (event) => {
+exports.realtimeSurveyNotification = onDocumentUpdated({
+  document: "tripCompletions/{tripId}",
+  secrets: ["GMAIL_PASSWORD", "GMAIL_USER"],
+}, async (event) => {
   const beforeSnapshot = event.data.before;
   const afterSnapshot = event.data.after;
   const tripId = event.params.tripId;
