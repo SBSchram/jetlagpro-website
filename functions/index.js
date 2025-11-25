@@ -47,13 +47,14 @@ let emailTransporter = null;
 function getEmailTransporter() {
   if (emailTransporter) return emailTransporter;
 
-  const gmailPassword = process.env.GMAIL_APP_PASSWORD;
+  const functions = require("firebase-functions");
+  const gmailPassword = functions.config().gmail?.password;
   if (!gmailPassword) {
-    logger.warn("⚠️ Gmail app password not set. Set GMAIL_APP_PASSWORD environment variable.");
+    logger.warn("⚠️ Gmail app password not set. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
     return null;
   }
 
-  const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+  const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
   emailTransporter = nodemailer.createTransport({
     service: "gmail",
     auth: { user: gmailUser, pass: gmailPassword },
@@ -579,67 +580,106 @@ exports.hourlyDigestNotification = onSchedule({
     const cutoffTime = lastNotificationTime || Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
     const cutoffMillis = cutoffTime.toMillis ? cutoffTime.toMillis() : cutoffTime._seconds * 1000;
     
+    // Query for both CREATE and UPDATE operations
     const snapshot = await db.collection("auditLog")
-      .where("operation", "==", "CREATE")
+      .where("operation", "in", ["CREATE", "UPDATE"])
       .orderBy("timestamp", "desc")
-      .limit(100)
+      .limit(200)
       .get();
     
     const newTrips = [];
+    const newSurveys = [];
     const seenTripIds = new Set();
+    const seenSurveyIds = new Set();
     
     snapshot.forEach((doc) => {
       const data = doc.data();
       const tripId = data.tripId || data.documentId;
-      if (!tripId || seenTripIds.has(tripId)) return;
+      if (!tripId) return;
       
       const entryTime = data.timestamp?.toMillis ? data.timestamp.toMillis() : 
                        (data.timestamp?._seconds ? data.timestamp._seconds * 1000 : 0);
       
       if (entryTime > cutoffMillis) {
-        seenTripIds.add(tripId);
-        newTrips.push({ tripId, createdAt: data.timestamp });
+        // Check if it's a CREATE operation (new trip)
+        if (data.operation === "CREATE" && !seenTripIds.has(tripId)) {
+          seenTripIds.add(tripId);
+          newTrips.push({ tripId, createdAt: data.timestamp, type: "trip" });
+        }
+        
+        // Check if it's an UPDATE with survey data (survey completion)
+        if (data.operation === "UPDATE" && !seenSurveyIds.has(tripId)) {
+          // Check if survey-related fields changed
+          const changedFields = data.changedFields || [];
+          const isSurveyUpdate = changedFields.some(field => 
+            field.includes("survey") || 
+            field.includes("Post") || 
+            field.includes("ageRange") ||
+            field.includes("userComment")
+          );
+          
+          if (isSurveyUpdate) {
+            seenSurveyIds.add(tripId);
+            newSurveys.push({ tripId, createdAt: data.timestamp, type: "survey" });
+          }
+        }
       }
     });
     
-    newTrips.sort((a, b) => {
+    // Combine and sort all entries
+    const allEntries = [...newTrips, ...newSurveys];
+    allEntries.sort((a, b) => {
       const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : a.createdAt?._seconds * 1000 || 0;
       const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : b.createdAt?._seconds * 1000 || 0;
       return timeB - timeA;
     });
 
-    logger.info(`📊 Found ${newTrips.length} new trip(s) since last notification`);
+    logger.info(`📊 Found ${newTrips.length} new trip(s) and ${newSurveys.length} survey(s) since last notification`);
 
-    // Only send email if there are new trips
-    if (newTrips.length > 0) {
-      // Build email content with trip IDs
-      const tripIds = newTrips.map(trip => trip.tripId).join("\n");
-      const emailBody = `New JetLagPro entries detected:
-
-${tripIds}
-
-Total: ${newTrips.length} trip(s)
-
----
-JetLagPro Research Analytics
-Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
+    // Only send email if there are new entries
+    if (allEntries.length > 0) {
+      // Build email content with separate sections
+      let emailBody = "New JetLagPro entries detected:\n\n";
+      
+      if (newTrips.length > 0) {
+        emailBody += `NEW TRIPS (${newTrips.length}):\n`;
+        emailBody += newTrips.map(trip => trip.tripId).join("\n");
+        emailBody += "\n\n";
+      }
+      
+      if (newSurveys.length > 0) {
+        emailBody += `SURVEY COMPLETIONS (${newSurveys.length}):\n`;
+        emailBody += newSurveys.map(survey => survey.tripId).join("\n");
+        emailBody += "\n\n";
+      }
+      
+      emailBody += `Total: ${newTrips.length} trip(s), ${newSurveys.length} survey(s)\n\n`;
+      emailBody += "---\n";
+      emailBody += "JetLagPro Research Analytics\n";
+      emailBody += `Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
 
       const transporter = getEmailTransporter();
       if (!transporter) {
-        throw new Error("Gmail transporter not initialized. Set GMAIL_APP_PASSWORD environment variable.");
+        throw new Error("Gmail transporter not initialized. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
       }
 
-      const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+      const functions = require("firebase-functions");
+      const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+      
+      const subjectParts = [];
+      if (newTrips.length > 0) subjectParts.push(`${newTrips.length} Trip${newTrips.length > 1 ? "s" : ""}`);
+      if (newSurveys.length > 0) subjectParts.push(`${newSurveys.length} Survey${newSurveys.length > 1 ? "s" : ""}`);
+      
       await transporter.sendMail({
         from: gmailUser,
         to: NOTIFICATION_EMAIL,
-        subject: `JetLagPro: ${newTrips.length} New Trip${newTrips.length > 1 ? "s" : ""} Added`,
+        subject: `JetLagPro: ${subjectParts.join(", ")} Added`,
         text: emailBody,
       });
       
-      logger.info(`✅ Email sent successfully to ${NOTIFICATION_EMAIL} with ${newTrips.length} trip ID(s)`);
+      logger.info(`✅ Email sent successfully to ${NOTIFICATION_EMAIL} (${newTrips.length} trips, ${newSurveys.length} surveys)`);
     } else {
-      logger.info("📭 No new trips - skipping email");
+      logger.info("📭 No new entries - skipping email");
     }
 
     // Update last notification timestamp to now
@@ -647,12 +687,14 @@ Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" }
     await settingsRef.set({
       lastNotificationTime: currentTime,
       lastCheckTime: currentTime,
-      lastCheckCount: newTrips.length,
+      lastCheckCount: allEntries.length,
+      lastTripCount: newTrips.length,
+      lastSurveyCount: newSurveys.length,
     }, { merge: true });
 
     logger.info("✅ Hourly digest notification check completed");
 
-    return { success: true, newTripsCount: newTrips.length };
+    return { success: true, newTripsCount: newTrips.length, newSurveysCount: newSurveys.length };
   } catch (error) {
     logger.error("❌ Error in hourly digest notification:", error);
     
@@ -660,7 +702,8 @@ Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" }
     const transporter = getEmailTransporter();
     if (transporter) {
       try {
-        const gmailUser = process.env.GMAIL_USER || "sbschram@gmail.com";
+        const functions = require("firebase-functions");
+        const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
         await transporter.sendMail({
           from: gmailUser,
           to: NOTIFICATION_EMAIL,

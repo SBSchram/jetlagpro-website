@@ -8,7 +8,7 @@ This system sends hourly email digests when new entries are added to Firebase Fi
 
 - **Email Recipient:** sbschram@gmail.com
 - **Frequency:** Hourly (batched digest)
-- **Content:** Trip IDs only
+- **Content:** Trip IDs for new trips AND survey completions
 - **Email Provider:** Gmail
 
 ## Setup Steps
@@ -22,13 +22,26 @@ This system sends hourly email digests when new entries are added to Firebase Fi
 ### 2. Generate App-Specific Password
 
 1. Go to https://myaccount.google.com/apppasswords
-2. Select **App:** Mail
-3. Select **Device:** Other (Custom name)
-4. Enter: `JetLagPro Notifications`
-5. Click **Generate**
-6. **Copy the 16-character password** (you'll only see it once!)
-   - It looks like: `abcd efgh ijkl mnop`
-   - **Remove spaces** when using it (use: `abcdefghijklmnop`)
+2. In the **App name** field, type: `JetLagPro Notifications`
+3. Click **Create**
+4. Google will show you a 16-character password like this:
+
+   ```
+   ┌─────────────────────────────────────┐
+   │  Your app password for your device  │
+   │                                     │
+   │      abcd efgh ijkl mnop            │
+   │                                     │
+   │  You won't be able to see this     │
+   │  password again, so make sure      │
+   │  to save it now.                   │
+   └─────────────────────────────────────┘
+   ```
+
+5. **Copy this password** - you'll only see it once!
+6. **Remove the spaces** when using it in Step 4:
+   - Displayed: `abcd efgh ijkl mnop`
+   - Use: `abcdefghijklmnop`
 
 ### 3. Install Dependencies
 
@@ -41,19 +54,31 @@ This will install the `nodemailer` package.
 
 ### 4. Set Firebase Environment Variables
 
-Set your Gmail app password using Firebase Secrets (recommended):
+Set your Gmail app password using Firebase config:
 
 ```bash
-# Set Gmail app password
-firebase functions:secrets:set GMAIL_APP_PASSWORD
-# Paste your 16-character app password when prompted (remove spaces)
+firebase functions:config:set gmail.password="abcdefghijklmnop"
 ```
+
+**Note:** Replace `abcdefghijklmnop` with your actual 16-character password **without spaces**
+
+Example with your password:
+```bash
+firebase functions:config:set gmail.password="cqtdvgvglfqutiru"
+```
+
+You should see:
+```
+✔ Functions config updated.
+Please deploy your functions for the change to take effect
+```
+
+---
 
 **Optional:** Set Gmail user (defaults to sbschram@gmail.com if not set):
 
 ```bash
-firebase functions:secrets:set GMAIL_USER
-# Enter: sbschram@gmail.com
+firebase functions:config:set gmail.user="sbschram@gmail.com"
 ```
 
 ### 5. Deploy Cloud Function
@@ -179,18 +204,27 @@ View in Firebase Console → Firestore to see:
 - **Cloud Scheduler:** Free tier includes 3 jobs
 - **Estimated Cost:** $0/month (within free tiers)
 
-## Email Template Customization
+## Email Template Example
 
-To customize the email content, edit `functions/index.js` in the `hourlyDigestNotification` function:
+You'll receive emails in this format:
 
-```javascript
-const emailBody = `New JetLagPro entries detected:
+```
+Subject: JetLagPro: 2 Trips, 3 Surveys Added
 
-${tripIds}
+New JetLagPro entries detected:
 
-Total: ${newTrips.length}} trip(s)
+NEW TRIPS (2):
+67CC2497-MXPE-251029-1622-A7F3C9E2
+8A3B5C9D-LFGE-251124-1045-B2D4E6F8
+
+SURVEY COMPLETIONS (3):
+2AEB770E-LAXW-251106-1332-11ad2ccf
+E7F4A825-FCOE-251009-2315-5b7c8d9e
+9B2C4D6E-JFKE-251115-0845-3a5c7e9f
+
+Total: 2 trip(s), 3 survey(s)
 
 ---
 JetLagPro Research Analytics
-Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
+Generated: 11/25/2025, 3:00:00 PM
 ```

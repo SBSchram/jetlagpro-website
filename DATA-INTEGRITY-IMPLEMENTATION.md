@@ -95,7 +95,7 @@ When any write occurs to `tripCompletions`, Cloud Functions automatically trigge
 
 ## Verification Tools
 
-Two web-based tools are available to help you verify the integrity of the system. These tools run entirely in your browser—no installation or command-line tools required. They provide a straightforward way to inspect the audit logs and confirm that the live database matches the immutable archive.
+Two web-based tools are available to help you verify the integrity of the system. These tools run entirely in your browser. No installation or command-line tools required. They provide a straightforward way to inspect the audit logs and confirm that the live database matches the immutable archive.
 
 ### Audit Log Viewer
 
