@@ -85,7 +85,10 @@ service cloud.firestore {
     }
     
     // ============================================================
-    // AUDIT LOG COLLECTION (Phase 2 - Not Yet Implemented)
+    // AUDIT LOG COLLECTION
+    // Immutable record of all tripCompletions operations
+    // Written by Cloud Functions, readable by public for verification
+    // Deployed: November 11, 2025
     // ============================================================
     match /auditLog/{entry} {
       allow read: if true;  // Public can verify
@@ -93,7 +96,19 @@ service cloud.firestore {
     }
     
     // ============================================================
-    // SNAPSHOTS COLLECTION (Phase 3 - Not Yet Implemented)
+    // SYSTEM COLLECTION
+    // Internal state for Cloud Functions (notification tracking, etc.)
+    // Deployed: November 25, 2025
+    // ============================================================
+    match /_system/{doc} {
+      allow read: if true;  // Public can view system status
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+    
+    // ============================================================
+    // SNAPSHOTS COLLECTION
+    // Timestamped dataset snapshots for research publication
+    // Not yet implemented
     // ============================================================
     match /_snapshots/{doc} {
       allow read: if true;  // Public can verify
