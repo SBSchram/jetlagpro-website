@@ -55,11 +55,19 @@ function getEmailTransporter() {
   try {
     gmailPassword = functions.config().gmail?.password;
     gmailUser = functions.config().gmail?.user;
+    logger.info("🔍 Using functions.config() for credentials");
   } catch (e) {
     // functions.config() not available in v2, use process.env
     gmailPassword = process.env.GMAIL_PASSWORD;
     gmailUser = process.env.GMAIL_USER;
+    logger.info("🔍 Using process.env for credentials");
   }
+  
+  // Debug logging (sanitized)
+  logger.info(`🔍 Gmail user: ${gmailUser || "NOT SET"}`);
+  logger.info(`🔍 Gmail password length: ${gmailPassword ? gmailPassword.length : 0} characters`);
+  logger.info(`🔍 Gmail password first 4 chars: ${gmailPassword ? gmailPassword.substring(0, 4) : "NONE"}`);
+  logger.info(`🔍 Gmail password last 4 chars: ${gmailPassword ? gmailPassword.substring(gmailPassword.length - 4) : "NONE"}`);
   
   if (!gmailPassword) {
     logger.warn("⚠️ Gmail app password not set. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
