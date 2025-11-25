@@ -551,172 +551,128 @@ exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async 
 });
 
 /**
- * Hourly Digest Notification - Sends email of new Firebase entries
- * Runs every hour via Cloud Scheduler
+ * Real-Time Trip Notification - Sends email immediately when trip is created
+ * Triggers on new document in tripCompletions collection
  */
-exports.hourlyDigestNotification = onSchedule({
-  schedule: "0 * * * *", // Every hour at minute 0
-  timeZone: "America/New_York",
-  region: "us-east1",
-}, async (event) => {
+exports.realtimeTripNotification = onDocumentCreated("tripCompletions/{tripId}", async (event) => {
+  const snapshot = event.data;
+  const tripId = event.params.tripId;
+  
+  if (!snapshot) {
+    logger.warn("No data associated with the event");
+    return;
+  }
+  
+  const data = snapshot.data();
+  
   try {
-    logger.info("🔄 Starting hourly digest notification check...");
-
-    // Get last notification timestamp from Firestore
-    const settingsRef = db.collection(NOTIFICATION_SETTINGS_COLLECTION).doc(NOTIFICATION_SETTINGS_DOC);
-    const settingsDoc = await settingsRef.get();
+    logger.info(`📧 Sending real-time notification for new trip: ${tripId}`);
     
-    let lastNotificationTime = null;
-    if (settingsDoc.exists) {
-      const data = settingsDoc.data();
-      lastNotificationTime = data.lastNotificationTime;
-      logger.info(`📅 Last notification time: ${lastNotificationTime}`);
-    } else {
-      // First run - check entries from last 1 hour
-      lastNotificationTime = Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
-      logger.info("📅 First run - checking last 1 hour of entries");
-    }
+    const emailBody = `New trip created:
 
-    const cutoffTime = lastNotificationTime || Timestamp.fromMillis(Date.now() - 60 * 60 * 1000);
-    const cutoffMillis = cutoffTime.toMillis ? cutoffTime.toMillis() : cutoffTime._seconds * 1000;
-    
-    // Query for both CREATE and UPDATE operations
-    const snapshot = await db.collection("auditLog")
-      .where("operation", "in", ["CREATE", "UPDATE"])
-      .orderBy("timestamp", "desc")
-      .limit(200)
-      .get();
-    
-    const newTrips = [];
-    const newSurveys = [];
-    const seenTripIds = new Set();
-    const seenSurveyIds = new Set();
-    
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      const tripId = data.tripId || data.documentId;
-      if (!tripId) return;
-      
-      const entryTime = data.timestamp?.toMillis ? data.timestamp.toMillis() : 
-                       (data.timestamp?._seconds ? data.timestamp._seconds * 1000 : 0);
-      
-      if (entryTime > cutoffMillis) {
-        // Check if it's a CREATE operation (new trip)
-        if (data.operation === "CREATE" && !seenTripIds.has(tripId)) {
-          seenTripIds.add(tripId);
-          newTrips.push({ tripId, createdAt: data.timestamp, type: "trip" });
-        }
-        
-        // Check if it's an UPDATE with survey data (survey completion)
-        if (data.operation === "UPDATE" && !seenSurveyIds.has(tripId)) {
-          // Check if survey-related fields changed
-          const changedFields = data.changedFields || [];
-          const isSurveyUpdate = changedFields.some(field => 
-            field.includes("survey") || 
-            field.includes("Post") || 
-            field.includes("ageRange") ||
-            field.includes("userComment")
-          );
-          
-          if (isSurveyUpdate) {
-            seenSurveyIds.add(tripId);
-            newSurveys.push({ tripId, createdAt: data.timestamp, type: "survey" });
-          }
-        }
-      }
-    });
-    
-    // Combine and sort all entries
-    const allEntries = [...newTrips, ...newSurveys];
-    allEntries.sort((a, b) => {
-      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : a.createdAt?._seconds * 1000 || 0;
-      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : b.createdAt?._seconds * 1000 || 0;
-      return timeB - timeA;
-    });
+Trip ID: ${tripId}
+Destination: ${data.destinationCode || "Unknown"}
+Direction: ${data.travelDirection || "Unknown"}
+Points Completed: ${data.pointsCompleted || 0}/12
+Timezone Count: ${data.timezonesCount ?? "Unknown"}
+Survey: ${data.surveyCompleted ? "Yes" : "No"}
 
-    logger.info(`📊 Found ${newTrips.length} new trip(s) and ${newSurveys.length} survey(s) since last notification`);
+---
+JetLagPro Research Analytics
+${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
 
-    // Only send email if there are new entries
-    if (allEntries.length > 0) {
-      // Build email content with separate sections
-      let emailBody = "New JetLagPro entries detected:\n\n";
-      
-      if (newTrips.length > 0) {
-        emailBody += `NEW TRIPS (${newTrips.length}):\n`;
-        emailBody += newTrips.map(trip => trip.tripId).join("\n");
-        emailBody += "\n\n";
-      }
-      
-      if (newSurveys.length > 0) {
-        emailBody += `SURVEY COMPLETIONS (${newSurveys.length}):\n`;
-        emailBody += newSurveys.map(survey => survey.tripId).join("\n");
-        emailBody += "\n\n";
-      }
-      
-      emailBody += `Total: ${newTrips.length} trip(s), ${newSurveys.length} survey(s)\n\n`;
-      emailBody += "---\n";
-      emailBody += "JetLagPro Research Analytics\n";
-      emailBody += `Generated: ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
-
-      const transporter = getEmailTransporter();
-      if (!transporter) {
-        throw new Error("Gmail transporter not initialized. Run: firebase functions:config:set gmail.password=YOUR_PASSWORD");
-      }
-
-      const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
-      
-      const subjectParts = [];
-      if (newTrips.length > 0) subjectParts.push(`${newTrips.length} Trip${newTrips.length > 1 ? "s" : ""}`);
-      if (newSurveys.length > 0) subjectParts.push(`${newSurveys.length} Survey${newSurveys.length > 1 ? "s" : ""}`);
-      
-      await transporter.sendMail({
-        from: gmailUser,
-        to: NOTIFICATION_EMAIL,
-        subject: `JetLagPro: ${subjectParts.join(", ")} Added`,
-        text: emailBody,
-      });
-      
-      logger.info(`✅ Email sent successfully to ${NOTIFICATION_EMAIL} (${newTrips.length} trips, ${newSurveys.length} surveys)`);
-    } else {
-      logger.info("📭 No new entries - skipping email");
-    }
-
-    // Update last notification timestamp to now
-    const currentTime = FieldValue.serverTimestamp();
-    await settingsRef.set({
-      lastNotificationTime: currentTime,
-      lastCheckTime: currentTime,
-      lastCheckCount: allEntries.length,
-      lastTripCount: newTrips.length,
-      lastSurveyCount: newSurveys.length,
-    }, { merge: true });
-
-    logger.info("✅ Hourly digest notification check completed");
-
-    return { success: true, newTripsCount: newTrips.length, newSurveysCount: newSurveys.length };
-  } catch (error) {
-    logger.error("❌ Error in hourly digest notification:", error);
-    
-    // Try to send error notification email
     const transporter = getEmailTransporter();
-    if (transporter) {
-      try {
-        const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
-        await transporter.sendMail({
-          from: gmailUser,
-          to: NOTIFICATION_EMAIL,
-          subject: "JetLagPro Notification Error",
-          text: `An error occurred while checking for new Firebase entries:
-
-${error.message}
-
-${error.stack || ""}`,
-        });
-      } catch (emailError) {
-        logger.error("❌ Failed to send error notification email:", emailError);
-      }
+    if (!transporter) {
+      logger.warn("⚠️ Gmail transporter not initialized - skipping notification");
+      return;
     }
+
+    const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
     
-    throw error;
+    await transporter.sendMail({
+      from: gmailUser,
+      to: NOTIFICATION_EMAIL,
+      subject: `JetLagPro: New Trip - ${data.destinationCode || tripId.substring(0, 8)}`,
+      text: emailBody,
+    });
+    
+    logger.info(`✅ Real-time notification sent for trip ${tripId}`);
+  } catch (error) {
+    logger.error(`❌ Error sending real-time trip notification for ${tripId}:`, error);
+  }
+});
+
+/**
+ * Real-Time Survey Notification - Sends email immediately when survey is completed/edited
+ * Triggers on document update in tripCompletions collection
+ */
+exports.realtimeSurveyNotification = onDocumentUpdated("tripCompletions/{tripId}", async (event) => {
+  const beforeSnapshot = event.data.before;
+  const afterSnapshot = event.data.after;
+  const tripId = event.params.tripId;
+  
+  if (!beforeSnapshot || !afterSnapshot) {
+    logger.warn("Missing before or after snapshot");
+    return;
+  }
+  
+  const beforeData = beforeSnapshot.data();
+  const afterData = afterSnapshot.data();
+  
+  // Check if survey-related fields changed
+  const changedKeys = Object.keys(afterData).filter(key => 
+    afterData[key] !== beforeData[key]
+  );
+  
+  const isSurveyUpdate = changedKeys.some(key => 
+    key.includes("survey") || 
+    key.includes("Post") || 
+    key.includes("ageRange") ||
+    key.includes("userComment")
+  );
+  
+  if (!isSurveyUpdate) {
+    // Not a survey update - skip notification
+    return;
+  }
+  
+  try {
+    logger.info(`📧 Sending real-time notification for survey update: ${tripId}`);
+    
+    // Determine if this is new survey or edit
+    const isNewSurvey = !beforeData.surveyCompleted && afterData.surveyCompleted;
+    const actionType = isNewSurvey ? "completed" : "edited";
+    
+    const emailBody = `Survey ${actionType}:
+
+Trip ID: ${tripId}
+Destination: ${afterData.destinationCode || "Unknown"}
+Direction: ${afterData.travelDirection || "Unknown"}
+Action: ${actionType === "completed" ? "First-time submission" : "Survey edited/retaken"}
+
+Changed fields: ${changedKeys.filter(k => !k.startsWith("_")).join(", ")}
+
+---
+JetLagPro Research Analytics
+${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
+
+    const transporter = getEmailTransporter();
+    if (!transporter) {
+      logger.warn("⚠️ Gmail transporter not initialized - skipping notification");
+      return;
+    }
+
+    const gmailUser = functions.config().gmail?.user || "sbschram@gmail.com";
+    
+    await transporter.sendMail({
+      from: gmailUser,
+      to: NOTIFICATION_EMAIL,
+      subject: `JetLagPro: Survey ${actionType === "completed" ? "Completed" : "Edited"} - ${tripId.substring(0, 8)}`,
+      text: emailBody,
+    });
+    
+    logger.info(`✅ Real-time survey notification sent for trip ${tripId} (${actionType})`);
+  } catch (error) {
+    logger.error(`❌ Error sending real-time survey notification for ${tripId}:`, error);
   }
 });
