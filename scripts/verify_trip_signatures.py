@@ -196,6 +196,7 @@ import hmac
 import hashlib
 import re
 import sys
+import urllib.request
 from typing import Dict, List, Optional
 
 
@@ -510,6 +511,36 @@ def print_report(report: Dict, verbose: bool = False) -> int:
         return 1
 
 
+def download_firestore_entries(collection='tripCompletions', output_file='firestore-trips.json') -> str:
+    """
+    Download Firestore collection data via REST API with automatic pagination.
+    Returns the path to the downloaded file.
+    """
+    print(f"Downloading {collection} from Firestore...")
+    
+    base_url = f'https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/{collection}?pageSize=1000'
+    all_docs = []
+    token = None
+    
+    while True:
+        url = base_url + (f'&pageToken={token}' if token else '')
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read())
+            docs = data.get('documents', [])
+            all_docs.extend(docs)
+            print(f"  Downloaded {len(all_docs)} documents...", end='\r')
+            
+            token = data.get('nextPageToken')
+            if not token:
+                break
+    
+    with open(output_file, 'w') as f:
+        json.dump({'documents': all_docs}, f, indent=2)
+    
+    print(f"\n  Saved {len(all_docs)} documents to {output_file}")
+    return output_file
+
+
 def main():
     """Main verification workflow."""
     import argparse
@@ -536,13 +567,14 @@ Security Note:
     
     parser.add_argument(
         '--trips',
-        required=True,
-        help='Path to trips JSON file'
+        required=False,
+        help='Path to trips JSON file (optional, auto-downloads if not provided)'
     )
     parser.add_argument(
         '--secret-key',
-        required=True,
-        help='Secret key for HMAC verification'
+        required=False,
+        default='7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a',
+        help='Secret key for HMAC verification (defaults to public key for research transparency)'
     )
     parser.add_argument(
         '--verbose',
@@ -551,6 +583,13 @@ Security Note:
     )
     
     args = parser.parse_args()
+    
+    # Auto-download trip data if not provided
+    if not args.trips:
+        print("Note: Trips file not provided, downloading automatically...")
+        print()
+        args.trips = download_firestore_entries('tripCompletions', 'firestore-trips.json')
+        print()
     
     # Load trips
     try:

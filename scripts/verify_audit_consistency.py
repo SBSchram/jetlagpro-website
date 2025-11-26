@@ -619,6 +619,36 @@ def load_firestore_entries(firestore_path: str) -> List[Dict]:
     return normalized
 
 
+def download_firestore_entries(collection='auditLog', output_file='firestore-audit.json') -> str:
+    """
+    Download Firestore collection data via REST API with automatic pagination.
+    Returns the path to the downloaded file.
+    """
+    print(f"Downloading {collection} from Firestore...")
+    
+    base_url = f'https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/{collection}?pageSize=1000'
+    all_docs = []
+    token = None
+    
+    while True:
+        url = base_url + (f'&pageToken={token}' if token else '')
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read())
+            docs = data.get('documents', [])
+            all_docs.extend(docs)
+            print(f"  Downloaded {len(all_docs)} documents...", end='\r')
+            
+            token = data.get('nextPageToken')
+            if not token:
+                break
+    
+    with open(output_file, 'w') as f:
+        json.dump({'documents': all_docs}, f, indent=2)
+    
+    print(f"\n  Saved {len(all_docs)} documents to {output_file}")
+    return output_file
+
+
 def download_gcs_entries() -> List[Dict]:
     """
     Download GCS audit entries directly via HTTP (no gsutil required).
@@ -1023,8 +1053,8 @@ Advanced usage (manual download with gsutil):
     
     parser.add_argument(
         '--firestore',
-        required=True,
-        help='Path to Firestore audit data JSON file'
+        required=False,
+        help='Path to Firestore audit data JSON file (optional, auto-downloads if not provided)'
     )
     parser.add_argument(
         '--gcs-dir',
@@ -1039,8 +1069,13 @@ Advanced usage (manual download with gsutil):
     
     args = parser.parse_args()
     
-    # Validate inputs
-    if not os.path.exists(args.firestore):
+    # Auto-download Firestore data if not provided
+    if not args.firestore:
+        print("Note: Firestore file not provided, downloading automatically...")
+        print()
+        args.firestore = download_firestore_entries('auditLog', 'firestore-audit.json')
+        print()
+    elif not os.path.exists(args.firestore):
         print(f"ERROR: Firestore file not found: {args.firestore}")
         return 1
     

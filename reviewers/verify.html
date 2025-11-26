@@ -893,60 +893,8 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 1: Download the Audit Data from our database</h2>
-            <p>Save this script as <code>download_firestore.py</code> and run it:</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>import json, urllib.request, sys
-collection = sys.argv[1] if len(sys.argv) > 1 else 'auditLog'
-output = sys.argv[2] if len(sys.argv) > 2 else f'firestore-{collection}.json'
-base_url = f'https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/{collection}?pageSize=1000'
-all_docs = []
-token = None
-while True:
-    url = base_url + (f'&pageToken={token}' if token else '')
-    response = json.loads(urllib.request.urlopen(url).read())
-    all_docs.extend(response.get('documents', []))
-    token = response.get('nextPageToken')
-    if not token:
-        break
-with open(output, 'w') as f:
-    json.dump({'documents': all_docs}, f, indent=2)
-print(f'Downloaded {len(all_docs)} documents to {output}')</code>
-            </div>
-            <p style="margin-top: 10px;">Run: <code>python download_firestore.py auditLog firestore-audit.json</code></p>
-        </div>
-
-        <div class="section">
-            <h2>Step 2: Download Immutable GCS Archive <span style="color: #666; font-size: 0.8em; font-weight: normal;">(Optional - Skip to Step 3)</span></h2>
-            <p style="margin-bottom: 10px; color: #666; font-size: 0.95em;"><strong>Note:</strong> Step 2 is optional. The verification script in Step 3 will automatically download GCS files for you. Only use this step if you prefer manual control with gsutil.</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>gsutil -m rsync -r gs://jetlagpro-audit-logs/audit-logs ./gcs-audit</code>
-            </div>
-            <div class="note" style="margin-top: 10px;">
-                <strong>Prerequisite:</strong> <code>gsutil</code> is part of the Google Cloud SDK. If not installed:
-                <ul style="margin: 8px 0 0 0; padding-left: 20px; line-height: 1.6;">
-                    <li><strong>macOS (Homebrew):</strong> <code>brew install google-cloud-sdk</code></li>
-                    <li><strong>Linux/Windows:</strong> Download from <a href="https://cloud.google.com/sdk/docs/install" target="_blank">cloud.google.com/sdk/docs/install</a></li>
-                </ul>
-                After installation, run <code>gcloud init</code> and <code>gcloud auth login</code>. The bucket is publicly readable, so no special permissions are required.
-            </div>
-            <p style="margin-top: 10px; font-size: 0.9em;">Each JSON file in the archive is a single audit event, version-locked for 10 years.</p>
-        </div>
-
-        <div class="section">
-            <h2>Step 3: Download and Run Verification Script (standalone, no dependencies, pure Python)</h2>
+            <h2>Step 1: Download and Run Verification Script</h2>
+            <p>Download the verification script:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -957,7 +905,7 @@ print(f'Downloaded {len(all_docs)} documents to {output}')</code>
                 <code>curl -o verify_audit_consistency.py https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
             </div>
             <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
-            <p style="margin-top: 15px;">Run the verification script. It will automatically download GCS files (no gsutil required):</p>
+            <p style="margin-top: 15px;">Run the verification (automatically downloads Firestore and GCS data):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -965,12 +913,16 @@ print(f'Downloaded {len(all_docs)} documents to {output}')</code>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python verify_audit_consistency.py --firestore firestore-audit.json</code>
+                <code>python verify_audit_consistency.py</code>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads GCS files and verifies consistency. No gsutil, no manual downloads, no complex setup.</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads all required data and verifies consistency. No manual downloads, no gsutil, no complex setup.</p>
             <details style="margin-top: 15px;">
-                <summary style="cursor: pointer; color: #0066cc; font-size: 0.9em;">Advanced: Use manual gsutil download (optional)</summary>
-                <p style="margin-top: 10px; font-size: 0.9em;">If you prefer to use gsutil from Step 2:</p>
+                <summary style="cursor: pointer; color: #0066cc; font-size: 0.9em;">Advanced: Manual download options (optional)</summary>
+                <p style="margin-top: 10px; font-size: 0.9em;">If you prefer to download data manually:</p>
+                <div class="code-block" style="margin-top: 8px;">
+                    <code>python verify_audit_consistency.py --firestore firestore-audit.json</code>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.9em;">Or use gsutil for GCS download:</p>
                 <div class="code-block" style="margin-top: 8px;">
                     <code>python verify_audit_consistency.py --firestore firestore-audit.json --gcs-dir ./gcs-audit</code>
                 </div>
@@ -997,21 +949,8 @@ print(f'Downloaded {len(all_docs)} documents to {output}')</code>
         </div>
 
         <div class="section">
-            <h2>Step 1: Download the Trip Data from our database</h2>
-            <p>Use the same script from Step 1 above (or save it as <code>download_firestore.py</code> if you haven't already):</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>python download_firestore.py tripCompletions firestore-trips.json</code>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>Step 2: Download and Run HMAC Verification Script (standalone, no dependencies, pure Python)</h2>
+            <h2>Step 1: Download and Run Verification Script</h2>
+            <p>Download the verification script:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1022,7 +961,7 @@ print(f'Downloaded {len(all_docs)} documents to {output}')</code>
                 <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
             </div>
             <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
-            <p style="margin-top: 15px;">Run the verification script to validate HMAC-SHA256 signatures for every trip ID in our dataset:</p>
+            <p style="margin-top: 15px;">Run the verification (automatically downloads trip data):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1030,11 +969,9 @@ print(f'Downloaded {len(all_docs)} documents to {output}')</code>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python verify_trip_signatures.py --trips firestore-trips.json --secret-key 7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a</code>
+                <code>python verify_trip_signatures.py</code>
             </div>
-            <div class="note">
-                <strong>Note:</strong> The HMAC secret key is intentionally public for research transparency and independent verification. See the source code comments for details.
-            </div>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads trip data and validates signatures. The HMAC secret key is intentionally public for research transparency.</p>
         </div>
 
         <div class="section">
