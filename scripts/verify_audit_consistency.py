@@ -996,6 +996,14 @@ def print_report(report: Dict) -> int:
     print(f"Discrepancies:              {report['discrepancies']}")
     print()
     
+    # Interpretation section
+    print("INTERPRETING RESULTS:")
+    print("  All records match – Firestore mirrors the immutable archive")
+    print("  Missing in Firestore – Unexpected; investigate immediately (GCS is authoritative)")
+    print("  Missing in GCS – Unexpected; investigate immediately (all post-deployment entries should exist in both systems)")
+    print("  Content mismatches – Potential tampering; investigate immediately (GCS is authoritative)")
+    print()
+    
     if report['discrepancies'] == 0:
         print("Status: ✅ Data records match as expected")
         print("="*70)
