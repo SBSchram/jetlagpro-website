@@ -5,6 +5,7 @@
 .DS_Store
 Thumbs.db
 *.log
+*firepit*.txt
 node_modules/
 .env
 .env.local
