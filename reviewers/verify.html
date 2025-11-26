@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Verify Audit Trail</title>
-    <script src="../load-common-head.js?v=20251126184459"></script>
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126184459">
+    <script src="../load-common-head.js?v=20251126184913"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126184913">
     <style>
         /* Container override for verify page - narrower for readability */
         .container {
@@ -48,7 +48,7 @@
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="../assets/js/firebase-service.js?v=20251126184459"></script>
+    <script src="../assets/js/firebase-service.js?v=20251126184913"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
         const VERIFIER_BUILD = '2025-11-26 12:30 UTC · commit 487f9ea';
@@ -864,7 +864,7 @@ HMAC Validation Results:
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251126184459"></script>
+        <script src="load-nav.js?v=20251126184913"></script>
 
         <div class="header">
             <h1>Trust but Verify</h1>
@@ -883,7 +883,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Verify on your computer with the verification script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button" style="margin-left: 15px;">View Source Code on GitHub</a></h2>
+            <h2>Verify on your computer with the <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank">verification script</a></h2>
             <p>Download the verification script:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
@@ -894,7 +894,7 @@ HMAC Validation Results:
                 </button>
                 <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
             </div>
-            <p style="margin-top: 15px;">Run it to download our trip data:</p>
+            <p style="margin-top: 15px;">Run it to download and analyze our trip data:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -904,7 +904,6 @@ HMAC Validation Results:
                 </button>
                 <code>python verify_trip_signatures.py</code>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads trip data and validates signatures. The HMAC secret key is intentionally public for research transparency.</p>
         </div>
 
         <div class="section">
@@ -923,7 +922,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Verify on your computer with the verification script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank" class="source-button" style="margin-left: 15px;">View Source Code on GitHub</a></h2>
+            <h2>Verify on your computer with the <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank">verification script</a></h2>
             <p>Download the verification script:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
