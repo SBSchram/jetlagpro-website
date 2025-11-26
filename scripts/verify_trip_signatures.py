@@ -480,13 +480,21 @@ def print_report(report: Dict, verbose: bool = False) -> int:
     print(f"  Error (malformed trip IDs): {report['error']}")
     print("="*60)
     
+    # Interpretation section
+    print("\nINTERPRETING RESULTS:")
+    print("  All signatures valid – All trip records were submitted by legitimate iOS devices")
+    print("  Legacy trips (no signature) – Expected for 20 early records before HMAC was implemented")
+    print("  Invalid signatures – Potential tampering or unauthorized submissions; investigate immediately")
+    print("  Missing trip IDs – Data integrity issue; investigate immediately")
+    print("")
+    
     # Check for invalid signatures - matches verify.html line 1003
     if report['invalid'] == 0 and report['error'] == 0:
-        print("\n✓ VERIFICATION PASSED")
+        print("✓ VERIFICATION PASSED")
         print("Trip verification complete: all signatures are valid or legacy.")
         return 0
     else:
-        print("\n✗ VERIFICATION FAILED")
+        print("✗ VERIFICATION FAILED")
         print("INVALID SIGNATURES FOUND:\n")
         
         # Show invalid signatures - matches verify.html line 1009-1018
