@@ -157,7 +157,9 @@ async function writeAuditEntry(auditEntry) {
 
     logger.info(`✅ GCS: Audit entry written (${fileName})`);
   } catch (error) {
-    logger.error("❌ Error writing audit entry:", error);
+    // Sanitize error message to prevent sensitive data exposure
+    const errorMessage = error?.message || String(error);
+    logger.error(`❌ Error writing audit entry: ${errorMessage}`);
     // Don't throw - we don't want to break the main operation
     // Just log the error for monitoring
   }
@@ -618,7 +620,9 @@ ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
     
     logger.info(`✅ Real-time notification sent for trip ${tripId}`);
   } catch (error) {
-    logger.error(`❌ Error sending real-time trip notification for ${tripId}:`, error);
+    // Sanitize error message to prevent password exposure
+    const errorMessage = error?.message || String(error);
+    logger.error(`❌ Error sending real-time trip notification for ${tripId}: ${errorMessage}`);
   }
 });
 
@@ -701,6 +705,8 @@ ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`;
     
     logger.info(`✅ Real-time survey notification sent for trip ${tripId} (${actionType})`);
   } catch (error) {
-    logger.error(`❌ Error sending real-time survey notification for ${tripId}:`, error);
+    // Sanitize error message to prevent password exposure
+    const errorMessage = error?.message || String(error);
+    logger.error(`❌ Error sending real-time survey notification for ${tripId}: ${errorMessage}`);
   }
 });
