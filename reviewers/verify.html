@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Verify Audit Trail</title>
-    <script src="../load-common-head.js?v=20251126185602"></script>
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126185602">
+    <script src="../load-common-head.js?v=20251126185907"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126185907">
     <style>
         /* Container override for verify page - narrower for readability */
         .container {
@@ -48,7 +48,7 @@
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="../assets/js/firebase-service.js?v=20251126185602"></script>
+    <script src="../assets/js/firebase-service.js?v=20251126185907"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
         const VERIFIER_BUILD = '2025-11-26 12:30 UTC · commit 487f9ea';
@@ -864,7 +864,7 @@ HMAC Validation Results:
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251126185602"></script>
+        <script src="load-nav.js?v=20251126185907"></script>
 
         <div class="header">
             <h1>Trust but Verify</h1>
@@ -923,7 +923,7 @@ HMAC Validation Results:
                 </button>
                 <code>curl -o verify_audit_consistency.py https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
             </div>
-            <p style="margin-top: 15px;">Run it to download our data on Firestore and GCS immutable data:</p>
+            <p style="margin-top: 15px;">Run it to download and compare our records from Firestore and those from the GCS immutable data:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -933,18 +933,6 @@ HMAC Validation Results:
                 </button>
                 <code>python verify_audit_consistency.py</code>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads all required data and verifies consistency. No manual downloads, no gsutil, no complex setup.</p>
-            <details style="margin-top: 15px;">
-                <summary style="cursor: pointer; color: #0066cc; font-size: 0.9em;">Advanced: Manual download options (optional)</summary>
-                <p style="margin-top: 10px; font-size: 0.9em;">If you prefer to download data manually:</p>
-                <div class="code-block" style="margin-top: 8px;">
-                    <code>python verify_audit_consistency.py --firestore firestore-audit.json</code>
-                </div>
-                <p style="margin-top: 10px; font-size: 0.9em;">Or use gsutil for GCS download:</p>
-                <div class="code-block" style="margin-top: 8px;">
-                    <code>python verify_audit_consistency.py --firestore firestore-audit.json --gcs-dir ./gcs-audit</code>
-                </div>
-            </details>
         </div>
 
     </div>
