@@ -28,6 +28,7 @@
             font-weight: 600;
             color: #1f2937;
             margin: 0 0 5px 0;
+            text-align: center;
         }
         .header p {
             font-size: 0.95rem;
@@ -874,10 +875,10 @@ HMAC Validation Results:
             <p>How do you know research data hasn't been manipulated? We provide two independent verifications:</p>
             
             <p><strong>✓ Audit Trail Verification</strong><br>
-            Every time data is created, modified, or deleted, a permanent record is written to Google Cloud Storage. This archive is immutable (cannot be changed) and version-locked for 10 years. You can verify that our live database matches this authoritative record.</p>
+            Every data change is permanently recorded in Google Cloud Storage. Verify that our data matches this immutable record.</p>
             
             <p><strong>✓ Device Authentication</strong><br>
-            Starting November 8, 2025, every trip record includes a cryptographic signature. This proves it was submitted by a legitimate iOS device with our app installed. You can verify that our database contains only authenticated entries.</p>
+            As of November 8, 2025, every trip entry requires a cryptographic signature created by our app on a legitimate iOS device.</p>
             
             <p>These measures provide reviewers with verifiable proof of data integrity. For technical details, see the <a href="../research-paper.html#appendix-data-integrity" target="_blank">research paper appendix</a>.</p>
         </div>
@@ -888,11 +889,12 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Independent Verification: Audit Trail (verify on your own computer using the same methodology)</h2>
+            <h2>Verify on your computer</h2>
         </div>
 
         <div class="section">
-            <h2>Step 1: Download Firestore Audit Data (via Firestore REST API, public read access)</h2>
+            <h2>Step 1: Download the Audit Data from our database</h2>
+            <p>Save this script as <code>download_firestore.py</code> and run it:</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -900,12 +902,24 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/auditLog?pageSize=1000" \
-  -o firestore-audit.json</code>
+                <code>import json, urllib.request, sys
+collection = sys.argv[1] if len(sys.argv) > 1 else 'auditLog'
+output = sys.argv[2] if len(sys.argv) > 2 else f'firestore-{collection}.json'
+base_url = f'https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/{collection}?pageSize=1000'
+all_docs = []
+token = None
+while True:
+    url = base_url + (f'&pageToken={token}' if token else '')
+    response = json.loads(urllib.request.urlopen(url).read())
+    all_docs.extend(response.get('documents', []))
+    token = response.get('nextPageToken')
+    if not token:
+        break
+with open(output, 'w') as f:
+    json.dump({'documents': all_docs}, f, indent=2)
+print(f'Downloaded {len(all_docs)} documents to {output}')</code>
             </div>
-            <div class="note">
-                <strong>Note:</strong> If the response includes <code>"nextPageToken"</code>, repeat the call with <code>&pageToken=...</code> and append results to the same file.
-            </div>
+            <p style="margin-top: 10px;">Run: <code>python download_firestore.py auditLog firestore-audit.json</code></p>
         </div>
 
         <div class="section">
@@ -940,8 +954,7 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>curl -o verify_audit_consistency.py \
-  https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
+                <code>curl -o verify_audit_consistency.py https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
             </div>
             <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
             <p style="margin-top: 15px;">Run the verification script. It will automatically download GCS files (no gsutil required):</p>
@@ -984,7 +997,8 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 1: Download Firestore Trip Data (via Firestore REST API, public read access)</h2>
+            <h2>Step 1: Download the Trip Data from our database</h2>
+            <p>Use the same script from Step 1 above (or save it as <code>download_firestore.py</code> if you haven't already):</p>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -992,11 +1006,7 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" \
-  -o firestore-trips.json</code>
-            </div>
-            <div class="note">
-                <strong>Note:</strong> If the response includes <code>"nextPageToken"</code>, repeat the call with <code>&pageToken=...</code> and append results to the same file.
+                <code>python download_firestore.py tripCompletions firestore-trips.json</code>
             </div>
         </div>
 
@@ -1009,8 +1019,7 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>curl -o verify_trip_signatures.py \
-  https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
+                <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
             </div>
             <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
             <p style="margin-top: 15px;">Run the verification script to validate HMAC-SHA256 signatures for every trip ID in our dataset:</p>
@@ -1021,9 +1030,7 @@ HMAC Validation Results:
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <code>python verify_trip_signatures.py \
-  --trips firestore-trips.json \
-  --secret-key 7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a</code>
+                <code>python verify_trip_signatures.py --trips firestore-trips.json --secret-key 7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a</code>
             </div>
             <div class="note">
                 <strong>Note:</strong> The HMAC secret key is intentionally public for research transparency and independent verification. See the source code comments for details.
