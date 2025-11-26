@@ -175,52 +175,35 @@ Discrepancies:              ${comparison.discrepancies}
         
         async function fetchGCSEntries() {
             try {
-                // Try to fetch the GCS bucket listing using JSON API
-                // Note: Bucket must be publicly readable
                 const listUrl = 'https://storage.googleapis.com/storage/v1/b/jetlagpro-audit-logs/o?prefix=audit-logs/&maxResults=10000';
-                console.log('Fetching GCS bucket listing from:', listUrl);
-                
                 const response = await fetch(listUrl, {
                     cache: 'no-store',
                     method: 'GET'
                 });
                 
-                console.log('GCS API response status:', response.status, response.statusText);
-                
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('GCS API error response:', errorText);
-                    
                     if (response.status === 403) {
                         console.warn('GCS bucket not publicly readable (403 Forbidden)');
                     } else if (response.status === 404) {
                         console.warn('GCS bucket not found (404 Not Found)');
-                    } else {
-                        console.warn(`GCS API error: ${response.status} ${response.statusText}`);
                     }
                     return null;
                 }
                 
                 const data = await response.json();
-                console.log('GCS API returned', data.items?.length || 0, 'items');
                 const files = data.items || [];
                 
                 if (files.length === 0) {
-                    console.warn('GCS bucket is accessible but contains no files in audit-logs/ prefix');
                     return [];
                 }
                 
-                // Fetch each JSON file and parse (limit to reasonable number for performance)
                 const entries = [];
-                const maxFiles = 1000; // Limit to prevent timeout
+                const maxFiles = 1000;
                 const jsonFiles = files.filter(f => f.name.endsWith('.json'));
                 const filesToFetch = jsonFiles.slice(0, maxFiles);
                 
-                console.log(`Fetching ${filesToFetch.length} JSON files from GCS...`);
-                
                 for (const file of filesToFetch) {
                     try {
-                        // Use the mediaLink or construct direct URL
                         const fileUrl = file.mediaLink || `https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`;
                         const fileResponse = await fetch(fileUrl, {
                             cache: 'no-store'
@@ -228,24 +211,14 @@ Discrepancies:              ${comparison.discrepancies}
                         
                         if (fileResponse.ok) {
                             const entry = await fileResponse.json();
-                            // Store raw entry for inspection
                             const rawEntry = JSON.parse(JSON.stringify(entry));
-                            // GCS entries are already in plain JSON, but normalize to ensure consistency
                             const normalized = normalizeEntry(entry);
                             normalized._raw = rawEntry;
                             entries.push(normalized);
-                        } else {
-                            console.warn(`Failed to fetch ${file.name}: ${fileResponse.status} ${fileResponse.statusText}`);
                         }
                     } catch (e) {
                         console.warn(`Error fetching ${file.name}:`, e);
                     }
-                }
-                
-                console.log(`Successfully fetched ${entries.length} audit entries from GCS`);
-                
-                if (jsonFiles.length > maxFiles) {
-                    console.warn(`Only fetched first ${maxFiles} of ${jsonFiles.length} JSON files`);
                 }
                 
                 return entries;
@@ -256,100 +229,65 @@ Discrepancies:              ${comparison.discrepancies}
         }
         
         function compareEntries(firestoreEntries, gcsEntries) {
-            const matched = 0;
-            const discrepancies = 0;
+            // Compare Firestore audit entries with GCS immutable archive
+            // Uses composite key (operation + documentId + eventId) to uniquely identify entries
+            // because multiple entries can share the same eventId (e.g., CREATE and VALIDATION_FAILED)
             const missingInFirestore = [];
             const missingInGCS = [];
             const mismatched = [];
             
-            // Track counts for reporting
             const totalFirestoreEntries = firestoreEntries.length;
             let preDeploymentCount = 0;
             let knownExceptionsCount = 0;
             
-            // Known pre-deployment entries: These 4 audit entries were created before the 
-            // immutable GCS archive was deployed (2025-11-11). They exist only in Firestore
-            // and are expected to be missing from GCS. We filter them out for verification
-            // to avoid false positives. This list is hardcoded for transparency - any future
-            // missing entries would indicate a real problem.
+            // Known exceptions documented for transparency:
+            // - Pre-deployment: 4 entries created before GCS archive was deployed (2025-11-11)
+            // - Validation failures: GCS shows CREATE, Firestore shows validation failure (expected discrepancy)
+            // - Field mismatches: Firestore Admin SDK omits null values, GCS preserves them (fixed Nov 20, 2025)
             const preDeploymentEventIds = new Set([
                 '3479ae2f-5a3f-46ef-9439-f7ca2984337d',
                 'dcd41966-3520-486e-93cc-0d50d76e1ac5',
                 '1f54b779-aff3-4cd7-b667-ecfdfc898a47',
                 '4253d2be-9d13-466f-b535-f55ade5b5dec'
             ]);
-            
-            // Known validation failures: Validation caught metadata format issues during
-            // testing. GCS shows CREATE (original write), Firestore shows validation failure.
-            // See verify_audit_consistency.py for details.
             const knownValidationFailures = new Set([
                 'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590'  // Test trip 23DB54B0, 16-char hex device ID
             ]);
-            
-            // Known field mismatch exceptions: Firestore Admin SDK omits null values when writing,
-            // but GCS preserves them. This causes discrepancies where Firestore is missing fields
-            // that GCS has. Fixed in Cloud Functions (Nov 20, 2025) - only include fields that exist.
-            // These entries are expected discrepancies from before the fix.
             const knownFieldMismatches = new Set([
                 '4b073475-b82b-4768-9ad8-57d2056307ca'  // travelDirection missing in Firestore (Nov 20, 2025)
             ]);
+            const knownEventIdCollisions = new Set([]);
             
-            // Known eventId collision exceptions: No longer needed - we now use composite keys
-            // (operation-documentId) instead of eventId for matching, so multiple entries from the
-            // same event are properly handled. Kept for backward compatibility with legacy exclusions.
-            const knownEventIdCollisions = new Set([
-                // Legacy: No longer needed with composite key matching (Nov 20, 2025)
-            ]);
-            
-            // Create maps for quick lookup using composite key (operation + documentId)
+            // Create maps using composite key: operation + documentId + eventId
             // This ensures each audit entry is uniquely identified, even when multiple entries
             // share the same eventId (e.g., CREATE and VALIDATION_FAILED from same document creation)
-            // The real problem: eventId identifies the source event, not the audit entry.
-            // Multiple audit entries can share the same eventId, so we use operation+documentId instead.
-            // Also store raw entries for inspection
             const firestoreMap = new Map();
             const firestoreRawMap = new Map();
             firestoreEntries.forEach(entry => {
-                // Use composite key: operation + documentId + eventId
-                // This uniquely identifies each audit entry:
-                // - CREATE/VALIDATION entries can share eventId (same source event), so operation distinguishes them
-                // - UPDATE entries have unique eventId per update, so eventId distinguishes them
-                // - Using all three ensures uniqueness for all entry types
                 const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const eventId = entry.eventId || entry._raw?.eventId || '';
                 const key = `${operation}-${documentId}-${eventId}`;
                 
-                // Check exclusions by eventId (for backward compatibility with known entries)
-                // eventId already extracted above for key generation
-                
-                // Skip pre-deployment entries - they're expected to be missing from GCS
+                // Filter out known exceptions (documented for transparency)
                 if (eventId && preDeploymentEventIds.has(eventId)) {
                     preDeploymentCount++;
                     return;
                 }
-                
-                // Skip known validation failures - they're expected discrepancies
                 if (eventId && knownValidationFailures.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
-                
-                // Skip known field mismatches - Firestore omits null values, GCS preserves them
-                // Fixed in Cloud Functions (Nov 20, 2025) - these are pre-fix entries
                 if (eventId && knownFieldMismatches.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
-                
-                // Skip known eventId collisions - no longer needed with composite key, but kept for legacy
                 if (eventId && knownEventIdCollisions.has(eventId)) {
                     knownExceptionsCount++;
                     return;
                 }
                 
                 firestoreMap.set(key, entry);
-                // Store raw entry if available
                 if (entry._raw) {
                     firestoreRawMap.set(key, entry._raw);
                 }
@@ -358,61 +296,24 @@ Discrepancies:              ${comparison.discrepancies}
             const gcsMap = new Map();
             const gcsRawMap = new Map();
             gcsEntries.forEach(entry => {
-                // Use composite key: operation + documentId + eventId (matches Firestore key generation)
                 const documentId = entry.documentId || entry.tripId || '';
                 const operation = entry.operation || 'UNKNOWN';
                 const eventId = entry.eventId || entry._raw?.eventId || '';
                 const key = `${operation}-${documentId}-${eventId}`;
                 
-                // Skip pre-deployment entries (they shouldn't be in GCS, but filter just in case)
-                if (eventId && preDeploymentEventIds.has(eventId)) {
-                    return;
-                }
-                
-                // Skip known validation failures - they're expected discrepancies
-                if (eventId && knownValidationFailures.has(eventId)) {
-                    return;
-                }
-                
-                // Skip known field mismatches - Firestore omits null values, GCS preserves them
-                if (eventId && knownFieldMismatches.has(eventId)) {
-                    return;
-                }
-                
-                // Skip known eventId collisions - no longer needed with composite key, but kept for legacy
-                if (eventId && knownEventIdCollisions.has(eventId)) {
+                if (eventId && (preDeploymentEventIds.has(eventId) || knownValidationFailures.has(eventId) || 
+                    knownFieldMismatches.has(eventId) || knownEventIdCollisions.has(eventId))) {
                     return;
                 }
                 
                 gcsMap.set(key, entry);
-                // Store raw entry if available
                 if (entry._raw) {
                     gcsRawMap.set(key, entry._raw);
                 }
             });
             
-            // Find matches and discrepancies
             let matchedCount = 0;
             const allKeys = new Set([...firestoreMap.keys(), ...gcsMap.keys()]);
-            
-            // DEBUG: Log first entry normalization
-            const firstKey = Array.from(allKeys)[0];
-            if (firstKey) {
-                console.log('=== DEBUG: First Entry Normalization ===');
-                console.log('Key:', firstKey);
-                const fsEntry = firestoreMap.get(firstKey);
-                const gcsEntry = gcsMap.get(firstKey);
-                if (fsEntry && gcsEntry) {
-                    const fsNorm = normalizeEntry(fsEntry);
-                    const gcsNorm = normalizeEntry(gcsEntry);
-                    console.log('Firestore normalized:', JSON.stringify(fsNorm, null, 2));
-                    console.log('GCS normalized:', JSON.stringify(gcsNorm, null, 2));
-                    console.log('Firestore hash:', hashEntry(fsEntry));
-                    console.log('GCS hash:', hashEntry(gcsEntry));
-                    console.log('Match:', hashEntry(fsEntry) === hashEntry(gcsEntry));
-                }
-                console.log('=== END DEBUG ===');
-            }
             
             allKeys.forEach(key => {
                 const firestoreEntry = firestoreMap.get(key);
@@ -423,19 +324,16 @@ Discrepancies:              ${comparison.discrepancies}
                 } else if (!gcsEntry) {
                     missingInGCS.push(key);
                 } else {
-                    // Compare normalized entries
                     const firestoreHash = hashEntry(firestoreEntry);
                     const gcsHash = hashEntry(gcsEntry);
                     
                     if (firestoreHash === gcsHash) {
                         matchedCount++;
                     } else {
-                        // Check exclusions by eventId (for backward compatibility)
                         const fsEventId = firestoreEntry.eventId || firestoreEntry._raw?.eventId;
                         const gcsEventId = gcsEntry.eventId || gcsEntry._raw?.eventId;
                         const eventId = fsEventId || gcsEventId;
                         
-                        // Skip known field mismatches and eventId collisions (already filtered above, but double-check here)
                         if (eventId && (knownFieldMismatches.has(eventId) || knownEventIdCollisions.has(eventId))) {
                             knownExceptionsCount++;
                             return;
@@ -507,42 +405,30 @@ Discrepancies:              ${comparison.discrepancies}
         }
         
         function normalizeEntry(entry) {
-            // Normalize an entry for comparison by:
-            // 1. Converting Firestore REST API format to plain values
-            // 2. Removing Firestore-specific document metadata
-            // 3. Sorting nested object keys for consistent comparison
-            // 4. Normalizing timestamps to ISO strings
-            // 5. Handling missing fields (set to null for consistent comparison)
+            // Normalize entries for comparison: Firestore REST API format differs from GCS plain JSON
+            // 1. Convert Firestore value wrappers (stringValue, integerValue, etc.) to plain values
+            // 2. Remove Firestore document metadata (name, createTime, updateTime, id)
+            // 3. Sort nested object keys for consistent comparison
+            // 4. Normalize timestamps to ISO strings and remove millisecond precision
+            // 5. Ensure missing fields are set to null for consistent comparison
             const normalized = {};
-            
-            // Fields to skip (Firestore document metadata, not part of audit data)
-            // Note: 'eventId' is part of the audit entry, not Firestore metadata, so we keep it
-            // Skip '_raw' as it's a duplicate of the top-level fields for debugging
             const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', '_raw']);
-            
-            // Get all possible keys from both Firestore and GCS entries
-            // For now, we'll just use the keys from this entry
             const keys = Object.keys(entry).sort();
             
             for (const key of keys) {
-                // Skip Firestore document metadata
                 if (skipFields.has(key)) {
                     continue;
                 }
                 
                 let value = entry[key];
-                
-                // Convert Firestore REST API format to plain values
                 value = extractFirestoreValue(value);
                 
-                // Special handling for source field - ensure it's always a string
+                // Ensure source field is always a string (not an object from Firestore REST API)
                 if (key === 'source') {
                     if (value && typeof value === 'object') {
-                        // If it's still an object after extraction, try to extract again
                         value = extractFirestoreValue(value);
                     }
                     if (value && typeof value !== 'string') {
-                        // Convert to string if not already
                         value = String(value);
                     }
                     if (!value) {
@@ -550,12 +436,12 @@ Discrepancies:              ${comparison.discrepancies}
                     }
                 }
                 
-                // Normalize timestamp field specifically (and any field that looks like a timestamp)
+                // Normalize timestamp fields to ISO strings
                 if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
                     value = normalizeTimestamp(value);
                 }
                 
-                // Recursively sort nested object keys for consistent comparison
+                // Sort nested object keys for consistent comparison
                 if (value && typeof value === 'object' && !Array.isArray(value)) {
                     value = sortObjectKeys(value);
                 }
@@ -564,34 +450,25 @@ Discrepancies:              ${comparison.discrepancies}
             }
             
             // Ensure critical fields exist (set to null if missing for consistent comparison)
-            // This handles cases where Firestore entries were created before we added these fields
-            // Also normalize source to always be a string (not an object)
             if (!('source' in normalized)) {
                 normalized.source = null;
             } else if (normalized.source && typeof normalized.source === 'object') {
-                // If source is an object (from Firestore REST API), extract the string value
                 normalized.source = extractFirestoreValue(normalized.source);
             } else if (normalized.source && typeof normalized.source !== 'string') {
-                // Convert to string if it's not already
                 normalized.source = String(normalized.source);
             }
             
             if (!('changedFields' in normalized)) {
                 normalized.changedFields = null;
-            } else if (normalized.changedFields === null) {
-                normalized.changedFields = null;
             } else if (!Array.isArray(normalized.changedFields)) {
-                // Ensure changedFields is an array (convert if needed)
                 normalized.changedFields = [];
             } else {
-                // Sort array for consistent comparison
                 normalized.changedFields = [...normalized.changedFields].sort();
             }
             
             if (!('changes' in normalized)) {
                 normalized.changes = null;
             } else if (normalized.changes && typeof normalized.changes !== 'object') {
-                // Ensure changes is an object
                 normalized.changes = null;
             }
             
@@ -599,23 +476,19 @@ Discrepancies:              ${comparison.discrepancies}
                 normalized.deletedData = null;
             }
             
-            // Normalize metadata structure: ensure surveyMetadata exists for CREATE entries
             // GCS explicitly adds surveyMetadata: null for CREATE entries, but Firestore doesn't store it
+            // Normalize to ensure consistent comparison
             if (normalized.operation === 'CREATE' && normalized.metadata) {
                 if (!('surveyMetadata' in normalized.metadata)) {
                     normalized.metadata.surveyMetadata = null;
                 }
             }
             
-            // Normalize timestamp strings to remove millisecond precision for comparison
-            // This handles the fact that GCS might round timestamps differently than Firestore
+            // Remove millisecond precision from timestamps (GCS and Firestore may round differently)
             const normalizeTimestampString = (str) => {
                 if (typeof str !== 'string') return str;
-                // Match ISO timestamp with optional milliseconds: 2025-11-12T01:49:14.942Z
-                // Pattern: YYYY-MM-DDTHH:mm:ss(.sss)?Z?
                 const match = str.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{1,3})?(Z)?$/);
                 if (match) {
-                    // Round to seconds: remove milliseconds, keep Z if present
                     return match[1] + (match[3] ? 'Z' : '');
                 }
                 return str;
@@ -633,27 +506,18 @@ Discrepancies:              ${comparison.discrepancies}
                 if (typeof obj === 'object') {
                     const result = {};
                     for (const [key, value] of Object.entries(obj)) {
-                        // Special handling for timestamp fields
-                        if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
-                            result[key] = normalizeTimestampsInObject(value);
-                        } else {
-                            result[key] = normalizeTimestampsInObject(value);
-                        }
+                        result[key] = normalizeTimestampsInObject(value);
                     }
                     return result;
                 }
                 return obj;
             };
             
-            // Apply timestamp normalization
             return normalizeTimestampsInObject(normalized);
         }
         
         function sortObjectKeys(obj) {
-            // Recursively sort all object keys for consistent comparison
-            // Also normalize any timestamp values found in nested structures
             if (obj === null || typeof obj !== 'object') {
-                // Check if it's a timestamp string
                 if (typeof obj === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(obj)) {
                     return normalizeTimestamp(obj);
                 }
@@ -669,7 +533,6 @@ Discrepancies:              ${comparison.discrepancies}
             for (const key of keys) {
                 let value = obj[key];
                 
-                // Normalize timestamp fields in nested objects
                 if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
                     value = normalizeTimestamp(value);
                 }
@@ -686,7 +549,6 @@ Discrepancies:              ${comparison.discrepancies}
         }
         
         function normalizeTimestamp(value) {
-            // Normalize any timestamp value to ISO string
             if (!value) return value;
             
             if (typeof value === 'string') {
@@ -701,33 +563,26 @@ Discrepancies:              ${comparison.discrepancies}
                 return value;
             }
             
-            if (typeof value === 'object') {
-                // Firestore Timestamp object with _seconds
-                if (value._seconds !== undefined) {
-                    const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
-                    return new Date(seconds * 1000).toISOString();
-                }
+            if (typeof value === 'object' && value._seconds !== undefined) {
+                const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
+                return new Date(seconds * 1000).toISOString();
             }
             
             return value;
         }
         
         function extractFirestoreValue(value) {
-            // Handle Firestore REST API value types
             if (value === null || value === undefined) {
                 return null;
             }
             
-            // If it's not an object, check if it's a timestamp string
             if (typeof value !== 'object') {
-                // Check if it looks like a timestamp string
                 if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
                     return normalizeTimestamp(value);
                 }
                 return value;
             }
             
-            // Handle Firestore value wrappers (check these first before recursing)
             if (value.timestampValue !== undefined) {
                 return normalizeTimestamp(value.timestampValue);
             }
@@ -750,7 +605,6 @@ Discrepancies:              ${comparison.discrepancies}
                 return value.arrayValue.values.map(v => extractFirestoreValue(v));
             }
             if (value.mapValue && value.mapValue.fields) {
-                // Recursively extract nested map
                 const nested = {};
                 for (const [k, v] of Object.entries(value.mapValue.fields)) {
                     nested[k] = extractFirestoreValue(v);
@@ -758,17 +612,14 @@ Discrepancies:              ${comparison.discrepancies}
                 return nested;
             }
             
-            // Handle Firestore Timestamp objects (from Admin SDK, not REST API)
             if (value._seconds !== undefined) {
                 return normalizeTimestamp(value);
             }
             
-            // If it's a plain array, recurse
             if (Array.isArray(value)) {
                 return value.map(v => extractFirestoreValue(v));
             }
             
-            // Plain object - recurse on all values to extract any nested Firestore values
             const result = {};
             for (const [k, v] of Object.entries(value)) {
                 result[k] = extractFirestoreValue(v);
@@ -777,24 +628,17 @@ Discrepancies:              ${comparison.discrepancies}
         }
         
         function hashEntry(entry) {
-            // Normalize the entry and create a hash
             const normalized = normalizeEntry(entry);
-            // Remove fields that are undefined, null, or empty objects/arrays
-            // This handles Firestore's behavior of omitting null values
             const cleanEntry = removeNullishFields(normalized);
-            // Use JSON.stringify with sorted keys for consistent hashing
             return JSON.stringify(cleanEntry, Object.keys(cleanEntry).sort());
         }
         
         function removeNullishFields(obj) {
-            // Recursively remove fields that are null, undefined, or empty objects
-            // This normalizes the difference between Firestore (omits nulls) and GCS (preserves nulls)
             if (obj === null || obj === undefined) {
                 return null;
             }
             
             if (Array.isArray(obj)) {
-                // Keep arrays, but clean their contents
                 return obj.map(item => removeNullishFields(item));
             }
             
@@ -804,21 +648,17 @@ Discrepancies:              ${comparison.discrepancies}
             
             const cleaned = {};
             for (const [key, value] of Object.entries(obj)) {
-                // Skip null, undefined
                 if (value === null || value === undefined) {
                     continue;
                 }
                 
-                // Handle nested objects
                 if (typeof value === 'object' && !Array.isArray(value)) {
                     const cleanedValue = removeNullishFields(value);
-                    // Skip empty objects {} - check BEFORE adding to cleaned
                     if (cleanedValue === null || (typeof cleanedValue === 'object' && Object.keys(cleanedValue).length === 0)) {
                         continue;
                     }
                     cleaned[key] = cleanedValue;
                 } else if (Array.isArray(value)) {
-                    // Keep arrays even if empty (they're semantically different from missing)
                     cleaned[key] = removeNullishFields(value);
                 } else {
                     cleaned[key] = value;
@@ -827,29 +667,8 @@ Discrepancies:              ${comparison.discrepancies}
             return cleaned;
         }
         
-        // HMAC-SHA256 secret key (same as in iOS app and trip-validator.js)
-        // 
-        // INTENTIONALLY PUBLIC FOR RESEARCH TRANSPARENCY
-        // 
-        // This key is exposed by design, not by accident. Here's why:
-        // 
-        // 1. NOT FOR SECURITY: This key doesn't protect sensitive data or control access.
-        //    All trip data is already publicly viewable on the dashboard.
-        // 
-        // 2. FOR VERIFICATION: Independent reviewers need this key to verify that trip IDs
-        //    follow the documented HMAC-SHA256 format, confirming our implementation claims.
-        // 
-        // 3. FOR TRANSPARENCY: Research requires reproducible methods. Hiding the key would
-        //    prevent independent verification of our cryptographic approach.
-        // 
-        // 4. WHAT IT PROTECTS: The key ensures trip IDs are consistently generated using
-        //    HMAC (not random UUIDs), providing format verification and collision resistance.
-        // 
-        // 5. WHAT IT DOESN'T PROTECT: It doesn't prevent fake trips (server validates),
-        //    doesn't control access (data is public), and doesn't encrypt anything.
-        // 
-        // In typical security contexts, exposing secrets is wrong. In research verification,
-        // hiding the algorithm would undermine transparency and reproducibility.
+        // HMAC-SHA256 secret key - INTENTIONALLY PUBLIC for research transparency
+        // Allows independent verification of trip ID signatures. Not for security (data is public).
         const HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
         
         /**
@@ -1074,8 +893,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 1: Download Firestore Audit Data</h2>
-            <p>Export audit entries via Firestore REST API (public read access):</p>
+            <h2>Step 1: Download Firestore Audit Data (via Firestore REST API, public read access)</h2>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1115,8 +933,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 3: Download and Run Verification Script</h2>
-            <p>Download the standalone verification script (no dependencies, pure Python):</p>
+            <h2>Step 3: Download and Run Verification Script (standalone, no dependencies, pure Python)</h2>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1169,8 +986,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 1: Download Firestore Trip Data</h2>
-            <p>Export trip records via Firestore REST API (public read access):</p>
+            <h2>Step 1: Download Firestore Trip Data (via Firestore REST API, public read access)</h2>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1187,8 +1003,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <h2>Step 2: Download and Run HMAC Verification Script</h2>
-            <p>Download the standalone verification script (no dependencies, pure Python):</p>
+            <h2>Step 2: Download and Run HMAC Verification Script (standalone, no dependencies, pure Python)</h2>
             <div class="code-block">
                 <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1210,10 +1025,10 @@ HMAC Validation Results:
                 </button>
                 <code>python verify_trip_signatures.py \
   --trips firestore-trips.json \
-  --secret-key [CONTACT_AUTHORS_FOR_KEY]</code>
+  --secret-key 7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a</code>
             </div>
             <div class="note">
-                <strong>Note:</strong> The secret key is required for signature verification. Contact the study authors to obtain the key for independent verification.
+                <strong>Note:</strong> The HMAC secret key is intentionally public for research transparency and independent verification. See the source code comments for details.
             </div>
         </div>
 
