@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Verify Audit Trail</title>
-    <script src="../load-common-head.js?v=20251126144509"></script>
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126144509">
+    <script src="../load-common-head.js?v=20251126184459"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126184459">
     <style>
         /* Container override for verify page - narrower for readability */
         .container {
@@ -48,7 +48,7 @@
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="../assets/js/firebase-service.js?v=20251126144509"></script>
+    <script src="../assets/js/firebase-service.js?v=20251126184459"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
         const VERIFIER_BUILD = '2025-11-26 12:30 UTC · commit 487f9ea';
@@ -864,7 +864,7 @@ HMAC Validation Results:
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251126144509"></script>
+        <script src="load-nav.js?v=20251126184459"></script>
 
         <div class="header">
             <h1>Trust but Verify</h1>
@@ -872,19 +872,53 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <p>How do you know research data hasn't been manipulated? We provide two independent verifications:</p>
+            <p>To insure that we have valid data, we require that all submissions come from authorized devices that include a cryptographic proof that can't be forged. Then, to insure that submitted data can't be altered, we created an immutable audit trail to detect and report unauthorized data changes. These are open source so that any third party can verify these truths.</p>
             
-            <p><strong>✓ Audit Trail Verification</strong><br>
-            Every data change is permanently recorded in Google Cloud Storage. Verify that our data matches this immutable record.</p>
-            
-            <p><strong>✓ Device Authentication</strong><br>
-            As of November 8, 2025, every trip entry requires a cryptographic signature created by our app on a legitimate iOS device.</p>
-            
-            <p>These measures provide reviewers with verifiable proof of data integrity. For technical details, see the <a href="../research-paper.html#appendix-data-integrity" target="_blank">research paper appendix</a>.</p>
+            <p>For technical details, see the <a href="../research-paper.html#appendix-data-integrity" target="_blank">research paper appendix</a>.</p>
         </div>
 
         <div class="section">
-            <h2>This is our audit <button id="verifyBtn" class="verify-button" onclick="runVerification()" style="margin-left: 15px;">Run Verification</button></h2>
+            <h2>Section 1: Verify Trip Records from Legitimate iOS Devices <button id="verifyTripBtn" class="verify-button" onclick="runTripVerification()" style="margin-left: 15px;">Run Trip Verification</button></h2>
+            <div id="tripVerificationResults" style="display: none; margin-top: 20px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>Verify on your computer with the verification script <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button" style="margin-left: 15px;">View Source Code on GitHub</a></h2>
+            <p>Download the verification script:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
+            </div>
+            <p style="margin-top: 15px;">Run it to download our trip data:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <code>python verify_trip_signatures.py</code>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads trip data and validates signatures. The HMAC secret key is intentionally public for research transparency.</p>
+        </div>
+
+        <div class="section">
+            <h2>Interpreting Trip Verification Results</h2>
+            <ul style="color: #374151; line-height: 1.8;">
+                <li><strong>All signatures valid</strong> – All trip records were submitted by legitimate iOS devices</li>
+                <li><strong>Legacy trips (no signature)</strong> – Expected for 20 early records before HMAC was implemented</li>
+                <li><strong>Invalid signatures</strong> – Potential tampering or unauthorized submissions; investigate immediately</li>
+                <li><strong>Missing trip IDs</strong> – Data integrity issue; investigate immediately</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Section 2: This is our audit <button id="verifyBtn" class="verify-button" onclick="runVerification()" style="margin-left: 15px;">Run Verification</button></h2>
             <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
@@ -931,51 +965,6 @@ HMAC Validation Results:
                 <li><strong>Missing in Firestore</strong> – Unexpected; investigate immediately (GCS is authoritative)</li>
                 <li><strong>Missing in GCS</strong> – Unexpected; investigate immediately (all post-deployment entries should exist in both systems)</li>
                 <li><strong>Content mismatches</strong> – Potential tampering; investigate immediately (GCS is authoritative)</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>Section 2: Verify Trip Records from Legitimate iOS Devices <button id="verifyTripBtn" class="verify-button" onclick="runTripVerification()" style="margin-left: 15px;">Run Trip Verification</button></h2>
-            <div id="tripVerificationResults" style="display: none; margin-top: 20px;"></div>
-        </div>
-
-        <div class="section">
-            <h2>Independent Verification: Trip Records (verify on your own computer)</h2>
-        </div>
-
-        <div class="section">
-            <h2>Step 1: Download and Run Verification Script</h2>
-            <p>Download the verification script:</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
-            </div>
-            <p style="margin-top: 15px;"><a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank" class="source-button">View Source Code on GitHub</a></p>
-            <p style="margin-top: 15px;">Run it to download our trip data:</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>python verify_trip_signatures.py</code>
-            </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>That's it!</strong> The script automatically downloads trip data and validates signatures. The HMAC secret key is intentionally public for research transparency.</p>
-        </div>
-
-        <div class="section">
-            <h2>Interpreting Trip Verification Results</h2>
-            <ul style="color: #374151; line-height: 1.8;">
-                <li><strong>All signatures valid</strong> – All trip records were submitted by legitimate iOS devices</li>
-                <li><strong>Legacy trips (no signature)</strong> – Expected for 20 early records before HMAC was implemented</li>
-                <li><strong>Invalid signatures</strong> – Potential tampering or unauthorized submissions; investigate immediately</li>
-                <li><strong>Missing trip IDs</strong> – Data integrity issue; investigate immediately</li>
             </ul>
         </div>
     </div>
