@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Verify Audit Trail</title>
-    <script src="../load-common-head.js?v=20251126194734"></script>
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126194734">
+    <script src="../load-common-head.js?v=20251126203607"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126203607">
     <style>
         /* Container override for verify page - narrower for readability */
         .container {
@@ -58,7 +58,7 @@
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="../assets/js/firebase-service.js?v=20251126194734"></script>
+    <script src="../assets/js/firebase-service.js?v=20251126203607"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
         const VERIFIER_BUILD = '2025-11-26 19:25 UTC · commit 74fd66c';
@@ -874,7 +874,7 @@ HMAC Validation Results:
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251126194734"></script>
+        <script src="load-nav.js?v=20251126203607"></script>
 
         <div class="header">
             <h1>Trust but Verify</h1>
@@ -882,7 +882,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <p>To insure that we have valid data, we require that all submissions come from authorized devices that include a cryptographic proof that can't be forged. Then, to insure that submitted data can't be altered, we created an immutable audit trail to detect and report unauthorized data changes. These are open source so that any third party can verify these truths.</p>
+            <p>We ensure data validity in two ways: First, all submissions must come from legitimate devices with unforgeable cryptographic signatures. Then we maintain an immutable audit trail that detects any unauthorized data changes. Our verification methods are open source to enable independent verification.</p>
             
             <p>For technical details, see the <a href="../research-paper.html#appendix-data-integrity" target="_blank">research paper appendix</a>.</p>
         </div>
