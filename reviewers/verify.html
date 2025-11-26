@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Verify Audit Trail</title>
-    <script src="../load-common-head.js?v=20251126192541"></script>
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126192541">
+    <script src="../load-common-head.js?v=20251126194354"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251126194354">
     <style>
         /* Container override for verify page - narrower for readability */
         .container {
@@ -58,7 +58,7 @@
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="../assets/js/firebase-service.js?v=20251126192541"></script>
+    <script src="../assets/js/firebase-service.js?v=20251126194354"></script>
     <script src="assets/js/copy-code.js"></script>
     <script>
         const VERIFIER_BUILD = '2025-11-26 19:25 UTC · commit 74fd66c';
@@ -180,7 +180,7 @@ Discrepancies:              ${comparison.discrepancies}
                 resultsDiv.innerHTML = `<pre>Error: ${error.message}\n\nPlease use the manual verification steps above.</pre>`;
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Run Verification';
+                btn.textContent = 'Review audit records for integrity';
             }
         }
         
@@ -874,7 +874,7 @@ HMAC Validation Results:
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251126192541"></script>
+        <script src="load-nav.js?v=20251126194354"></script>
 
         <div class="header">
             <h1>Trust but Verify</h1>
@@ -888,7 +888,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <button id="verifyTripBtn" class="verify-button" onclick="runTripVerification()" style="font-size: 1.2rem; font-weight: 600; color: white; background: #0066cc; border: 1px solid #0052a3; border-radius: 6px; padding: 12px 20px; margin: 0 0 20px 0; cursor: pointer; display: inline-block; text-align: left;">Verify that Trip Records are from Legitimate iOS Devices</button>
+            <button id="verifyTripBtn" class="verify-button" onclick="runTripVerification()" style="font-size: 1.2rem; font-weight: 600; color: white; background: #0066cc; border: 1px solid #0052a3; border-radius: 6px; padding: 12px 20px; margin: 0 0 10px 0; cursor: pointer; display: inline-block; text-align: left;">Verify that Trip Records are from Legitimate iOS Devices</button>
             <div id="tripVerificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
@@ -917,7 +917,7 @@ HMAC Validation Results:
         </div>
 
         <div class="section">
-            <button id="verifyBtn" class="verify-button" onclick="runVerification()" style="font-size: 1.2rem; font-weight: 600; color: white; background: #0066cc; border: 1px solid #0052a3; border-radius: 6px; padding: 12px 20px; margin: 0 0 20px 0; cursor: pointer; display: inline-block; text-align: left;">Review audit records for integrity</button>
+            <button id="verifyBtn" class="verify-button" onclick="runVerification()" style="font-size: 1.2rem; font-weight: 600; color: white; background: #0066cc; border: 1px solid #0052a3; border-radius: 6px; padding: 12px 20px; margin: 0 0 10px 0; cursor: pointer; display: inline-block; text-align: left;">Review audit records for integrity</button>
             <div id="verificationResults" style="display: none; margin-top: 20px;"></div>
         </div>
 
