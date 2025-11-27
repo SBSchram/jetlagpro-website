@@ -12,4 +12,34 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Data exports (sensitive research data)
 tripCompletions_web.csv
+firestore-audit.json
+trips.json
+firebase_web_data.json
+analysis_report.txt
+
+# Debug and test files
+firebase-debug.html
+test-*.html
+*-debug.log
+
+# Development scripts (internal use only)
+dev-server.sh
+update-cache-version.sh
+export_*.js
+back_to_emoji.py
+convert_to_symbols.py
+fix_faces.py
+analyze_jetlag_data.py
+
+# Workspace and IDE files
+*.code-workspace
+h origin main
+
+# HandyWorks files (now in handyworks-website repository)
+data/external/
+
+# Demo directory (if not needed for public)
+# demo/
