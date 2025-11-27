@@ -62,9 +62,9 @@ firebase functions:config:set gmail.password="abcdefghijklmnop"
 
 **Note:** Replace `abcdefghijklmnop` with your actual 16-character password **without spaces**
 
-Example with your password:
+Example (replace with your actual password):
 ```bash
-firebase functions:config:set gmail.password="cqtdvgvglfqutiru"
+firebase functions:config:set gmail.password="your-16-char-password-here"
 ```
 
 You should see:
