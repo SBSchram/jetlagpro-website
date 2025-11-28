@@ -16,7 +16,9 @@ function copyCode(button) {
         return;
     }
     
-    const text = codeElement.textContent;
+    // Get text and normalize to single line (remove line breaks and extra whitespace)
+    // This allows visual word-wrapping while copying as a single-line command
+    const text = codeElement.textContent.replace(/\s+/g, ' ').trim();
     
     navigator.clipboard.writeText(text).then(() => {
         // Visual feedback
