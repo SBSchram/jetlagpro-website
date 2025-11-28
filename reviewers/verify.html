@@ -833,8 +833,7 @@ Discrepancies:              ${comparison.discrepancies}
             
             let status = 'success';
             if (comparison.discrepancies === 0) {
-                output += 'Status: ✅ Data records match as expected\n';
-                output += '======================================================================';
+                output += 'Status: ✅ Data records match as expected';
             } else {
                 status = 'error';
                 output += 'DISCREPANCIES FOUND:\n\n';
