@@ -817,10 +817,7 @@ The GCS bucket needs to be made publicly readable for web-based verification.`,
             const comparison = compareEntries(firestoreEntries, gcsEntries);
             
             // Step 4: Format results
-            let output = `AUDIT TRAIL VERIFICATION
-======================================================================
-
-DATA SOURCES
+            let output = `DATA SOURCES
 Firestore audit entries:    ${comparison.totalFirestoreEntries}
   - Pre-GCS archiving:      ${comparison.preDeploymentCount}
   - GCS archived:          ${comparison.gcsCount}
