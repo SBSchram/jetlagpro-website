@@ -1489,6 +1489,151 @@
                     }
                 });
                 
+                // Apply Word template styles to elements
+                function applyWordStyles(element) {
+                    // Process headings first
+                    const headings = element.querySelectorAll('h1, h2, h3, h4');
+                    headings.forEach(heading => {
+                        const tagName = heading.tagName.toLowerCase();
+                        if (tagName === 'h1') {
+                            // Article title
+                            const currentStyle = heading.getAttribute('style') || '';
+                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Articletitle";');
+                            heading.setAttribute('class', 'Articletitle');
+                        } else if (tagName === 'h2') {
+                            // Heading 1 style
+                            const currentStyle = heading.getAttribute('style') || '';
+                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading1";');
+                            heading.setAttribute('class', 'Heading1');
+                        } else if (tagName === 'h3') {
+                            // Heading 2 style
+                            const currentStyle = heading.getAttribute('style') || '';
+                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading2";');
+                            heading.setAttribute('class', 'Heading2');
+                        } else if (tagName === 'h4') {
+                            // Heading 3 style
+                            const currentStyle = heading.getAttribute('style') || '';
+                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading3";');
+                            heading.setAttribute('class', 'Heading3');
+                        }
+                    });
+                    
+                    // Process paragraphs - need to track context
+                    const paragraphs = element.querySelectorAll('p');
+                    paragraphs.forEach((p, index) => {
+                        const textContent = p.textContent.trim();
+                        const currentStyle = p.getAttribute('style') || '';
+                        
+                        // Check for special paragraph types first
+                        if (textContent.toLowerCase().includes('keywords:')) {
+                            p.setAttribute('style', currentStyle + 'mso-style-name:"Keywords";');
+                            p.setAttribute('class', 'Keywords');
+                        } else if (p.previousElementSibling && p.previousElementSibling.tagName === 'H2' && 
+                                   p.previousElementSibling.textContent.trim() === 'Abstract') {
+                            // First paragraph after Abstract heading
+                            p.setAttribute('style', currentStyle + 'mso-style-name:"Abstract";');
+                            p.setAttribute('class', 'Abstract');
+                        } else if (textContent.match(/^Figure \d+:/i)) {
+                            // Figure captions
+                            p.setAttribute('style', currentStyle + 'mso-style-name:"Figurecaption";');
+                            p.setAttribute('class', 'Figurecaption');
+                        } else {
+                            // Determine if this is first paragraph after a heading
+                            let prevSibling = p.previousElementSibling;
+                            let isFirstAfterHeading = false;
+                            
+                            // Check if previous sibling is a heading
+                            if (prevSibling && ['H1', 'H2', 'H3', 'H4'].includes(prevSibling.tagName)) {
+                                isFirstAfterHeading = true;
+                            } else {
+                                // Check if previous sibling is whitespace/comment and before that is a heading
+                                while (prevSibling && !prevSibling.textContent.trim() && prevSibling.previousElementSibling) {
+                                    prevSibling = prevSibling.previousElementSibling;
+                                }
+                                if (prevSibling && ['H1', 'H2', 'H3', 'H4'].includes(prevSibling.tagName)) {
+                                    isFirstAfterHeading = true;
+                                }
+                            }
+                            
+                            if (isFirstAfterHeading) {
+                                p.setAttribute('style', currentStyle + 'mso-style-name:"Paragraph";');
+                                p.setAttribute('class', 'Paragraph');
+                            } else {
+                                p.setAttribute('style', currentStyle + 'mso-style-name:"Newparagraph";');
+                                p.setAttribute('class', 'Newparagraph');
+                            }
+                        }
+                    });
+                    
+                    // Process lists
+                    const ulLists = element.querySelectorAll('ul');
+                    ulLists.forEach(ul => {
+                        const currentStyle = ul.getAttribute('style') || '';
+                        ul.setAttribute('style', currentStyle + 'mso-style-name:"Bulletedlist";');
+                        ul.setAttribute('class', 'Bulletedlist');
+                    });
+                    
+                    const olLists = element.querySelectorAll('ol');
+                    olLists.forEach(ol => {
+                        const currentStyle = ol.getAttribute('style') || '';
+                        ol.setAttribute('style', currentStyle + 'mso-style-name:"Numberedlist";');
+                        ol.setAttribute('class', 'Numberedlist');
+                    });
+                    
+                    // Process table captions
+                    const captions = element.querySelectorAll('caption');
+                    captions.forEach(caption => {
+                        const currentStyle = caption.getAttribute('style') || '';
+                        caption.setAttribute('style', currentStyle + 'mso-style-name:"Tabletitle";');
+                        caption.setAttribute('class', 'Tabletitle');
+                    });
+                    
+                    // Handle References section specially
+                    const allH2s = Array.from(element.querySelectorAll('h2'));
+                    const referencesHeading = allH2s.find(h2 => h2.textContent.trim() === 'References');
+                    if (referencesHeading) {
+                        let nextEl = referencesHeading.nextElementSibling;
+                        while (nextEl && nextEl.tagName !== 'H2') {
+                            if (nextEl.tagName === 'OL') {
+                                // Apply References style to list items
+                                nextEl.querySelectorAll('li').forEach(li => {
+                                    // Create or find paragraph in list item
+                                    let p = li.querySelector('p');
+                                    if (!p) {
+                                        p = document.createElement('p');
+                                        p.innerHTML = li.innerHTML;
+                                        li.innerHTML = '';
+                                        li.appendChild(p);
+                                    }
+                                    const currentStyle = p.getAttribute('style') || '';
+                                    p.setAttribute('style', currentStyle + 'mso-style-name:"References";');
+                                    p.setAttribute('class', 'References');
+                                });
+                            }
+                            nextEl = nextEl.nextElementSibling;
+                        }
+                    }
+                    
+                    // Handle Acknowledgments section
+                    const ackHeading = allH2s.find(h2 => 
+                        h2.textContent.trim().toLowerCase().includes('acknowledgment')
+                    );
+                    if (ackHeading) {
+                        let nextEl = ackHeading.nextElementSibling;
+                        while (nextEl && nextEl.tagName !== 'H2') {
+                            if (nextEl.tagName === 'P') {
+                                const currentStyle = nextEl.getAttribute('style') || '';
+                                nextEl.setAttribute('style', currentStyle + 'mso-style-name:"Acknowledgements";');
+                                nextEl.setAttribute('class', 'Acknowledgements');
+                            }
+                            nextEl = nextEl.nextElementSibling;
+                        }
+                    }
+                }
+                
+                // Apply Word styles to the cloned content
+                applyWordStyles(wordContent);
+                
                 // Create Word-compatible HTML with embedded styles and images
                 const wordHTML = `<!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
