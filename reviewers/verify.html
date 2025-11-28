@@ -818,16 +818,16 @@ The GCS bucket needs to be made publicly readable for web-based verification.`,
             
             // Step 4: Format results
             let output = `DATA SOURCES
-Firestore audit entries:    ${comparison.totalFirestoreEntries}
-  - Pre-GCS archiving:      ${comparison.preDeploymentCount}
-  - GCS archived:          ${comparison.gcsCount}
+Firestore audit entries: ${comparison.totalFirestoreEntries}
+  - Pre-GCS archiving: ${comparison.preDeploymentCount}
+  - GCS archived: ${comparison.gcsCount}
 
 VERIFICATION RESULTS
-GCS entries:               ${comparison.gcsCount}
-  Exceptions:               ${comparison.knownExceptionsCount}  (development test entries, documented)
-  Matches:                 ${comparison.matched}
+GCS entries: ${comparison.gcsCount}
+  Exceptions: ${comparison.knownExceptionsCount} (development test entries, documented)
+  Matches: ${comparison.matched}
 
-Discrepancies:              ${comparison.discrepancies}
+Discrepancies: ${comparison.discrepancies}
 
 `;
             
