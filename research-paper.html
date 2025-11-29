@@ -143,8 +143,8 @@
             --img-methods-padding: 20px;   /* HTML cell padding */
             
             /* Point images (LU-8, LI-1, ST-36, SP-3, HT-8, SI-5, BL-66, KI-3, PC-8, SJ-6, GB-41, LIV-1) */
-            --img-point-width: 80px;
-            --img-point-height: 80px;
+            --img-point-width: 100px;
+            --img-point-height: 100px;
             --img-point-padding: 8px;
             
             /* Chinese Organ Clock (Wheel-Simple.jpg) */
@@ -153,7 +153,7 @@
             
             /* Word export specific - must fit 624px page width with margins */
             --word-img-methods-width: 170px;  /* Matches HTML for consistency */
-            --word-img-point-size: 80px;       /* Matches HTML for consistency */
+            --word-img-point-size: 100px;    /* Matches HTML for consistency */
             --word-img-wheel-width: 300px;
             --word-table-spacing: 15px;        /* Tighter spacing for Word */
         }
@@ -1276,8 +1276,8 @@
                 padding: 15  // Word export padding (tighter than HTML 20px)
             },
             point: {
-                width: 80,   // Matches --img-point-width (80px)
-                height: 80   // Matches --img-point-height (80px)
+                width: 100,  // Matches --img-point-width (100px)
+                height: 100  // Matches --img-point-height (100px)
             },
             wheel: {
                 width: 300   // Matches --word-img-wheel-width (300px)
@@ -1816,11 +1816,11 @@
             border-spacing: var(--word-table-spacing) !important;
             border-collapse: separate !important;
         }
-        /* Point images table - width calculated from point size (6 columns x 80px = 480px) */
+        /* Point images table - width calculated from point size (6 columns x 100px = 600px) */
         /* Matches: IMAGE_SIZES.point.width * 6 */
         table[style*="table-layout: fixed"] {
-            width: 480px !important;
-            max-width: 480px !important;
+            width: 600px !important;
+            max-width: 600px !important;
             margin-left: auto !important;
             margin-right: auto !important;
             table-layout: fixed !important;
@@ -1836,8 +1836,8 @@
         table[style*="table-layout: fixed"] td {
             border: none !important;
             padding: 5px !important;
-            width: 80px !important;
-            height: 80px !important;
+            width: 100px !important;
+            height: 100px !important;
             text-align: center !important;
             vertical-align: middle !important;
         }
@@ -1850,14 +1850,15 @@
             vertical-align: top !important;
             padding: 15px !important;
         }
-        /* Point images - exact 80x80px square */
+        /* Point images - exact 100x100px square */
+        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
         table[style*="table-layout: fixed"] img {
-            width: 80px !important;
-            height: 80px !important;
-            max-width: 80px !important;
-            max-height: 80px !important;
-            min-width: 80px !important;
-            min-height: 80px !important;
+            width: 100px !important;
+            height: 100px !important;
+            max-width: 100px !important;
+            max-height: 100px !important;
+            min-width: 100px !important;
+            min-height: 100px !important;
             object-fit: contain !important;
             display: block !important;
             margin: 0 auto !important;
@@ -1943,10 +1944,11 @@
             display: block !important;
             margin: 0 auto !important;
         }
-        /* Point images table - fixed 480px width (6 columns x 80px) - tight spacing for Word */
+        /* Point images table - fixed 600px width (6 columns x 100px) - tight spacing for Word */
+        /* Matches: IMAGE_SIZES.point.width * 6 */
         table[style*="table-layout: fixed"] {
-            width: 480px !important;
-            max-width: 480px !important;
+            width: 600px !important;
+            max-width: 600px !important;
             margin: 5px auto !important;
             table-layout: fixed !important;
             border-collapse: collapse !important;
