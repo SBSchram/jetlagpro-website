@@ -123,20 +123,59 @@
             background: #1d4ed8;
         }
         
+        /* ============================================
+           CENTRALIZED IMAGE SIZE DEFINITIONS
+           
+           TO CHANGE IMAGE SIZES:
+           1. Update CSS variables below (lines 131-149)
+           2. Update JavaScript constants (lines 1258-1271)
+           3. Keep them in sync!
+           
+           Image Types:
+           - Methods screenshots: 3 app screenshots in Methods section
+           - Point images: 12 acupuncture point images
+           - Chinese Organ Clock: Wheel visualization (Figure 1)
+           ============================================ */
+        :root {
+            /* Methods screenshots (research-photo-1, 2, 4) */
+            --img-methods-width: 170px;
+            --img-methods-spacing: 20px;  /* HTML spacing between images */
+            --img-methods-padding: 20px;   /* HTML cell padding */
+            
+            /* Point images (LU-8, LI-1, ST-36, SP-3, HT-8, SI-5, BL-66, KI-3, PC-8, SJ-6, GB-41, LIV-1) */
+            --img-point-width: 80px;
+            --img-point-height: 80px;
+            --img-point-padding: 8px;
+            
+            /* Chinese Organ Clock (Wheel-Simple.jpg) */
+            --img-wheel-max-width: 50%;
+            --img-wheel-margin: 0 auto;
+            
+            /* Word export specific - must fit 624px page width with margins */
+            --word-img-methods-width: 170px;  /* Matches HTML for consistency */
+            --word-img-point-size: 80px;       /* Matches HTML for consistency */
+            --word-img-wheel-width: 300px;
+            --word-table-spacing: 15px;        /* Tighter spacing for Word */
+        }
+        
         /* Responsive image sizing for HTML display (Word export resizes separately) */
         .methods-screenshots {
             text-align: center;
             margin: 30px 0;
             width: 100%;
+        }
         
         .methods-screenshots table {
-            width: 100%;
+            width: auto;
             max-width: 100%;
             margin: 0 auto;
-            border-spacing: 20px;
+            border-spacing: var(--img-methods-spacing);
             border-collapse: separate;
-            width: 300px;
-            max-width: 100%;
+        }
+        
+        .methods-screenshots img {
+            width: var(--img-methods-width);
+            max-width: var(--img-methods-width);
             height: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -144,8 +183,9 @@
         }
         
         .methods-screenshots td {
-            width: 33.33%;
-            padding: 20px;
+            width: auto;
+            padding: var(--img-methods-padding);
+            text-align: center;
             vertical-align: top;
             border: none;
         }
@@ -168,8 +208,8 @@
         }
         
         .point-images-table img {
-            width: 120px;
-            height: 120px;
+            width: var(--img-point-width);
+            height: var(--img-point-height);
             object-fit: contain;
             display: block;
             margin: 0 auto;
@@ -198,12 +238,12 @@
             }
             
             .methods-screenshots img {
-                width: 200px;
+                width: var(--img-methods-width);
             }
             
             .point-images-table img {
-                width: 100px;
-                height: 100px;
+                width: var(--img-point-width);
+                height: var(--img-point-height);
             }
         }
 
@@ -1219,6 +1259,31 @@
             }
         }
         
+        // ============================================
+        // CENTRALIZED IMAGE SIZE CONSTANTS (JavaScript)
+        // 
+        // MUST MATCH CSS VARIABLES ABOVE (lines 131-149)
+        // 
+        // TO CHANGE SIZES:
+        // 1. Update CSS :root variables (lines 131-149)
+        // 2. Update these JavaScript constants (keep same values)
+        // 3. Both must match!
+        // ============================================
+        const IMAGE_SIZES = {
+            methods: {
+                width: 170,  // Matches --img-methods-width (170px)
+                spacing: 15, // Word export spacing (tighter than HTML 20px)
+                padding: 15  // Word export padding (tighter than HTML 20px)
+            },
+            point: {
+                width: 80,   // Matches --img-point-width (80px)
+                height: 80   // Matches --img-point-height (80px)
+            },
+            wheel: {
+                width: 300   // Matches --word-img-wheel-width (300px)
+            }
+        };
+        
         // Word Document Export Function (HTML format with embedded images)
         async function exportToWord() {
             try {
@@ -1292,23 +1357,24 @@
                                                    img.src.includes('research-photo-4.png');
                         
                         if (isMethodsScreenshot) {
-                            // App screenshots - larger width to expand to margins, maintain aspect ratio
-                            targetWidth = 250;
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 250;
-                            finalStyle = 'width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; border: none;';
+                            // App screenshots - use centralized constant
+                            targetWidth = IMAGE_SIZES.methods.width;
+                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * IMAGE_SIZES.methods.width;
+                            finalStyle = `width: ${IMAGE_SIZES.methods.width}px; max-width: ${IMAGE_SIZES.methods.width}px; height: auto; display: block; margin: 0 auto; border: none;`;
+                        } else if (img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || img.src.includes('ST-36.jpg') || 
                                   img.src.includes('SP-3.jpg') || img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
                                   img.src.includes('BL-66.jpg') || img.src.includes('KI-10.jpg') || img.src.includes('KI-3.jpg') ||
                                   img.src.includes('PC-8.jpg') || img.src.includes('SJ-6.jpg') || img.src.includes('GB-41.jpg') || 
                                   img.src.includes('LIV-1.jpg')) {
-                            // Acupuncture point images - maintain square 80x80px for Word
-                            targetWidth = 80;
-                            targetHeight = 80;  // Force square
-                            finalStyle = 'width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto; border: none;';
-                        } else if (img.src.includes('Wheel-Complex.jpg')) {
-                            // Chinese Organ Clock - moderate size, no border
-                            targetWidth = 300;
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 300;
-                            finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
+                            // Acupuncture point images - use centralized constant
+                            targetWidth = IMAGE_SIZES.point.width;
+                            targetHeight = IMAGE_SIZES.point.height;
+                            finalStyle = `width: ${IMAGE_SIZES.point.width}px; height: ${IMAGE_SIZES.point.height}px; object-fit: contain; display: block; margin: 0 auto; border: none;`;
+                        } else if (img.src.includes('Wheel-Simple.jpg') || img.src.includes('Wheel-Complex.jpg')) {
+                            // Chinese Organ Clock - use centralized constant
+                            targetWidth = IMAGE_SIZES.wheel.width;
+                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * IMAGE_SIZES.wheel.width;
+                            finalStyle = `width: ${IMAGE_SIZES.wheel.width}px; height: auto; display: block; margin: 20px auto; border: none;`;
                         } else {
                             // Other images - use original size or reasonable default, no border
                             if (originalWidth) {
@@ -1432,30 +1498,31 @@
                         table.style.tableLayout = 'auto';
                         table.style.marginLeft = 'auto';
                         table.style.marginRight = 'auto';
-                        table.style.borderSpacing = '15px';
+                        table.style.borderSpacing = IMAGE_SIZES.methods.spacing + 'px';
                         table.style.borderCollapse = 'separate';
-                        // Set cell widths to 33.33% each with more padding
+                        // Set cell widths to 33.33% each with centralized padding
                         const cells = table.querySelectorAll('td');
                         cells.forEach(cell => {
                             cell.style.width = '33.33%';
-                            cell.style.padding = '15px';
+                            cell.style.padding = IMAGE_SIZES.methods.padding + 'px';
                         });
                     }
-                    // Point images table - 480px width (6 columns x 80px) - tight spacing
+                    // Point images table - width calculated from point size (6 columns)
                     if (table.querySelector('img') && 
                         (table.querySelector('img').src.includes('LU-8.jpg') || 
                          table.querySelector('img').src.includes('LI-1.jpg') ||
                          table.querySelector('img').src.includes('ST-36.jpg') ||
                          table.querySelector('img').src.includes('BL-66.jpg'))) {
-                        table.style.width = '480px';
-                        table.style.maxWidth = '480px';
+                        const pointTableWidth = IMAGE_SIZES.point.width * 6; // 6 columns
+                        table.style.width = pointTableWidth + 'px';
+                        table.style.maxWidth = pointTableWidth + 'px';
                         table.style.tableLayout = 'fixed';
                         table.style.margin = '5px auto';
                         table.style.borderCollapse = 'collapse';
                         table.style.borderSpacing = '0';
                         table.style.padding = '0';
                         table.style.fontSize = '9pt';
-                        // Set image row cells to 80x80px with minimal padding
+                        // Set image row cells using centralized constants
                         const rows = table.querySelectorAll('tr');
                         rows.forEach((row, rowIndex) => {
                             row.style.margin = '0';
@@ -1464,12 +1531,12 @@
                             const cells = row.querySelectorAll('td');
                             const hasImage = cells[0].querySelector('img');
                             cells.forEach(cell => {
-                                cell.style.width = '80px';
+                                cell.style.width = IMAGE_SIZES.point.width + 'px';
                                 cell.style.border = 'none';
                                 cell.style.margin = '0';
                                 cell.style.lineHeight = '1';
                                 if (hasImage) {
-                                    cell.style.height = '80px';
+                                    cell.style.height = IMAGE_SIZES.point.height + 'px';
                                     cell.style.padding = '1px';
                                     cell.style.verticalAlign = 'middle';
                                 } else {
@@ -1739,15 +1806,18 @@
             padding: 0 !important;
         }
         /* Methods screenshots table - expanded to margins with more spacing */
+        /* Uses: --word-table-spacing (15px) from CSS variables */
         .methods-screenshots table {
             width: 90% !important;
             max-width: 90% !important;
             margin-left: auto !important;
             margin-right: auto !important;
             table-layout: auto !important;
-            border-spacing: 15px !important;
+            border-spacing: var(--word-table-spacing) !important;
             border-collapse: separate !important;
-        /* Point images table - fixed width to fit within margins (6 columns x 80px = 480px) */
+        }
+        /* Point images table - width calculated from point size (6 columns x 80px = 480px) */
+        /* Matches: IMAGE_SIZES.point.width * 6 */
         table[style*="table-layout: fixed"] {
             width: 480px !important;
             max-width: 480px !important;
@@ -1761,7 +1831,8 @@
             text-align: left;
             vertical-align: top;
         }
-        /* Point image cells - square containers (80px x 80px) */
+        /* Point image cells - square containers */
+        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
         table[style*="table-layout: fixed"] td {
             border: none !important;
             padding: 5px !important;
@@ -1771,6 +1842,7 @@
             vertical-align: middle !important;
         }
         /* Methods screenshots cells */
+        /* Matches: IMAGE_SIZES.methods.padding */
         .methods-screenshots td {
             border: none !important;
             width: 33.33% !important;
@@ -1790,10 +1862,12 @@
             display: block !important;
             margin: 0 auto !important;
         }
-        /* Methods screenshots - larger width, expands to margins */
+        /* Methods screenshots - moderate size with spacing */
+        /* Matches: IMAGE_SIZES.methods.width */
         .methods-screenshots img {
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 170px !important;
+            max-width: 170px !important;
+            height: auto !important;
             object-fit: contain !important;
             display: block !important;
             margin: 0 auto !important;
@@ -1862,8 +1936,8 @@
             padding: 15px !important;
         }
         .methods-screenshots img {
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 170px !important;
+            max-width: 170px !important;
             height: auto !important;
             object-fit: contain !important;
             display: block !important;
