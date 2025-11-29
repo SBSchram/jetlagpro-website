@@ -161,7 +161,7 @@
         /* Responsive image sizing for HTML display (Word export resizes separately) */
         .methods-screenshots {
             text-align: center;
-            margin: 30px 0;
+            margin: 10px 0 30px 0;
             width: 100%;
         }
         
@@ -581,7 +581,6 @@
 
         <h2>Methods</h2>
 		<p>The mobile application provides users with timing and instructions to stimulate specific points based on the destination time. Ideally starting at the airport (or anytime thereafter), users select the destination. The app immediately identifies the first active point matching the destination time. This process is illustrated below.</p>
-
 		<div class="methods-screenshots">
             <table>
                 <tr>
@@ -1946,10 +1945,11 @@
         }
         /* Point images table - fixed 600px width (6 columns x 100px) - tight spacing for Word */
         /* Matches: IMAGE_SIZES.point.width * 6 */
-        table[style*="table-layout: fixed"] {
+        table[style*="table-layout: fixed"],
+        .point-images-table {
             width: 600px !important;
             max-width: 600px !important;
-            margin: 5px auto !important;
+            margin: 0 auto !important;
             table-layout: fixed !important;
             border-collapse: collapse !important;
             border-spacing: 0 !important;
@@ -1963,7 +1963,7 @@
             height: auto !important;
         }
         table[style*="table-layout: fixed"] td {
-            width: 80px !important;
+            width: 100px !important;
             padding: 1px !important;
             text-align: center !important;
             vertical-align: middle !important;
@@ -1971,38 +1971,58 @@
             margin: 0 !important;
             line-height: 1 !important;
         }
-        /* Image row cells - square 80x80px, minimal padding */
+        /* Image row cells - square 100x100px, minimal padding */
+        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
         table[style*="table-layout: fixed"] tr:has(img) td {
-            width: 80px !important;
-            height: 80px !important;
+            width: 100px !important;
+            height: 100px !important;
             padding: 1px !important;
             vertical-align: middle !important;
         }
         /* Label row cells - minimal height, tight spacing */
         table[style*="table-layout: fixed"] tr:not(:has(img)) td {
-            width: 80px !important;
+            width: 100px !important;
             padding: 0 1px !important;
             height: auto !important;
             vertical-align: top !important;
         }
+        /* Point images - exact 100x100px square for Word */
+        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
         table[style*="table-layout: fixed"] img {
-            width: 80px !important;
-            height: 80px !important;
-            max-width: 80px !important;
-            max-height: 80px !important;
-            min-width: 80px !important;
-            min-height: 80px !important;
+            width: 100px !important;
+            height: 100px !important;
+            max-width: 100px !important;
+            max-height: 100px !important;
+            min-width: 100px !important;
+            min-height: 100px !important;
             object-fit: contain !important;
             display: block !important;
             margin: 0 !important;
             padding: 0 !important;
         }
         /* Reduce spacing in label paragraphs - very tight */
-        table[style*="table-layout: fixed"] p {
+        /* Override inline margin-top styles */
+        table[style*="table-layout: fixed"] p,
+        .point-images-table p {
             margin: 0 !important;
+            margin-top: 0 !important;
             padding: 0 !important;
             font-size: 9pt !important;
             line-height: 1 !important;
+        }
+        /* Ensure point images table cells have minimal spacing */
+        .point-images-table td {
+            padding: 1px !important;
+            margin: 0 !important;
+        }
+        /* Point images in Word - ensure proper size */
+        .point-images-table img {
+            width: 100px !important;
+            height: 100px !important;
+            max-width: 100px !important;
+            max-height: 100px !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         /* Word-specific styles */
         @page {
