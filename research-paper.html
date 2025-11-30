@@ -581,7 +581,7 @@
 
         <h2>Methods</h2>
 		<p>The mobile application provides users with timing and instructions to stimulate specific points based on the destination time. Ideally starting at the airport (or anytime thereafter), users select the destination. The app immediately identifies the first active point matching the destination time. This process is illustrated below.</p>
-		<div class="methods-screenshots">
+		<div class="methods-screenshots" id="methodsScreenshots">
             <table>
                 <tr>
                     <td>
@@ -613,7 +613,7 @@
 
         <div style="text-align: center; margin: 30px 0;">
             <h2>Point Images</h2>
-            <table class="point-images-table">
+            <table class="point-images-table" id="pointImagesTable">
                 <tr>
                     <td>
                         <img src="assets/images/LU-8.jpg" alt="LU-8 Point">
@@ -709,60 +709,32 @@
 			
              <h2 style="text-align: left;">Data Collected</h2>
             
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #333;">
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #333;" class="data-collected-table">
+                <caption style="caption-side: top; text-align: center; font-weight: bold; font-size: 14pt; padding: 10px 0; color: #2c3e50;">Table 2: Data Collection Categories</caption>
                 <thead>
                     <tr>
-                        <th style="border: 1px solid #333; padding: 12px; background-color: #f0f0f0; text-align: left; width: 50%; vertical-align: top;">
+                        <th style="border: 1px solid #333; padding: 8px; background-color: #f0f0f0; text-align: left; width: 50%; vertical-align: top;">
                             <strong>Survey Questions</strong>
                         </th>
-                        <th style="border: 1px solid #333; padding: 12px; background-color: #f0f0f0; text-align: left; width: 50%; vertical-align: top;">
+                        <th style="border: 1px solid #333; padding: 8px; background-color: #f0f0f0; text-align: left; width: 50%; vertical-align: top;">
                             <strong>Data Reported by the App</strong>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="border: 1px solid #333; padding: 12px; vertical-align: top;">
-                            <ul style="margin: 0; padding-left: 20px;">
-                                <li>Overall anticipated jet lag severity</li>
-                                <li><strong>Post travel:</strong></li>
-                                <ul style="margin: 5px 0 10px 20px; padding-left: 15px;">
-                                    <li>Sleep disturbance</li>
-                                    <li>Daytime fatigue</li>
-                                    <li>Difficulty concentrating</li>
-                                    <li>Irritability</li>
-                                    <li>Lack of Motivation/energy</li>
-                                    <li>Gastrointestinal issues</li>
-                                </ul>
-                                <li>Age Range</li>
-                            </ul>
+                        <td style="border: 1px solid #333; padding: 8px; vertical-align: top;">
+                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">Overall anticipated jet lag severity; <strong>Post travel:</strong> Sleep disturbance, Daytime fatigue, Difficulty concentrating, Irritability, Lack of Motivation/energy, Gastrointestinal issues; Age Range</p>
                         </td>
-                        <td style="border: 1px solid #333; padding: 12px; vertical-align: top;">
-                            <ul style="margin: 0; padding-left: 20px;">
-                                <li>Direction of travel</li>
-                                <li>Number of time zones crossed</li>
-                                <li>Number of points marked as stimulated</li>
-                                <li>Local timezone to validate location</li>
-                            </ul>
+                        <td style="border: 1px solid #333; padding: 8px; vertical-align: top;">
+                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">Direction of travel; Number of time zones crossed; Number of points marked as stimulated; Local timezone to validate location</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
   	
 
-<h2>Data Integrity</h2>
-
-<p>Maintaining data integrity and securing it from tampering became integral to this study. As the project evolved, multiple safeguards were introduced to prevent fictitious entries or detect manipulation. A brief summary is below. More technical details are found in the Appendix.</p>
-
-<ul style="margin-left: 40px; padding-left: 20px;">
-	<li><strong>Trip records are cryptographically signed</strong> – Trip submissions must include a cryptographic signature that can only be generated by the app. It is not possible to fabricate trip records without using the actual app on a real device.</li>
-	
-	<li><strong>Public access to the immutable records</strong> – Open source tools at <a href="reviewers/verify.html">jetlagpro.com/reviewers/verify</a> let anyone confirm that (1) the live database used for analysis matches the permanent archive, and (2) trip records have valid cryptographic signatures.</li>
-	
-	<li><strong>All database changes are permanently logged</strong> – Every create, edit, or delete is automatically recorded in an immutable archive maintained by Google that cannot be changed by anyone. Our log is open to the public and can be found at <a href="reviewers/audit-log.html">jetlagpro.com/reviewers/audit-log</a>.</li>
-		
-	<li><strong>Analysis excludes test data</strong> – Developer test sessions and test trips are automatically filtered out before analysis (view at <a href="reviewers/analysis.html">jetlagpro.com/reviewers/analysis</a>). Of 20 trips collected before cryptographic signatures were implemented, 9 valid trips with survey info remain in the dataset and are labeled as "legacy". The remaining test trips are filtered out.</li>
-</ul>        
+<p>Data integrity safeguards include cryptographic signatures on trip records to prevent fabrication, immutable audit logging of all database changes, automatic filtering of test data, and publicly accessible verification tools. Detailed technical documentation is provided in the Appendix.</p>        
 		
 		<h2>Data Analysis</h2>
 		
@@ -1301,6 +1273,114 @@
                 const originalChartCanvas = document.getElementById('liveResearchChart');
                 let chartImageData = null;
                 
+                // Capture point images table as single image BEFORE cloning
+                let pointImagesData = null;
+                const pointImagesTable = document.getElementById('pointImagesTable');
+                if (pointImagesTable) {
+                    try {
+                        // Get the parent div that contains the table and heading
+                        const pointImagesContainer = pointImagesTable.closest('div');
+                        if (pointImagesContainer) {
+                            // Create a temporary container with proper Word formatting
+                            const tempContainer = document.createElement('div');
+                            tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 624px; background: white; padding: 10px;';
+                            
+                            // Clone the container
+                            const clonedContainer = pointImagesContainer.cloneNode(true);
+                            clonedContainer.style.cssText = 'width: 624px; margin: 0 auto; background: white;';
+                            
+                            // Format the table for Word export
+                            const clonedTable = clonedContainer.querySelector('table');
+                            if (clonedTable) {
+                                clonedTable.style.cssText = 'width: 600px; margin: 0 auto; border-collapse: collapse; table-layout: fixed;';
+                                const cells = clonedTable.querySelectorAll('td');
+                                cells.forEach(cell => {
+                                    cell.style.cssText = 'width: 100px; padding: 2px; text-align: center; vertical-align: middle;';
+                                });
+                                const images = clonedTable.querySelectorAll('img');
+                                images.forEach(img => {
+                                    img.style.cssText = 'width: 100px; height: 100px; object-fit: contain; display: block; margin: 0 auto;';
+                                });
+                                const paragraphs = clonedTable.querySelectorAll('p');
+                                paragraphs.forEach(p => {
+                                    p.style.cssText = 'margin: 2px 0; font-size: 10pt; font-weight: bold; text-align: center;';
+                                });
+                            }
+                            
+                            tempContainer.appendChild(clonedContainer);
+                            document.body.appendChild(tempContainer);
+                            
+                            // Capture with html2canvas at high resolution
+                            const canvas = await html2canvas(clonedContainer, {
+                                scale: 2,
+                                useCORS: true,
+                                allowTaint: true,
+                                backgroundColor: '#ffffff',
+                                width: 624,
+                                height: clonedContainer.offsetHeight
+                            });
+                            
+                            pointImagesData = canvas.toDataURL('image/png', 1.0);
+                            document.body.removeChild(tempContainer);
+                            console.log('Point images table captured for Word export');
+                        }
+                    } catch (error) {
+                        console.warn('Could not capture point images table:', error);
+                    }
+                }
+                
+                // Capture methods screenshots as single image BEFORE cloning
+                let methodsScreenshotsData = null;
+                const methodsScreenshotsContainer = document.getElementById('methodsScreenshots');
+                if (methodsScreenshotsContainer) {
+                    try {
+                        // Create a temporary container with proper Word formatting
+                        const tempContainer = document.createElement('div');
+                        tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 624px; background: white; padding: 10px;';
+                        
+                        // Clone the container
+                        const clonedContainer = methodsScreenshotsContainer.cloneNode(true);
+                        clonedContainer.style.cssText = 'width: 624px; margin: 0 auto; background: white;';
+                        
+                        // Format the table for Word export
+                        const clonedTable = clonedContainer.querySelector('table');
+                        if (clonedTable) {
+                            clonedTable.style.cssText = 'width: 100%; margin: 0 auto; border-collapse: separate; border-spacing: 15px;';
+                            const cells = clonedTable.querySelectorAll('td');
+                            cells.forEach(cell => {
+                                cell.style.cssText = 'width: 33.33%; padding: 10px; text-align: center; vertical-align: top;';
+                            });
+                            const images = clonedTable.querySelectorAll('img');
+                            images.forEach(img => {
+                                img.style.cssText = 'width: 170px; max-width: 170px; height: auto; display: block; margin: 0 auto;';
+                            });
+                            const paragraphs = clonedTable.querySelectorAll('p');
+                            paragraphs.forEach(p => {
+                                p.style.cssText = 'margin: 8px 0 0 0; font-size: 10pt; font-weight: bold; text-align: center;';
+                            });
+                        }
+                        
+                        tempContainer.appendChild(clonedContainer);
+                        document.body.appendChild(tempContainer);
+                        
+                        // Capture with html2canvas at high resolution
+                        const canvas = await html2canvas(clonedContainer, {
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: true,
+                            backgroundColor: '#ffffff',
+                            width: 624,
+                            height: clonedContainer.offsetHeight
+                        });
+                        
+                        methodsScreenshotsData = canvas.toDataURL('image/png', 1.0);
+                        document.body.removeChild(tempContainer);
+                        console.log('Methods screenshots captured for Word export');
+                    } catch (error) {
+                        console.warn('Could not capture methods screenshots:', error);
+                    }
+                }
+                
                 // Check if chart exists and is ready
                 if (originalChartCanvas) {
                     try {
@@ -1323,8 +1403,30 @@
                 const wordContent = paperContent.cloneNode(true);
                 
                 // Convert images to base64 for embedding while preserving sizes
+                // Skip point images and methods screenshots as they're already captured as composite images
                 const images = wordContent.querySelectorAll('img');
                 for (let img of images) {
+                    // Skip if this is a captured composite image (already processed)
+                    if (pointImagesData && img.src === pointImagesData) {
+                        continue;
+                    }
+                    if (methodsScreenshotsData && img.src === methodsScreenshotsData) {
+                        continue;
+                    }
+                    // Skip individual point images and methods screenshots (they're in composite images now)
+                    const isPointImage = img.src.includes('LU-8.jpg') || img.src.includes('LI-1.jpg') || 
+                                       img.src.includes('ST-36.jpg') || img.src.includes('SP-3.jpg') || 
+                                       img.src.includes('HT-8.jpg') || img.src.includes('SI-5.jpg') ||
+                                       img.src.includes('BL-66.jpg') || img.src.includes('KI-3.jpg') ||
+                                       img.src.includes('PC-8.jpg') || img.src.includes('SJ-6.jpg') || 
+                                       img.src.includes('GB-41.jpg') || img.src.includes('LIV-1.jpg');
+                    const isMethodsScreenshot = img.closest('#methodsScreenshots') || 
+                                               img.src.includes('research-photo-1.png') || 
+                                               img.src.includes('research-photo-2.png') || 
+                                               img.src.includes('research-photo-4.png');
+                    if ((isPointImage && pointImagesData) || (isMethodsScreenshot && methodsScreenshotsData)) {
+                        continue;
+                    }
                     try {
                         // Capture original styling and dimensions
                         const originalStyle = img.getAttribute('style') || '';
@@ -1435,6 +1537,47 @@
                     console.warn('Chart image data not available - chart may not have been rendered');
                 }
                 
+                // Replace point images table with captured image
+                if (pointImagesData) {
+                    const pointImagesTableClone = wordContent.querySelector('#pointImagesTable');
+                    if (pointImagesTableClone) {
+                        const pointImagesContainer = pointImagesTableClone.closest('div');
+                        if (pointImagesContainer) {
+                            // Create image element
+                            const pointImagesImg = document.createElement('img');
+                            pointImagesImg.src = pointImagesData;
+                            pointImagesImg.alt = 'Point Images - All 12 Acupuncture Points';
+                            pointImagesImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 20px auto; border: none;';
+                            
+                            // Replace the container content with the image
+                            pointImagesContainer.innerHTML = '';
+                            const heading = document.createElement('h2');
+                            heading.textContent = 'Point Images';
+                            heading.style.cssText = 'text-align: center; margin-bottom: 10px;';
+                            pointImagesContainer.appendChild(heading);
+                            pointImagesContainer.appendChild(pointImagesImg);
+                            console.log('Point images table replaced with captured image in Word export');
+                        }
+                    }
+                }
+                
+                // Replace methods screenshots with captured image
+                if (methodsScreenshotsData) {
+                    const methodsScreenshotsClone = wordContent.querySelector('#methodsScreenshots');
+                    if (methodsScreenshotsClone) {
+                        // Create image element
+                        const methodsImg = document.createElement('img');
+                        methodsImg.src = methodsScreenshotsData;
+                        methodsImg.alt = 'JetLagPro App Screenshots - Methods';
+                        methodsImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 20px auto; border: none;';
+                        
+                        // Replace the container content with the image
+                        methodsScreenshotsClone.innerHTML = '';
+                        methodsScreenshotsClone.appendChild(methodsImg);
+                        console.log('Methods screenshots replaced with captured image in Word export');
+                    }
+                }
+                
                 // Ensure tables maintain fixed widths for Word
                 const tables = wordContent.querySelectorAll('table');
                 tables.forEach(table => {
@@ -1469,6 +1612,64 @@
                             cell.style.fontSize = '8.5pt';
                             cell.style.lineHeight = '1.1';
                             cell.style.margin = '0';
+                        });
+                        // Remove all row spacing
+                        const rows = table.querySelectorAll('tr');
+                        rows.forEach(row => {
+                            row.style.margin = '0';
+                            row.style.padding = '0';
+                            row.style.height = 'auto';
+                        });
+                        // Remove spacing from table body
+                        const tbody = table.querySelector('tbody');
+                        if (tbody) {
+                            tbody.style.margin = '0';
+                            tbody.style.padding = '0';
+                        }
+                        const thead = table.querySelector('thead');
+                        if (thead) {
+                            thead.style.margin = '0';
+                            thead.style.padding = '0';
+                        }
+                    }
+                    // Data Collected table (Table 2) - tight spacing with compact text format
+                    else if (caption && caption.textContent.includes('Table 2')) {
+                        // Add a class for CSS targeting
+                        table.className = 'data-collected-table';
+                        table.style.margin = '5px auto';
+                        table.style.fontSize = '9pt';
+                        table.style.width = '100%';
+                        table.style.maxWidth = '624px';
+                        table.style.borderCollapse = 'collapse';
+                        table.style.borderSpacing = '0';
+                        // Tighten caption
+                        caption.style.margin = '0 0 3px 0';
+                        caption.style.padding = '3px 0';
+                        caption.style.fontSize = '10pt';
+                        caption.style.lineHeight = '1.1';
+                        // Tighten header cells - minimal padding
+                        const headerCells = table.querySelectorAll('th');
+                        headerCells.forEach(cell => {
+                            cell.style.padding = '2px 4px';
+                            cell.style.fontSize = '8.5pt';
+                            cell.style.lineHeight = '1.1';
+                            cell.style.margin = '0';
+                        });
+                        // Tighten data cells - minimal padding
+                        const dataCells = table.querySelectorAll('td');
+                        dataCells.forEach(cell => {
+                            cell.style.padding = '2px 4px';
+                            cell.style.fontSize = '9pt';
+                            cell.style.lineHeight = '1.3';
+                            cell.style.margin = '0';
+                        });
+                        // Tighten paragraphs - compact text format
+                        const paragraphs = table.querySelectorAll('p');
+                        paragraphs.forEach(p => {
+                            p.style.margin = '0';
+                            p.style.padding = '0';
+                            p.style.fontSize = '9pt';
+                            p.style.lineHeight = '1.3';
                         });
                         // Remove all row spacing
                         const rows = table.querySelectorAll('tr');
@@ -1801,6 +2002,51 @@
         }
         .organ-clock-table tbody,
         .organ-clock-table thead {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        /* Data Collected table - tight spacing with compact text format for Word export */
+        .data-collected-table {
+            margin: 5px auto !important;
+            font-size: 9pt !important;
+            width: 100% !important;
+            max-width: 624px !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+        }
+        .data-collected-table caption {
+            margin: 0 0 3px 0 !important;
+            padding: 3px 0 !important;
+            font-size: 10pt !important;
+            line-height: 1.1 !important;
+        }
+        .data-collected-table th {
+            padding: 2px 4px !important;
+            font-size: 8.5pt !important;
+            line-height: 1.1 !important;
+            border: 1px solid #333 !important;
+            margin: 0 !important;
+        }
+        .data-collected-table td {
+            padding: 2px 4px !important;
+            font-size: 9pt !important;
+            line-height: 1.3 !important;
+            border: 1px solid #333 !important;
+            margin: 0 !important;
+        }
+        /* Compact text format in Data Collected table */
+        .data-collected-table p {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 9pt !important;
+            line-height: 1.3 !important;
+        }
+        .data-collected-table tr {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .data-collected-table tbody,
+        .data-collected-table thead {
             margin: 0 !important;
             padding: 0 !important;
         }
