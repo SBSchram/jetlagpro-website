@@ -57,6 +57,16 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 import argparse
 
+# Developer device IDs - single source of truth
+# Matches TripValidator.DEVELOPER_DEVICE_IDS in assets/js/trip-validator.js
+DEVELOPER_DEVICE_IDS = [
+    '2330B376',
+    '7482966F',
+    '5E001B36',
+    '23DB54B0',
+    '1CDD41FC'
+]
+
 
 def load_trips(trips_path: str) -> List[Dict]:
     """Load trip records from JSON file."""
@@ -109,7 +119,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     Filter trips for analysis.
     
     EXCLUDED:
-    - Developer test sessions: Device IDs 2330B376, 7482966F
+    - Developer test sessions: Device IDs defined in DEVELOPER_DEVICE_IDS constant
     - Test trips: timezonesCount=0 or same timezone without survey
     - Incomplete surveys: Missing symptom severity data
     - Invalid HMAC: Signature mismatch (if signature present)
@@ -125,8 +135,8 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     valid_trips = []
     
     # Developer device IDs to exclude (test sessions)
-    # Matches live dashboard at reviewers/assets/js/analytics.js:58
-    developer_device_ids = ['2330B376', '7482966F']
+    # Matches TripValidator.DEVELOPER_DEVICE_IDS in assets/js/trip-validator.js
+    developer_device_ids = DEVELOPER_DEVICE_IDS
     
     for trip in trips:
         trip_id = trip.get('tripId', '')
@@ -856,7 +866,7 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     lines.append("TEST TRIPS (Excluded)")
     lines.append("  • timezonesCount = 0")
     lines.append("  • arrival timezone = origin timezone (without survey completion)")
-    lines.append("  • Developer device IDs: 2330B376, 7482966F")
+    lines.append(f"  • Developer device IDs: {', '.join(DEVELOPER_DEVICE_IDS)}")
     lines.append("  • Explicit isTest flag")
     lines.append("")
     lines.append("  Rationale: Local testing, development sessions, or same-timezone")

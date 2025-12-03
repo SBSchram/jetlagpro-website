@@ -567,7 +567,11 @@ function mapSource(rawSource) {
     }
 }
 
-const DEVELOPER_PREFIXES = ['2330B376', '7482966F', '5E001B36', '23DB54B0'];
+// Developer device IDs - use single source of truth from TripValidator
+// Note: trip-validator.js must be loaded before this file
+const DEVELOPER_PREFIXES = typeof TripValidator !== 'undefined' 
+    ? TripValidator.DEVELOPER_DEVICE_IDS 
+    : ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC']; // Fallback if TripValidator not available
 
 function classifyEntry(entry) {
     const tripId = entry.tripId || entry.documentId || '';

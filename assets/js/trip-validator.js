@@ -14,6 +14,11 @@ class TripValidator {
     // Same key is embedded in iOS and React Native apps
     static HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
     
+    // Developer device IDs - single source of truth
+    // These are device IDs from developer test devices and simulators
+    // Used to filter out test data from research analysis
+    static DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC'];
+    
     /**
      * Validates HMAC-SHA256 signature on a trip ID
      * Trip IDs from Build 6+ have format: deviceID-dest-date-time-signature
@@ -371,14 +376,14 @@ class TripValidator {
      * @param {Object} options - Filtering options
      * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
      * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
-     * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: ['2330B376', '7482966F', '5E001B36'])
+     * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: TripValidator.DEVELOPER_DEVICE_IDS)
      * @returns {Array} - Filtered array of trips for analysis
      */
     static filterForAnalysis(trips, options = {}) {
         const {
             requireSurvey = false,
             excludeDeveloper = true,
-            developerDeviceIds = ['2330B376', '7482966F', '5E001B36', '23DB54B0']
+            developerDeviceIds = TripValidator.DEVELOPER_DEVICE_IDS
         } = options;
         
         let filtered = trips;

@@ -51,8 +51,11 @@ function getValidationStats(trips) {
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
 
-// Developer device IDs (for categorization, not exclusion)
-const DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F'];
+// Developer device IDs - use single source of truth from TripValidator
+// Note: trip-validator.js must be loaded before this file
+const DEVELOPER_DEVICE_IDS = typeof TripValidator !== 'undefined' 
+    ? TripValidator.DEVELOPER_DEVICE_IDS 
+    : ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC']; // Fallback if TripValidator not available
 
 // Check if a trip is from a developer device
 function isDeveloperTrip(trip) {
