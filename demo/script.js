@@ -6,6 +6,11 @@ const CONSTANTS = {
     UPDATE_INTERVAL: 60000,
     MAX_RECENT_DESTINATIONS: 5,
     SEARCH_RESULTS_LIMIT: 10,
+    CACHE_VERSION: '2025-07-26-1430', // Cache busting version for assets
+    ASSET_PATHS: {
+        POINT_IMAGES: 'assets/point-images',
+        VIDEOS: 'assets/videos'
+    },
     STORAGE_KEYS: {
         SELECTED_AIRPORT: 'jetlagpro_selected_airport',
         RECENT_DESTINATIONS: 'recentDestinations'
@@ -133,6 +138,25 @@ const TimeUtils = {
             hour12: true
         };
         return date.toLocaleTimeString('en-US', { ...defaultOptions, ...options });
+    },
+    
+    // iOS-compatible time formatting: "h a" when minutes are 0, "h:mm a" when minutes are not 0
+    formatTimeIOS(date) {
+        const minutes = date.getMinutes();
+        const hours = date.getHours();
+        
+        // Format hour (1-12)
+        const hour12 = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        // If minutes are 0, show "h a" (e.g., "3 PM")
+        if (minutes === 0) {
+            return `${hour12} ${ampm}`;
+        }
+        
+        // If minutes are not 0, show "h:mm a" (e.g., "3:30 PM")
+        const minutesStr = minutes.toString().padStart(2, '0');
+        return `${hour12}:${minutesStr} ${ampm}`;
     }
 };
 
@@ -152,7 +176,58 @@ class JetLagProDemo {
         this.notificationSchedule = []; // Added for notification schedule
         this.timezoneOffset = 0; // Added for timezone offset
         
+        // Phase 5: Image cycling system
+        // Track cycle state per point: 0=original, 1=alternate, 2=mirror original, 3=mirror alternate
+        this.pointCycleStates = new Map(); // Map<pointId, cycleState>
+        this.videoObservers = new Map(); // Map<pointId, {video, observer}> for cleanup
+        
         this.init();
+    }
+
+    // Helper methods to reduce code duplication
+    
+    /**
+     * Find a point by its ID
+     */
+    findPointById(pointId) {
+        return this.points.find(p => p.id === pointId);
+    }
+    
+    /**
+     * Find a schedule item by point ID
+     */
+    findScheduleItemByPointId(pointId) {
+        return this.notificationSchedule.find(item => item.point.id === pointId);
+    }
+    
+    /**
+     * Get a DOM element within a point card
+     */
+    getPointElement(pointId, selector) {
+        return document.querySelector(`[data-point-id="${pointId}"] ${selector}`);
+    }
+    
+    /**
+     * Apply mirror transform to an element
+     */
+    applyMirrorTransform(element, shouldMirror) {
+        if (element) {
+            element.style.transform = shouldMirror ? 'scaleX(-1)' : 'scaleX(1)';
+        }
+    }
+    
+    /**
+     * Get image path with cache busting
+     */
+    getImagePath(imageName) {
+        return `${CONSTANTS.ASSET_PATHS.POINT_IMAGES}/${imageName}.jpg?v=${CONSTANTS.CACHE_VERSION}`;
+    }
+    
+    /**
+     * Get video path with cache busting
+     */
+    getVideoPath(videoName) {
+        return `${CONSTANTS.ASSET_PATHS.VIDEOS}/${videoName}?v=${CONSTANTS.CACHE_VERSION}`;
     }
 
     async init() {
@@ -458,13 +533,13 @@ class JetLagProDemo {
             // No destination case: calculate based on local time
             const currentHour = new Date().getHours();
             const pointId = this.hourToPointId[currentHour];
-            this.currentPoint = this.points.find(p => p.id === pointId);
+            this.currentPoint = this.findPointById(pointId);
         } else {
             // Destination case: find current point based on destination timezone
             const destinationTime = TimeUtils.toDestinationTime(this.selectedAirport.timezone);
             const destinationHour = destinationTime.getHours();
             const pointId = this.hourToPointId[destinationHour];
-            this.currentPoint = this.points.find(p => p.id === pointId);
+            this.currentPoint = this.findPointById(pointId);
         }
     }
 
@@ -480,28 +555,79 @@ class JetLagProDemo {
         const orderedPoints = this.getOrderedPoints();
         const currentPointId = this.currentPoint ? this.currentPoint.id : null;
 
+        // Determine current journey order for isNextUp detection
+        let currentJourneyOrder = null;
+        if (this.selectedAirport && currentPointId && this.notificationSchedule.length > 0) {
+            const currentScheduleItem = this.findScheduleItemByPointId(currentPointId);
+            currentJourneyOrder = currentScheduleItem ? currentScheduleItem.transitionNumber : null;
+        }
+        
+        // Check if current point is completed (for isNextUp logic)
+        const isCurrentPointCompleted = currentPointId ? this.completedPoints.has(currentPointId) : false;
+        
         const pointsHTML = orderedPoints.map((point, index) => {
             const isCurrent = point.id === currentPointId;
             const isExpanded = this.expandedPointId === point.id || isCurrent; // Auto-expand current point
             const isCompleted = this.completedPoints.has(point.id);
-            const journeyOrder = index + 1;
             
-            const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId);
+            // Get journeyOrder from transitionNumber in notification schedule
+            // If no destination or schedule item not found, fall back to index + 1
+            let journeyOrder;
+            if (this.selectedAirport && this.notificationSchedule.length > 0) {
+                const scheduleItem = this.findScheduleItemByPointId(point.id);
+                journeyOrder = scheduleItem ? scheduleItem.transitionNumber : (index + 1);
+            } else {
+                // No destination case: use index + 1
+                journeyOrder = index + 1;
+            }
+            
+            // Determine if this is a past point (calculate once, reuse)
+            const isPast = this.selectedAirport ? this.isPastPoint(point.id, currentPointId) : false;
+            
+            // Determine if this is the "next up" point
+            // Next up = first future point after current point, only shown when current point is completed
+            let isNextUp = false;
+            if (this.selectedAirport && currentJourneyOrder !== null && !isCurrent) {
+                if (!isPast && isCurrentPointCompleted) {
+                    // This is a future point and current is completed
+                    // Check if this is the first future point
+                    const pointScheduleItem = this.findScheduleItemByPointId(point.id);
+                    if (pointScheduleItem) {
+                        const pointJourneyOrder = pointScheduleItem.transitionNumber;
+                        // Check if this is the first point after current
+                        const allFuturePoints = this.notificationSchedule
+                            .filter(item => {
+                                const itemIsPast = this.isPastPoint(item.point.id, currentPointId);
+                                return !itemIsPast && item.point.id !== currentPointId;
+                            })
+                            .sort((a, b) => a.transitionNumber - b.transitionNumber);
+                        
+                        if (allFuturePoints.length > 0 && allFuturePoints[0].point.id === point.id) {
+                            isNextUp = true;
+                        }
+                    }
+                }
+            }
+            
+            const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId, isNextUp);
             
             return `
-                <div class="point-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isExpanded ? 'expanded' : ''}" data-point-id="${point.id}">
+                <div class="point-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isPast ? 'past' : ''} ${isExpanded ? 'expanded' : ''}" data-point-id="${point.id}">
                     <div class="point-header" onclick="demo.togglePoint(${point.id})">
                         <div class="point-stimulation-text">${stimulationText}</div>
                         <div class="point-chevron">${isExpanded ? '▲' : '▼'}</div>
                     </div>
                     <div class="point-content">
                         <div class="point-media">
-                            <div class="point-image">
-                                <img src="assets/point-images/${point.imageName}.jpg?v=2025-07-26-1430" alt="${point.name} location">
+                            <div class="point-image-container">
+                                <div class="point-image">
+                                    <img src="${this.getImagePath(this.getImageNameForCycle(point))}" alt="${point.name} location" class="${this.isMirrored(point.id) ? 'mirrored' : ''}">
+                                </div>
+                                <div class="point-left-right-label">${this.getLeftRightLabel(point)}</div>
                             </div>
                             <div class="point-video">
-                                <video preload="metadata" autoplay loop muted playsinline>
-                                    <source src="assets/videos/${point.videoName}?v=2025-07-26-1430" type="video/mp4">
+                                <video preload="metadata" autoplay muted playsinline class="${this.isMirrored(point.id) ? 'mirrored' : ''}" data-point-id="${point.id}">
+                                    <source src="${this.getVideoPath(point.videoName)}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
@@ -531,6 +657,17 @@ class JetLagProDemo {
         }).join('');
 
         DOM.setHTML('pointsList', pointsHTML);
+        
+        // Phase 5: Setup video loop observers for all expanded points
+        // Use setTimeout to ensure DOM is fully updated
+        setTimeout(() => {
+            orderedPoints.forEach(point => {
+                const isExpanded = this.expandedPointId === point.id || point.id === currentPointId;
+                if (isExpanded) {
+                    this.setupVideoLoopObserver(point.id);
+                }
+            });
+        }, 100);
     }
 
     getOrderedPoints() {
@@ -546,7 +683,7 @@ class JetLagProDemo {
             for (let i = 0; i < 24; i++) {
                 const targetHour = (currentHour + i) % 24;
                 const pointId = this.hourToPointId[targetHour];
-                const point = this.points.find(p => p.id === pointId);
+                const point = this.findPointById(pointId);
                 
                 if (point && !seenPointIds.has(point.id)) {
                     orderedPoints.push(point);
@@ -556,11 +693,19 @@ class JetLagProDemo {
             
             return orderedPoints;
         } else {
-            // Destination case: order points by notification schedule, with current point at top
+            // Destination case: order points by transitionNumber from notification schedule
             const currentPointId = this.currentPoint ? this.currentPoint.id : null;
             
-            // Get all points from notification schedule
-            const schedulePoints = this.notificationSchedule.map(item => item.point);
+            // Sort notification schedule by transitionNumber (1-12)
+            const sortedSchedule = [...this.notificationSchedule].sort((a, b) => {
+                // Handle missing transitionNumber (fallback to current behavior)
+                const aNum = a.transitionNumber || 999;
+                const bNum = b.transitionNumber || 999;
+                return aNum - bNum;
+            });
+            
+            // Get points in sorted order
+            let schedulePoints = sortedSchedule.map(item => item.point);
             
             if (currentPointId) {
                 // Find the current point in the schedule and move it to the front
@@ -580,7 +725,7 @@ class JetLagProDemo {
         }
     }
 
-    formatStimulationText(point, journeyOrder, currentPointId) {
+    formatStimulationText(point, journeyOrder, currentPointId, isNextUp = false) {
         // Use ordinal number (journeyOrder) instead of point.id
         const pointName = `Point ${journeyOrder}`;
         
@@ -593,28 +738,42 @@ class JetLagProDemo {
             }
         } else {
             // Destination case - use stored notification schedule
-            const scheduleItem = this.notificationSchedule.find(item => item.point.id === point.id);
+            const scheduleItem = this.findScheduleItemByPointId(point.id);
             if (!scheduleItem) {
-                return `${pointName} - schedule not available`;
+                return `${pointName} is not yet ready to stimulate`;
             }
             
             if (point.id === currentPointId) {
-                return `${pointName} tells your body it is ${this.selectedAirport.code} time`;
+                // Current point: check if completed
+                if (this.completedPoints.has(point.id)) {
+                    return `Massage ${pointName} Complete`;
+                } else {
+                    return `Massage ${pointName} now`;
+                }
             } else {
                 const isPast = this.isPastPoint(point.id, currentPointId);
                 if (isPast) {
-                    return `${pointName} is no longer active`;
+                    // Past point: just show point name (no additional text)
+                    return pointName;
                 } else {
-                    const destTime = this.formatTime(scheduleItem.destinationTime);
+                    // Future point: "Rub Point X at [local time]"
                     const localTime = this.formatTime(scheduleItem.localTime);
-                    return `Do ${pointName.toLowerCase()} (${destTime}) at your ${localTime}`;
+                    let text = `Rub ${pointName} at ${localTime}`;
+                    
+                    // Append "NEXT UP" if this is the next upcoming point
+                    if (isNextUp) {
+                        text += " NEXT UP";
+                    }
+                    
+                    return text;
                 }
             }
         }
     }
 
     formatTime(date) {
-        return TimeUtils.formatTime(date);
+        // Use iOS-compatible formatter for point display
+        return TimeUtils.formatTimeIOS(date);
     }
 
     getPointTimeString(pointId) {
@@ -626,6 +785,161 @@ class JetLagProDemo {
                hour < 12 ? `${hour} AM` : 
                hour === 12 ? '12 PM' : 
                `${hour - 12} PM`;
+    }
+
+    // Phase 5: Image Cycling System Methods
+    
+    /**
+     * Get the current cycle state for a point (defaults to 0)
+     * State 0: original image, State 1: "a" image, State 2: mirror original, State 3: mirror "a"
+     */
+    getCycleState(pointId) {
+        return this.pointCycleStates.get(pointId) || 0;
+    }
+    
+    /**
+     * Set the cycle state for a point
+     */
+    setCycleState(pointId, state) {
+        this.pointCycleStates.set(pointId, state % 4);
+    }
+    
+    /**
+     * Advance the cycle state for a point (0→1→2→3→0...)
+     */
+    advanceCycle(pointId) {
+        const currentState = this.getCycleState(pointId);
+        this.setCycleState(pointId, currentState + 1);
+        // Update the image in the DOM if the point is expanded
+        this.updatePointImage(pointId);
+    }
+    
+    /**
+     * Get the image name for the current cycle state
+     * State 0,2: original image (e.g., "LU-8")
+     * State 1,3: alternate image (e.g., "LU-8a")
+     */
+    getImageNameForCycle(point) {
+        const cycleState = this.getCycleState(point.id);
+        const useAlternate = (cycleState === 1 || cycleState === 3);
+        return useAlternate ? point.imageName + "a" : point.imageName;
+    }
+    
+    /**
+     * Get the Left/Right label for the current cycle state
+     * KI-3, LI-1, PC-8: States 0,1 = "Left"; States 2,3 = "Right"
+     * All other points: States 0,1 = "Right"; States 2,3 = "Left"
+     */
+    getLeftRightLabel(point) {
+        const cycleState = this.getCycleState(point.id);
+        const specialPoints = ["KI-3", "LI-1", "PC-8"];
+        
+        if (specialPoints.includes(point.imageName)) {
+            // KI-3, LI-1, PC-8: cycleState 0,1 = Left; 2,3 = Right
+            return (cycleState < 2) ? "Left" : "Right";
+        } else {
+            // All other points: cycleState 0,1 = Right; 2,3 = Left
+            return (cycleState < 2) ? "Right" : "Left";
+        }
+    }
+    
+    /**
+     * Check if the image should be mirrored (states 2 and 3)
+     */
+    isMirrored(pointId) {
+        const cycleState = this.getCycleState(pointId);
+        return cycleState >= 2;
+    }
+    
+    /**
+     * Update the point image in the DOM when cycle state changes
+     */
+    updatePointImage(pointId) {
+        const point = this.findPointById(pointId);
+        if (!point) return;
+        
+        const imageName = this.getImageNameForCycle(point);
+        const imageElement = this.getPointElement(pointId, '.point-image img');
+        if (imageElement) {
+            imageElement.src = this.getImagePath(imageName);
+            this.applyMirrorTransform(imageElement, this.isMirrored(pointId));
+        }
+        
+        // Update video mirroring
+        const videoElement = this.getPointElement(pointId, '.point-video video');
+        if (videoElement) {
+            this.applyMirrorTransform(videoElement, this.isMirrored(pointId));
+        }
+        
+        // Update Left/Right label
+        const labelElement = this.getPointElement(pointId, '.point-left-right-label');
+        if (labelElement) {
+            labelElement.textContent = this.getLeftRightLabel(point);
+        }
+    }
+    
+    /**
+     * Setup video loop observer for a point to advance cycle on each loop
+     */
+    setupVideoLoopObserver(pointId) {
+        // Clean up any existing observer
+        this.cleanupVideoObserver(pointId);
+        
+        const videoElement = this.getPointElement(pointId, '.point-video video');
+        if (!videoElement) return;
+        
+        // Check if alternate image exists (only proceed if it does)
+        const point = this.findPointById(pointId);
+        if (!point || !this.hasAlternateImage(point)) {
+            // For non-alternating points, just start video if it exists
+            // Still need to loop the video manually
+            videoElement.addEventListener('ended', () => {
+                videoElement.currentTime = 0;
+                videoElement.play();
+            });
+            return;
+        }
+        
+        // Reset cycle state to 0 when setting up observer
+        this.setCycleState(pointId, 0);
+        
+        // Add event listener for video loop completion
+        // Since we removed the 'loop' attribute, we handle looping manually
+        const handleLoop = () => {
+            this.advanceCycle(pointId);
+            // Restart video for next loop
+            videoElement.currentTime = 0;
+            videoElement.play();
+        };
+        
+        videoElement.addEventListener('ended', handleLoop);
+        
+        // Store observer info for cleanup
+        this.videoObservers.set(pointId, {
+            video: videoElement,
+            handler: handleLoop
+        });
+    }
+    
+    /**
+     * Clean up video loop observer for a point
+     */
+    cleanupVideoObserver(pointId) {
+        const observer = this.videoObservers.get(pointId);
+        if (observer) {
+            observer.video.removeEventListener('ended', observer.handler);
+            this.videoObservers.delete(pointId);
+        }
+    }
+    
+    /**
+     * Check if an alternate image exists for a point
+     * Note: This checks if the image would exist, but doesn't verify it's actually loaded
+     */
+    hasAlternateImage(point) {
+        // For now, assume all points have "a" variants once they're added
+        // In production, we could check if the image exists by trying to load it
+        return true; // Will be true once all "a" variant images are added
     }
 
     getPointDestinationTime(pointId) {
@@ -676,8 +990,11 @@ class JetLagProDemo {
 
     togglePoint(pointId) {
         if (this.expandedPointId === pointId) {
+            // Collapsing: cleanup video observer
+            this.cleanupVideoObserver(pointId);
             this.expandedPointId = null;
         } else {
+            // Expanding: will setup observer in generatePointsList
             this.expandedPointId = pointId;
         }
         this.generatePointsList();
@@ -958,7 +1275,7 @@ class JetLagProDemo {
 
     getPointForHour(hour) {
         const pointId = this.hourToPointId[hour];
-        return this.points.find(p => p.id === pointId) || this.points[0];
+        return this.findPointById(pointId) || this.points[0];
     }
     
     debugSearchBarStyles() {

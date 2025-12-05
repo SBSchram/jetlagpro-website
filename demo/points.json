@@ -9,7 +9,7 @@
       "imageName": "LU-8",
       "videoName": "LU-8.mp4",
       "pointLocation": "Find the depression about 1 inch above the wrist just inside the bone.",
-      "stimulationMethod": "Press into the point and rub it deeply with a firm pressure. If you feel you are pressing against the bone, you have it right!",
+      "stimulationMethod": "Press into the point and rub deeply with a firm pressure. If you feel you are pressing against the bone, you have it right!",
       "indications": "Dry cough, shortness of breath, wheezing, chest pain, sore throat, wrist pain, edema.",
       "functions": "Regulates Lung Qi, clears Lung heat, descends Lung Qi, and benefits the throat and chest"
     },
@@ -22,7 +22,7 @@
       "imageName": "LI-1",
       "videoName": "LI-1.mp4",
       "pointLocation": "This point is on the thumb side of the index finger, at the top corner of the nail.",
-      "stimulationMethod": "Press into this point and rub it with a firm pressure for about a minute.",
+      "stimulationMethod": "Press into this point and rub it with a firm pressure. Steady pressure works as well.",
       "indications": "Toothache, sore throat, jaw pain, toothache, shoulder pain, fever, calms the mind.",
       "functions": "Clears heat (tootheache, sore throat, fever), opens the sinuses, and promotes proper bowel function."
     },
@@ -34,7 +34,7 @@
       "timeDescription": "7-9 AM",
       "imageName": "ST-36",
       "videoName": "ST-36.mp4",
-      "pointLocation": "This point is about 3 inches below the kneecap between the shin bone and the fibula. It may sore when you press into it.",
+      "pointLocation": "This point is about 3 inches below the kneecap between the shin bone and the fibula. It may be sore when you press into it.",
       "stimulationMethod": "Lean down and firmly massage the muscle with your fingers pressing into the flesh. Or, cross your leg over the other and massage it that way.",
       "indications": "Stomach pain, bloating, diarrhea, constipation, fatigue, weak immunity, leg pain, overall weakness.",
       "functions": "Tonifies both Qi and Blood, invigorates digestion and settles the stomach. It boosts overall energy."
@@ -48,7 +48,7 @@
       "imageName": "SP-3",
       "videoName": "SP-3.mp4",
       "pointLocation": "This point is along the inside edge of your foot where a big bump starts before you reach the big toe.",
-      "stimulationMethod": "Use your thumb to press back and forth into this point. It should feel like you are rubbing into the bone and will likely be sore.",
+      "stimulationMethod": "Use your thumb to press back and forth into this point. It should feel like you are rubbing into the base of the bone and will often be sore.",
       "indications": "Bloating, diarrhea, weak appetite, fatigue, heaviness in the body.",
       "functions": "Strengthens digestion, resolves the feelings of heaviness, supports and soothes the belly."
     },
@@ -60,8 +60,8 @@
       "timeDescription": "11 AM - 1 PM",
       "imageName": "HT-8",
       "videoName": "HT-8.mp4",
-      "pointLocation": "On the palm of your hand, find the big crease. The point is where your pinky touches the crease between the bones.",
-      "stimulationMethod": "Use your index finger or knuckle to press this point that is between the bones. Press firmly and rub in an up and down motion.",
+      "pointLocation": "On the palm of your hand, find the big crease. The point is found where your pinky touches the crease.",
+      "stimulationMethod": "Use any finger or your knuckle to press into this point. It is between the bones so you have to press firmly. You can use a press and release, press and release techniue.",
       "indications": "Palpitations, chest pain, insomnia, anxiety, elbow pain, emotional distress.",
       "functions": "Clears agitation, calms the spirit, regulates the Heart, and benefits the chest and upper limbs."
     },
@@ -87,21 +87,21 @@
       "imageName": "BL-66",
       "videoName": "BL-66.mp4",
       "pointLocation": "On the outside edge of the foot where the small toe meets the larger bone.",
-      "stimulationMethod": "Use your index or middle finger to rub into the base of the big bone. It may be sore so be both firm and gentle.",
+      "stimulationMethod": "Use your index or middle finger to rub into the base of the big bone. It's easier to do if your leg is crossed over your knee.",
       "indications": "Headache, stiff neck, urinary problems, calms the spirit.",
       "functions": "Clears heat, expels wind, benefits the head and neck, and calms the spirit."
     },
     {
       "id": 8,
-      "name": "Kidney-10",
-      "chineseName": "Yin Valley",
-      "chineseChars": "阴谷",
+      "name": "Kidney-3",
+      "chineseName": "Geat Ravine",
+      "chineseChars": "太溪",
       "timeDescription": "5-7 PM",
-      "imageName": "KI-10",
-      "videoName": "KI-10.mp4",
-      "pointLocation": "While sitting, find the sore spot at the top of your bottom leg as shown in the video.",
-      "stimulationMethod": "Rub your thumb around this area. It will be sore don't press too hard. Apply a firm pressure and you press into the point and a press and release method.",
-      "indications": "Knee pain, lower back pain, urinary problems, and reproductive issues.",
+      "imageName": "KI-3",
+      "videoName": "KI-3.mp4",
+      "pointLocation": "While sitting with your leg crossed onto your knee, the point is between the high point on your ankle bone and the Achilles tendon.",
+      "stimulationMethod": "With your thumb, rub this spot with a circular motion as shown in the video. ",
+      "indications": "Low back pain, urinary problems, tinnitus, hearing issues.",
       "functions": "Tonifies the Kidney, helps the lower back and knees, and regulates urine."
     },
     {
@@ -113,7 +113,7 @@
       "imageName": "PC-8",
       "videoName": "PC-8.mp4",
       "pointLocation": "Find the place on the long crease on your palm where your middle finger touches it.",
-      "stimulationMethod": "Press between the bones with your index finger, thumb or knuckle. Press firmly and rub back and forth.",
+      "stimulationMethod": "Use any finger or your knuckle to press into this point. It is between the bones so you have to press firmly. You can use a press and release, press and release techniue.",
       "indications": "Chest pain, palpitations, anxiety, insomnia, emotional upset.",
       "functions": "Clears heat, calms the spirit, regulates Heart Qi, and benefits the chest."
     },
@@ -126,7 +126,7 @@
       "imageName": "SJ-6",
       "videoName": "SJ-6.mp4",
       "pointLocation": "With your hand facing down, raise your fingers to find your wrist crease. Put four fingers on the wrist crease. The point is above the top finger, between the two arm bones.",
-      "stimulationMethod": "Use your index finger or thumb to press between the bones and into the point.",
+      "stimulationMethod": "Use your index finger or thumb to press between the bones and into the point while moving your wrist back and forth as in the video.",
       "indications": "Constipation, abdominal pain, rib pain, shoulder pain.",
       "functions": "Clears heat, benefits the bowels, helps the ribs."
     },
@@ -139,7 +139,7 @@
       "imageName": "GB-41",
       "videoName": "GB-41.mp4",
       "pointLocation": "With your foot on your knee. The point is between the small and fourth toe at the top of the first depression you find when moving up from the toes.",
-      "stimulationMethod": "Press into the depression and rub up and down while maintaining a steady pressure.",
+      "stimulationMethod": "Cross your leg over your knee or lean over if you have enough room. Press into the depression and rub into the point while maintaining a steady pressure.",
       "indications": "Headache, dizziness, red eyes, frustration.",
       "functions": "Clears heat, benefits the head and eyes, and regulates emotions."
     },
@@ -152,7 +152,7 @@
       "imageName": "LIV-1",
       "videoName": "LIV-1.mp4",
       "pointLocation": "On the big toe, on the inside edge, about 0.1 inch from the corner of the nail.",
-      "stimulationMethod": "Use your index finger to press into this point and rub it around with a firm pressure.",
+      "stimulationMethod": "Press into this point and rub it with a firm pressure. Steady pressure works as well. It can be done with your foot on the floor or with your foot crossed over your knee.",
       "indications": "Headache, dizziness, insomnia, anger, frustration, eye problems.",
       "functions": "Clears heat, calms the Liver, benefits the head and eyes, and regulates emotions."
     }
