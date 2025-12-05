@@ -1077,10 +1077,12 @@ body {
 }
 
 .section-header-image {
-    max-width: 100%;
+    max-width: 250px;
     height: auto;
     margin-bottom: 3rem;
     display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .steps-container {
@@ -1142,7 +1144,7 @@ body {
     
     .section-header-image {
         margin-bottom: 2rem;
-        max-width: 100%;
+        max-width: 250px;
     }
 }
 
