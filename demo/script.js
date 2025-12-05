@@ -4,7 +4,7 @@ console.log('JetLagPro Demo script loading...');
 // Simple utilities to reduce code duplication (no architectural complexity)
 const CONSTANTS = {
     UPDATE_INTERVAL: 60000,
-    MAX_RECENT_DESTINATIONS: 5,
+    MAX_RECENT_DESTINATIONS: 3, // Match iOS: limit to 3 recent destinations
     SEARCH_RESULTS_LIMIT: 10,
     CACHE_VERSION: '2025-07-26-1430', // Cache busting version for assets
     ASSET_PATHS: {
@@ -325,6 +325,12 @@ class JetLagProDemo {
     }
 
     handleAirportSearch(query) {
+        // Update displays based on search state
+        const searchText = query.trim();
+        if (searchText === '') {
+            this.updateRecentDestinationsDisplay();
+            this.updateEmptyState();
+        }
         console.log('Searching for:', query);
         
         // Show/hide clear button
@@ -335,7 +341,8 @@ class JetLagProDemo {
         
         if (!query.trim()) {
             this.hideSearchResults();
-            this.showEmptyState();
+            this.updateEmptyState();
+            this.updateRecentDestinationsDisplay();
             return;
         }
 
@@ -466,10 +473,13 @@ class JetLagProDemo {
     hideSearchResults() {
         console.log('Hiding search results');
         DOM.hide('searchResults');
+        // Update displays when search is cleared
+        this.updateRecentDestinationsDisplay();
+        this.updateEmptyState();
     }
 
     showEmptyState() {
-        DOM.showFlex('emptyState');
+        this.updateEmptyState();
         this.updateRecentDestinationsDisplay();
     }
 
@@ -500,6 +510,10 @@ class JetLagProDemo {
         
         // Clear search input
         DOM.setValue('airportSearch', '');
+        
+        // Update displays
+        this.updateRecentDestinationsDisplay();
+        this.updateEmptyState();
         
         // Switch to Journey tab (don't hide destination tab yet)
         this.switchToTab('journey');
@@ -618,29 +632,32 @@ class JetLagProDemo {
                         <div class="point-chevron">${isExpanded ? '▲' : '▼'}</div>
                     </div>
                     <div class="point-content">
+                        <!-- Location section FIRST (match iOS) -->
+                        <div class="point-detail-item">
+                            <div class="point-detail-title">Location</div>
+                            <div class="point-detail-content">${point.pointLocation}</div>
+                        </div>
+                        
+                        <!-- Point Image and Video Layout (match iOS HStack) -->
                         <div class="point-media">
                             <div class="point-image-container">
                                 <div class="point-image">
-                                    <img src="${this.getImagePath(this.getImageNameForCycle(point))}" alt="${point.name} location" class="${this.isMirrored(point.id) ? 'mirrored' : ''}">
+                                    <img src="${this.getImagePath(this.getImageNameForCycle(point))}" alt="${point.name} location" data-point-id="${point.id}">
                                 </div>
                                 <div class="point-left-right-label">${this.getLeftRightLabel(point)}</div>
                             </div>
                             <div class="point-video">
-                                <video preload="metadata" autoplay muted playsinline class="${this.isMirrored(point.id) ? 'mirrored' : ''}" data-point-id="${point.id}">
+                                <video preload="metadata" autoplay muted playsinline data-point-id="${point.id}">
                                     <source src="${this.getVideoPath(point.videoName)}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
                         </div>
-                        <div class="point-details">
-                            <div class="point-detail-item">
-                                <div class="point-detail-title">Location</div>
-                                <div class="point-detail-content">${point.pointLocation}</div>
-                            </div>
-                            <div class="point-detail-item">
-                                <div class="point-detail-title">Stimulate</div>
-                                <div class="point-detail-content">${point.stimulationMethod}</div>
-                            </div>
+                        
+                        <!-- Stimulation section LAST (match iOS) -->
+                        <div class="point-detail-item">
+                            <div class="point-detail-title">Stimulate</div>
+                            <div class="point-detail-content">${point.stimulationMethod}</div>
                         </div>
                         ${isCurrent && !isCompleted ? `
                             <div class="mark-stimulated-button">
@@ -658,12 +675,19 @@ class JetLagProDemo {
 
         DOM.setHTML('pointsList', pointsHTML);
         
-        // Phase 5: Setup video loop observers for all expanded points
+        // Phase 5: Setup video loop observers and apply initial mirroring for all expanded points
         // Use setTimeout to ensure DOM is fully updated
         setTimeout(() => {
             orderedPoints.forEach(point => {
                 const isExpanded = this.expandedPointId === point.id || point.id === currentPointId;
                 if (isExpanded) {
+                    // Initialize cycle state to 0 if not already set
+                    if (!this.pointCycleStates.has(point.id)) {
+                        this.setCycleState(point.id, 0);
+                    }
+                    // Apply initial mirroring based on current cycle state
+                    this.applyInitialMirroring(point.id);
+                    // Setup video loop observer
                     this.setupVideoLoopObserver(point.id);
                 }
             });
@@ -852,6 +876,21 @@ class JetLagProDemo {
     }
     
     /**
+     * Apply initial mirroring transform to image and video based on current cycle state
+     */
+    applyInitialMirroring(pointId) {
+        const imageElement = this.getPointElement(pointId, '.point-image img');
+        if (imageElement) {
+            this.updateImageMirroring(pointId, imageElement);
+        }
+        
+        const videoElement = this.getPointElement(pointId, '.point-video video');
+        if (videoElement) {
+            this.updateVideoMirroring(pointId, videoElement);
+        }
+    }
+    
+    /**
      * Update the point image in the DOM when cycle state changes
      */
     updatePointImage(pointId) {
@@ -861,14 +900,16 @@ class JetLagProDemo {
         const imageName = this.getImageNameForCycle(point);
         const imageElement = this.getPointElement(pointId, '.point-image img');
         if (imageElement) {
+            // Update image source (changes between base and "a" variant)
             imageElement.src = this.getImagePath(imageName);
-            this.applyMirrorTransform(imageElement, this.isMirrored(pointId));
+            // Apply mirroring transform immediately (works even while image loads)
+            this.updateImageMirroring(pointId, imageElement);
         }
         
         // Update video mirroring
         const videoElement = this.getPointElement(pointId, '.point-video video');
         if (videoElement) {
-            this.applyMirrorTransform(videoElement, this.isMirrored(pointId));
+            this.updateVideoMirroring(pointId, videoElement);
         }
         
         // Update Left/Right label
@@ -876,6 +917,24 @@ class JetLagProDemo {
         if (labelElement) {
             labelElement.textContent = this.getLeftRightLabel(point);
         }
+    }
+    
+    /**
+     * Update image mirroring based on cycle state
+     */
+    updateImageMirroring(pointId, imageElement) {
+        if (!imageElement) return;
+        const shouldMirror = this.isMirrored(pointId);
+        imageElement.style.transform = shouldMirror ? 'scaleX(-1)' : 'scaleX(1)';
+    }
+    
+    /**
+     * Update video mirroring based on cycle state
+     */
+    updateVideoMirroring(pointId, videoElement) {
+        if (!videoElement) return;
+        const shouldMirror = this.isMirrored(pointId);
+        videoElement.style.transform = shouldMirror ? 'scaleX(-1)' : 'scaleX(1)';
     }
     
     /**
@@ -888,20 +947,13 @@ class JetLagProDemo {
         const videoElement = this.getPointElement(pointId, '.point-video video');
         if (!videoElement) return;
         
-        // Check if alternate image exists (only proceed if it does)
         const point = this.findPointById(pointId);
-        if (!point || !this.hasAlternateImage(point)) {
-            // For non-alternating points, just start video if it exists
-            // Still need to loop the video manually
-            videoElement.addEventListener('ended', () => {
-                videoElement.currentTime = 0;
-                videoElement.play();
-            });
-            return;
-        }
+        if (!point) return;
         
-        // Reset cycle state to 0 when setting up observer
-        this.setCycleState(pointId, 0);
+        // Initialize cycle state to 0 if not already set
+        if (!this.pointCycleStates.has(pointId)) {
+            this.setCycleState(pointId, 0);
+        }
         
         // Add event listener for video loop completion
         // Since we removed the 'loop' attribute, we handle looping manually
@@ -919,6 +971,11 @@ class JetLagProDemo {
             video: videoElement,
             handler: handleLoop
         });
+        
+        // Start video playback
+        videoElement.play().catch(err => {
+            console.warn(`Failed to autoplay video for point ${pointId}:`, err);
+        });
     }
     
     /**
@@ -932,15 +989,6 @@ class JetLagProDemo {
         }
     }
     
-    /**
-     * Check if an alternate image exists for a point
-     * Note: This checks if the image would exist, but doesn't verify it's actually loaded
-     */
-    hasAlternateImage(point) {
-        // For now, assume all points have "a" variants once they're added
-        // In production, we could check if the image exists by trying to load it
-        return true; // Will be true once all "a" variant images are added
-    }
 
     getPointDestinationTime(pointId) {
         if (!this.selectedAirport) return '';
@@ -1132,41 +1180,66 @@ class JetLagProDemo {
         Storage.save(CONSTANTS.STORAGE_KEYS.RECENT_DESTINATIONS, this.recentDestinations);
     }
 
-    clearRecentDestinations() {
-        console.log('clearRecentDestinations called');
-        this.recentDestinations = [];
-        this.saveRecentDestinations();
-        this.updateRecentDestinationsDisplay();
-    }
+    // Removed clearRecentDestinations() - iOS uses individual delete icons only
 
     updateRecentDestinationsDisplay() {
         const recentList = DOM.get('recentList');
         const recentDestinations = DOM.get('recentDestinations');
+        const searchText = DOM.getValue('airportSearch') || '';
         
         if (!recentList || !recentDestinations) return;
         
-        console.log('updateRecentDestinationsDisplay called, length:', this.recentDestinations.length);
-        
-        if (this.recentDestinations.length === 0) {
-            console.log('No recent destinations, hiding section');
+        // Only show recent destinations when search is empty
+        if (searchText.trim() !== '') {
             DOM.hide('recentDestinations');
             return;
         }
         
-        console.log('Has recent destinations, showing section');
-        const recentHTML = this.recentDestinations.map(airport => `
-            <div class="airport-result" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
-                <div class="airport-info">
-                    <div class="airport-name">${airport.name}</div>
-                    <div class="airport-location">${airport.city}, ${airport.country}</div>
+        // Limit to 3 destinations (matching iOS)
+        const limitedDestinations = this.recentDestinations.slice(0, 3);
+        
+        if (limitedDestinations.length === 0) {
+            DOM.hide('recentDestinations');
+            return;
+        }
+        
+        // Generate HTML matching iOS DestinationItemView structure
+        const recentHTML = limitedDestinations.map(airport => `
+            <div class="destination-item-wrapper">
+                <div class="destination-item-box" onclick="demo.selectAirport('${airport.code}')" data-airport-code="${airport.code}">
+                    <div class="destination-item-content">
+                        <span class="destination-item-name">${airport.name}</span>
+                        <span class="destination-item-code">[${airport.code}]</span>
+                    </div>
                 </div>
-                <div class="airport-code">${airport.code}</div>
+                <button class="destination-item-delete" onclick="event.stopPropagation(); demo.removeRecentDestination('${airport.code}')" title="Delete">
+                    <span class="delete-icon">✕</span>
+                </button>
             </div>
         `).join('');
         
         DOM.setHTML('recentList', recentHTML);
         DOM.show('recentDestinations');
         DOM.hide('emptyState');
+    }
+    
+    removeRecentDestination(airportCode) {
+        this.recentDestinations = this.recentDestinations.filter(dest => dest.code !== airportCode);
+        this.saveRecentDestinations();
+        this.updateRecentDestinationsDisplay();
+        this.updateEmptyState();
+    }
+    
+    updateEmptyState() {
+        const searchText = DOM.getValue('airportSearch') || '';
+        const hasRecentDestinations = this.recentDestinations.length > 0;
+        
+        // Only show empty state when search is empty AND no recent destinations
+        if (searchText.trim() === '' && !hasRecentDestinations) {
+            DOM.showFlex('emptyState');
+        } else {
+            DOM.hide('emptyState');
+        }
     }
 
     hideDestinationTab() {

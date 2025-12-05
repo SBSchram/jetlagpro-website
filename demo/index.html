@@ -23,7 +23,7 @@
     <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
     <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
 
-    <link rel="stylesheet" href="styles.css?v=20250127220000">
+    <link rel="stylesheet" href="styles.css?v=20251205165103">
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
@@ -182,7 +182,7 @@
                                     <div class="search-bar">
                                         <div class="search-input-wrapper">
                                             <div class="search-icon">🔍</div>
-                                            <input type="text" id="airportSearch" placeholder="Choose your destination&#8203;&#8203;" class="search-input">
+                                            <input type="text" id="airportSearch" placeholder="Type your destination" class="search-input">
                                             <div id="clearSearchButton" class="clear-button" style="display: none;" onclick="demo.clearSearch()">
                                                 <span>✕</span>
                                             </div>
@@ -211,9 +211,6 @@
                                 </div>
                                 <div id="recentList" class="recent-list">
                                     <!-- Recent destinations will be populated here -->
-                                </div>
-                                <div class="clear-recent-button">
-                                    <button onclick="demo.clearRecentDestinations()">Clear Recent Destinations</button>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +437,7 @@
 
 
     <!-- Scripts -->
-    <script src="script.js?v=20250127220000"></script>
+    <script src="script.js?v=20251205165103"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');
