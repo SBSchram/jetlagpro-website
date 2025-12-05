@@ -254,10 +254,13 @@ class JetLagProDemo {
                 this.updateActivePoint();
                 this.generatePointsList();
                 this.hideDestinationTab();
+                
+                // iOS behavior: If destination is active, start on Points tab (journey tab)
+                this.switchToTab('journey');
+            } else {
+                // No active destination: start on Destinations tab (match iOS default)
+                this.switchToTab('destination');
             }
-            
-            // Always start with home tab
-            this.switchToTab('home');
             
             // Show default sections expanded
             this.showDefaultSections();
