@@ -120,13 +120,13 @@ body {
     flex: 1;
     overflow-y: auto;
     background: #f2f2f7;
-    padding-bottom: 83px; /* Space for tab bar */
+    padding-bottom: 70px; /* Space for tab bar */
     position: relative;
 }
 
 @media (max-width: 360px) {
     .app-main {
-        padding-bottom: 70px; /* Smaller space for mobile tab bar */
+        padding-bottom: 60px; /* Smaller space for mobile tab bar */
     }
 }
 
@@ -477,8 +477,8 @@ body {
     justify-content: space-around;
     background: #ffffff;
     border-top: 1px solid #d1d1d6;
-    height: 83px;
-    padding-bottom: 20px; /* Safe area for home indicator */
+    height: 60px;
+    padding-bottom: 8px; /* Safe area for home indicator */
 }
 
 .tab-item {
@@ -689,7 +689,7 @@ body {
     flex: 1;
     overflow-y: auto;
     background: #f2f2f7;
-    padding-bottom: 83px; /* Space for tab bar */
+    padding-bottom: 70px; /* Space for tab bar */
 }
 
 .points-list {
@@ -790,6 +790,8 @@ body {
     align-items: flex-start;
     gap: 12px;
     margin-bottom: 16px;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
 }
 
@@ -798,7 +800,9 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    flex-shrink: 0;
+    flex: 0 0 auto;
+    width: 160px;
+    min-width: 0;
 }
 
 .point-image {
@@ -807,6 +811,7 @@ body {
     overflow: hidden;
     border-radius: 10px;
     position: relative;
+    flex-shrink: 0;
 }
 
 .point-image img {
@@ -822,6 +827,7 @@ body {
     font-weight: 500;
     color: #8e8e93;
     text-align: center;
+    width: 100%;
 }
 
 .point-video {
@@ -833,6 +839,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 0 0 auto;
     flex-shrink: 0;
 }
 
@@ -1534,4 +1541,247 @@ body {
     margin: 0;
     color: #666;
     line-height: 1.5;
+}
+
+/* FTUE Welcome Modal */
+.ftue-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ftue-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.ftue-content {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-44px); /* Move up by one finger width (match iOS) */
+}
+
+.ftue-pages {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.ftue-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.ftue-page.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.ftue-page.prev {
+    transform: translateX(-100%);
+}
+
+.ftue-header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+.ftue-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+}
+
+/* Gradient headers for each page (blue to orange) */
+.gradient-page-0 {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 1), rgba(0, 102, 255, 0.8));
+}
+
+.gradient-page-1 {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.67), rgba(255, 149, 0, 0.33));
+}
+
+.gradient-page-2 {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.33), rgba(255, 149, 0, 0.67));
+}
+
+.gradient-page-3 {
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.8), rgba(255, 149, 0, 1));
+}
+
+.ftue-page-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+.ftue-concept {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.ftue-concept h3 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: #1d1d1f;
+}
+
+.ftue-tagline {
+    font-size: 15px;
+    color: #8e8e93;
+    margin-top: 8px;
+}
+
+.ftue-instructions h4 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-top: 20px;
+}
+
+.ftue-page-title {
+    font-size: 19px;
+    font-weight: 600;
+    text-align: center;
+    color: #1d1d1f;
+    margin-top: 20px;
+}
+
+.ftue-steps {
+    margin-top: 24px;
+}
+
+.ftue-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.ftue-bullet {
+    font-weight: 700;
+    color: #8e8e93;
+    flex-shrink: 0;
+}
+
+.ftue-step-item span:not(.ftue-bullet) {
+    flex: 1;
+    color: #1d1d1f;
+}
+
+.ftue-sleep-message {
+    font-size: 17px;
+    color: #8e8e93;
+    text-align: center;
+    margin-top: 8px;
+    padding: 0 20px;
+}
+
+.ftue-actions {
+    margin-top: 20px;
+    padding-bottom: 80px;
+}
+
+.ftue-button {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #007AFF;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ftue-button:hover {
+    background: #0056b3;
+}
+
+.ftue-button:active {
+    background: #004494;
+}
+
+.ftue-dont-show {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ftue-dont-show label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #8e8e93;
+    cursor: pointer;
+}
+
+.ftue-dont-show input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.ftue-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+
+.ftue-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c7c7cc;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.ftue-indicator.active {
+    background: #34c759; /* iOS green */
 } 

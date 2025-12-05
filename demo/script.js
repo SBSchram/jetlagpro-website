@@ -219,8 +219,13 @@ class JetLagProDemo {
     /**
      * Get image path with cache busting
      */
-    getImagePath(imageName) {
-        return `${CONSTANTS.ASSET_PATHS.POINT_IMAGES}/${imageName}.jpg?v=${CONSTANTS.CACHE_VERSION}`;
+    getImagePath(imageName, cycleState = null) {
+        const basePath = `${CONSTANTS.ASSET_PATHS.POINT_IMAGES}/${imageName}.jpg?v=${CONSTANTS.CACHE_VERSION}`;
+        // Add cycle state to force reload when cycling between base and "a" variant
+        if (cycleState !== null) {
+            return `${basePath}&cycle=${cycleState}`;
+        }
+        return basePath;
     }
     
     /**
@@ -642,7 +647,7 @@ class JetLagProDemo {
                         <div class="point-media">
                             <div class="point-image-container">
                                 <div class="point-image">
-                                    <img src="${this.getImagePath(this.getImageNameForCycle(point))}" alt="${point.name} location" data-point-id="${point.id}">
+                                    <img src="${this.getImagePath(this.getImageNameForCycle(point), this.getCycleState(point.id))}" alt="${point.name} location" data-point-id="${point.id}">
                                 </div>
                                 <div class="point-left-right-label">${this.getLeftRightLabel(point)}</div>
                             </div>
@@ -897,11 +902,15 @@ class JetLagProDemo {
         const point = this.findPointById(pointId);
         if (!point) return;
         
+        const cycleState = this.getCycleState(pointId);
         const imageName = this.getImageNameForCycle(point);
         const imageElement = this.getPointElement(pointId, '.point-image img');
         if (imageElement) {
             // Update image source (changes between base and "a" variant)
-            imageElement.src = this.getImagePath(imageName);
+            // Include cycle state in path to force browser reload
+            const newSrc = this.getImagePath(imageName, cycleState);
+            // Always update src to ensure image reloads when cycling
+            imageElement.src = newSrc;
             // Apply mirroring transform immediately (works even while image loads)
             this.updateImageMirroring(pointId, imageElement);
         }
