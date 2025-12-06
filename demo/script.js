@@ -175,11 +175,15 @@ class JetLagProDemo {
         this.maxRecentDestinations = CONSTANTS.MAX_RECENT_DESTINATIONS; // Use constant
         this.notificationSchedule = []; // Added for notification schedule
         this.timezoneOffset = 0; // Added for timezone offset
+        this.tripStartDate = null; // Track when trip started
         
         // Phase 5: Image cycling system
         // Track cycle state per point: 0=original, 1=alternate, 2=mirror original, 3=mirror alternate
         this.pointCycleStates = new Map(); // Map<pointId, cycleState>
         this.videoObservers = new Map(); // Map<pointId, {video, observer}> for cleanup
+        
+        // Trip tracking
+        this.completedTrips = []; // Array of completed trip objects
         
         this.init();
     }
@@ -267,6 +271,10 @@ class JetLagProDemo {
             
             // Generate initial points list
             this.generatePointsList();
+            
+            // Load completed trips and update home screen
+            this.loadCompletedTrips();
+            this.updateHomeScreen();
             
             // Show empty state for destination tab
             this.showEmptyState();
@@ -510,6 +518,7 @@ class JetLagProDemo {
         // Calculate timezone offset and generate notification schedule
         this.calculateTimezoneOffset(airport);
         this.generateNotificationSchedule(airport);
+        this.tripStartDate = new Date(); // Track trip start time
         
         this.updateDestinationDisplay();
         this.updateActivePoint();
@@ -1073,12 +1082,33 @@ class JetLagProDemo {
     }
 
     endJourney() {
+        // Save completed trip before clearing
+        if (this.selectedAirport && this.completedPoints.size > 0) {
+            // Calculate timezone data
+            const timezoneOffsetHours = this.timezoneOffset / 3600;
+            const timezonesCount = Math.abs(Math.floor(timezoneOffsetHours));
+            const travelDirection = timezoneOffsetHours > 0 ? 'west' : 'east';
+            
+            const trip = {
+                tripId: `trip_${Date.now()}`,
+                destinationCode: this.selectedAirport.code,
+                startDate: this.tripStartDate ? this.tripStartDate.toISOString() : new Date().toISOString(),
+                completedPoints: Array.from(this.completedPoints),
+                timezonesCount: timezonesCount,
+                travelDirection: travelDirection,
+                timezoneOffset: this.timezoneOffset
+            };
+            this.completedTrips.push(trip);
+            this.saveCompletedTrips();
+        }
+        
         this.selectedAirport = null;
         this.currentPoint = null;
         this.expandedPointId = null;
         this.completedPoints.clear();
         this.notificationSchedule = []; // Clear notification schedule
         this.timezoneOffset = 0; // Reset timezone offset
+        this.tripStartDate = null; // Reset trip start date
         
         // Clear localStorage
         this.clearSelectedAirport();
@@ -1156,6 +1186,140 @@ class JetLagProDemo {
         } else {
             console.error('Tab item not found for:', tabName);
         }
+        
+        // Update home screen when switching to home tab
+        if (tabName === 'home') {
+            this.updateHomeScreen();
+        }
+    }
+    
+    // Home Screen Functions
+    loadCompletedTrips() {
+        const saved = Storage.load('completedTrips');
+        if (saved && Array.isArray(saved)) {
+            this.completedTrips = saved;
+        }
+    }
+    
+    saveCompletedTrips() {
+        Storage.save('completedTrips', this.completedTrips);
+    }
+    
+    updateHomeScreen() {
+        this.updateTripManagement();
+        this.updateStreakMastery();
+    }
+    
+    updateTripManagement() {
+        const container = DOM.get('tripManagementContent');
+        if (!container) return;
+        
+        if (this.completedTrips.length === 0) {
+            container.innerHTML = '<div class="no-trips-message">No completed trips</div>';
+            return;
+        }
+        
+        // Sort trips by start date (newest first)
+        const sortedTrips = [...this.completedTrips].sort((a, b) => 
+            new Date(b.startDate) - new Date(a.startDate)
+        );
+        
+        const tripsHTML = sortedTrips.map(trip => {
+            const startDate = new Date(trip.startDate);
+            const dateStr = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const pointsCount = trip.completedPoints ? trip.completedPoints.length : 0;
+            const travelDirection = trip.travelDirection || 'east';
+            const timezonesCount = trip.timezonesCount || 0;
+            const detailsStr = `${pointsCount} points • ${travelDirection}ward • ${timezonesCount} Timezones`;
+            
+            return `
+                <div class="trip-item">
+                    <div class="trip-item-box">
+                        <div class="trip-item-content">
+                            <div class="trip-item-header">
+                                <div class="trip-item-title">${trip.destinationCode} - ${dateStr}</div>
+                            </div>
+                            <div class="trip-item-details">${detailsStr}</div>
+                        </div>
+                    </div>
+                    <button class="trip-item-delete" onclick="demo.deleteTrip('${trip.tripId}')" title="Delete">✕</button>
+                </div>
+            `;
+        }).join('');
+        
+        container.innerHTML = `<div class="trip-list">${tripsHTML}</div>`;
+    }
+    
+    updateStreakMastery() {
+        const container = DOM.get('streakMasteryContent');
+        if (!container) return;
+        
+        // For now, show basic structure - will add calculations later
+        container.innerHTML = `
+            <div class="streak-table">
+                <div class="streak-table-header">
+                    <div class="streak-table-header-col length">Length</div>
+                    <div class="streak-table-header-col current">Current</div>
+                    <div class="streak-table-header-col all">All (${this.completedTrips.length})</div>
+                </div>
+                <div style="height: 1px; background: #d1d1d6; margin: 4px 20px;"></div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">1 point</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">2 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">3 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">4 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">5 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">6 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">7-9 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">10-12 points</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0</div>
+                </div>
+                <div class="streak-table-row">
+                    <div class="streak-table-row-label">Points per trip</div>
+                    <div class="streak-table-row-value">0</div>
+                    <div class="streak-table-row-value">0.0</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    deleteTrip(tripId) {
+        this.completedTrips = this.completedTrips.filter(trip => trip.tripId !== tripId);
+        this.saveCompletedTrips();
+        this.updateHomeScreen();
+    }
+    
+    showMasteryInfo() {
+        alert('Mastery levels info - to be implemented');
     }
 
     showError(message) {

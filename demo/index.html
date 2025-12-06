@@ -23,7 +23,7 @@
     <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
     <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
 
-    <link rel="stylesheet" href="styles.css?v=20251205171658">
+    <link rel="stylesheet" href="styles.css?v=20251205211241">
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
@@ -143,133 +143,27 @@
                         <div class="home-header">
                             <div class="header-gradient">
                                 <div class="home-header-content">
-                                    <h1 class="home-title">How to be a Jet Lag Pro</h1>
+                                    <h1 class="home-title">Trip Data and Achievements</h1>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="content-container">
-                            <!-- Get Notified Section -->
-                            <section class="notifications-section">
-                                <div class="section-header expandable" onclick="toggleSection('notifications')">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">Get Notified:</span>
-                                    </div>
-                                    <div class="chevron" id="notificationsChevron">▼</div>
-                                </div>
-                                <div class="section-content" id="notificationsContent">
-                                    <div class="notification-item">
-                                        <span class="bullet">•</span>
-                                        <span class="notification-text">Notifications are enabled and working properly</span>
-                                    </div>
-                                    <div class="notification-item">
-                                        <span class="bullet">•</span>
-                                        <span class="notification-text">You'll receive alerts when it's time to stimulate points</span>
-                                    </div>
+                            <!-- Trip Management Section -->
+                            <section class="trip-management-section">
+                                <div id="tripManagementContent">
+                                    <!-- Will be populated by JavaScript -->
                                 </div>
                             </section>
-
-                            <!-- Main Instructions -->
-                            <section class="main-instructions">
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Start the app at the airport.</span>
+                            
+                            <!-- Streak Mastery Section -->
+                            <section class="streak-mastery-section">
+                                <div class="streak-mastery-header">
+                                    <h2>Streak Mastery</h2>
+                                    <button class="info-button" onclick="demo.showMasteryInfo()" title="Info">ℹ️</button>
                                 </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Choose your destination (airplane tab).</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Stimulate the point that is shown.</span>
-                                </div>
-                            </section>
-
-                            <!-- Stimulation Guidelines Section -->
-                            <section class="stimulation-section">
-                                <div class="section-header expandable" onclick="toggleSection('stimulation')">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">How to Stimulate</span>
-                                    </div>
-                                    <div class="chevron" id="stimulationChevron">▼</div>
-                                </div>
-                                <div class="section-content" id="stimulationContent">
-                                    <p>Use your fingers or a blunt tool (pen top) to apply pressure like in the video.</p>
-                                    
-                                    <h4>Important Tips</h4>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Use a firm pressure - You can do this through light clothes</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Pay attention and focus on what you are doing</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Rub and press each point for a minute</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Breathe slowly and take your time</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Points exist on both sides of the body so do both sides</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">For best results, do all 12 points over 24 hours</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Stop pressing on a point if you feel any pain or odd discomfort</span>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Final Instructions -->
-                            <section class="final-instructions">
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">The app can be closed as you do other things. Notices will remind you to do the next point at the right time.</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Continue with each point, even after the flight ends for a full 24 hour cycle.</span>
-                                </div>
-                            </section>
-
-                            <!-- Survey Code Section -->
-                            <section class="survey-code-section">
-                                <div class="section-header">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">Survey code to rate effectiveness</span>
-                                    </div>
-                                </div>
-                                <div class="section-content">
-                                    <p class="survey-description">View our research goal:</p>
-                                    
-                                    <div class="survey-code-display">
-                                        <div class="code-container">
-                                            <span class="survey-code">JLP-A7B3C9D2</span>
-                                        </div>
-                                        <button class="copy-button" onclick="demo.copySurveyCode()">Copy</button>
-                                    </div>
-                                    
-                                    <div class="survey-links">
-                                        <a href="../survey.html" class="survey-button">
-                                            <span class="link-icon">🔗</span>
-                                            <span>Take Survey</span>
-                                        </a>
-                                        <a href="../research-paper.html" class="research-button">
-                                            <span class="research-icon">📄</span>
-                                            <span>View our research goal</span>
-                                        </a>
-                                    </div>
+                                <div id="streakMasteryContent">
+                                    <!-- Will be populated by JavaScript -->
                                 </div>
                             </section>
                         </div>
@@ -539,7 +433,7 @@
 
 
     <!-- Scripts -->
-    <script src="script.js?v=20251205171658"></script>
+    <script src="script.js?v=20251205211241"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');
