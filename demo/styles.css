@@ -712,23 +712,7 @@ body {
     border: 2px solid #34c759;
 }
 
-.point-card.completed::after {
-    content: "✓";
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #34c759;
-    color: #ffffff;
-    width: 24px;
-    height: 24px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    z-index: 10;
-}
+/* Completion indicator moved to ::before in border colors section below */
 
 .point-header {
     padding: 8px 16px;
@@ -2012,6 +1996,178 @@ body {
 .encouragement-message.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Achievement Popup (matches iOS) */
+.achievement-popup {
+    background: #ffffff;
+    color: #000000;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 80%;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    pointer-events: none;
+    position: absolute;
+    bottom: 200px;
+}
+
+.achievement-popup.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.achievement-emoji {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.achievement-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #000000;
+}
+
+.achievement-description {
+    font-size: 14px;
+    color: #8e8e93;
+    line-height: 1.4;
+}
+
+/* Bilateral Timers (matches iOS) */
+.bilateral-timers-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+    width: 100%;
+}
+
+.bilateral-timer-btn {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.timer-ring-bg {
+    fill: none;
+    stroke: #e5e5ea;
+    stroke-width: 3;
+}
+
+.timer-ring-progress {
+    fill: none;
+    stroke: #007AFF;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 201; /* 2 * PI * 32 */
+    stroke-dashoffset: 201;
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+.bilateral-timer-btn.active .timer-ring-progress {
+    stroke: #007AFF;
+}
+
+.bilateral-timer-btn.complete .timer-ring-progress {
+    stroke: #34c759;
+}
+
+.timer-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.timer-icon {
+    font-size: 18px;
+    color: #007AFF;
+}
+
+.bilateral-timer-btn.active .timer-icon {
+    color: #007AFF;
+}
+
+.bilateral-timer-btn.complete .timer-icon {
+    color: #34c759;
+}
+
+.timer-text {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: monospace;
+    color: #007AFF;
+}
+
+.bilateral-timer-btn.active .timer-text {
+    color: #007AFF;
+}
+
+.bilateral-timer-btn.complete .timer-text {
+    color: #34c759;
+}
+
+/* Border Colors for Point Cards */
+.point-card.border-green {
+    border: 2px solid #34c759;
+}
+
+.point-card.border-blue {
+    border: 2px solid #007AFF;
+}
+
+.point-card.border-orange {
+    border: 2px solid #ff9500;
+}
+
+.point-card.border-black {
+    border: 2px solid #000000;
+}
+
+/* Completion Indicator (green checkmark circle) */
+.point-card.completed {
+    position: relative;
+}
+
+.point-card.completed::before {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: #34c759;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .mastery-points-text {

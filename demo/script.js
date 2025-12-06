@@ -190,6 +190,13 @@ class JetLagProDemo {
         this.lastCompletedPointId = null; // Last completed point ID for streak tracking
         this.encouragementMessageTimeout = null; // Timeout for auto-hiding messages
         
+        // Bilateral timers (Left/Right 30-second timers)
+        this.timers = new Map(); // Map<pointId, {left: TimerState, right: TimerState, leftTimer: Timer, rightTimer: Timer}>
+        
+        // Achievement tracking
+        this.achievements = []; // Array of unlocked achievements
+        this.achievementTimeout = null; // Timeout for auto-hiding achievement popup
+        
         this.init();
     }
 
@@ -648,7 +655,7 @@ class JetLagProDemo {
             const stimulationText = this.formatStimulationText(point, journeyOrder, currentPointId, isNextUp);
             
             return `
-                <div class="point-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isPast ? 'past' : ''} ${isExpanded ? 'expanded' : ''}" data-point-id="${point.id}">
+                <div class="point-card ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isPast ? 'past' : ''} ${isExpanded ? 'expanded' : ''} ${this.getBorderColorClass(point, isCurrent, isPast)}" data-point-id="${point.id}">
                     <div class="point-header" onclick="demo.togglePoint(${point.id})">
                         <div class="point-stimulation-text">${stimulationText}</div>
                         <div class="point-chevron">${isExpanded ? '▲' : '▼'}</div>
@@ -680,10 +687,39 @@ class JetLagProDemo {
                             <div class="point-detail-content"><strong>Stimulate</strong>: ${point.stimulationMethod} ${this.getStimulationSuffix(point)}</div>
                         </div>
                         ${isCurrent && !isCompleted ? `
+                            <div class="bilateral-timers-container">
+                                <button class="bilateral-timer-btn" data-point-id="${point.id}" data-side="left" onclick="demo.startTimer(${point.id}, 'left')">
+                                    <svg class="timer-ring" width="70" height="70">
+                                        <circle class="timer-ring-bg" cx="35" cy="35" r="32" />
+                                        <circle class="timer-ring-progress" cx="35" cy="35" r="32" data-progress="0" />
+                                    </svg>
+                                    <div class="timer-content">
+                                        <span class="timer-icon">⏱</span>
+                                        <span class="timer-text" data-timer-text="30">30</span>
+                                    </div>
+                                </button>
+                                <div class="mark-stimulated-button">
+                                    <button class="mark-stimulated-btn" onclick="demo.markPointAsStimulated(${point.id})">
+                                        <span>☐</span>
+                                        <span>Mark as Stimulated</span>
+                                    </button>
+                                </div>
+                                <button class="bilateral-timer-btn" data-point-id="${point.id}" data-side="right" onclick="demo.startTimer(${point.id}, 'right')">
+                                    <svg class="timer-ring" width="70" height="70">
+                                        <circle class="timer-ring-bg" cx="35" cy="35" r="32" />
+                                        <circle class="timer-ring-progress" cx="35" cy="35" r="32" data-progress="0" />
+                                    </svg>
+                                    <div class="timer-content">
+                                        <span class="timer-icon">⏱</span>
+                                        <span class="timer-text" data-timer-text="30">30</span>
+                                    </div>
+                                </button>
+                            </div>
+                        ` : isCurrent && isCompleted ? `
                             <div class="mark-stimulated-button">
-                                <button class="mark-stimulated-btn" onclick="demo.markPointAsStimulated(${point.id})">
-                                    <span>☐</span>
-                                    <span>Mark as Stimulated</span>
+                                <button class="mark-stimulated-btn completed" disabled>
+                                    <span>☑</span>
+                                    <span>Stimulated</span>
                                 </button>
                             </div>
                         ` : ''}
@@ -1112,9 +1148,16 @@ class JetLagProDemo {
             button.classList.add('completed');
         }
         
+        // Check for first point achievement
+        this.checkFirstPointAchievement();
+        
         // Check if this is the final point (12th point)
         if (this.completedPoints.size === 12) {
             this.showEncouragementMessage("You did it! You stimulated the last point 🎉 🎯");
+            // Show trip completion alert after a delay
+            setTimeout(() => {
+                this.showTripCompletionAlert('point12Stimulated');
+            }, 2000);
             return;
         }
         
@@ -1141,9 +1184,211 @@ class JetLagProDemo {
         this.lastCompletedPointId = pointId;
     }
 
+    // MARK: - Bilateral Timers
+    
+    /**
+     * Timer state: ready, active (secondsRemaining), complete
+     */
+    startTimer(pointId, side) {
+        // Stop any existing timer for this side
+        this.stopTimer(pointId, side);
+        
+        // Initialize timer state if needed
+        if (!this.timers.has(pointId)) {
+            this.timers.set(pointId, {
+                left: { state: 'ready', seconds: 30 },
+                right: { state: 'ready', seconds: 30 },
+                leftTimer: null,
+                rightTimer: null
+            });
+        }
+        
+        const timerData = this.timers.get(pointId);
+        const timerState = timerData[side];
+        
+        // Set to active state
+        timerState.state = 'active';
+        timerState.seconds = 30;
+        
+        // Update UI
+        this.updateTimerUI(pointId, side, timerState);
+        
+        // Start countdown
+        const interval = setInterval(() => {
+            timerState.seconds -= 1;
+            this.updateTimerUI(pointId, side, timerState);
+            
+            if (timerState.seconds <= 0) {
+                timerState.state = 'complete';
+                timerState.seconds = 0;
+                this.updateTimerUI(pointId, side, timerState);
+                clearInterval(interval);
+                timerData[`${side}Timer`] = null;
+            }
+        }, 1000);
+        
+        timerData[`${side}Timer`] = interval;
+    }
+    
+    stopTimer(pointId, side) {
+        if (!this.timers.has(pointId)) return;
+        
+        const timerData = this.timers.get(pointId);
+        const interval = timerData[`${side}Timer`];
+        
+        if (interval) {
+            clearInterval(interval);
+            timerData[`${side}Timer`] = null;
+        }
+    }
+    
+    updateTimerUI(pointId, side, timerState) {
+        const button = document.querySelector(`.bilateral-timer-btn[data-point-id="${pointId}"][data-side="${side}"]`);
+        if (!button) return;
+        
+        const progressRing = button.querySelector('.timer-ring-progress');
+        const timerText = button.querySelector('.timer-text');
+        const timerIcon = button.querySelector('.timer-icon');
+        
+        if (!progressRing || !timerText || !timerIcon) return;
+        
+        const progress = (30 - timerState.seconds) / 30;
+        const circumference = 2 * Math.PI * 32; // radius = 32
+        const offset = circumference * (1 - progress);
+        
+        progressRing.style.strokeDasharray = `${circumference}`;
+        progressRing.style.strokeDashoffset = `${offset}`;
+        progressRing.setAttribute('data-progress', progress);
+        
+        if (timerState.state === 'ready') {
+            timerText.textContent = '30';
+            timerIcon.textContent = '⏱';
+            button.classList.remove('active', 'complete');
+        } else if (timerState.state === 'active') {
+            timerText.textContent = timerState.seconds;
+            timerIcon.textContent = '⏱';
+            button.classList.add('active');
+            button.classList.remove('complete');
+        } else if (timerState.state === 'complete') {
+            timerText.textContent = '✓';
+            timerIcon.textContent = '✓';
+            button.classList.add('complete');
+            button.classList.remove('active');
+        }
+    }
+    
+    clearAllTimers() {
+        this.timers.forEach((timerData, pointId) => {
+            if (timerData.leftTimer) {
+                clearInterval(timerData.leftTimer);
+            }
+            if (timerData.rightTimer) {
+                clearInterval(timerData.rightTimer);
+            }
+        });
+        this.timers.clear();
+    }
+    
+    // MARK: - Border Color Logic
+    
+    getBorderColorClass(point, isCurrent, isPast) {
+        if (isCurrent) {
+            return 'border-green';
+        } else if (isPast) {
+            return 'border-black';
+        } else {
+            // Future point - check if notification is cancelled
+            const scheduleItem = this.notificationSchedule.find(item => item.point.id === point.id);
+            if (scheduleItem && scheduleItem.isCancelled) {
+                return 'border-orange';
+            }
+            return 'border-blue';
+        }
+    }
+    
+    // MARK: - Achievement System
+    
+    checkFirstPointAchievement() {
+        if (this.completedPoints.size === 1 && !this.achievements.includes('firstPoint')) {
+            this.unlockAchievement('firstPoint');
+        }
+    }
+    
+    unlockAchievement(type) {
+        if (this.achievements.includes(type)) return;
+        
+        this.achievements.push(type);
+        
+        const achievement = this.getAchievementData(type);
+        if (achievement) {
+            this.showAchievementPopup(achievement);
+        }
+    }
+    
+    getAchievementData(type) {
+        const achievements = {
+            firstPoint: {
+                emoji: '🎯',
+                title: 'First Point!',
+                description: 'You\'ve completed your first pressure point. Keep going!'
+            }
+        };
+        return achievements[type];
+    }
+    
+    showAchievementPopup(achievement) {
+        // Clear any existing timeout
+        if (this.achievementTimeout) {
+            clearTimeout(this.achievementTimeout);
+        }
+        
+        const popup = document.getElementById('achievementPopup');
+        if (!popup) return;
+        
+        popup.innerHTML = `
+            <div class="achievement-emoji">${achievement.emoji}</div>
+            <div class="achievement-title">${achievement.title}</div>
+            <div class="achievement-description">${achievement.description}</div>
+        `;
+        
+        popup.style.display = 'block';
+        popup.classList.remove('show');
+        
+        // Force reflow
+        popup.offsetHeight;
+        
+        // Animate in
+        setTimeout(() => {
+            popup.classList.add('show');
+        }, 10);
+        
+        // Auto-hide after 3 seconds
+        this.achievementTimeout = setTimeout(() => {
+            popup.classList.remove('show');
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 600);
+        }, 3000);
+    }
+    
+    // MARK: - End Journey Confirmation
+    
     endJourney() {
+        // Show confirmation alert
+        if (confirm('Are you sure you want to end this trip?')) {
+            this.confirmEndJourney();
+        }
+    }
+    
+    confirmEndJourney() {
+        // Clear all timers
+        this.clearAllTimers();
+        
         // Save completed trip before clearing
         if (this.selectedAirport && this.completedPoints.size > 0) {
+            // Show trip completion alert
+            this.showTripCompletionAlert('manualEndXButton');
+            
             // Calculate timezone data
             const timezoneOffsetHours = this.timezoneOffset / 3600;
             const timezonesCount = Math.abs(Math.floor(timezoneOffsetHours));
@@ -1585,6 +1830,79 @@ class JetLagProDemo {
      * Shows encouragement message to user (matches iOS timing: 0.5s delay, 6s display, 0.6s animation)
      * @param {string} message - The message to display
      */
+    // MARK: - Trip Completion Alerts
+    
+    showTripCompletionAlert(method) {
+        const pointsCount = this.completedPoints.size;
+        const tripScore = this.calculateTripScore(pointsCount);
+        const longestStreak = this.calculateLongestStreak();
+        
+        let title = 'Trip Completed!';
+        let message = '';
+        
+        // Add method badge
+        if (method === 'point12Stimulated') {
+            message += '24-hour cycle completed!\n\n';
+        } else if (method === 'manualEndXButton') {
+            message += 'Trip ended manually.\n\n';
+        } else if (method === 'timeout24Hours') {
+            message += `Your trip to ${this.selectedAirport?.code || 'destination'} has ended after 24 hours.\n\n`;
+        }
+        
+        // Add performance tier
+        const tier = this.getPerformanceTier(pointsCount);
+        message += `${tier.emoji} ${tier.label}\n`;
+        message += `${pointsCount} points completed\n`;
+        if (longestStreak > 1) {
+            message += `Longest streak: ${longestStreak} points\n`;
+        }
+        message += `Trip score: ${tripScore}\n\n`;
+        message += tier.encouragement;
+        
+        alert(`${title}\n\n${message}`);
+    }
+    
+    calculateTripScore(pointsCount) {
+        // Simplified scoring: 6 points per completed point (max 72)
+        return pointsCount * 6;
+    }
+    
+    calculateLongestStreak() {
+        // Calculate longest consecutive streak from completed points
+        const orderedIds = this.getOrderedPointIds();
+        let maxStreak = 0;
+        let currentStreak = 0;
+        
+        for (const pointId of orderedIds) {
+            if (this.completedPoints.has(pointId)) {
+                currentStreak++;
+                maxStreak = Math.max(maxStreak, currentStreak);
+            } else {
+                currentStreak = 0;
+            }
+        }
+        
+        return maxStreak;
+    }
+    
+    getPerformanceTier(pointsCount) {
+        if (pointsCount === 0) {
+            return { emoji: '🌱', label: 'Journey Started', encouragement: 'Every journey begins with a single step!' };
+        } else if (pointsCount >= 1 && pointsCount <= 3) {
+            return { emoji: '🌱', label: 'Every Point Counts', encouragement: 'Keep going, you\'re making progress!' };
+        } else if (pointsCount >= 4 && pointsCount <= 6) {
+            return { emoji: '💪', label: 'Good Effort', encouragement: 'You\'re doing great! Keep it up!' };
+        } else if (pointsCount >= 7 && pointsCount <= 9) {
+            return { emoji: '⭐', label: 'Great Work', encouragement: 'Excellent progress! You\'re almost there!' };
+        } else if (pointsCount >= 10 && pointsCount <= 11) {
+            return { emoji: '🏆', label: 'Outstanding', encouragement: 'Amazing dedication! Just a bit more!' };
+        } else if (pointsCount === 12) {
+            return { emoji: '🏆', label: 'Perfect Journey', encouragement: 'Perfect! You completed all 12 points!' };
+        } else {
+            return { emoji: '🌱', label: 'Journey Complete', encouragement: 'Well done on completing your journey!' };
+        }
+    }
+    
     showEncouragementMessage(message) {
         // Add "on target" emoji to the end of the message
         const fullMessage = `${message} 🎯`;
