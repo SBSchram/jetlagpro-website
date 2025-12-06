@@ -865,42 +865,7 @@ body {
     font-weight: 600; /* Bold for title */
 }
 
-.mark-stimulated-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 12px;
-}
-
-.mark-stimulated-btn {
-    background: transparent;
-    border: 2px solid #007AFF;
-    color: #007AFF;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.mark-stimulated-btn:hover {
-    background: #007AFF;
-    color: #ffffff;
-}
-
-.mark-stimulated-btn.completed {
-    border-color: #34c759;
-    color: #34c759;
-    cursor: default;
-}
-
-.mark-stimulated-btn.completed:hover {
-    background: transparent;
-    color: #34c759;
-}
+/* Mark as Stimulated button removed per user request */
 
 /* Divider between points */
 .point-divider {
@@ -2038,96 +2003,7 @@ body {
     line-height: 1.4;
 }
 
-/* Bilateral Timers (matches iOS) */
-.bilateral-timers-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 12px;
-    width: 100%;
-}
-
-.bilateral-timer-btn {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.timer-ring {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: rotate(-90deg);
-}
-
-.timer-ring-bg {
-    fill: none;
-    stroke: #e5e5ea;
-    stroke-width: 3;
-}
-
-.timer-ring-progress {
-    fill: none;
-    stroke: #007AFF;
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-dasharray: 201; /* 2 * PI * 32 */
-    stroke-dashoffset: 201;
-    transition: stroke-dashoffset 0.1s linear;
-}
-
-.bilateral-timer-btn.active .timer-ring-progress {
-    stroke: #007AFF;
-}
-
-.bilateral-timer-btn.complete .timer-ring-progress {
-    stroke: #34c759;
-}
-
-.timer-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-}
-
-.timer-icon {
-    font-size: 18px;
-    color: #007AFF;
-}
-
-.bilateral-timer-btn.active .timer-icon {
-    color: #007AFF;
-}
-
-.bilateral-timer-btn.complete .timer-icon {
-    color: #34c759;
-}
-
-.timer-text {
-    font-size: 16px;
-    font-weight: 500;
-    font-family: monospace;
-    color: #007AFF;
-}
-
-.bilateral-timer-btn.active .timer-text {
-    color: #007AFF;
-}
-
-.bilateral-timer-btn.complete .timer-text {
-    color: #34c759;
-}
+/* Bilateral Timers removed per user request */
 
 /* Border Colors for Point Cards */
 .point-card.border-green {

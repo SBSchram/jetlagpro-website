@@ -190,8 +190,7 @@ class JetLagProDemo {
         this.lastCompletedPointId = null; // Last completed point ID for streak tracking
         this.encouragementMessageTimeout = null; // Timeout for auto-hiding messages
         
-        // Bilateral timers (Left/Right 30-second timers)
-        this.timers = new Map(); // Map<pointId, {left: TimerState, right: TimerState, leftTimer: Timer, rightTimer: Timer}>
+        // Timers removed per user request
         
         // Achievement tracking
         this.achievements = []; // Array of unlocked achievements
@@ -686,43 +685,6 @@ class JetLagProDemo {
                         <div class="point-detail-item">
                             <div class="point-detail-content"><strong>Stimulate</strong>: ${point.stimulationMethod} ${this.getStimulationSuffix(point)}</div>
                         </div>
-                        ${isCurrent && !isCompleted ? `
-                            <div class="bilateral-timers-container">
-                                <button class="bilateral-timer-btn" data-point-id="${point.id}" data-side="left" onclick="demo.startTimer(${point.id}, 'left')">
-                                    <svg class="timer-ring" width="70" height="70">
-                                        <circle class="timer-ring-bg" cx="35" cy="35" r="32" />
-                                        <circle class="timer-ring-progress" cx="35" cy="35" r="32" data-progress="0" />
-                                    </svg>
-                                    <div class="timer-content">
-                                        <span class="timer-icon">⏱</span>
-                                        <span class="timer-text" data-timer-text="30">30</span>
-                                    </div>
-                                </button>
-                                <div class="mark-stimulated-button">
-                                    <button class="mark-stimulated-btn" onclick="demo.markPointAsStimulated(${point.id})">
-                                        <span>☐</span>
-                                        <span>Mark as Stimulated</span>
-                                    </button>
-                                </div>
-                                <button class="bilateral-timer-btn" data-point-id="${point.id}" data-side="right" onclick="demo.startTimer(${point.id}, 'right')">
-                                    <svg class="timer-ring" width="70" height="70">
-                                        <circle class="timer-ring-bg" cx="35" cy="35" r="32" />
-                                        <circle class="timer-ring-progress" cx="35" cy="35" r="32" data-progress="0" />
-                                    </svg>
-                                    <div class="timer-content">
-                                        <span class="timer-icon">⏱</span>
-                                        <span class="timer-text" data-timer-text="30">30</span>
-                                    </div>
-                                </button>
-                            </div>
-                        ` : isCurrent && isCompleted ? `
-                            <div class="mark-stimulated-button">
-                                <button class="mark-stimulated-btn completed" disabled>
-                                    <span>☑</span>
-                                    <span>Stimulated</span>
-                                </button>
-                            </div>
-                        ` : ''}
                     </div>
                 </div>
                 ${index < orderedPoints.length - 1 ? '<div class="point-divider"></div>' : ''}
@@ -1184,110 +1146,7 @@ class JetLagProDemo {
         this.lastCompletedPointId = pointId;
     }
 
-    // MARK: - Bilateral Timers
-    
-    /**
-     * Timer state: ready, active (secondsRemaining), complete
-     */
-    startTimer(pointId, side) {
-        // Stop any existing timer for this side
-        this.stopTimer(pointId, side);
-        
-        // Initialize timer state if needed
-        if (!this.timers.has(pointId)) {
-            this.timers.set(pointId, {
-                left: { state: 'ready', seconds: 30 },
-                right: { state: 'ready', seconds: 30 },
-                leftTimer: null,
-                rightTimer: null
-            });
-        }
-        
-        const timerData = this.timers.get(pointId);
-        const timerState = timerData[side];
-        
-        // Set to active state
-        timerState.state = 'active';
-        timerState.seconds = 30;
-        
-        // Update UI
-        this.updateTimerUI(pointId, side, timerState);
-        
-        // Start countdown
-        const interval = setInterval(() => {
-            timerState.seconds -= 1;
-            this.updateTimerUI(pointId, side, timerState);
-            
-            if (timerState.seconds <= 0) {
-                timerState.state = 'complete';
-                timerState.seconds = 0;
-                this.updateTimerUI(pointId, side, timerState);
-                clearInterval(interval);
-                timerData[`${side}Timer`] = null;
-            }
-        }, 1000);
-        
-        timerData[`${side}Timer`] = interval;
-    }
-    
-    stopTimer(pointId, side) {
-        if (!this.timers.has(pointId)) return;
-        
-        const timerData = this.timers.get(pointId);
-        const interval = timerData[`${side}Timer`];
-        
-        if (interval) {
-            clearInterval(interval);
-            timerData[`${side}Timer`] = null;
-        }
-    }
-    
-    updateTimerUI(pointId, side, timerState) {
-        const button = document.querySelector(`.bilateral-timer-btn[data-point-id="${pointId}"][data-side="${side}"]`);
-        if (!button) return;
-        
-        const progressRing = button.querySelector('.timer-ring-progress');
-        const timerText = button.querySelector('.timer-text');
-        const timerIcon = button.querySelector('.timer-icon');
-        
-        if (!progressRing || !timerText || !timerIcon) return;
-        
-        const progress = (30 - timerState.seconds) / 30;
-        const circumference = 2 * Math.PI * 32; // radius = 32
-        const offset = circumference * (1 - progress);
-        
-        progressRing.style.strokeDasharray = `${circumference}`;
-        progressRing.style.strokeDashoffset = `${offset}`;
-        progressRing.setAttribute('data-progress', progress);
-        
-        if (timerState.state === 'ready') {
-            timerText.textContent = '30';
-            timerIcon.textContent = '⏱';
-            button.classList.remove('active', 'complete');
-        } else if (timerState.state === 'active') {
-            timerText.textContent = timerState.seconds;
-            timerIcon.textContent = '⏱';
-            button.classList.add('active');
-            button.classList.remove('complete');
-        } else if (timerState.state === 'complete') {
-            timerText.textContent = '✓';
-            timerIcon.textContent = '✓';
-            button.classList.add('complete');
-            button.classList.remove('active');
-        }
-    }
-    
-    clearAllTimers() {
-        this.timers.forEach((timerData, pointId) => {
-            if (timerData.leftTimer) {
-                clearInterval(timerData.leftTimer);
-            }
-            if (timerData.rightTimer) {
-                clearInterval(timerData.rightTimer);
-            }
-        });
-        this.timers.clear();
-    }
+    // MARK: - Bilateral Timers (Removed per user request)
     
     // MARK: - Border Color Logic
     
@@ -1381,9 +1240,6 @@ class JetLagProDemo {
     }
     
     confirmEndJourney() {
-        // Clear all timers
-        this.clearAllTimers();
-        
         // Save completed trip before clearing
         if (this.selectedAirport && this.completedPoints.size > 0) {
             // Show trip completion alert
