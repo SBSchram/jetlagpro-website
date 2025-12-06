@@ -871,9 +871,14 @@ body {
 }
 
 .point-detail-content {
-    color: #3a3a3c;
-    font-size: 15px;
+    color: #1d1d1f; /* Match iOS primary color */
+    font-size: 17px; /* Match iOS body font size */
     line-height: 1.4;
+    font-weight: 400;
+}
+
+.point-detail-content strong {
+    font-weight: 600; /* Bold for title */
 }
 
 .mark-stimulated-button {

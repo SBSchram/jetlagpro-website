@@ -651,8 +651,7 @@ class JetLagProDemo {
                     <div class="point-content">
                         <!-- Location section FIRST (match iOS) -->
                         <div class="point-detail-item">
-                            <div class="point-detail-title">Location</div>
-                            <div class="point-detail-content">${point.pointLocation}</div>
+                            <div class="point-detail-content"><strong>Locate the point</strong>: ${point.pointLocation}</div>
                         </div>
                         
                         <!-- Point Image and Video Layout (match iOS HStack) -->
@@ -673,8 +672,7 @@ class JetLagProDemo {
                         
                         <!-- Stimulation section LAST (match iOS) -->
                         <div class="point-detail-item">
-                            <div class="point-detail-title">Stimulate</div>
-                            <div class="point-detail-content">${point.stimulationMethod}</div>
+                            <div class="point-detail-content"><strong>Stimulate</strong>: ${point.stimulationMethod} ${this.getStimulationSuffix(point)}</div>
                         </div>
                         ${isCurrent && !isCompleted ? `
                             <div class="mark-stimulated-button">
@@ -874,6 +872,43 @@ class JetLagProDemo {
             // All other points: cycleState 0,1 = Right; 2,3 = Left
             return (cycleState < 2) ? "Right" : "Left";
         }
+    }
+    
+    /**
+     * Get the limb word for stimulation suffix (matches iOS logic)
+     * Returns: "leg", "foot", "hand", "wrist", "forearm", or "arm"
+     */
+    getLimbWord(point) {
+        switch (point.imageName) {
+            case "ST-36":
+                return "leg";
+            case "SP-3":
+            case "BL-66":
+            case "KI-3":
+            case "GB-41":
+            case "LIV-1":
+                return "foot";
+            case "LI-1":
+            case "PC-8":
+            case "HT-8":
+                return "hand";
+            case "LU-8":
+            case "SI-5":
+                return "wrist";
+            case "SJ-6":
+                return "forearm";
+            default:
+                return "arm";
+        }
+    }
+    
+    /**
+     * Get the stimulation suffix (matches iOS format)
+     * Returns: "Work each [limb] for 30 seconds."
+     */
+    getStimulationSuffix(point) {
+        const limbWord = this.getLimbWord(point);
+        return `Work each ${limbWord} for 30 seconds.`;
     }
     
     /**
