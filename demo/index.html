@@ -23,7 +23,7 @@
     <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
     <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
 
-    <link rel="stylesheet" href="styles.css?v=20251205215000">
+    <link rel="stylesheet" href="styles.css?v=20251206071000">
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
@@ -138,39 +138,8 @@
                 
                 <!-- Main Content Area -->
                 <main class="app-main">
-                    <!-- Home Tab Content -->
-                    <div id="homeTab" class="tab-content active">
-                        <div class="home-header">
-                            <div class="header-gradient">
-                                <div class="home-header-content">
-                                    <h1 class="home-title">Trip Data and Achievements</h1>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="content-container">
-                            <!-- Trip Management Section -->
-                            <section class="trip-management-section">
-                                <div id="tripManagementContent">
-                                    <!-- Will be populated by JavaScript -->
-                                </div>
-                            </section>
-                            
-                            <!-- Streak Mastery Section -->
-                            <section class="streak-mastery-section">
-                                <div class="streak-mastery-header">
-                                    <h2>Streak Mastery</h2>
-                                    <button class="info-button" onclick="demo.showMasteryInfo()" title="Info">ℹ️</button>
-                                </div>
-                                <div id="streakMasteryContent">
-                                    <!-- Will be populated by JavaScript -->
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-
                     <!-- Destination Tab Content -->
-                    <div id="destinationTab" class="tab-content">
+                    <div id="destinationTab" class="tab-content active">
                         <div class="destination-header">
                             <div class="header-gradient">
                                 <div class="destination-header-content">
@@ -415,10 +384,6 @@
 
                 <!-- Bottom Tab Bar -->
                 <nav class="tab-bar">
-                    <div class="tab-item active" onclick="switchTab('home')">
-                        <div class="tab-icon">🏠</div>
-                        <div class="tab-label">Home</div>
-                    </div>
                     <div class="tab-item" onclick="switchTab('destination')">
                         <div class="tab-icon">✈️</div>
                         <div class="tab-label">Destination</div>
@@ -439,7 +404,7 @@
 
 
     <!-- Scripts -->
-    <script src="script.js?v=20251205215000"></script>
+    <script src="script.js?v=20251206071000"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');

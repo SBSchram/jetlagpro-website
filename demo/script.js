@@ -168,7 +168,7 @@ class JetLagProDemo {
         this.hourToPointId = [];
         this.selectedAirport = null;
         this.currentPoint = null;
-        this.currentTab = 'home';
+        this.currentTab = 'destination';
         this.expandedPointId = null;
         this.completedPoints = new Set();
         this.recentDestinations = []; // Added for recent destinations
@@ -1362,9 +1362,7 @@ class JetLagProDemo {
         }
         
         // Update home screen when switching to home tab
-        if (tabName === 'home') {
-            this.updateHomeScreen();
-        }
+        // Home tab removed - no trip/achievement tracking in demo
     }
     
     // Home Screen Functions
