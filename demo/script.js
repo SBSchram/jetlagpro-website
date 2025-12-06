@@ -285,7 +285,7 @@ class JetLagProDemo {
             
             // Load completed trips and update home screen
             this.loadCompletedTrips();
-            this.updateHomeScreen();
+            // Home screen removed - no trip/achievement tracking in demo
             
             // Show empty state for destination tab
             this.showEmptyState();
