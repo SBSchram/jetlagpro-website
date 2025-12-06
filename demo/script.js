@@ -745,17 +745,9 @@ class JetLagProDemo {
                 return aNum - bNum;
             });
             
-            // Get points in sorted order
+            // Get points in sorted order - schedule is already sorted by transitionNumber (1-12)
+            // transitionNumber 1 = current point (first point in journey), so no need to reorder
             let schedulePoints = sortedSchedule.map(item => item.point);
-            
-            if (currentPointId) {
-                // Find the current point in the schedule and move it to the front
-                const currentPointIndex = schedulePoints.findIndex(p => p.id === currentPointId);
-                if (currentPointIndex !== -1) {
-                    const currentPoint = schedulePoints.splice(currentPointIndex, 1)[0];
-                    schedulePoints.unshift(currentPoint);
-                }
-            }
             
             // Add any missing points from the original list
             const missingPoints = this.points.filter(point => 
@@ -1492,7 +1484,20 @@ class JetLagProDemo {
     calculateNextTransitionTimes(currentHour, now) {
         const transitionTimes = [];
         
-        // Find the next odd hour from current time
+        // First, add the current point's transition time (current odd hour) - MATCH iOS
+        // This ensures transitionNumber 1 = current point (first point in journey)
+        const currentOddHour = currentHour % 2 === 0 ? currentHour - 1 : currentHour;
+        const adjustedCurrentHour = currentOddHour < 0 ? 23 : currentOddHour;
+        
+        // Create transition time for current point
+        const currentTransitionTime = new Date(now);
+        currentTransitionTime.setHours(adjustedCurrentHour, 0, 0, 0);
+        currentTransitionTime.setMinutes(0, 0, 0);
+        
+        // If current point's transition time has passed today, it's still the current point (use today)
+        transitionTimes.push(currentTransitionTime);
+        
+        // Find the next odd hour from current time (for remaining 11 transitions)
         let nextOddHour = currentHour;
         if (nextOddHour % 2 === 0) {
             nextOddHour += 1; // If even, go to next odd hour
@@ -1503,13 +1508,16 @@ class JetLagProDemo {
             nextOddHour = 1; // Wrap around to 1 AM
         }
         
-        // Calculate 12 transition times (odd hours)
-        for (let i = 0; i < 12; i++) {
-            const targetHour = (nextOddHour + i * 2) % 24;
-            if (targetHour === 0) targetHour = 24; // Handle midnight
+        // Calculate the next 11 odd-hour transitions (we already have 1, so we need 11 more) - MATCH iOS
+        for (let i = 0; i < 11; i++) {
+            let targetHour = nextOddHour + (i * 2);
+            if (targetHour > 23) {
+                targetHour = targetHour - 24;
+            }
             
             const transitionTime = new Date(now);
             transitionTime.setHours(targetHour, 0, 0, 0);
+            transitionTime.setMinutes(0, 0, 0);
             
             // If this time has already passed today, move to tomorrow
             if (transitionTime <= now) {
