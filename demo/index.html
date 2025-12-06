@@ -23,7 +23,7 @@
     <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
     <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
 
-    <link rel="stylesheet" href="styles.css?v=20251205213050">
+    <link rel="stylesheet" href="styles.css?v=20251205213412">
     <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
@@ -234,6 +234,11 @@
                             <div class="points-list" id="pointsList">
                                 <!-- Points will be dynamically generated here -->
                             </div>
+                            
+                            <!-- Reward Messages Overlay (matches iOS) -->
+                            <div id="rewardMessagesOverlay" class="reward-messages-overlay">
+                                <div id="encouragementMessage" class="encouragement-message" style="display: none;"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -433,7 +438,7 @@
 
 
     <!-- Scripts -->
-    <script src="script.js?v=20251205213050"></script>
+    <script src="script.js?v=20251205213412"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');

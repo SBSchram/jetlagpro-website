@@ -1167,6 +1167,7 @@ body {
     height: 120px;
     margin: 0;
     z-index: 10;
+    background: linear-gradient(135deg, #007AFF, rgba(0, 122, 255, 0.8)); /* Blue gradient matching iOS */
 }
 
 .destination-header .header-gradient {
@@ -1175,6 +1176,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, #007AFF, rgba(0, 122, 255, 0.8)); /* Blue gradient matching iOS */
 }
 
 .destination-header-content {
@@ -1974,6 +1976,42 @@ body {
     color: #8e8e93;
     width: 35px;
     text-align: right;
+}
+
+/* Reward Messages Overlay (matches iOS) */
+.reward-messages-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; /* Don't block interactions */
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 100px; /* Position above tab bar */
+}
+
+.encouragement-message {
+    background: #34c759; /* Green background matching iOS */
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 80%;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    pointer-events: none;
+}
+
+.encouragement-message.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .mastery-points-text {

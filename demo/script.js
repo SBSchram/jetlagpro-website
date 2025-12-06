@@ -185,6 +185,11 @@ class JetLagProDemo {
         // Trip tracking
         this.completedTrips = []; // Array of completed trip objects
         
+        // Reward message tracking (matches iOS)
+        this.currentStreak = 0; // Current consecutive streak
+        this.lastCompletedPointId = null; // Last completed point ID for streak tracking
+        this.encouragementMessageTimeout = null; // Timeout for auto-hiding messages
+        
         this.init();
     }
 
@@ -1106,6 +1111,34 @@ class JetLagProDemo {
             button.innerHTML = '<span>☑</span><span>Completed</span>';
             button.classList.add('completed');
         }
+        
+        // Check if this is the final point (12th point)
+        if (this.completedPoints.size === 12) {
+            this.showEncouragementMessage("You did it! You stimulated the last point 🎉 🎯");
+            return;
+        }
+        
+        // Track streak and generate encouragement message
+        const wasConsecutive = this.isConsecutivePoint(pointId);
+        if (wasConsecutive && this.lastCompletedPointId !== null) {
+            this.currentStreak += 1;
+        } else {
+            this.currentStreak = 1; // Reset streak but this point still counts as 1
+        }
+        
+        // Generate encouraging message
+        const message = this.generateEncouragementMessage(
+            pointId,
+            this.currentStreak,
+            this.completedPoints.size,
+            wasConsecutive
+        );
+        
+        // Show encouragement message
+        this.showEncouragementMessage(message);
+        
+        // Update last completed point
+        this.lastCompletedPointId = pointId;
     }
 
     endJourney() {
@@ -1136,6 +1169,19 @@ class JetLagProDemo {
         this.notificationSchedule = []; // Clear notification schedule
         this.timezoneOffset = 0; // Reset timezone offset
         this.tripStartDate = null; // Reset trip start date
+        
+        // Reset reward message tracking
+        this.currentStreak = 0;
+        this.lastCompletedPointId = null;
+        if (this.encouragementMessageTimeout) {
+            clearTimeout(this.encouragementMessageTimeout);
+            this.encouragementMessageTimeout = null;
+        }
+        const messageElement = document.getElementById('encouragementMessage');
+        if (messageElement) {
+            messageElement.style.display = 'none';
+            messageElement.classList.remove('show');
+        }
         
         // Clear localStorage
         this.clearSelectedAirport();
@@ -1353,6 +1399,232 @@ class JetLagProDemo {
         // Simple error display - could be enhanced with a proper error component
         console.error(message);
         alert(message);
+    }
+    
+    // MARK: - Reward Messages (matches iOS)
+    
+    /**
+     * Checks if the completed point is consecutive to the last completed point
+     * @param {number} pointId - The ID of the point that was just completed
+     * @returns {boolean} True if consecutive, false if there was a gap or this is the first point
+     */
+    isConsecutivePoint(pointId) {
+        if (this.lastCompletedPointId === null) {
+            return true; // First point is always considered consecutive
+        }
+        
+        // Get ordered point sequence from notification schedule
+        const orderedPointIds = this.getOrderedPointIds();
+        
+        const lastIndex = orderedPointIds.indexOf(this.lastCompletedPointId);
+        const currentIndex = orderedPointIds.indexOf(pointId);
+        
+        if (lastIndex === -1 || currentIndex === -1) {
+            return false;
+        }
+        
+        // Check if current point is the next one in sequence
+        return currentIndex === lastIndex + 1;
+    }
+    
+    /**
+     * Gets ordered point IDs from notification schedule
+     * @returns {Array<number>} Array of point IDs in journey order
+     */
+    getOrderedPointIds() {
+        if (!this.selectedAirport || this.notificationSchedule.length === 0) {
+            return [];
+        }
+        
+        return [...this.notificationSchedule]
+            .sort((a, b) => a.transitionNumber - b.transitionNumber)
+            .map(item => item.point.id);
+    }
+    
+    /**
+     * Generates an encouraging message based on completion context (matches iOS)
+     * @param {number} pointId - The completed point ID
+     * @param {number} streak - Current consecutive streak
+     * @param {number} totalCompleted - Total points completed in journey
+     * @param {boolean} wasConsecutive - Whether this point was consecutive
+     * @returns {string} Encouraging message string
+     */
+    generateEncouragementMessage(pointId, streak, totalCompleted, wasConsecutive) {
+        let baseMessage;
+        
+        // Progress milestone messages (take priority)
+        if (totalCompleted === 3) {
+            baseMessage = "Quarter way there! 💪";
+        } else if (totalCompleted === 6) {
+            baseMessage = "Halfway champion! 🎯";
+        } else if (totalCompleted === 9) {
+            baseMessage = "Almost there! 🚀";
+        } else if (totalCompleted === 12) {
+            baseMessage = "Journey complete! 🏆";
+        }
+        // Streak-based messages
+        else if (wasConsecutive && streak >= 2) {
+            switch (streak) {
+                case 2:
+                    baseMessage = "Keep it up! 🔥";
+                    break;
+                case 3:
+                    baseMessage = "You're on fire! 🔥🔥";
+                    break;
+                case 4:
+                    baseMessage = "Way to go! Amazing! 🔥🔥🔥";
+                    break;
+                case 5:
+                    baseMessage = "Five in a row! You're rocking it! 🔥🔥🔥🔥";
+                    break;
+                case 6:
+                    baseMessage = "Fabulous dedication! ⭐";
+                    break;
+                case 7:
+                    baseMessage = "Your body will thank you for this! ⭐⭐";
+                    break;
+                case 8:
+                    baseMessage = "Your work is truly impressive!! ⭐⭐⭐";
+                    break;
+                case 9:
+                case 10:
+                case 11:
+                    baseMessage = "Journey master! 🏆";
+                    break;
+                default:
+                    baseMessage = "Incredible focus! 🌟";
+            }
+        }
+        // Resumption encouragement (after missed points)
+        else if (!wasConsecutive && totalCompleted > 1) {
+            baseMessage = "Welcome back! Keep going! 💪";
+        }
+        // First point - dynamic message with hours until next point
+        else if (totalCompleted === 1) {
+            return this.generateFirstPointMessage(pointId);
+        }
+        // Default single completion (fallback)
+        else {
+            baseMessage = "Good Start! Now keep it up! 🎯";
+        }
+        
+        // Append "next up" timing to all messages (except final point which is handled separately)
+        const nextUpSuffix = this.getNextPointTimingSuffix(pointId);
+        if (nextUpSuffix) {
+            return `${baseMessage} ${nextUpSuffix}`;
+        }
+        
+        return baseMessage;
+    }
+    
+    /**
+     * Generates the "next up" timing suffix for any point (matches iOS)
+     * @param {number} pointId - The ID of the point that was just completed
+     * @returns {string} Formatted "next up" string, or empty string if no next point
+     */
+    getNextPointTimingSuffix(pointId) {
+        if (!this.selectedAirport || this.notificationSchedule.length === 0) {
+            return "";
+        }
+        
+        // Find the current point's transition number
+        const currentPoint = this.notificationSchedule.find(item => item.point.id === pointId);
+        if (!currentPoint || currentPoint.transitionNumber >= 12) {
+            // No next point (this is the final point)
+            return "";
+        }
+        
+        // Find the next point (transition number + 1)
+        const nextTransitionNumber = currentPoint.transitionNumber + 1;
+        const nextPoint = this.notificationSchedule.find(item => item.transitionNumber === nextTransitionNumber);
+        if (!nextPoint) {
+            return "";
+        }
+        
+        // Calculate time from now to next point's local time
+        const now = new Date();
+        const timeInterval = nextPoint.localTime.getTime() - now.getTime();
+        const totalMinutes = Math.max(1, Math.round(timeInterval / 60000));
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        // Format the "next up" suffix based on whether there are remaining minutes
+        if (hours > 0 && minutes > 0) {
+            // Hours and minutes - use singular "hour" for 1, plural for 2+
+            if (hours === 1) {
+                return `Next up ${hours} hour ${minutes} minutes.`;
+            } else {
+                return `Next up ${hours} hours ${minutes} minutes.`;
+            }
+        } else if (hours > 0) {
+            // Just hours
+            return `Next up ${hours} hours.`;
+        } else {
+            // Just minutes (less than an hour)
+            return `Next up ${minutes} minutes.`;
+        }
+    }
+    
+    /**
+     * Generates the first point message with hours until next point (matches iOS)
+     * @param {number} pointId - The ID of the point that was just completed
+     * @returns {string} Formatted message with hours until next point
+     */
+    generateFirstPointMessage(pointId) {
+        const baseMessage = "Great start, you just earned your first pressure point,";
+        const nextUpSuffix = this.getNextPointTimingSuffix(pointId);
+        
+        if (!nextUpSuffix) {
+            return "Good Start! Now keep it up! 🎯";
+        }
+        
+        return `${baseMessage} ${nextUpSuffix}`;
+    }
+    
+    /**
+     * Shows encouragement message to user (matches iOS timing: 0.5s delay, 6s display, 0.6s animation)
+     * @param {string} message - The message to display
+     */
+    showEncouragementMessage(message) {
+        // Add "on target" emoji to the end of the message
+        const fullMessage = `${message} 🎯`;
+        
+        // Clear any existing timeout
+        if (this.encouragementMessageTimeout) {
+            clearTimeout(this.encouragementMessageTimeout);
+        }
+        
+        const messageElement = document.getElementById('encouragementMessage');
+        if (!messageElement) return;
+        
+        // Hide message immediately if it's already showing
+        messageElement.style.display = 'none';
+        messageElement.classList.remove('show');
+        
+        // Delay showing the message by 0.5 seconds after point completion
+        setTimeout(() => {
+            messageElement.textContent = fullMessage;
+            messageElement.style.display = 'block';
+            
+            // Force reflow to ensure display change is applied
+            messageElement.offsetHeight;
+            
+            // Animate in
+            setTimeout(() => {
+                messageElement.classList.add('show');
+            }, 10);
+            
+            // Auto-hide after 6 seconds of display (0.5 delay + 6 display + 0.6 animation = 7.1 seconds total)
+            this.encouragementMessageTimeout = setTimeout(() => {
+                // Animate the message out (slide up and fade)
+                messageElement.classList.remove('show');
+                
+                // Hide after animation completes
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 600); // 0.6s animation duration
+            }, 6000); // 6 seconds display time
+        }, 500); // 0.5 second delay
     }
 
     addRecentDestination(airport) {
