@@ -554,9 +554,19 @@ class JetLagProDemo {
 
     updateDestinationDisplay() {
         if (this.selectedAirport) {
-            DOM.setHTML('destinationStatus', `<span>Heading to ${this.selectedAirport.code} where it's <span id="destinationTime">${this.getDestinationTimeString()}</span></span>`);
-            DOM.setText('destinationName', this.selectedAirport.name);
-            DOM.show('destinationName');
+            const timeString = this.getDestinationTimeString();
+            const airportName = this.selectedAirport.name;
+            // Calculate dynamic font size based on airport name length (matching iOS logic)
+            let fontSize = '20px'; // title2 default
+            if (airportName.length > 20 && airportName.length <= 30) {
+                fontSize = '18px'; // title3
+            } else if (airportName.length > 30 && airportName.length <= 40) {
+                fontSize = '16px'; // headline
+            } else if (airportName.length > 40) {
+                fontSize = '14px'; // subheadline
+            }
+            DOM.setHTML('destinationStatus', `<span class="airport-name-text" style="font-size: ${fontSize}; font-weight: 600;">${airportName}</span> <span class="destination-time" style="font-size: 14px; opacity: 0.8;">(<span id="destinationTime">${timeString}</span>)</span>`);
+            DOM.hide('destinationName');
             DOM.showFlex('endJourneyButton');
         } else {
             DOM.setHTML('destinationStatus', '<span>No Destination Yet</span>');
