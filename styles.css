@@ -3025,7 +3025,120 @@ body.modal-open {
     }
 }
 
+/* ============================================
+   Horary Points Page Styles
+   ============================================ */
 
+.content-wrapper {
+    max-width: 1200px;
+}
 
+.wheel-section {
+    text-align: center;
+    margin: 40px 0;
+}
 
+.wheel-image {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.points-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.point-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #007bff;
+}
+
+.point-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.point-number {
+    background: #007bff;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.point-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.point-time {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.point-description {
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.theory-section {
+    background: #e3f2fd;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 0 0 40px 0;
+}
+
+.research-link {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 20px 0;
+}
+
+.research-link:hover {
+    background: #218838;
+}
+
+.research-link-container {
+    text-align: center;
+    margin: 40px 0;
+}
+
+/* Responsive adjustments for Horary Points page */
+@media (max-width: 768px) {
+    .points-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .wheel-image {
+        max-width: 100%;
+    }
+    
+    .theory-section {
+        padding: 20px;
+    }
+    
+    .point-card {
+        padding: 15px;
+    }
+}
  
