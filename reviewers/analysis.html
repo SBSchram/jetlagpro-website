@@ -120,12 +120,10 @@
         <div class="data-section section-container" id="reproduce-analysis">
             <h2>Reproduce This Analysis</h2>
             <p style="text-align: center; color: #374151; font-size: 1rem; line-height: 1.6;">
-                All analyses shown on this page can be independently reproduced. Download the raw data and analysis script to verify our statistical methods and results.
+                All analyses shown on this page can be independently reproduced. Download the data and script by copying the commands and running them in a terminal or command window.
             </p>
 
-            <div class="section" style="text-align: center; margin-top: 25px;">
-                <p style="text-align: center; margin-bottom: 20px; color: #374151;">Download the data and script, then run the analysis to reproduce all statistics.</p>
-                
+            <div style="text-align: center; margin-top: 20px;">
                 <div class="verification-grid">
                     <div class="verification-column">
                         <h3>Download Raw Trip Data</h3>
@@ -154,7 +152,7 @@
                     </div>
                 </div>
                 
-                <div style="text-align: center; margin-top: 30px;">
+                <div style="text-align: center; margin-top: 20px;">
                     <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 0 0 15px 0;">Run the Analysis</h3>
                     <div class="code-block" style="max-width: 600px; margin: 0 auto;">
                         <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
@@ -166,10 +164,6 @@
                         <code>python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt</code>
                     </div>
                 </div>
-                
-                <p style="text-align: center; color: #6b7280; font-size: 0.9rem; margin-top: 20px;">
-                    The script generates a detailed report with all statistics shown on this page. Compare the output with the live data displayed above. Requires Python 3.6+ with no external dependencies.
-                </p>
             </div>
         </div>
 
