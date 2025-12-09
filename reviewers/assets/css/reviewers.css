@@ -286,6 +286,35 @@ code {
     opacity: 0.6;
 }
 
+/* Verification Grid - Used by verify.html and analysis.html */
+.verification-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.verification-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.verification-column h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+/* Mobile responsiveness for verification grid */
+@media (max-width: 768px) {
+    .verification-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
 .source-button {
     background: #6b7280;
     color: white;

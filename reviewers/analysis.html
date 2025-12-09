@@ -16,13 +16,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
     <!-- External CSS and JavaScript files -->
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251203044500">
-    <link rel="stylesheet" href="assets/css/analytics.css?v=20251203044500">
-    <script src="../assets/js/firebase-service.js?v=20251203044500"></script>
-    <script src="../assets/js/trip-validator.js?v=20251203044500"></script>
-    <script src="assets/js/analytics.js?v=20251203044500"></script>
-    <script src="assets/js/charts.js?v=20251203044500"></script>
-    <script src="assets/js/copy-code.js?v=20251203044500"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251203120000">
+    <link rel="stylesheet" href="assets/css/analytics.css?v=20251203120000">
+    <script src="../assets/js/firebase-service.js?v=20251203120000"></script>
+    <script src="../assets/js/trip-validator.js?v=20251203120000"></script>
+    <script src="assets/js/analytics.js?v=20251203120000"></script>
+    <script src="assets/js/charts.js?v=20251203120000"></script>
+    <script src="assets/js/copy-code.js?v=20251203120000"></script>
     
     <script>
         // Inline JavaScript removed - now using external files:
@@ -119,83 +119,56 @@
 
         <div class="data-section section-container" id="reproduce-analysis">
             <h2>Reproduce This Analysis</h2>
-            <p style="color: #374151; font-size: 1rem; line-height: 1.6;">
+            <p style="text-align: center; color: #374151; font-size: 1rem; line-height: 1.6;">
                 All analyses shown on this page can be independently reproduced. Download the raw data and analysis script to verify our statistical methods and results.
             </p>
 
-            <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 1: Download Raw Trip Data</h3>
-            <p style="color: #374151; font-size: 0.95rem;">Export all trip completion records (including survey responses) from our public Firestore database:</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" -o trips.json</code>
-            </div>
-            <div class="info-box">
-                <strong>Data Included:</strong> Each trip record contains:
-                <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
-                    <li><strong>Trip details</strong>: ID, dates, airports, time zones, direction</li>
-                    <li><strong>Intervention data</strong>: Points stimulated, completion method</li>
-                    <li><strong>Survey responses</strong>: Pre-travel and post-travel symptom ratings (fatigue, sleep disruption, cognitive function, mood, digestive issues)</li>
-                    <li><strong>Metadata</strong>: HMAC signatures, timestamps, device info</li>
-                </ul>
-            </div>
-            <p style="color: #6b7280; font-size: 0.85rem; margin-top: 10px;">
-                <strong>Note:</strong> If the response includes <code class="inline">"nextPageToken"</code>, repeat the call with <code class="inline">&pageToken=...</code> to retrieve all pages.
-            </p>
-
-            <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 2: Download Analysis Script</h3>
-            <p style="color: #374151; font-size: 0.95rem;">Get the standalone Python analysis script (pure Python, minimal dependencies):</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>curl -o analyze_jetlag_data.py https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
-            </div>
-            <p style="margin-top: 15px;">
-                <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank" class="github-button">View Source Code on GitHub</a>
-            </p>
-
-            <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 3: Run the Analysis</h3>
-            <p style="color: #374151; font-size: 0.95rem;">Execute the analysis script to reproduce all statistics shown on this page:</p>
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                </button>
-                <code>python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt</code>
-            </div>
-
-            <h3 style="color: #1f2937; margin-top: 25px; margin-bottom: 15px;">Step 4: Compare Results</h3>
-            <p style="color: #374151; font-size: 0.95rem;">
-                The script will generate a detailed report (<code class="inline">analysis_report.txt</code>) containing:
-            </p>
-            <ul style="color: #374151; line-height: 1.8; margin-left: 20px;">
-                <li><strong>Basic Statistics</strong> – Trip counts, average points stimulated, average severity</li>
-                <li><strong>Dose-Response Analysis</strong> – Mean severity by time zone and stimulation level</li>
-                <li><strong>Point Usage Statistics</strong> – Frequency of each acupuncture point</li>
-            </ul>
-            <p style="color: #374151; font-size: 0.95rem; margin-top: 15px;">
-                Compare the output with the live data displayed on this page. Values should match (within rounding).
-            </p>
-
-            <div class="warning-box">
-                <p>
-                    <strong>📊 Requirements:</strong> The analysis script requires Python 3.6+ with no external dependencies. All calculations use pure Python for transparency and reproducibility.
-                </p>
-            </div>
-
-            <div class="note-box">
-                <p>
-                    <strong>🔍 Transparency Note:</strong> This analysis uses the exact same data and calculations as the live dashboard. No data is hidden or filtered beyond what is documented in the <a href="../research-paper.html">research paper</a>.
+            <div class="section" style="text-align: center; margin-top: 25px;">
+                <p style="text-align: center; margin-bottom: 20px; color: #374151;">Download the data and script, then run the analysis to reproduce all statistics.</p>
+                
+                <div class="verification-grid">
+                    <div class="verification-column">
+                        <h3>Download Raw Trip Data</h3>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                            <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" -o trips.json</code>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-column">
+                        <h3>Download Analysis Script (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank">Script</a>)</h3>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                            <code>curl -o analyze_jetlag_data.py https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 0 0 15px 0;">Run the Analysis</h3>
+                    <div class="code-block" style="max-width: 600px; margin: 0 auto;">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt</code>
+                    </div>
+                </div>
+                
+                <p style="text-align: center; color: #6b7280; font-size: 0.9rem; margin-top: 20px;">
+                    The script generates a detailed report with all statistics shown on this page. Compare the output with the live data displayed above. Requires Python 3.6+ with no external dependencies.
                 </p>
             </div>
         </div>

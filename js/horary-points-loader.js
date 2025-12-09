@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Load points data from the same source as demo
-        const response = await fetch('data/points.json');
+        const response = await fetch('demo/points.json');
         if (!response.ok) {
             throw new Error(`Failed to load points.json: ${response.status}`);
         }
