@@ -124,37 +124,31 @@
             </p>
 
             <div style="text-align: center; margin-top: 20px;">
-                <div class="verification-grid">
-                    <div class="verification-column">
-                        <h3>1. Download Raw Trip Data</h3>
-                        <div class="code-block">
-                            <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                            <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" -o trips.json</code>
-                        </div>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 0 0 15px 0;">1. Download Raw Trip Data</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" -o trips.json</code>
                     </div>
                     
-                    <div class="verification-column">
-                        <h3>2. Download Analysis Script (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank">Script</a>)</h3>
-                        <div class="code-block">
-                            <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                            <code>curl -o analyze_jetlag_data.py https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
-                        </div>
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 30px 0 15px 0;">2. Download Analysis Script (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank">Script</a>)</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o analyze_jetlag_data.py https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
                     </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 0 0 15px 0;">3. Run the Analysis</h3>
-                    <div class="code-block" style="max-width: 600px; margin: 0 auto;">
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 30px 0 15px 0;">3. Run the Analysis</h3>
+                    <div class="code-block">
                         <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
