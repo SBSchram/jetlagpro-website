@@ -929,12 +929,11 @@
 
         <h4>3. Deleting Evidence</h4>
         <p><strong>Threat:</strong> Developer deletes audit logs to hide tampering.</p>
-        <p><strong>Prevention:</strong> All audit logs are written to two places simultaneously: (1) a mutable database for real-time viewing, and (2) an immutable archive that cannot be deleted. The archive uses Google Cloud Storage with a legally-binding 10-year retention lock. Even the project owner cannot delete these files. If the mutable database is tampered with, the immutable archive provides proof.</p>
-        <p><strong>How to verify:</strong> Run the verification script at <code>scripts/verify_audit_consistency.py</code> to compare the live database against the immutable archive. Any discrepancies indicate tampering.</p>
+        <p><strong>Prevention:</strong> Audit logs are written to an immutable archive that cannot be deleted or modified. Any tampering with the live database is detectable by comparing it against the permanent archive.</p>
 
         <h4>4. Tampering with Security Code</h4>
         <p><strong>Threat:</strong> Developer modifies the security code itself to bypass audit logging.</p>
-        <p><strong>Prevention:</strong> All security code is publicly visible in a GitHub repository (<code>jetlagpro-website/functions/</code>). Reviewers can compare the published code against what's actually deployed. Additionally, because audit logs are written to two independent systems (mutable database + immutable archive), tampering with one doesn't affect the other. The deployment history shows when code was changed and by whom.</p>
+        <p><strong>Prevention:</strong> All security code is publicly visible in the GitHub repository. Reviewers can compare published code against what's deployed, and deployment history shows when changes were made.</p>
  		
 	   
 	   <h3>How to Verify the Data</h3>
