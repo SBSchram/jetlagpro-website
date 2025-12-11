@@ -976,24 +976,14 @@ async function exportSurveyData() {
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
             console.log('🚀 Attempting to update existing tripCompletions record...');
             
-            // Create survey metadata (separate from trip _writeMetadata to preserve original)
-            const surveyMetadata = {
-                source: 'web_survey',
-                sourceVersion: '1.0.0',
-                timestamp: window.firebaseServerTimestamp(),
-                userAgent: navigator.userAgent.substring(0, 100),
-                browserInfo: `${navigator.platform}; ${navigator.language}`,
-                surveyUrl: window.location.href.split('?')[0]
-            };
+            // Survey metadata removed - UPDATE operation type is sufficient to identify survey submissions
+            // surveyCompleted: true already proves a survey was submitted
             
             // Prepare flat survey data to add to existing trip record
             const surveyUpdateData = {
                 // Survey completion status
                 surveyCompleted: true,
                 surveySubmittedAt: timestamp,
-                
-                // Survey metadata (keeps original trip _writeMetadata intact)
-                _surveyMetadata: surveyMetadata,
                 
                 // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',

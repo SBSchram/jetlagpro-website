@@ -31,8 +31,8 @@ service cloud.firestore {
         // Survey not yet completed (any updates allowed)
         resource.data.surveyCompleted != true
         
-        // OR web survey retaking/editing (allows survey fields)
-        || request.resource.data.keys().hasAny(['_surveyMetadata', 'surveyCompleted'])
+        // OR web survey submission (surveyCompleted field being set)
+        || request.resource.data.keys().hasAny(['surveyCompleted'])
         
         // OR iOS app updating point completions during active trip
         || onlyUpdatingAllowedFields();
@@ -50,8 +50,7 @@ service cloud.firestore {
           'point1Completed', 'point2Completed', 'point3Completed',
           'point4Completed', 'point5Completed', 'point6Completed',
           'point7Completed', 'point8Completed', 'point9Completed',
-          'point10Completed', 'point11Completed', 'point12Completed',
-          '_writeMetadata'  // Always allow updating metadata
+          'point10Completed', 'point11Completed', 'point12Completed'
         ];
         
         return request.resource.data.diff(resource.data)

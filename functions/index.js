@@ -235,17 +235,22 @@ function validateTripIdSignature(tripId) {
 // Metadata is optional tracking data, not a security mechanism
 
 /**
- * Determine canonical source string for audit entries.
- * Prioritizes write metadata source, then survey metadata, with optional fallback.
+ * Determine source based on operation type
+ * Metadata removed - operation type is sufficient
  */
-function resolveSource(writeMetadata, surveyMetadata, fallback = null) {
-  if (writeMetadata && typeof writeMetadata.source === "string" && writeMetadata.source.trim() !== "") {
-    return writeMetadata.source.trim();
+function resolveSource(operation, data) {
+  // CREATE = trip completion from app
+  if (operation === "CREATE") {
+    return "ios_app";
   }
-  if (surveyMetadata && typeof surveyMetadata.source === "string" && surveyMetadata.source.trim() !== "") {
-    return surveyMetadata.source.trim();
+  
+  // UPDATE with surveyCompleted = survey submission
+  if (operation === "UPDATE" && data.surveyCompleted === true) {
+    return "web_survey";
   }
-  return fallback;
+  
+  // Fallback for other operations (console edits, etc)
+  return "firebase_console";
 }
 
 /**
@@ -262,7 +267,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   }
   
   const data = snapshot.data();
-  const source = resolveSource(data._writeMetadata, data._surveyMetadata, "firebase_console");
+  const source = resolveSource("CREATE", data);
   
   // Create audit log entry (minimal - full data is in tripCompletions)
   // Only include fields that exist (don't default to null - Firestore omits null values)
@@ -278,12 +283,7 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
     eventId: event.id,
   };
 
-  const metadata = {};
-  if (data._writeMetadata !== undefined) metadata.writeMetadata = data._writeMetadata;
-  if (data._surveyMetadata !== undefined) metadata.surveyMetadata = data._surveyMetadata;
-  if (Object.keys(metadata).length > 0) {
-    auditEntry.metadata = metadata;
-  }
+  // Metadata collection removed - no longer needed without _writeMetadata/_surveyMetadata
   
   // Only add fields if they exist (prevents Firestore from omitting them)
   if (data.destinationCode !== undefined) auditEntry.destinationCode = data.destinationCode;
@@ -315,7 +315,7 @@ exports.auditLoggerUpdate = onDocumentUpdated("tripCompletions/{tripId}", async 
   
   const beforeData = beforeSnapshot.data();
   const afterData = afterSnapshot.data();
-  const source = resolveSource(afterData._writeMetadata, afterData._surveyMetadata, "firebase_console");
+  const source = resolveSource("UPDATE", afterData);
   
   // Helper function to normalize values for comparison
   // Treats undefined, null, and empty string as equivalent "empty" state
@@ -417,7 +417,7 @@ exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async 
   }
   
   const data = snapshot.data();
-  const source = resolveSource(data._writeMetadata, data._surveyMetadata, "firebase_console");
+  const source = resolveSource("DELETE", data);
   
   // Create audit log entry for deletion
   const auditEntry = {
@@ -467,7 +467,6 @@ exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (eve
     logger.warn(`⚠️ Invalid HMAC signature detected for trip ${tripId}`, {
       tripId,
       reason: validation.reason,
-      source: data._writeMetadata?.source,
     });
     
     // Log to audit trail
@@ -476,9 +475,8 @@ exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (eve
       collection: "tripCompletions",
       documentId: tripId,
       timestamp: FieldValue.serverTimestamp(),
-      source: resolveSource(data._writeMetadata, data._surveyMetadata, data._writeMetadata?.source || null),
+      source: resolveSource("CREATE", data),
       reason: validation.reason,
-      metadata: data._writeMetadata || null,
       eventId: event.id,
     });
     
