@@ -17,7 +17,7 @@ class TripValidator {
     // Developer device IDs - single source of truth
     // These are device IDs from developer test devices and simulators
     // Used to filter out test data from research analysis
-    static DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC'];
+    static DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC', '35181B4C'];
     
     /**
      * Validates HMAC-SHA256 signature on a trip ID
