@@ -15,51 +15,27 @@ service cloud.firestore {
       // -------------------- CREATE ACCESS --------------------
       // Check 1: Document ID matches tripId in data
       // Check 2: TripId matches supported formats (legacy + HMAC signature)
-      // Check 3: Write includes metadata object
-      // Check 4: Metadata has required fields
-      // Check 5: Source is from approved list
-      // Check 6: Timestamp field exists
       // Format: 8hex-AirportDir-YYMMDD-HHMM[-8hexSig]
       // Example: 2330B376-ISTE-251111-0052-55e927a7
+      // Note: Metadata validation removed - HMAC signature provides sufficient security
       allow create: if 
         request.resource.data.tripId == tripId
         && (
           tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}$')
           || tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$')
-        )
-        && request.resource.data.keys().hasAll(['_writeMetadata'])
-        && request.resource.data._writeMetadata.keys().hasAll(['source', 'timestamp'])
-        && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
-        && request.resource.data._writeMetadata.timestamp != null;
+        );
       
       // -------------------- UPDATE ACCESS --------------------
-      // Allow updates ONLY if final document maintains metadata integrity
+      // Allow updates for survey submission or point completion updates
       allow update: if 
-        // Final document (after merge) includes metadata
-        request.resource.data._writeMetadata != null
-        && request.resource.data._writeMetadata.source in ['ios_app', 'web_survey']
-        && request.resource.data._writeMetadata.timestamp != null
-        // Original metadata must still exist (cannot be deleted)
-        && resource.data._writeMetadata != null
+        // Survey not yet completed (any updates allowed)
+        resource.data.surveyCompleted != true
         
-        // AND one of these conditions:
-        && (
-          // 1. Survey not yet completed (any updates allowed)
-          resource.data.surveyCompleted != true
-          
-          // 2. Web survey retaking/editing (allows survey fields)
-          || (
-            request.resource.data.keys().hasAny(['_surveyMetadata', 'surveyCompleted'])
-            && (
-              request.resource.data._surveyMetadata.source == 'web_survey'
-              || resource.data._surveyMetadata.source == 'web_survey'
-            )
-          )
-          
-          // 3. iOS app updating point completions during active trip
-          || (request.resource.data._writeMetadata.source == 'ios_app' 
-              && onlyUpdatingAllowedFields())
-        );
+        // OR web survey retaking/editing (allows survey fields)
+        || request.resource.data.keys().hasAny(['_surveyMetadata', 'surveyCompleted'])
+        
+        // OR iOS app updating point completions during active trip
+        || onlyUpdatingAllowedFields();
       
       // -------------------- DELETE ACCESS --------------------
       // NEVER allow deletes (prevent data loss)

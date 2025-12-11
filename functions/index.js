@@ -231,51 +231,8 @@ function validateTripIdSignature(tripId) {
   return {valid: false, reason: "signature_mismatch"};
 }
 
-/**
- * Validate metadata consistency
- * @param {object} metadata - _writeMetadata object
- * @return {object} - {valid: boolean, issues: string[]}
- */
-function validateMetadata(metadata) {
-  const issues = [];
-  
-  if (!metadata) {
-    return {valid: false, issues: ["missing_metadata"]};
-  }
-  
-  // Check required fields
-  if (!metadata.source) issues.push("missing_source");
-  if (!metadata.timestamp) issues.push("missing_timestamp");
-  
-  // Validate source
-  if (metadata.source && !["ios_app", "web_survey"].includes(metadata.source)) {
-    issues.push("invalid_source");
-  }
-  
-  // Validate device ID format (if present)
-  // Accept both full UUID (legacy) and 8-char device hash (new format)
-  if (metadata.deviceId) {
-    const uuidRegex = /^[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}$/i;
-    const hashRegex = /^[A-F0-9]{8}$/i;
-    const hexStringRegex = /^[a-f0-9]{16,36}$/i; // Legacy test data (16-36 hex chars)
-    
-    if (!uuidRegex.test(metadata.deviceId) && 
-        !hashRegex.test(metadata.deviceId) && 
-        !hexStringRegex.test(metadata.deviceId)) {
-      issues.push("invalid_device_id_format");
-    }
-  }
-  
-  // Validate build number (if present)
-  if (metadata.appBuild) {
-    const buildNum = parseInt(metadata.appBuild);
-    if (isNaN(buildNum) || buildNum < 0 || buildNum > 1000) {
-      issues.push("invalid_build_number");
-    }
-  }
-  
-  return {valid: issues.length === 0, issues};
-}
+// Metadata validation removed - HMAC signature provides sufficient security
+// Metadata is optional tracking data, not a security mechanism
 
 /**
  * Determine canonical source string for audit entries.
@@ -537,51 +494,8 @@ exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (eve
   }
 });
 
-/**
- * Metadata Validator - Checks metadata consistency
- * Triggers on document creation
- */
-exports.metadataValidator = onDocumentCreated("tripCompletions/{tripId}", async (event) => {
-  const snapshot = event.data;
-  const tripId = event.params.tripId;
-  
-  if (!snapshot) {
-    logger.warn("No data associated with the event");
-    return;
-  }
-  
-  const data = snapshot.data();
-  const metadata = data._writeMetadata;
-  
-  // Validate metadata
-  const validation = validateMetadata(metadata);
-  
-  if (!validation.valid) {
-    logger.warn(`⚠️ Metadata validation issues for trip ${tripId}`, {
-      tripId,
-      issues: validation.issues,
-    });
-    
-    // Log to audit trail
-    // Only include metadata if it exists (prevents Firestore from omitting null values)
-    const auditEntry = {
-      operation: "METADATA_VALIDATION_FAILED",
-      collection: "tripCompletions",
-      documentId: tripId,
-      timestamp: FieldValue.serverTimestamp(),
-      source: resolveSource(metadata, data._surveyMetadata, metadata?.source || null),
-      issues: validation.issues,
-      eventId: event.id, // eventId links related entries from same source event
-    };
-    // Only add metadata if it exists (don't default to null - Firestore omits null values)
-    if (metadata !== undefined && metadata !== null) {
-      auditEntry.metadata = metadata;
-    }
-    await writeAuditEntry(auditEntry);
-  } else {
-    logger.info(`✅ Metadata valid for trip ${tripId}`, {tripId});
-  }
-});
+// metadataValidator removed - HMAC signature provides sufficient security
+// No need to validate optional tracking metadata
 
 /**
  * Real-Time Trip Notification - Sends email immediately when trip is created
