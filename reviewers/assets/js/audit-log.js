@@ -62,8 +62,18 @@ async function loadAuditLog() {
         
         // Build final list: CREATE/UPDATE entries with validation status attached
         auditLogData = [];
+        const metadataValidationCutoff = new Date('2025-12-11T00:00:00Z');
+        
         allEntries.forEach(entry => {
             if (entry.operation === 'VALIDATION') return; // Skip standalone validations
+            
+            // Suppress METADATA_VALIDATION_FAILED entries prior to Dec 11, 2025 (known bugs fixed)
+            if (entry.operation === 'METADATA_VALIDATION_FAILED') {
+                const entryDate = new Date(entry.timestamp);
+                if (entryDate < metadataValidationCutoff) {
+                    return; // Skip historical metadata validation failures
+                }
+            }
             
             const tripId = entry.tripId || entry.documentId;
             const tripValidations = entriesByTrip[tripId]?.validations || [];
