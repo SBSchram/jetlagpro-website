@@ -927,13 +927,9 @@
         <p><strong>Threat:</strong> Developer changes trip or survey data after collection to improve outcomes.</p>
         <p><strong>Prevention:</strong> Every database change is automatically recorded in an audit log that tracks who made the change. Any unauthorized changes are visible in the public <a href="reviewers/audit-log.html">audit log</a>.</p>
 
-        <h4>3. Deleting Evidence</h4>
-        <p><strong>Threat:</strong> Developer deletes audit logs to hide tampering.</p>
-        <p><strong>Prevention:</strong> Audit logs are written to an immutable archive that cannot be deleted or modified. Any tampering with the live database is detectable by comparing it against the permanent archive.</p>
-
-        <h4>4. Tampering with Security Code</h4>
-        <p><strong>Threat:</strong> Developer modifies the security code itself to bypass audit logging.</p>
-        <p><strong>Prevention:</strong> All security code is publicly visible in the GitHub repository. Reviewers can compare published code against what's deployed, and deployment history shows when changes were made.</p>
+        <h4>3. Tamper Detection</h4>
+        <p><strong>Threat:</strong> Developer deletes audit logs or modifies security code to hide tampering.</p>
+        <p><strong>Prevention:</strong> Audit logs are stored in an immutable archive. Security code is publicly visible. Both can be independently verified.</p>
  		
 	   
 	   <h3>How to Verify the Data</h3>
