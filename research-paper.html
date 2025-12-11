@@ -930,40 +930,6 @@
         <h4>3. Tamper Detection</h4>
         <p><strong>Threat:</strong> Developer deletes audit logs or modifies security code to hide tampering.</p>
         <p><strong>Prevention:</strong> Audit logs are stored in an immutable archive. Security code is publicly visible. Both can be independently verified.</p>
- 		
-	   
-	   <h3>How to Verify the Data</h3>
-
-        <p>Anyone can verify that the data hasn't been tampered with. No special access required.</p>
-
-        <h4>View the Audit Log</h4>
-        <p>Visit <a href="reviewers/audit-log.html">jetlagpro.com/reviewers/audit-log</a> to see every database change in real-time:</p>
-        <ul style="margin-left: 40px; padding-left: 20px;">
-            <li>When each trip was created or modified</li>
-            <li>Whether the change came from the App, Survey, or Console</li>
-            <li>Which trips are from real users vs test devices</li>
-            <li>Whether trip IDs have valid cryptographic signatures</li>
-        </ul>
-        <p>Console-originated changes are clearly marked, making any developer tampering immediately visible.</p>
-
-        <h4>Run the Verification Script</h4>
-        <p>Compare the live database against the immutable archive:</p>
-        <ol style="margin-left: 40px; padding-left: 20px;">
-            <li>Visit <a href="reviewers/verify.html">jetlagpro.com/reviewers/verify</a></li>
-            <li>Click "Run Verification" (runs in your browser, no installation needed)</li>
-            <li>Review the results: any discrepancies indicate tampering</li>
-        </ol>
-        <p>The verification tool downloads data from both the live database and the immutable archive, then compares them. Because the archive cannot be deleted or modified (even by the developer), any differences prove the live database was tampered with.</p>
-
-        <h4>For Technical Reviewers</h4>
-        <p>Run the verification script yourself:</p>
-        <ol style="margin-left: 40px; padding-left: 20px;">
-            <li>Download the script: <code>curl -o verify.py https://jetlagpro.com/scripts/verify_audit_consistency.py</code></li>
-            <li>Run it: <code>python verify.py</code></li>
-            <li>Check the output for discrepancies</li>
-        </ol>
-        <p>The script compares the live database against the immutable archive and reports any differences. Source code is available at <code>github.com/SBSchram/jetlagpro-website/tree/main/scripts</code>.</p>
-
 
 		</div>
     </main>
