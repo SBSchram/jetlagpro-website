@@ -269,7 +269,7 @@ function validateMetadata(metadata) {
   // Validate build number (if present)
   if (metadata.appBuild) {
     const buildNum = parseInt(metadata.appBuild);
-    if (isNaN(buildNum) || buildNum < 1 || buildNum > 1000) {
+    if (isNaN(buildNum) || buildNum < 0 || buildNum > 1000) {
       issues.push("invalid_build_number");
     }
   }
