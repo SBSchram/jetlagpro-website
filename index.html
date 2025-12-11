@@ -348,11 +348,11 @@
                     </div>
                     
                     <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
-                        <div class="modal-content">
+                        <div class="modal-content" id="testflightModalContent" style="cursor: pointer;">
                             <div class="modal-body">
-                                <p id="testflightModalDescription">After TestFlight shows you this screen, close it and return here.</p>
+                                <p id="testflightModalDescription">Click anywhere to go to TestFlight</p>
                                 <div class="modal-image-wrapper">
-                                    <img src="assets/images/TestFlightRedeem.JPG?v=3" alt="Screenshot of TestFlight Redeem screen that should be closed" class="modal-image">
+                                    <img src="assets/images/TestFlightRedeem.JPG?v=3" alt="Screenshot of TestFlight Redeem screen" class="modal-image">
                                 </div>
                                 <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Continue to TestFlight</button>
                             </div>
@@ -470,12 +470,29 @@
         (function () {
             const testFlightButton = document.getElementById('openTestFlightModal');
             const modal = document.getElementById('testflightModal');
+            const modalContent = document.getElementById('testflightModalContent');
             const continueButton = document.getElementById('continueToTestFlight');
             const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
 
-            if (!testFlightButton || !modal || !continueButton) {
+            if (!testFlightButton || !modal || !modalContent || !continueButton) {
                 return;
             }
+
+            const goToTestFlight = () => {
+                // Prevent double-triggering
+                if (continueButton.disabled) return;
+                continueButton.disabled = true;
+                continueButton.textContent = 'Opening...';
+                
+                modal.classList.remove('is-visible');
+                document.body.classList.remove('modal-open');
+                
+                // Mark as visited to prevent re-prompts
+                sessionStorage.setItem('testflightVisited', 'true');
+                
+                // Navigate directly to avoid Safari's "Open in AppStore?" prompt on return
+                window.location.href = TESTFLIGHT_URL;
+            };
 
             const openModal = (event) => {
                 if (event) {
@@ -493,27 +510,28 @@
                 continueButton.focus({ preventScroll: true });
             };
 
-            const closeModal = () => {
-                modal.classList.remove('is-visible');
-                document.body.classList.remove('modal-open');
-                testFlightButton.focus({ preventScroll: true });
-            };
-
             testFlightButton.addEventListener('click', openModal);
 
-            continueButton.addEventListener('click', () => {
-                // Prevent double-triggering
-                if (continueButton.disabled) return;
-                continueButton.disabled = true;
-                continueButton.textContent = 'Opening...';
-                
-                closeModal();
-                
-                // Mark as visited to prevent re-prompts
-                sessionStorage.setItem('testflightVisited', 'true');
-                
-                // Navigate directly to avoid Safari's "Open in AppStore?" prompt on return
-                window.location.href = TESTFLIGHT_URL;
+            // Make entire modal content clickable
+            modalContent.addEventListener('click', (e) => {
+                // Prevent event from bubbling to overlay
+                e.stopPropagation();
+                goToTestFlight();
+            });
+
+            // Button click also works (for accessibility)
+            continueButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToTestFlight();
+            });
+
+            // Clicking overlay (outside modal) closes it
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('is-visible');
+                    document.body.classList.remove('modal-open');
+                    testFlightButton.focus({ preventScroll: true });
+                }
             });
         })();
 
