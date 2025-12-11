@@ -4,7 +4,13 @@ This is the official website for JetLagPro, hosted on GitHub Pages.
 
 ## About
 
-JetLagPro is an iOS app that uses traditional Chinese acupressure techniques to help travelers overcome jet lag naturally. This website serves as the landing page and provides information about the app's features and benefits.
+JetLagPro is an iOS app that uses traditional Chinese acupressure techniques to help travelers overcome jet lag naturally. This website serves as the landing page, research documentation, and data collection platform.
+
+### Key Features
+- **Research Platform:** Clinical trial data collection via web surveys
+- **Data Integrity:** Immutable audit logging with independent verification
+- **Security:** HMAC-signed trip IDs prevent data fabrication
+- **Transparency:** Public audit logs and verification tools
 
 ## Local Development
 
@@ -48,11 +54,29 @@ Name: @
 Value: yourusername.github.io
 ```
 
+## Documentation
+
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and major changes
+- **[DATA-INTEGRITY-IMPLEMENTATION.md](DATA-INTEGRITY-IMPLEMENTATION.md)** - Data security architecture
+- **[Research Paper](https://jetlagpro.com/research-paper.html)** - Scientific background and methodology
+
 ## File Structure
 
+### Website
 - `index.html` - Main landing page
+- `survey.html` - Post-trip survey
+- `research-paper.html` - Scientific documentation
 - `styles.css` - CSS styles
 - `CNAME` - Custom domain configuration
+
+### Backend
+- `functions/` - Firebase Cloud Functions (audit logging, validation)
+- `firestore.rules` - Firebase Security Rules
+- `scripts/` - Verification and analysis tools
+
+### Documentation
+- `CHANGELOG.md` - Version history
+- `DATA-INTEGRITY-IMPLEMENTATION.md` - Security architecture
 - `README.md` - This file
 
 ## Contributing
