@@ -348,13 +348,41 @@
                     </div>
                     
                     <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
-                        <div class="modal-content" id="testflightModalContent" style="cursor: pointer;">
-                            <div class="modal-body">
-                                <p id="testflightModalDescription">Click anywhere to go to TestFlight</p>
-                                <div class="modal-image-wrapper">
-                                    <img src="assets/images/TestFlightRedeem.JPG?v=3" alt="Screenshot of TestFlight Redeem screen" class="modal-image">
+                        <div class="modal-content" id="testflightModalContent">
+                            <div class="modal-pages">
+                                <!-- Page 1: Install TestFlight -->
+                                <div class="modal-page active" data-page="1">
+                                    <div class="modal-body">
+                                        <h3 id="testflightModalTitle">Step 1: Install TestFlight</h3>
+                                        <p id="testflightModalDescription">We'll take you to the App Store to install TestFlight.</p>
+                                        <div class="modal-icon">
+                                            <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
+                                        </div>
+                                        <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer;">Open App Store</button>
+                                    </div>
                                 </div>
-                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Continue to TestFlight</button>
+                                
+                                <!-- Page 2: Return to Safari -->
+                                <div class="modal-page" data-page="2">
+                                    <div class="modal-body">
+                                        <h3>Step 2: Return to Safari</h3>
+                                        <p><strong>After installing TestFlight:</strong></p>
+                                        <ol style="text-align: left; margin: 20px 0; padding-left: 20px;">
+                                            <li>Return to this Safari tab</li>
+                                            <li>Click the <strong>"Get JetLagPro"</strong> button below</li>
+                                        </ol>
+                                        <div class="modal-icon">
+                                            <span style="font-size: 64px;">🔙</span>
+                                        </div>
+                                        <button type="button" class="btn btn-primary modal-primary" id="closeModal">Got it</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Page Indicators -->
+                            <div class="modal-indicators">
+                                <span class="modal-indicator active" data-page="1" aria-label="Page 1 of 2"></span>
+                                <span class="modal-indicator" data-page="2" aria-label="Page 2 of 2"></span>
                             </div>
                         </div>
                     </div>
@@ -466,16 +494,54 @@
 
         // Clean two-step process - no auto-copy needed
         
-        // TestFlight warning modal
+        // TestFlight multi-page modal
         (function () {
             const testFlightButton = document.getElementById('openTestFlightModal');
             const modal = document.getElementById('testflightModal');
             const modalContent = document.getElementById('testflightModalContent');
             const continueButton = document.getElementById('continueToTestFlight');
+            const closeButton = document.getElementById('closeModal');
             const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
+            
+            let currentPage = 1;
+            const pages = document.querySelectorAll('.modal-page');
+            const indicators = document.querySelectorAll('.modal-indicator');
 
             if (!testFlightButton || !modal || !modalContent || !continueButton) {
                 return;
+            }
+
+            // Page navigation functions
+            function showPage(pageNumber) {
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.remove('active', 'prev');
+                });
+                
+                // Show target page
+                const targetPage = document.querySelector(`.modal-page[data-page="${pageNumber}"]`);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index + 1 === pageNumber);
+                });
+                
+                currentPage = pageNumber;
+            }
+
+            function nextPage() {
+                if (currentPage < 2) {
+                    showPage(currentPage + 1);
+                }
+            }
+
+            function prevPage() {
+                if (currentPage > 1) {
+                    showPage(currentPage - 1);
+                }
             }
 
             const goToTestFlight = () => {
@@ -484,14 +550,20 @@
                 continueButton.disabled = true;
                 continueButton.textContent = 'Opening...';
                 
+                // Mark that user is going to App Store
+                sessionStorage.setItem('testflightVisited', 'true');
+                sessionStorage.setItem('testflightPage2Pending', 'true');
+                
+                // Navigate to App Store
+                window.location.href = TESTFLIGHT_URL;
+            };
+
+            const closeModal = () => {
                 modal.classList.remove('is-visible');
                 document.body.classList.remove('modal-open');
-                
-                // Mark as visited to prevent re-prompts
-                sessionStorage.setItem('testflightVisited', 'true');
-                
-                // Navigate directly to avoid Safari's "Open in AppStore?" prompt on return
-                window.location.href = TESTFLIGHT_URL;
+                // Reset to Page 1 for next time
+                showPage(1);
+                sessionStorage.removeItem('testflightPage2Pending');
             };
 
             const openModal = (event) => {
@@ -500,37 +572,88 @@
                 }
                 
                 // If already visited TestFlight, skip modal and go directly
-                if (sessionStorage.getItem('testflightVisited') === 'true') {
+                if (sessionStorage.getItem('testflightVisited') === 'true' && 
+                    sessionStorage.getItem('testflightPage2Pending') !== 'true') {
                     window.location.href = TESTFLIGHT_URL;
                     return;
                 }
                 
+                // Check if we should show Page 2 (user returned from App Store)
+                const shouldShowPage2 = sessionStorage.getItem('testflightPage2Pending') === 'true';
+                
                 modal.classList.add('is-visible');
                 document.body.classList.add('modal-open');
-                continueButton.focus({ preventScroll: true });
+                
+                if (shouldShowPage2) {
+                    showPage(2);
+                    if (closeButton) {
+                        closeButton.focus({ preventScroll: true });
+                    }
+                } else {
+                    showPage(1);
+                    continueButton.focus({ preventScroll: true });
+                }
             };
 
+            // Event listeners
             testFlightButton.addEventListener('click', openModal);
 
-            // Make entire modal content clickable
-            modalContent.addEventListener('click', (e) => {
-                // Prevent event from bubbling to overlay
-                e.stopPropagation();
-                goToTestFlight();
-            });
+            // Make Page 1 fully clickable (maintains current UX)
+            const page1Body = document.querySelector('.modal-page[data-page="1"] .modal-body');
+            if (page1Body) {
+                page1Body.addEventListener('click', (e) => {
+                    // Don't trigger if clicking the button itself (button handles it)
+                    if (e.target !== continueButton && !continueButton.contains(e.target)) {
+                        goToTestFlight();
+                    }
+                });
+            }
 
-            // Button click also works (for accessibility)
+            // Button click handlers
             continueButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 goToTestFlight();
             });
 
+            if (closeButton) {
+                closeButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeModal();
+                });
+            }
+
             // Clicking overlay (outside modal) closes it
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
-                    modal.classList.remove('is-visible');
-                    document.body.classList.remove('modal-open');
+                    closeModal();
                     testFlightButton.focus({ preventScroll: true });
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!modal.classList.contains('is-visible')) return;
+                
+                if (e.key === 'Escape') {
+                    closeModal();
+                    testFlightButton.focus({ preventScroll: true });
+                } else if (e.key === 'ArrowLeft' && currentPage > 1) {
+                    prevPage();
+                } else if (e.key === 'ArrowRight' && currentPage < 2) {
+                    nextPage();
+                }
+            });
+
+            // Check on page load if user returned from App Store
+            window.addEventListener('pageshow', (e) => {
+                if (e.persisted || (performance.navigation && performance.navigation.type === 2)) {
+                    // Page was loaded from cache (user likely returned)
+                    if (sessionStorage.getItem('testflightPage2Pending') === 'true') {
+                        // Small delay to ensure page is fully loaded
+                        setTimeout(() => {
+                            openModal();
+                        }, 500);
+                    }
                 }
             });
         })();
