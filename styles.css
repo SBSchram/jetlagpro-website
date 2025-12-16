@@ -302,14 +302,14 @@ body {
 }
 
 .btn-primary {
-    background: #764ba2;
+    background: #2563eb;
     color: white;
-    border-color: #764ba2;
+    border-color: #2563eb;
 }
 
 .btn-primary:hover {
-    background: #667eea;
-    border-color: #667eea;
+    background: #1d4ed8;
+    border-color: #1d4ed8;
     transform: translateY(-2px);
 }
 
