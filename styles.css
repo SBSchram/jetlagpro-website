@@ -1368,7 +1368,7 @@ body {
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
-    display: none;
+    display: none !important;
     flex-direction: column;
     gap: 12px;
 }
@@ -2940,7 +2940,7 @@ body.swiping * {
 
 .modal-body p {
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     line-height: 1.5;
     font-weight: 400;
 }
@@ -3241,7 +3241,7 @@ body.modal-open {
 .modal-visual {
     position: relative;
     text-align: center;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .quit-overlay {
@@ -3257,6 +3257,7 @@ body.modal-open {
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     z-index: 10;
+    text-align: center;
 }
 
 .quit-overlay small {
