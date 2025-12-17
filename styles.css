@@ -3238,22 +3238,59 @@ body.modal-open {
     }
 }
 
+.modal-visual {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.quit-overlay {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.quit-overlay small {
+    display: block;
+    font-size: 11px;
+    margin-top: 2px;
+    opacity: 0.9;
+}
+
 /* Mobile responsive for modal pages */
 @media (max-width: 768px) {
     .modal-pages {
         min-height: 250px;
     }
-    
+
     .modal-body h3 {
         font-size: 1.2rem;
     }
-    
+
     .modal-body p {
         font-size: 0.95rem;
     }
-    
+
     .modal-icon {
         margin: 15px 0;
+    }
+
+    .modal-visual img {
+        width: 180px !important;
+    }
+
+    .quit-overlay {
+        font-size: 12px;
+        padding: 4px 8px;
     }
 }
  
