@@ -87,7 +87,6 @@ The audit log viewer provides a real-time interface to explore all database oper
 - All CREATE, UPDATE, DELETE operations with timestamps
 - Source identification for each operation (ios_app, web_survey, firebase_console)
 - HMAC signature validation results
-- Metadata validation results
 
 **How to use:**
 1. Open the URL in your browser
@@ -215,14 +214,15 @@ The dual-write system logs every operation to both Firestore (for real-time view
 
 **How matching works:**
 The verification tool uses a composite key (`operation-documentId`) to match entries between Firestore and GCS. This is important because:
-- One document creation event can produce multiple audit entries (CREATE, METADATA_VALIDATION_FAILED, HMAC_VALIDATION_FAILED)
+- One document creation event can produce multiple audit entries (CREATE, HMAC_VALIDATION_FAILED)
 - These entries share the same `eventId` (which identifies the source event, not the audit entry)
 - Using `operation-documentId` ensures each audit entry is matched independently
-- For example: `CREATE-{tripId}` matches the CREATE entry, while `METADATA_VALIDATION_FAILED-{tripId}` matches the validation entry
+- For example: `CREATE-{tripId}` matches the CREATE entry, while `HMAC_VALIDATION_FAILED-{tripId}` matches the validation entry
+- Note: METADATA_VALIDATION_FAILED entries no longer exist (metadata validation removed Dec 11, 2025)
 
 **What this confirms:**
 **Normalization safeguards:**
-Before hashing, both Firestore and GCS entries are normalized by stripping null / undefined fields and empty metadata objects. This eliminates false mismatches caused by Firestore omitting optional values (for example, `travelDirection` or `_writeMetadata` fields set to null) while still surfacing real differences.
+Before hashing, both Firestore and GCS entries are normalized by stripping null / undefined fields. This eliminates false mismatches caused by Firestore omitting optional values (for example, `travelDirection` fields set to null) while still surfacing real differences.
 
 **If you see a discrepancy (post–Nov 21, 2025 verifier build):**
 1. Check the verifier build label on `verify.html` and confirm it matches the latest commit noted in the release notes.
@@ -239,16 +239,16 @@ If you see discrepancies in post-deployment entries, that would indicate potenti
 
 ### 4. Survey Data Integrity
 
-When participants complete surveys, their responses update the existing trip record. The system preserves the original trip creation metadata while adding survey-specific metadata. This allows you to trace both when the trip was completed (from the app) and when the survey was submitted (from the web).
+When participants complete surveys, their responses update the existing trip record. The system automatically logs the operation type, allowing you to trace both when the trip was completed (from the app) and when the survey was submitted (from the web).
 
 **What to verify:** Survey submissions are properly logged and traceable to their source.
 
 **How to verify:**
 - Open `audit-log.html`
 - Filter by operation: UPDATE
-- You should see updates showing `source: "web_survey"` in the `_surveyMetadata` field
-- The `changes` field should show survey-related fields being added (e.g., `surveyCompleted`, `sleepPost`, `fatiguePost`, etc.)
-- The original `_writeMetadata` should be preserved (not overwritten), showing the trip was originally created by the iOS app
+- You should see updates with `source: "web_survey"` (derived from operation type)
+- The `changes` field should show survey-related fields being added (e.g., `surveyCompleted`, `surveySubmittedAt`, `sleepPost`, `fatiguePost`, etc.)
+- CREATE operations show `source: "ios_app"` (trip creation from the app)
 
 **What you'll see:**
 ```
@@ -256,10 +256,9 @@ Trip ID: 2330B376-MXPE-251111-1622-A7F3C9E2
 Operation: UPDATE
 Source: web_survey
 Changed Fields: surveyCompleted, surveySubmittedAt, sleepPost, fatiguePost, ...
-Original Source: ios_app (preserved in _writeMetadata)
 ```
 
-This shows the trip was created by the iOS app, and later updated with survey data from the web survey. Both metadata objects are preserved, providing a complete audit trail.
+The audit log shows the complete sequence: CREATE (ios_app) followed by UPDATE (web_survey), providing a complete audit trail without needing metadata fields.
 
 ### 5. GCS Archive Accessibility
 
@@ -338,10 +337,10 @@ async function writeAuditEntry(auditEntry) {
 **File:** `firestore.rules`
 
 **Key rules:**
-- Blocks creates without `_writeMetadata`
+- Validates trip ID format (HMAC signature provides authentication)
 - Blocks updates after `surveyCompleted: true` (except allowed fields)
 - Blocks ALL deletes
-- Only allows writes from `ios_app` or `web_survey` sources
+- Source detection based on operation type (CREATE → ios_app, UPDATE → web_survey)
 
 ---
 
