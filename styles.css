@@ -302,14 +302,14 @@ body {
 }
 
 .btn-primary {
-    background: #764ba2;
+    background: #2563eb;
     color: white;
-    border-color: #764ba2;
+    border-color: #2563eb;
 }
 
 .btn-primary:hover {
-    background: #667eea;
-    border-color: #667eea;
+    background: #1d4ed8;
+    border-color: #1d4ed8;
     transform: translateY(-2px);
 }
 
@@ -1368,7 +1368,7 @@ body {
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
-    display: none;
+    display: none !important;
     flex-direction: column;
     gap: 12px;
 }
@@ -2939,10 +2939,10 @@ body.swiping * {
 }
 
 .modal-body p {
-    color: #dc2626;
-    margin-bottom: 20px;
+    color: #333;
+    margin-bottom: 10px;
     line-height: 1.5;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .modal-image-wrapper {
@@ -2984,6 +2984,96 @@ body.swiping * {
 
 .modal-close:hover {
     color: #1e40af;
+}
+
+/* Multi-page modal styles */
+.modal-pages {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.modal-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.modal-page.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    position: relative;
+}
+
+.modal-page.prev {
+    transform: translateX(-100%);
+}
+
+.modal-icon {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-icon img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+}
+
+.modal-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.modal-indicator.active {
+    background: #2563eb;
+}
+
+.modal-body ol {
+    text-align: left;
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.modal-body ol li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* Make Page 1 fully clickable (maintains current UX) */
+.modal-page[data-page="1"] .modal-body {
+    cursor: pointer;
+}
+
+.modal-page[data-page="1"] .modal-body:hover {
+    opacity: 0.95;
+}
+
+/* Page 2 specific styles */
+.modal-page[data-page="2"] .modal-body {
+    cursor: default;
 }
 
 body.modal-open {
@@ -3145,6 +3235,63 @@ body.modal-open {
     
     .point-card {
         padding: 15px;
+    }
+}
+
+.modal-visual {
+    position: relative;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.quit-overlay {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    text-align: center;
+}
+
+.quit-overlay small {
+    display: block;
+    font-size: 11px;
+    margin-top: 2px;
+    opacity: 0.9;
+}
+
+/* Mobile responsive for modal pages */
+@media (max-width: 768px) {
+    .modal-pages {
+        min-height: 250px;
+    }
+
+    .modal-body h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-body p {
+        font-size: 0.95rem;
+    }
+
+    .modal-icon {
+        margin: 15px 0;
+    }
+
+    .modal-visual img {
+        width: 180px !important;
+    }
+
+    .quit-overlay {
+        font-size: 12px;
+        padding: 4px 8px;
     }
 }
  

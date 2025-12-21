@@ -45,7 +45,7 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20251211130933">
+    <link rel="stylesheet" href="styles.css?v=20251212140308">
     <script src="load-common-head.js?v=20251211130933"></script>
 </head>
 <body>
@@ -240,13 +240,13 @@
     </script>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20251211130933"></script>
+    <script src="js/components.js?v=20251212140200"></script>
     
     <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js?v=20251211130933"></script>
+    <script src="js/translate.js?v=20251212140000"></script>
     
     <!-- Notification Manager -->
-    <script src="notifications.js?v=20251211130933"></script>
+    <script src="notifications.js?v=20251212140000"></script>
 
     <main>
         <section class="hero-simple">
@@ -255,7 +255,7 @@
                 <p class="hero-subtitle">The chronoacupuncture app that works with your body's natural rhythms</p>
                 <div class="hero-buttons">
                     <a href="demo/" class="btn btn-primary">Try Interactive Demo</a>
-                    <a href="#download" class="btn btn-secondary">Get the App</a>
+                    <a href="#download" class="btn btn-primary">Get the App</a>
                 </div>
             </div>
         </section>
@@ -348,13 +348,16 @@
                     </div>
                     
                     <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
-                        <div class="modal-content" id="testflightModalContent" style="cursor: pointer;">
+                        <div class="modal-content" id="testflightModalContent">
                             <div class="modal-body">
-                                <p id="testflightModalDescription">Click anywhere to go to TestFlight</p>
-                                <div class="modal-image-wrapper">
-                                    <img src="assets/images/TestFlightRedeem.JPG?v=3" alt="Screenshot of TestFlight Redeem screen" class="modal-image">
+                                <h3 id="testflightModalTitle" style="font-size: 1.5em;">What Happens Next</h3>
+                                <p id="testflightModalDescription"><strong>After TestFlight Installs - you will see</strong></p>
+                                <div class="modal-visual" style="margin-top: 5px;">
+                                    <img src="assets/images/TestFlightRedeem.JPG?v=20251212140307" alt="TestFlight redeem screen" style="width: 200px; border-radius: 8px; opacity: 0.9;">
+                                    <div class="quit-overlay">❌ QUIT HERE<br><small style="font-size: 10px;">(Don't enter code)</small></div>
                                 </div>
-                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Continue to TestFlight</button>
+                                <p style="text-align: center; margin: 10px 0 0 0;"><strong style="color: #ef4444;">CLOSE TestFlight when you see</strong><br><strong style="color: #000; font-size: 1.4em;">Ready To Test</strong></p>
+                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer; margin-top: 15px;">Continue to App Store</button>
                             </div>
                         </div>
                     </div>
@@ -466,70 +469,59 @@
 
         // Clean two-step process - no auto-copy needed
         
-        // TestFlight warning modal
+        // TestFlight modal - Simple trap warning
         (function () {
             const testFlightButton = document.getElementById('openTestFlightModal');
             const modal = document.getElementById('testflightModal');
-            const modalContent = document.getElementById('testflightModalContent');
             const continueButton = document.getElementById('continueToTestFlight');
             const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
 
-            if (!testFlightButton || !modal || !modalContent || !continueButton) {
+            if (!testFlightButton || !modal || !continueButton) {
                 return;
             }
 
-            const goToTestFlight = () => {
-                // Prevent double-triggering
-                if (continueButton.disabled) return;
-                continueButton.disabled = true;
-                continueButton.textContent = 'Opening...';
-                
-                modal.classList.remove('is-visible');
-                document.body.classList.remove('modal-open');
-                
-                // Mark as visited to prevent re-prompts
-                sessionStorage.setItem('testflightVisited', 'true');
-                
-                // Navigate directly to avoid Safari's "Open in AppStore?" prompt on return
-                window.location.href = TESTFLIGHT_URL;
-            };
-
+            // Open modal - show trap warning
             const openModal = (event) => {
                 if (event) {
                     event.preventDefault();
                 }
-                
-                // If already visited TestFlight, skip modal and go directly
-                if (sessionStorage.getItem('testflightVisited') === 'true') {
-                    window.location.href = TESTFLIGHT_URL;
-                    return;
-                }
-                
                 modal.classList.add('is-visible');
                 document.body.classList.add('modal-open');
                 continueButton.focus({ preventScroll: true });
             };
 
+            // Close modal
+            const closeModal = () => {
+                modal.classList.remove('is-visible');
+                document.body.classList.remove('modal-open');
+            };
+
+            // Navigate to App Store - close modal and go
+            const goToAppStore = () => {
+                if (continueButton.disabled) return;
+                continueButton.disabled = true;
+                continueButton.textContent = 'Opening...';
+                
+                closeModal();
+                window.location.href = TESTFLIGHT_URL;
+            };
+
+            // Event listeners
             testFlightButton.addEventListener('click', openModal);
+            continueButton.addEventListener('click', goToAppStore);
 
-            // Make entire modal content clickable
-            modalContent.addEventListener('click', (e) => {
-                // Prevent event from bubbling to overlay
-                e.stopPropagation();
-                goToTestFlight();
-            });
-
-            // Button click also works (for accessibility)
-            continueButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                goToTestFlight();
-            });
-
-            // Clicking overlay (outside modal) closes it
+            // Close on overlay click
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
-                    modal.classList.remove('is-visible');
-                    document.body.classList.remove('modal-open');
+                    closeModal();
+                    testFlightButton.focus({ preventScroll: true });
+                }
+            });
+
+            // Escape key closes modal
+            document.addEventListener('keydown', (e) => {
+                if (modal.classList.contains('is-visible') && e.key === 'Escape') {
+                    closeModal();
                     testFlightButton.focus({ preventScroll: true });
                 }
             });
