@@ -802,6 +802,13 @@ function validateSection(sectionId) {
 async function submitSurvey() {
     console.log('📤 Submitting survey...');
     
+    // Check if survey access is blocked
+    if (window.surveyBlocked) {
+        console.error('❌ Survey submission blocked - trip data not found');
+        alert('This survey is not available. The trip data required for this survey could not be found.');
+        return;
+    }
+    
     // Check if code is validated
     if (!isCodeValidated) {
         alert('Please enter a valid survey code to submit your responses.');
@@ -1293,7 +1300,7 @@ async function checkAndPreFillExistingSurvey() {
             return;
         }
         
-        console.log('🔍 Checking for existing survey data for tripId:', tripId);
+        console.log('🔍 Checking for trip data for tripId:', tripId);
         
         // Get the trip document from Firebase
         const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
@@ -1316,10 +1323,165 @@ async function checkAndPreFillExistingSurvey() {
                 console.log('ℹ️ Trip exists but no survey data - new survey');
             }
         } else {
-            console.log('ℹ️ Trip not found - new survey');
+            // Trip data doesn't exist - check if this is an existing survey being edited
+            console.log('⚠️ Trip data not found - checking for existing survey data');
+            
+            try {
+                const surveyResult = await checkExistingSurveyByTripIdWithService(tripId);
+                
+                if (surveyResult.exists) {
+                    // Survey exists but trip data doesn't - allow editing (developer scenario)
+                    console.log('✅ Found existing survey data (editing mode) - trip data missing but survey exists');
+                    isExistingSurvey = true;
+                    
+                    // Update the heading
+                    updateSurveyHeading(tripId);
+                    
+                    // Pre-fill with survey data if available
+                    if (surveyResult.data) {
+                        prefillSurveyWithSurveyData(surveyResult.data);
+                    }
+                } else {
+                    // No trip data AND no survey data - block access
+                    console.error('❌ Trip data not found and no existing survey - blocking access');
+                    blockSurveyAccess();
+                    return;
+                }
+            } catch (surveyError) {
+                console.error('❌ Error checking for existing survey:', surveyError);
+                // If we can't check for existing survey, block access to be safe
+                blockSurveyAccess();
+                return;
+            }
         }
     } catch (error) {
         console.error('❌ Error checking for existing survey:', error);
+        // On error, block access to be safe
+        blockSurveyAccess();
+    }
+}
+
+// Block survey access when trip data is missing
+function blockSurveyAccess() {
+    console.log('🚫 Blocking survey access - trip data not found');
+    
+    // Hide survey content
+    const surveyContent = document.getElementById('surveyContent');
+    const previewSection = document.querySelector('.survey-preview');
+    
+    if (surveyContent) {
+        surveyContent.style.display = 'none';
+    }
+    
+    if (previewSection) {
+        previewSection.style.display = 'none';
+    }
+    
+    // Create and show error message
+    const surveyMainColumn = document.querySelector('.survey-main-column');
+    if (surveyMainColumn) {
+        // Remove any existing error message
+        const existingError = surveyMainColumn.querySelector('.survey-blocked-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Create error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'survey-blocked-error survey-card';
+        errorDiv.style.cssText = `
+            margin: 40px auto;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        `;
+        
+        errorDiv.innerHTML = `
+            <h2 style="color: #ef4444; margin-bottom: 20px;">Survey Not Available</h2>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                This survey link is not valid. The trip data required for this survey could not be found.
+            </p>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.5;">
+                If you believe this is an error, please contact support.
+            </p>
+        `;
+        
+        surveyMainColumn.insertBefore(errorDiv, surveyMainColumn.firstChild);
+    }
+    
+    // Disable submission button if it exists
+    const submitBtn = document.getElementById('submitSurveyBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.display = 'none';
+    }
+    
+    // Set a flag to prevent any form submission
+    window.surveyBlocked = true;
+}
+
+// Pre-fill survey with survey data (for editing existing surveys when trip data is missing)
+function prefillSurveyWithSurveyData(surveyData) {
+    console.log('📝 Pre-filling survey with existing survey data...');
+    console.log('🔍 Full surveyData object:', surveyData);
+    
+    // Pre-fill demographic fields
+    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
+    demographicFields.forEach(field => {
+        if (surveyData[field]) {
+            const element = document.querySelector(`select[name="${field}"]`);
+            if (element) {
+                element.value = surveyData[field];
+                console.log(`✅ Pre-filled ${field} with value: ${surveyData[field]}`);
+            }
+        }
+    });
+    
+    // Pre-fill rating fields
+    const ratingFields = [
+        'generalAnticipated',
+        'sleepPre', 'sleepExpectations', 'sleepPost',
+        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
+        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
+        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
+        'giPre', 'giExpectations', 'giPost'
+    ];
+    
+    ratingFields.forEach(field => {
+        if (surveyData[field] !== undefined && surveyData[field] !== null) {
+            const value = surveyData[field];
+            const selector = `input[name="${field}"][value="${value}"]`;
+            const radio = document.querySelector(selector);
+            if (radio) {
+                const allRadiosInGroup = document.querySelectorAll(`input[name="${field}"]`);
+                allRadiosInGroup.forEach(r => {
+                    const label = document.querySelector(`label[for="${r.id}"]`);
+                    if (label) {
+                        label.classList.remove('selected');
+                    }
+                });
+                
+                radio.checked = true;
+                const label = document.querySelector(`label[for="${radio.id}"]`);
+                if (label) {
+                    label.classList.add('selected');
+                }
+                
+                const event = new Event('change', { bubbles: true });
+                radio.dispatchEvent(event);
+            }
+        }
+    });
+    
+    // Pre-fill comments
+    if (surveyData.userComment) {
+        const commentField = document.querySelector('#userComment');
+        if (commentField) {
+            commentField.value = surveyData.userComment;
+        }
     }
 }
 
