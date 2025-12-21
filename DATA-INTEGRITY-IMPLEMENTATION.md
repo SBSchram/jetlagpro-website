@@ -370,7 +370,7 @@ async function writeAuditEntry(auditEntry) {
 - Verification Script: `https://github.com/SBSchram/jetlagpro-website/tree/main/scripts`
 
 **Documentation:**
-- Research Paper Appendix: `https://jetlagpro.com/research-paper.html#appendix-data-integrity`
+- Authentication Methods: `scripts/verify_trip_signatures.py` (detailed HMAC authentication documentation)
 
 ---
 
