@@ -27,6 +27,41 @@ body {
     min-width: 1200px; /* Ensure desktop minimum width */
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        overflow-x: auto;
+    }
+    
+    .container {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+    
+    .analysis-subnav {
+        font-size: 0.75rem;
+        padding: 8px 5px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .analysis-subnav a {
+        margin-right: 10px;
+        font-size: 0.75rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
+
 /* Analysis Page Sub-Menu */
 .analysis-subnav {
     position: sticky;

@@ -39,6 +39,32 @@
     padding: 20px 20px 20px 40px; /* More left padding for white space */
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .reviewer-nav {
+        font-size: 0.8rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .reviewer-nav a {
+        margin-right: 6px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
+
 /* Common Header Styles - Used by multiple pages */
 .header {
     padding: 0;

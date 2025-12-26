@@ -22,6 +22,36 @@ body {
     min-width: 1200px; /* Ensure desktop minimum width */
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+    
+    .stats-bar {
+        flex-wrap: wrap;
+        gap: 15px;
+        font-size: 0.8rem;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .audit-table {
+        font-size: 0.75rem;
+        min-width: 800px;
+    }
+    
+    .audit-table th,
+    .audit-table td {
+        padding: 6px 4px;
+    }
+}
+
 /* Header and refresh button styles moved to reviewers.css */
 
 /* Stats Summary */

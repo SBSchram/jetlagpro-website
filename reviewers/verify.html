@@ -72,6 +72,31 @@
             margin: 0 0 15px 0;
             text-align: center;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px !important;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .verification-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .data-section {
+                padding: 15px;
+            }
+            
+            .data-section pre {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+        }
     </style>
     <!-- CryptoJS for HMAC-SHA256 validation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
