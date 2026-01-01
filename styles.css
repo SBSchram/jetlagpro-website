@@ -3104,7 +3104,10 @@ body.modal-open {
     }
     
     .modal-body {
-        max-height: 75vh;
+        height: 400px;
+        max-height: 400px;
+        overflow-y: scroll !important;
+        -webkit-overflow-scrolling: touch;
         padding-bottom: 20px;
     }
     
