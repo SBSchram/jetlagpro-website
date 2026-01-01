@@ -45,7 +45,7 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20251212181000">
+    <link rel="stylesheet" href="styles.css?v=20251212182000">
     <script src="load-common-head.js?v=20251211130933"></script>
 </head>
 <body>
@@ -489,15 +489,11 @@
                     event.preventDefault();
                 }
                 
-                // Show modal FIRST (before locking body)
+                // Show modal
                 modal.classList.add('is-visible');
                 
-                // Save current scroll position
-                scrollPosition = window.pageYOffset;
-                
-                // Lock body with position: fixed (prevents iOS Safari scrolling)
+                // Lock body (simpler approach - just add class, let CSS handle it)
                 document.body.classList.add('modal-open');
-                document.body.style.top = `-${scrollPosition}px`;
                 
                 continueButton.focus({ preventScroll: true });
             };
@@ -506,10 +502,8 @@
             const closeModal = () => {
                 modal.classList.remove('is-visible');
                 
-                // Unlock body and restore scroll position
+                // Unlock body
                 document.body.classList.remove('modal-open');
-                document.body.style.top = '';
-                window.scrollTo(0, scrollPosition);
             };
 
             // Navigate to App Store - close modal and go
