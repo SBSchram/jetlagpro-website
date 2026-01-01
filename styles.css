@@ -2905,8 +2905,7 @@ body.swiping * {
     justify-content: center;
     padding: 20px;
     z-index: 2000;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 }
 
 .modal-overlay.is-visible {
@@ -2924,9 +2923,6 @@ body.swiping * {
     box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.4);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    max-height: 90vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .modal-content:hover {
@@ -3086,31 +3082,18 @@ body.modal-open {
 @media (max-width: 480px) {
     .modal-overlay {
         padding: 10px;
-        align-items: center;
-        overflow: hidden;
     }
     
     .modal-content {
         padding: 16px;
         margin: 0;
         max-height: calc(100vh - 20px);
-        height: calc(100vh - 20px);
         overflow-y: auto;
-        overflow-x: hidden;
-        display: flex;
-        flex-direction: column;
         -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
     }
     
     .modal-body {
-        flex: 1 1 auto;
-        overflow: visible;
-        padding-top: 0;
         padding-bottom: 20px;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
     }
     
     .modal-body h3 {
