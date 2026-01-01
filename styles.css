@@ -3085,9 +3085,10 @@ body.modal-open {
     }
     
     .modal-content {
-        padding: 16px;
+        padding: 12px;
         margin: 0;
-        max-height: calc(100vh - 20px);
+        height: 85vh;
+        max-height: 85vh;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
     }
@@ -3099,6 +3100,11 @@ body.modal-open {
     .modal-body h3 {
         margin-top: 0;
         margin-bottom: 8px;
+        font-size: 1.2rem;
+    }
+    
+    .modal-visual img {
+        width: 160px !important;
     }
     
     .modal-body p {
