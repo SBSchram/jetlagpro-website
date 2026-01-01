@@ -3081,30 +3081,48 @@ body.modal-open {
 
 @media (max-width: 480px) {
     .modal-overlay {
-        padding: 10px;
+        padding: 5px;
     }
     
     .modal-content {
-        padding: 12px;
+        padding: 10px;
         margin: 0;
-        height: 85vh;
-        max-height: 85vh;
-        overflow-y: scroll;
-        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
     }
     
     .modal-body {
-        padding-bottom: 20px;
+        padding-bottom: 10px;
     }
     
     .modal-body h3 {
         margin-top: 0;
+        margin-bottom: 6px;
+        font-size: 1.1rem;
+    }
+    
+    .modal-body p {
+        font-size: 0.85rem;
         margin-bottom: 8px;
-        font-size: 1.2rem;
+        margin-top: 4px;
+    }
+    
+    .modal-visual {
+        margin: 5px 0;
     }
     
     .modal-visual img {
-        width: 160px !important;
+        width: 140px !important;
+    }
+    
+    .modal-primary {
+        padding: 10px 16px;
+        font-size: 14px;
+        margin-top: 10px !important;
+    }
+    
+    .quit-overlay {
+        font-size: 11px;
+        padding: 3px 6px;
     }
     
     .modal-body p {
