@@ -3088,43 +3088,33 @@ body.modal-open {
 
 @media (max-width: 480px) {
     .modal-overlay {
-        padding: 5px;
+        padding: 10px;
     }
     
     .modal-content {
-        padding: 10px;
+        padding: 16px;
         margin: 0;
-        max-width: 100%;
+        max-height: 90vh;
     }
     
     .modal-body {
-        padding-bottom: 10px;
+        max-height: 75vh;
+        padding-bottom: 20px;
     }
     
     .modal-body h3 {
         margin-top: 0;
-        margin-bottom: 6px;
-        font-size: 1.1rem;
-    }
-    
-    .modal-body p {
-        font-size: 0.85rem;
         margin-bottom: 8px;
-        margin-top: 4px;
-    }
-    
-    .modal-visual {
-        margin: 5px 0;
+        font-size: 1.3rem;
     }
     
     .modal-visual img {
-        width: 140px !important;
+        width: 180px !important;
     }
     
     .modal-primary {
-        padding: 10px 16px;
-        font-size: 14px;
-        margin-top: 10px !important;
+        padding: 12px 20px;
+        font-size: 15px;
     }
     
     .quit-overlay {
