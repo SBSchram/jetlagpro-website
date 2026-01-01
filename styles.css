@@ -3084,12 +3084,13 @@ body.modal-open {
     .modal-overlay {
         padding: 10px;
         align-items: center;
+        overflow-y: auto;
     }
     
     .modal-content {
         padding: 16px;
         margin: 0 auto;
-        max-height: 95vh;
+        max-height: calc(95vh - 20px);
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -3097,10 +3098,9 @@ body.modal-open {
     }
     
     .modal-body {
-        flex: 1;
-        overflow-y: auto;
+        flex: 0 1 auto;
+        overflow: visible;
         padding-bottom: 20px;
-        -webkit-overflow-scrolling: touch;
     }
     
     .modal-body p {
