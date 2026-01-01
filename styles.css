@@ -2938,7 +2938,7 @@ body.swiping * {
     font-size: 1.4rem;
     color: #1e40af;
     margin-bottom: 12px;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .modal-body p {
@@ -3106,10 +3106,16 @@ body.modal-open {
     .modal-body {
         flex: 1 1 auto;
         overflow: visible;
+        padding-top: 0;
         padding-bottom: 20px;
         min-height: 0;
         display: flex;
         flex-direction: column;
+    }
+    
+    .modal-body h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
     }
     
     .modal-body p {
@@ -3295,6 +3301,7 @@ body.modal-open {
 
     .modal-body h3 {
         font-size: 1.2rem;
+        margin-top: 0;
     }
 
     .modal-body p {
