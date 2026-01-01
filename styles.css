@@ -3080,12 +3080,6 @@ body.modal-open {
 }
 
 @media (max-width: 480px) {
-    body.modal-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-    }
-    
     .modal-overlay {
         padding: 10px;
     }
@@ -3096,7 +3090,6 @@ body.modal-open {
         max-height: calc(100vh - 20px);
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
     }
     
     .modal-body {
