@@ -3121,7 +3121,8 @@ body.modal-open {
     }
     
     .modal-visual img {
-        width: 360px !important;
+        width: 90% !important;
+        max-width: 450px !important;
     }
     
     .quit-overlay {
