@@ -556,6 +556,8 @@ class JetLagProDemo {
         if (this.selectedAirport) {
             const timeString = this.getDestinationTimeString();
             const airportName = this.selectedAirport.name;
+            const airportCode = this.selectedAirport.code;
+            const displayText = `${airportName} [${airportCode}]`; // Match iOS format: name [CODE]
             // Calculate dynamic font size based on airport name length (matching iOS logic)
             let fontSize = '20px'; // title2 default
             if (airportName.length > 20 && airportName.length <= 30) {
@@ -565,7 +567,7 @@ class JetLagProDemo {
             } else if (airportName.length > 40) {
                 fontSize = '14px'; // subheadline
             }
-            DOM.setHTML('destinationStatus', `<span class="airport-name-text" style="font-size: ${fontSize}; font-weight: 600;">${airportName}</span> <span class="destination-time" style="font-size: 14px; opacity: 0.8;">(<span id="destinationTime">${timeString}</span>)</span>`);
+            DOM.setHTML('destinationStatus', `<span class="airport-name-text" style="font-size: ${fontSize}; font-weight: 600;">${displayText}</span> <span class="destination-time" style="font-size: 14px; opacity: 0.8;">(<span id="destinationTime">${timeString}</span>)</span>`);
             DOM.hide('destinationName');
             DOM.showFlex('endJourneyButton');
         } else {
