@@ -113,7 +113,7 @@ body {
 /* Notification Setup Section */
 .notification-section {
     padding: 60px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
     color: white;
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .notification-buttons .btn-primary {
-    background: #2563eb;
+    background: #0066FF;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -158,7 +158,7 @@ body {
 }
 
 .notification-buttons .btn-primary:hover {
-    background: #1d4ed8;
+    background: #0052CC;
     transform: translateY(-2px);
 }
 
@@ -203,7 +203,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 120px 0 80px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
     color: white;
     min-height: 100vh;
     display: flex;
@@ -302,14 +302,14 @@ body {
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: #0066FF;
     color: white;
-    border-color: #2563eb;
+    border-color: #0066FF;
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
+    background: #0052CC;
+    border-color: #0052CC;
     transform: translateY(-2px);
 }
 
@@ -1027,7 +1027,7 @@ body {
 
 /* New pages styling */
 .hero-simple {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
     color: white;
     padding: 8rem 0 4rem; /* Added extra top padding for fixed header */
     text-align: center;
@@ -1629,7 +1629,7 @@ body.swiping * {
 /* Download Section */
 .download {
     padding: 20px 0 80px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
     color: white;
     text-align: center;
 }
@@ -2534,7 +2534,7 @@ body.swiping * {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
     color: white;
     text-decoration: none;
     border-radius: 8px;
