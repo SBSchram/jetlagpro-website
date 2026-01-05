@@ -43,3 +43,30 @@ data/external/
 
 # Demo directory (if not needed for public)
 # demo/
+
+# Temporary work files - personal drafts, inquiries, etc.
+# These are work-in-progress files that shouldn't be committed
+*_inquiry*.md
+*_draft*.md
+*_temp*.md
+*_scratch*.md
+*_personal*.md
+*_private*.md
+*_work*.md
+*_notes*.md
+*_draft*.txt
+*_temp*.txt
+*_scratch*.txt
+
+# Article/work creation scripts (temporary)
+create_*.py
+*_create_*.py
+*mpa*.py
+*MPA*.py
+
+# Temporary work directories
+_temp/
+_scratch/
+_drafts/
+_work/
+*.work/
