@@ -925,6 +925,13 @@
             "timezone": "Europe/Dublin"
         },
         {
+            "code": "DUR",
+            "name": "King Shaka",
+            "city": "Durban",
+            "country": "South Africa",
+            "timezone": "Africa/Johannesburg"
+        },
+        {
             "code": "BRU",
             "name": "Brussels",
             "city": "Brussels",
