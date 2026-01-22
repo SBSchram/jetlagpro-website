@@ -45,7 +45,7 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20251212201000">
+    <link rel="stylesheet" href="styles.css?v=20251212140308">
     <script src="load-common-head.js?v=20251211130933"></script>
 </head>
 <body>
@@ -254,7 +254,7 @@
                 <h1>Beat Jet Lag with Ancient Wisdom</h1>
                 <p class="hero-subtitle">The chronoacupuncture app that works with your body's natural rhythms</p>
                 <div class="hero-buttons">
-                    <a href="demo/" class="btn btn-primary">Try It First</a>
+                    <a href="demo/" class="btn btn-primary">Try Interactive Demo</a>
                     <a href="#download" class="btn btn-primary">Get the App</a>
                 </div>
             </div>
@@ -347,25 +347,26 @@
                         </div>
                     </div>
                     
+                    <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
+                        <div class="modal-content" id="testflightModalContent">
+                            <div class="modal-body">
+                                <h3 id="testflightModalTitle" style="font-size: 1.5em;">What Happens Next</h3>
+                                <p id="testflightModalDescription"><strong>After TestFlight Installs - you will see</strong></p>
+                                <div class="modal-visual" style="margin-top: 5px;">
+                                    <img src="assets/images/TestFlightRedeem.JPG?v=20251212140307" alt="TestFlight redeem screen" style="width: 200px; border-radius: 8px; opacity: 0.9;">
+                                    <div class="quit-overlay">❌ QUIT HERE<br><small style="font-size: 10px;">(Don't enter code)</small></div>
+                                </div>
+                                <p style="text-align: center; margin: 10px 0 0 0;"><strong style="color: #ef4444;">CLOSE TestFlight when you see</strong><br><strong style="color: #000; font-size: 1.4em;">Ready To Test</strong></p>
+                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer; margin-top: 15px;">Continue to App Store</button>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </section>
 
     </main>
-
-    <!-- TestFlight Modal - moved outside main content for proper overlay -->
-    <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
-        <div class="modal-content" id="testflightModalContent">
-            <div class="modal-body">
-                <h3 id="testflightModalTitle" style="font-size: 1.5em;">Get TestFlight but Don't Open</h3>
-                <p id="testflightModalDescription"><strong>After you see this, come back to get JetLagPro</strong></p>
-                <div class="modal-visual" style="margin-top: 5px;">
-                    <img src="assets/images/TestFlightOpen.jpg?v=20251212193500" alt="TestFlight Open button in App Store" style="width: 540px; border-radius: 8px; opacity: 0.9;">
-                </div>
-                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer; margin-top: 15px;">I'm Ready: Get TestFlight</button>
-            </div>
-        </div>
-    </div>
 
 
     <div id="main-footer"></div>
@@ -479,29 +480,19 @@
                 return;
             }
 
-            // Track scroll position for body lock
-            let scrollPosition = 0;
-
             // Open modal - show trap warning
             const openModal = (event) => {
                 if (event) {
                     event.preventDefault();
                 }
-                
-                // Show modal
                 modal.classList.add('is-visible');
-                
-                // Lock body (simpler approach - just add class, let CSS handle it)
                 document.body.classList.add('modal-open');
-                
                 continueButton.focus({ preventScroll: true });
             };
 
             // Close modal
             const closeModal = () => {
                 modal.classList.remove('is-visible');
-                
-                // Unlock body
                 document.body.classList.remove('modal-open');
             };
 

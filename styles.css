@@ -113,7 +113,7 @@ body {
 /* Notification Setup Section */
 .notification-section {
     padding: 60px 0;
-    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .notification-buttons .btn-primary {
-    background: #0066FF;
+    background: #2563eb;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -158,7 +158,7 @@ body {
 }
 
 .notification-buttons .btn-primary:hover {
-    background: #0052CC;
+    background: #1d4ed8;
     transform: translateY(-2px);
 }
 
@@ -203,7 +203,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 120px 0 80px;
-    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     min-height: 100vh;
     display: flex;
@@ -302,14 +302,14 @@ body {
 }
 
 .btn-primary {
-    background: #0066FF;
+    background: #2563eb;
     color: white;
-    border-color: #0066FF;
+    border-color: #2563eb;
 }
 
 .btn-primary:hover {
-    background: #0052CC;
-    border-color: #0052CC;
+    background: #1d4ed8;
+    border-color: #1d4ed8;
     transform: translateY(-2px);
 }
 
@@ -1027,7 +1027,7 @@ body {
 
 /* New pages styling */
 .hero-simple {
-    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 8rem 0 4rem; /* Added extra top padding for fixed header */
     text-align: center;
@@ -1629,7 +1629,7 @@ body.swiping * {
 /* Download Section */
 .download {
     padding: 20px 0 80px 0;
-    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     text-align: center;
 }
@@ -2534,7 +2534,7 @@ body.swiping * {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #0066FF 0%, #FF9500 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -2898,20 +2898,19 @@ body.swiping * {
 /* Modal styles */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: rgba(15, 23, 42, 0.75);
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 20px;
     z-index: 2000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.is-visible {
-    display: flex;
+    display: block;
 }
 
 .modal-content {
@@ -2925,13 +2924,6 @@ body.swiping * {
     box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.4);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    max-height: 90vh;
-}
-
-.modal-body {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    max-height: 80vh;
 }
 
 .modal-content:hover {
@@ -2943,7 +2935,7 @@ body.swiping * {
     font-size: 1.4rem;
     color: #1e40af;
     margin-bottom: 12px;
-    margin-top: 0;
+    margin-top: 20px;
 }
 
 .modal-body p {
@@ -3090,52 +3082,15 @@ body.modal-open {
 
 @media (max-width: 480px) {
     .modal-overlay {
-        padding: 5px;
+        padding: 10px;
+        align-items: center;
     }
     
     .modal-content {
-        padding: 10px;
-        margin: 0;
+        padding: 16px;
+        margin: 0 auto;
         max-height: 95vh;
     }
-    
-    .modal-body {
-        padding-bottom: 8px;
-    }
-    
-    .modal-body h3 {
-        margin-top: 0;
-        margin-bottom: 4px;
-        font-size: 1rem;
-    }
-    
-    .modal-body p {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-        margin-top: 4px;
-        line-height: 1.2;
-    }
-    
-    .modal-visual {
-        margin: 4px 0;
-    }
-    
-    .modal-visual img {
-        width: 90% !important;
-        max-width: 450px !important;
-    }
-    
-    .quit-overlay {
-        font-size: 9px;
-        padding: 2px 4px;
-    }
-    
-    .modal-primary {
-        padding: 8px 14px;
-        font-size: 13px;
-        margin-top: 6px !important;
-    }
-}
     
     .modal-body p {
         font-size: 0.95rem;
@@ -3320,7 +3275,6 @@ body.modal-open {
 
     .modal-body h3 {
         font-size: 1.2rem;
-        margin-top: 0;
     }
 
     .modal-body p {
@@ -3332,8 +3286,7 @@ body.modal-open {
     }
 
     .modal-visual img {
-        width: 90% !important;
-        max-width: 500px !important;
+        width: 180px !important;
     }
 
     .quit-overlay {
