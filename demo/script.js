@@ -894,6 +894,8 @@ class JetLagProDemo {
     getLimbWord(point) {
         switch (point.imageName) {
             case "ST-36":
+            case "SP-10":
+            case "LIV-8":
                 return "leg";
             case "SP-3":
             case "BL-66":
@@ -910,6 +912,12 @@ class JetLagProDemo {
                 return "wrist";
             case "SJ-6":
                 return "forearm";
+            case "BL-2":
+                return "eyebrow";
+            case "KI-27":
+                return "collarbone";
+            case "GB-20":
+                return "neck";
             default:
                 return "arm";
         }
