@@ -51,10 +51,11 @@ if (-not $ffmpegExe) {
     Write-Error "ffmpeg not found. Install it (e.g. winget install ffmpeg), then close and reopen PowerShell and run this script again. See scripts\CONVERT_KI27_README.md."
 }
 
-# Crop to square keeping bottom: crop=min(iw,ih):min(iw,ih):0:ih-min(iw,ih)
+# Crop to square keeping bottom: crop=min(iw\,ih):min(iw\,ih):0:ih-min(iw\,ih)
+# Commas inside min() must be escaped (\) or ffmpeg treats them as filter separators.
 # Then scale to 480x480
 & $ffmpegExe -i $src `
-    -vf "crop=min(iw,ih):min(iw,ih):0:ih-min(iw,ih),scale=480:480" `
+    -vf "crop=min(iw\,ih):min(iw\,ih):0:ih-min(iw\,ih),scale=480:480" `
     -c:v libx264 -preset medium -crf 30 `
     -an `
     -movflags +faststart `
