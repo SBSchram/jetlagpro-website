@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Data Analysis</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="JetLagPro Research Data Analysis">
+    <script src="../load-common-head.js?v=20251211130933"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <!-- CryptoJS for HMAC-SHA256 validation (trip ID signatures) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <!-- External CSS and JavaScript files -->
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251211130933">
+    <link rel="stylesheet" href="assets/css/analytics.css?v=20251211130933">
+    <script src="../assets/js/firebase-service.js?v=20251211130933"></script>
+    <script src="../assets/js/trip-validator.js?v=20251211130933"></script>
+    <script src="assets/js/analytics.js?v=20251211130933"></script>
+    <script src="assets/js/charts.js?v=20251211130933"></script>
+    <script src="assets/js/copy-code.js?v=20251211130933"></script>
+    
+    <script>
+        // Inline JavaScript removed - now using external files:
+        // - analytics.js: Main dashboard functionality
+        // - charts.js: Chart rendering functions
+        
+        // Add event listener for refresh button (CSP-compliant, no inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (typeof refreshDataWithService === 'function') {
+                        refreshDataWithService();
+                    }
+                });
+            }
+            
+            // Add event listener for Top link (CSP-compliant)
+            const topLink = document.querySelector('.analysis-subnav a[href="#"]');
+            if (topLink) {
+                topLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                });
+            }
+            
+            // Fix anchor links to account for sticky nav offset
+            document.querySelectorAll('.analysis-subnav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return; // Top link handled above
+                    
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const offset = 60; // Height of sticky nav
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Common Reviewer Navigation (loaded dynamically) -->
+        <script src="load-nav.js?v=20251211130933"></script>
+
+        <!-- Analysis Page Sub-Menu -->
+        <nav class="analysis-subnav">
+            <a href="#">Top</a>
+            <a href="#trip-stats">Trip Stats</a>
+            <a href="#dose-response">Dose-Response</a>
+            <a href="#submissions">Submissions</a>
+            <a href="#point-mapping">Point Usage</a>
+            <a href="#reproduce-analysis">Reproduce</a>
+        </nav>
+
+        <div class="header">
+            <h1>Data Analysis</h1>
+            <button class="refresh-btn" id="refreshBtn">Refresh</button>
+        </div>
+        
+        <!-- Build Version Info -->
+        <div style="text-align: center; color: #6b7280; font-size: 0.85rem; margin: -10px 0 20px 0;">
+            Analysis build 2025-11-23 03:58 UTC · commit 19d0ac4
+        </div>
+
+        <div class="data-section" id="trip-stats">
+            <h2>Trip Stats</h2>
+            <div id="tripStats" class="loading">Loading trip stats...</div>
+        </div>
+
+        <div class="data-section" id="dose-response">
+            <h2 id="doseResponseHeading">Dose-Response Analysis</h2>
+            <div id="advancedAnalytics" class="loading">Loading advanced analysis...</div>
+        </div>
+
+        <div class="data-section" id="submissions">
+            <h2 style="text-align: center;">Trip Submissions</h2>
+            <div id="recentSubmissions" class="loading">Loading recent data...</div>
+        </div>
+
+        <div class="data-section" id="point-mapping">
+            <h2 id="pointMappingHeading">Point Usage</h2>
+            <div id="pointMappingTable" class="loading">Loading point stimulation data...</div>
+        </div>
+
+        <div class="data-section section-container" id="reproduce-analysis">
+            <h2 style="text-align: center;">Reproduce This Analysis</h2>
+            <p style="text-align: center; color: #374151; font-size: 1rem; line-height: 1.6;">
+                Run these commands in a terminal or command window.
+            </p>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 0 0 15px 0;">1. Download Raw Trip Data</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -s "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions?pageSize=1000" -o trips.json</code>
+                    </div>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 30px 0 15px 0;">2. Download Analysis Script (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_data.py" target="_blank">View Script</a>)</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o analyze_jetlag_data.py https://jetlagpro.com/scripts/analyze_jetlag_data.py</code>
+                    </div>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 30px 0 15px 0;">3. Run the Analysis</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -9,14 +9,15 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="description" content="Help advance chronoacupuncture research by participating in our jet lag survey. Your feedback helps improve jet lag management for travelers worldwide.">
+    <meta name="description" content="Participate in our jet lag research survey. Your feedback helps improve jet lag management for travelers worldwide.">
     <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
     <script>
         // Eternal cache busting solution - auto-generates timestamp
         const cacheVersion = Math.floor(Date.now() / 1000);
-        document.write('<link rel="stylesheet" href="survey.css?v=' + cacheVersion + '">');
+        document.write('<link rel="stylesheet" href="survey.css?v=20251211130933">');
     </script>
     <script src="load-common-head.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="main-header"></div>
@@ -25,55 +26,29 @@
         <section class="hero-simple">
             <div class="container">
                 <h1>Jet Lag Research Survey</h1>
-                <p class="hero-subtitle">Help advance chronoacupuncture research and improve jet lag management for travelers worldwide.</p>
             </div>
         </section>
 
         <div class="survey-main-column">
-            <section class="survey-intro survey-card">
-                <div class="container">
-                    <div class="intro-content">
-                        <h2>About This Research</h2>
-                        <p>JetLagPro is conducting research to evaluate the effectiveness of chronoacupuncture for jet lag management. Your participation helps advance our understanding of this traditional Chinese medicine approach.</p>
-                        
-                        <div class="research-goals">
-                            <h3>Research Goals:</h3>
-                            <ul>
-                                <li>Evaluate chronoacupuncture effectiveness for jet lag</li>
-                                <li>Understand individual variation in treatment response</li>
-                                <li>Identify optimal usage patterns for travelers</li>
-                                <li>Improve jet lag management for future users</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- Survey Preview Section -->
             <section class="survey-preview survey-card">
                 <div class="container">
                     <div class="preview-content">
                         <h2>Survey Preview</h2>
-                        <p>Below is a preview of the research survey questions. To participate in the actual survey and contribute to our research, you'll need a survey code from the JetLagPro app.</p>
+                        <p style="text-align: left;">Below is a preview of the research survey questions. To participate:</p>
                         
                         <div class="preview-notice">
                             <div class="notice-box">
-                                <h4>🔬 Research Participation</h4>
-                                <p>This survey is part of ongoing research into chronoacupuncture for jet lag management. To participate:</p>
                                 <ol>
-                                    <li>Download the JetLagPro app</li>
+                                    <li><a href="index.html#download">Get JetLagPro in 2 Steps</a></li>
                                     <li>Complete a journey in the app</li>
                                     <li>Click the survey link in the app</li>
-                                </ol>
-                                <p>Or</p>
-                                <ol>
-                                    <li>Get the survey code from the app</li>
-                                    <li>Return here and enter the code in the box just below</li>
                                 </ol>
                             </div>
                         </div>
                         
-                        <div class="code-input-section">
+                        <div class="code-input-section" style="display: none;">
                             <label for="surveyCode">Survey Code (Required for Submission):</label>
                             <input type="text" id="surveyCode" placeholder="Enter your survey code (e.g., JLP-XXXXXXXX)" maxlength="12">
                             <button type="button" id="validateCode" class="btn btn-primary">Enable Survey Submission</button>
@@ -89,106 +64,52 @@
 
                     <!-- LJLQ-based survey - Single scrollable form -->
                     <div class="survey-content">
-                      <h3>Jet Lag Questions</h3>
-                      <p>&nbsp;</p>
+                      
+
+                      <h3>Post Travel Jet Lag Questions</h3>
                       <form id="travelForm">
+                        <!-- General Anticipated Jet Lag Question -->
+                        <div class="symptom-group">
+                          <h4>Overall anticipated jet lag severity</h4>
+                          <div class="symptom-row">
+                            <div class="rating-container">
+                              <div class="rating-bubbles">
+                                <input type="radio" name="generalAnticipated" value="1" id="general_anticipated_1" class="rating-input">
+                                <label for="general_anticipated_1" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="2" id="general_anticipated_2" class="rating-input">
+                                <label for="general_anticipated_2" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="3" id="general_anticipated_3" class="rating-input">
+                                <label for="general_anticipated_3" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="4" id="general_anticipated_4" class="rating-input">
+                                <label for="general_anticipated_4" class="rating-bubble"></label>
+                                <input type="radio" name="generalAnticipated" value="5" id="general_anticipated_5" class="rating-input">
+                                <label for="general_anticipated_5" class="rating-bubble"></label>
+                              </div>
+                              <div class="rating-labels">
+                                <span>None</span>
+                                <span>Severe</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         <div class="symptom-group">
                           <h4>Sleep disturbance</h4>
                           <div class="symptom-row">
                             <div class="rating-container">
-                              <div class="rating-bubbles mobile-only">
-                                <input type="radio" name="sleep_pre" value="1" id="sleep_pre_1" class="rating-input">
-                                <label for="sleep_pre_1" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_pre" value="2" id="sleep_pre_2" class="rating-input">
-                                <label for="sleep_pre_2" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_pre" value="3" id="sleep_pre_3" class="rating-input">
-                                <label for="sleep_pre_3" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_pre" value="4" id="sleep_pre_4" class="rating-input">
-                                <label for="sleep_pre_4" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_pre" value="5" id="sleep_pre_5" class="rating-input">
-                                <label for="sleep_pre_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-bubbles-desktop desktop-only">
-                                <input type="radio" name="sleep_pre" value="1" id="sleep_pre_1_desktop" class="rating-input">
-                                <label for="sleep_pre_1_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_pre" value="2" id="sleep_pre_2_desktop" class="rating-input">
-                                <label for="sleep_pre_2_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_pre" value="3" id="sleep_pre_3_desktop" class="rating-input">
-                                <label for="sleep_pre_3_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_pre" value="4" id="sleep_pre_4_desktop" class="rating-input">
-                                <label for="sleep_pre_4_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_pre" value="5" id="sleep_pre_5_desktop" class="rating-input">
-                                <label for="sleep_pre_5_desktop" class="rating-bubble-desktop"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles mobile-only">
-                                <input type="radio" name="sleep_expectations" value="1" id="sleep_expectations_1" class="rating-input">
-                                <label for="sleep_expectations_1" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_expectations" value="2" id="sleep_expectations_2" class="rating-input">
-                                <label for="sleep_expectations_2" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_expectations" value="3" id="sleep_expectations_3" class="rating-input">
-                                <label for="sleep_expectations_3" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_expectations" value="4" id="sleep_expectations_4" class="rating-input">
-                                <label for="sleep_expectations_4" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_expectations" value="5" id="sleep_expectations_5" class="rating-input">
-                                <label for="sleep_expectations_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-bubbles-desktop desktop-only">
-                                <input type="radio" name="sleep_expectations" value="1" id="sleep_expectations_1_desktop" class="rating-input">
-                                <label for="sleep_expectations_1_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_expectations" value="2" id="sleep_expectations_2_desktop" class="rating-input">
-                                <label for="sleep_expectations_2_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_expectations" value="3" id="sleep_expectations_3_desktop" class="rating-input">
-                                <label for="sleep_expectations_3_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_expectations" value="4" id="sleep_expectations_4_desktop" class="rating-input">
-                                <label for="sleep_expectations_4_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_expectations" value="5" id="sleep_expectations_5_desktop" class="rating-input">
-                                <label for="sleep_expectations_5_desktop" class="rating-bubble-desktop"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Anticipated</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles mobile-only">
-                                <input type="radio" name="sleep_post" value="1" id="sleep_post_1" class="rating-input">
+                              <div class="rating-bubbles">
+                                <input type="radio" name="sleepPost" value="1" id="sleep_post_1" class="rating-input">
                                 <label for="sleep_post_1" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_post" value="2" id="sleep_post_2" class="rating-input">
+                                <input type="radio" name="sleepPost" value="2" id="sleep_post_2" class="rating-input">
                                 <label for="sleep_post_2" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_post" value="3" id="sleep_post_3" class="rating-input">
+                                <input type="radio" name="sleepPost" value="3" id="sleep_post_3" class="rating-input">
                                 <label for="sleep_post_3" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_post" value="4" id="sleep_post_4" class="rating-input">
+                                <input type="radio" name="sleepPost" value="4" id="sleep_post_4" class="rating-input">
                                 <label for="sleep_post_4" class="rating-bubble"></label>
-                                <input type="radio" name="sleep_post" value="5" id="sleep_post_5" class="rating-input">
+                                <input type="radio" name="sleepPost" value="5" id="sleep_post_5" class="rating-input">
                                 <label for="sleep_post_5" class="rating-bubble"></label>
                               </div>
-                              <div class="rating-bubbles-desktop desktop-only">
-                                <input type="radio" name="sleep_post" value="1" id="sleep_post_1_desktop" class="rating-input">
-                                <label for="sleep_post_1_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_post" value="2" id="sleep_post_2_desktop" class="rating-input">
-                                <label for="sleep_post_2_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_post" value="3" id="sleep_post_3_desktop" class="rating-input">
-                                <label for="sleep_post_3_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_post" value="4" id="sleep_post_4_desktop" class="rating-input">
-                                <label for="sleep_post_4_desktop" class="rating-bubble-desktop"></label>
-                                <input type="radio" name="sleep_post" value="5" id="sleep_post_5_desktop" class="rating-input">
-                                <label for="sleep_post_5_desktop" class="rating-bubble-desktop"></label>
-                              </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Post-travel</span>
                                 <span>Severe</span>
                               </div>
                             </div>
@@ -200,77 +121,19 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_pre" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_pre" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_pre" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_pre" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_pre" value="5" />
-                                </label>
+                                <input type="radio" name="fatiguePost" value="1" id="fatigue_post_1" class="rating-input">
+                                <label for="fatigue_post_1" class="rating-bubble"></label>
+                                <input type="radio" name="fatiguePost" value="2" id="fatigue_post_2" class="rating-input">
+                                <label for="fatigue_post_2" class="rating-bubble"></label>
+                                <input type="radio" name="fatiguePost" value="3" id="fatigue_post_3" class="rating-input">
+                                <label for="fatigue_post_3" class="rating-bubble"></label>
+                                <input type="radio" name="fatiguePost" value="4" id="fatigue_post_4" class="rating-input">
+                                <label for="fatigue_post_4" class="rating-bubble"></label>
+                                <input type="radio" name="fatiguePost" value="5" id="fatigue_post_5" class="rating-input">
+                                <label for="fatigue_post_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_expectations" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_expectations" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_expectations" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_expectations" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_expectations" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Anticipated</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_post" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_post" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_post" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_post" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="fatigue_post" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Post-travel</span>
                                 <span>Severe</span>
                               </div>
                             </div>
@@ -282,77 +145,19 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_pre" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_pre" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_pre" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_pre" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_pre" value="5" />
-                                </label>
+                                <input type="radio" name="concentrationPost" value="1" id="concentration_post_1" class="rating-input">
+                                <label for="concentration_post_1" class="rating-bubble"></label>
+                                <input type="radio" name="concentrationPost" value="2" id="concentration_post_2" class="rating-input">
+                                <label for="concentration_post_2" class="rating-bubble"></label>
+                                <input type="radio" name="concentrationPost" value="3" id="concentration_post_3" class="rating-input">
+                                <label for="concentration_post_3" class="rating-bubble"></label>
+                                <input type="radio" name="concentrationPost" value="4" id="concentration_post_4" class="rating-input">
+                                <label for="concentration_post_4" class="rating-bubble"></label>
+                                <input type="radio" name="concentrationPost" value="5" id="concentration_post_5" class="rating-input">
+                                <label for="concentration_post_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_expectations" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_expectations" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_expectations" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_expectations" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_expectations" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Anticipated</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_post" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_post" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_post" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_post" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="concentration_post" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Post-travel</span>
                                 <span>Severe</span>
                               </div>
                             </div>
@@ -364,77 +169,43 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_pre" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_pre" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_pre" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_pre" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_pre" value="5" />
-                                </label>
+                                <input type="radio" name="irritabilityPost" value="1" id="irritability_post_1" class="rating-input">
+                                <label for="irritability_post_1" class="rating-bubble"></label>
+                                <input type="radio" name="irritabilityPost" value="2" id="irritability_post_2" class="rating-input">
+                                <label for="irritability_post_2" class="rating-bubble"></label>
+                                <input type="radio" name="irritabilityPost" value="3" id="irritability_post_3" class="rating-input">
+                                <label for="irritability_post_3" class="rating-bubble"></label>
+                                <input type="radio" name="irritabilityPost" value="4" id="irritability_post_4" class="rating-input">
+                                <label for="irritability_post_4" class="rating-bubble"></label>
+                                <input type="radio" name="irritabilityPost" value="5" id="irritability_post_5" class="rating-input">
+                                <label for="irritability_post_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Typical</span>
                                 <span>Severe</span>
                               </div>
                             </div>
                           </div>
+                        </div>
+
+                        <div class="symptom-group">
+                          <h4>Lack of motivation/energy</h4>
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_expectations" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_expectations" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_expectations" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_expectations" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_expectations" value="5" />
-                                </label>
+                                <input type="radio" name="motivationPost" value="1" id="motivation_post_1" class="rating-input">
+                                <label for="motivation_post_1" class="rating-bubble"></label>
+                                <input type="radio" name="motivationPost" value="2" id="motivation_post_2" class="rating-input">
+                                <label for="motivation_post_2" class="rating-bubble"></label>
+                                <input type="radio" name="motivationPost" value="3" id="motivation_post_3" class="rating-input">
+                                <label for="motivation_post_3" class="rating-bubble"></label>
+                                <input type="radio" name="motivationPost" value="4" id="motivation_post_4" class="rating-input">
+                                <label for="motivation_post_4" class="rating-bubble"></label>
+                                <input type="radio" name="motivationPost" value="5" id="motivation_post_5" class="rating-input">
+                                <label for="motivation_post_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Anticipated</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_post" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_post" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_post" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_post" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="irritability_post" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Post-travel</span>
                                 <span>Severe</span>
                               </div>
                             </div>
@@ -446,77 +217,19 @@
                           <div class="symptom-row">
                             <div class="rating-container">
                               <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_pre" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_pre" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_pre" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_pre" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_pre" value="5" />
-                                </label>
+                                <input type="radio" name="giPost" value="1" id="gi_post_1" class="rating-input">
+                                <label for="gi_post_1" class="rating-bubble"></label>
+                                <input type="radio" name="giPost" value="2" id="gi_post_2" class="rating-input">
+                                <label for="gi_post_2" class="rating-bubble"></label>
+                                <input type="radio" name="giPost" value="3" id="gi_post_3" class="rating-input">
+                                <label for="gi_post_3" class="rating-bubble"></label>
+                                <input type="radio" name="giPost" value="4" id="gi_post_4" class="rating-input">
+                                <label for="gi_post_4" class="rating-bubble"></label>
+                                <input type="radio" name="giPost" value="5" id="gi_post_5" class="rating-input">
+                                <label for="gi_post_5" class="rating-bubble"></label>
                               </div>
                               <div class="rating-labels">
                                 <span>None</span>
-                                <span>Typical</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_expectations" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_expectations" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_expectations" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_expectations" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_expectations" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Anticipated</span>
-                                <span>Severe</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_post" value="1" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_post" value="2" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_post" value="3" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_post" value="4" />
-                                </label>
-                                <label class="rating-bubble">
-                                  <input type="radio" name="gi_post" value="5" />
-                                </label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Post-travel</span>
                                 <span>Severe</span>
                               </div>
                             </div>
@@ -524,143 +237,10 @@
                         </div>
                       </form>
 
-                      <h3 style="margin-top: 40px;">Flight Details</h3>
-                                              <p>&nbsp;</p>
-                      <form id="contextForm">
-                        <div class="context-row">
-                          <label>Arrival Date <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <input type="date" name="flight_landing_date" required>
-                        </div>
-                        <div class="context-row">
-                          <label>Arrival hour <span style="color: #e74c3c; font-weight: bold;">*</span></label>
-                          <select name="flight_landing_hour" required>
-                            <option value="">Select hour</option>
-                            <option value="0">00:00 (Midnight)</option>
-                            <option value="1">01:00</option>
-                            <option value="2">02:00</option>
-                            <option value="3">03:00</option>
-                            <option value="4">04:00</option>
-                            <option value="5">05:00</option>
-                            <option value="6">06:00</option>
-                            <option value="7">07:00</option>
-                            <option value="8">08:00</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00 (Noon)</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                            <option value="23">23:00</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>Arrival airport</label>
-                          <input type="text" name="destination" placeholder="e.g., LHR, JFK, LAX" maxlength="3" style="text-transform: uppercase;">
-                        </div>
-                        <div class="context-row">
-                          <label>Direction of travel</label>
-                          <select name="direction">
-                            <option value="east">Eastward</option>
-                            <option value="west">Westward</option>
-                            <option value="both">Both</option>
-                            <option value="not_sure">Not sure</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>Number of time zones crossed</label>
-                          <select name="timezones">
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12+">12+</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>Flight duration (hours)</label>
-                          <select name="flight_duration">
-                            <option value="">Select flight duration</option>
-                            <option value="1">1 hour</option>
-                            <option value="2">2 hours</option>
-                            <option value="3">3 hours</option>
-                            <option value="4">4 hours</option>
-                            <option value="5">5 hours</option>
-                            <option value="6">6 hours</option>
-                            <option value="7">7 hours</option>
-                            <option value="8">8 hours</option>
-                            <option value="9">9 hours</option>
-                            <option value="10">10 hours</option>
-                            <option value="11">11 hours</option>
-                            <option value="12">12 hours</option>
-                            <option value="13">13 hours</option>
-                            <option value="14">14 hours</option>
-                            <option value="15">15 hours</option>
-                            <option value="16">16 hours</option>
-                            <option value="17">17 hours</option>
-                            <option value="18">18 hours</option>
-                            <option value="19">19 hours</option>
-                            <option value="20">20 hours</option>
-                            <option value="21">21 hours</option>
-                            <option value="22">22 hours</option>
-                            <option value="23">23 hours</option>
-                            <option value="24">24+ hours</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>How many acupressure points did you stimulate (total)?</label>
-                          <select name="points_total" required>
-                            <option value="">Select number of points</option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                          </select>
-                        </div>
-                        <div class="context-row">
-                          <label>How many hours did you sleep during the flight?</label>
-                          <select name="sleep_hours">
-                            <option value="">Select sleep hours</option>
-                            <option value="0">0 hours</option>
-                            <option value="1">1 hour</option>
-                            <option value="2">2 hours</option>
-                            <option value="3">3 hours</option>
-                            <option value="4">4 hours</option>
-                            <option value="5">5 hours</option>
-                            <option value="6">6 hours</option>
-                            <option value="7">7 hours</option>
-                            <option value="8">8 hours</option>
-                            <option value="9">9 hours</option>
-                            <option value="10">10+ hours</option>
-                          </select>
-                        </div>
-                      </form>
-                      <h3 style="margin-top: 40px;">Demographics</h3>
+                      <h3 style="margin-top: 40px;">Age Range</h3>
                       <form id="demographicsForm">
                         <div class="demographic-row">
-                          <label>Age range</label>
-                          <select name="age_range">
+                          <select name="ageRange">
                             <option value="lt18">&lt;18</option>
                             <option value="18-24">18–24</option>
                             <option value="25-34">25–34</option>
@@ -668,45 +248,6 @@
                             <option value="45-54">45–54</option>
                             <option value="55-64">55–64</option>
                             <option value="65+">65+</option>
-                          </select>
-                        </div>
-                        <div class="demographic-row">
-                          <label>Gender</label>
-                          <select name="gender">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="nonbinary">Non-binary</option>
-                            <option value="notsay">Prefer not to say</option>
-                          </select>
-                        </div>
-                        <div class="demographic-row">
-                          <label>Travel experience</label>
-                          <select name="travel_experience">
-                            <option value="novice">Novice</option>
-                            <option value="occasional">Occasional</option>
-                            <option value="frequent">Frequent</option>
-                            <option value="very_frequent">Very frequent</option>
-                          </select>
-                        </div>
-                        <div class="demographic-row">
-                          <label>Geographic region</label>
-                          <select name="region">
-                            <option value="na">North America</option>
-                            <option value="eu">Europe</option>
-                            <option value="asia">Asia</option>
-                            <option value="oceania">Oceania</option>
-                            <option value="africa">Africa</option>
-                            <option value="sa">South America</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <div class="demographic-row">
-                          <label>Primary travel purpose</label>
-                          <select name="purpose">
-                            <option value="business">Business</option>
-                            <option value="leisure">Leisure</option>
-                            <option value="family">Family</option>
-                            <option value="other">Other</option>
                           </select>
                         </div>
                       </form>
@@ -720,7 +261,7 @@
                                 placeholder="Share your experience, suggestions, or any additional thoughts about chronoacupuncture and jet lag management..."
                                 maxlength="1000"
                                 rows="4"
-                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"
+                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 16px;"
                             ></textarea>
                             <div class="comment-counter">
                                 <span id="commentCharCount">0</span>/1000 characters
@@ -731,7 +272,7 @@
                         </div>
                         
                         <!-- Submit Button -->
-                        <div style="margin-top: 40px; padding: 30px; text-align: center; border-top: 2px solid #e5e7eb; background: #f9fafb;">
+                        <div class="submit-section">
                             <button 
                                 id="submitSurveyBtn"
                                 onclick="submitSurvey()" 
@@ -744,16 +285,10 @@
                                     font-size: 18px;
                                     font-weight: bold;
                                     cursor: pointer;
-                                    transition: background-color 0.3s ease;
                                 "
-                                onmouseover="this.style.background='#059669'"
-                                onmouseout="this.style.background='#10b981'"
                             >
                                 🚀 Submit Survey
                             </button>
-                            <p style="margin-top: 15px; color: #6b7280; font-size: 14px;">
-                                Make sure you've entered a valid survey code above before submitting.
-                            </p>
                         </div>
                     </div> <!-- End survey-content -->
 
@@ -761,20 +296,10 @@
                         <div class="completion-content">
                             <div class="completion-icon">🎉</div>
                             <h2>Survey Complete!</h2>
-                            <p>Thank you for participating in our research. Your feedback will help improve jet lag management for travelers worldwide.</p>
-                            
-                            <div class="completion-benefits">
-                                <h3>What happens next:</h3>
-                                <ul>
-                                    <li>✅ Your anonymous data will be analyzed for research purposes</li>
-                                    <li>✅ You'll receive free access to the final version of JetLagPro</li>
-                                    <li>✅ Research results will be published to advance jet lag science</li>
-                                    <li>✅ Your contribution helps future travelers</li>
-                                </ul>
-                            </div>
+                            <p>Thank you for taking our survey.</p>
                             
                             <div class="completion-actions">
-                                <a href="index.html" class="btn btn-primary">Return to JetLagPro</a>
+                                <a href="index.html" class="btn btn-primary">Return to Home Page</a>
                                 <a href="research-paper.html" class="btn btn-secondary" target="_blank">Read Our Research Paper</a>
                             </div>
                         </div>
@@ -783,17 +308,11 @@
             </div>
         </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 JetLagPro. All rights reserved. | <a href="privacy.html">Privacy Policy</a></p>
-        </div>
-    </footer>
-
     <!-- Firebase SDKs -->
     <script type="module">
         // Import the functions you need from the SDKs
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, doc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, doc, updateDoc, getDoc, setDoc, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -817,14 +336,21 @@
         window.firebaseAddDoc = addDoc;
         window.firebaseDoc = doc;
         window.firebaseUpdateDoc = updateDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseSetDoc = setDoc;
         window.firebaseServerTimestamp = serverTimestamp;
+        window.firebaseArrayUnion = arrayUnion;
 
         console.log('🔥 Firebase initialized successfully');
     </script>
+    
+    <!-- Survey Read Service for DRY read operations -->
+    <script src="assets/js/survey-read-service.js"></script>
+    
           <script>
           // Eternal cache busting for JavaScript - auto-generates timestamp
           const jsVersion = Math.floor(Date.now() / 1000);
-          document.write('<script src="survey.js?v=' + jsVersion + '"><\/script>');
+          document.write('<script src="survey.js?v=20251211130933"><\/script>');
       </script>
     
     <!-- Legacy cache refresh script removed - eternal cache busting now handles this -->

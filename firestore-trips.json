@@ -1,0 +1,4708 @@
+{
+  "documents": [
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/04F1668A-BKKE-251203-2125-b65e8ab3",
+      "fields": {
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-12-03T14:25:41Z"
+        },
+        "pointsCompleted": {
+          "integerValue": "11"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "12"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-12-04T12:34:11Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Asia/Bangkok"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "timestamp": {
+                "timestampValue": "2025-12-04T12:34:11.471Z"
+              },
+              "platform": {
+                "stringValue": "iOS 18.6.2"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "deviceId": {
+                "stringValue": "07119643-68DD-4C9C-BE04-B3468F349431"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              }
+            }
+          }
+        },
+        "destinationCode": {
+          "stringValue": "BKK"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "04F1668A-BKKE-251203-2125-b65e8ab3"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        }
+      },
+      "createTime": "2025-12-04T12:34:11.828495Z",
+      "updateTime": "2025-12-04T12:34:11.828495Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/098D60B3-SYDE-260108-1449-cc434221",
+      "fields": {
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2026-01-08T22:49:24Z"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/Los_Angeles"
+        },
+        "timezonesCount": {
+          "integerValue": "19"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "SYD"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2026-01-09T14:00:31Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/Los_Angeles"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "098D60B3-SYDE-260108-1449-cc434221"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2026-01-09T14:00:32.035439Z",
+      "updateTime": "2026-01-09T14:00:32.035439Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/0AA70A8D-1D66-4FC9-BD50-03D3BF664AFE",
+      "fields": {
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "irritabilityExpectations": {
+          "integerValue": "1"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "purpose": {
+          "stringValue": "leisure"
+        },
+        "userComment": {
+          "stringValue": "Fred"
+        },
+        "flightLandingHour": {
+          "stringValue": "18"
+        },
+        "created": {
+          "timestampValue": "2025-09-05T15:11:55Z"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "4"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "irritabilityPre": {
+          "integerValue": "1"
+        },
+        "fatiguePre": {
+          "integerValue": "1"
+        },
+        "concentrationPre": {
+          "integerValue": "1"
+        },
+        "concentrationExpectations": {
+          "integerValue": "1"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-09-05T15:11:55Z"
+        },
+        "completionMethod": {
+          "stringValue": "auto"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "flightDuration": {
+          "stringValue": ""
+        },
+        "pointsCompleted": {
+          "integerValue": "7"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "giPre": {
+          "integerValue": "1"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "0AA70A8D-1D66-4FC9-BD50-03D3BF664AFE"
+        },
+        "travelExperience": {
+          "stringValue": "frequent"
+        },
+        "startDate": {
+          "stringValue": "2025-09-04T17:03:30Z"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "giExpectations": {
+          "integerValue": "1"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "appVersion": {
+          "stringValue": "2025011905"
+        },
+        "flightLandingDate": {
+          "stringValue": "2025-09-04"
+        },
+        "ageRange": {
+          "stringValue": "65+"
+        },
+        "sleepExpectations": {
+          "integerValue": "1"
+        },
+        "fatigueExpectations": {
+          "integerValue": "1"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-09-05T15:14:37.244Z"
+        },
+        "surveyCompletedAt": {
+          "timestampValue": "2025-09-05T15:14:37.526Z"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "gender": {
+          "stringValue": "male"
+        },
+        "surveyCode": {
+          "stringValue": "JLP-5CBDFADC"
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "sleepPre": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2025-09-05T15:11:55.383666Z",
+      "updateTime": "2025-09-27T15:18:16.780010Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/0B071174-CDGE-251218-2347-7e907404",
+      "fields": {
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-12-19T20:32:39Z"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "0B071174-CDGE-251218-2347-7e907404"
+        },
+        "destinationCode": {
+          "stringValue": "CDG"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Europe/Paris"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-12-18T22:47:13Z"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "deviceId": {
+                "stringValue": "66830F5B-4F33-41F3-A39F-8BB244C05B9D"
+              },
+              "platform": {
+                "stringValue": "iOS 18.6.1"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-19T20:32:39.449Z"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "appBuild": {
+                "stringValue": "3"
+              }
+            }
+          }
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "10"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2025-12-19T20:32:39.764719Z",
+      "updateTime": "2025-12-19T20:32:39.764719Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/13B9BAF0-LHRE-251210-1548-e4d91a3c",
+      "fields": {
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "completionDate": {
+          "stringValue": "2026-01-02T17:49:13Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Europe/London"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "13B9BAF0-LHRE-251210-1548-e4d91a3c"
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "startDate": {
+          "stringValue": "2025-12-10T15:48:26Z"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        },
+        "originTimezone": {
+          "stringValue": "Europe/London"
+        },
+        "destinationCode": {
+          "stringValue": "LHR"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2026-01-02T17:49:16.837567Z",
+      "updateTime": "2026-01-02T17:49:16.837567Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/1CDD41FC-LHRE-251202-1447-81a58c27",
+      "fields": {
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "generalAnticipated": {
+          "integerValue": "3"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "deviceId": {
+                "stringValue": "40CC3C5F-096C-42FB-9A2D-4430D11E6C51"
+              },
+              "platform": {
+                "stringValue": "iOS 26.0.1"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-03T09:24:25.940Z"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              }
+            }
+          }
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "completionDate": {
+          "stringValue": "2025-12-03T09:24:25Z"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Vers"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-07T23:54:34.359Z"
+              }
+            }
+          }
+        },
+        "pointsCompleted": {
+          "integerValue": "1"
+        },
+        "destinationCode": {
+          "stringValue": "LHR"
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-12-07T23:54:33.875Z"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "1CDD41FC-LHRE-251202-1447-81a58c27"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": ""
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "startDate": {
+          "stringValue": "2025-12-02T19:47:17Z"
+        }
+      },
+      "createTime": "2025-12-03T09:24:26.335983Z",
+      "updateTime": "2025-12-07T23:54:34.399071Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251111-0052-55e927a7",
+      "fields": {
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": "Checking on empty survey data if modified"
+        },
+        "startDate": {
+          "stringValue": "2025-11-11T05:52:20Z"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-15T17:56:08.263Z"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-11T18:56:08Z"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251111-0052-55e927a7"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "appBuild": {
+                "stringValue": "6"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-11T18:56:08.944Z"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              }
+            }
+          }
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button_survey"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-15T17:56:08.628Z"
+              }
+            }
+          }
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2025-11-11T18:41:14.973231Z",
+      "updateTime": "2025-11-15T17:56:08.669647Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251120-0807-8177408f",
+      "fields": {
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-20T17:52:53Z"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-20T20:54:11.263Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": "Test of audit and verification"
+        },
+        "generalAnticipated": {
+          "integerValue": "3"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "timestamp": {
+                "timestampValue": "2025-11-20T17:52:53.428Z"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "appBuild": {
+                "stringValue": "6"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-20T20:54:11.464Z"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              }
+            }
+          }
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251120-0807-8177408f"
+        },
+        "startDate": {
+          "stringValue": "2025-11-20T13:07:21Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2025-11-20T17:52:53.721263Z",
+      "updateTime": "2025-11-20T20:54:11.501471Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251120-1554-fc548bda",
+      "fields": {
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-21T06:00:03.479Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251120-1554-fc548bda"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "generalAnticipated": {
+          "integerValue": "1"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "startDate": {
+          "stringValue": "2025-11-20T20:54:53Z"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "userComment": {
+          "stringValue": "Testing"
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-21T00:46:45.325Z"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              }
+            }
+          }
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "timestamp": {
+                "timestampValue": "2025-11-21T06:00:03.730Z"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              }
+            }
+          }
+        },
+        "completionDate": {
+          "stringValue": "2025-11-21T00:46:45Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2025-11-21T00:46:45.648111Z",
+      "updateTime": "2025-11-21T06:00:03.779503Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251120-2006-406b0d35",
+      "fields": {
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-21T04:47:56.113Z"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              }
+            }
+          }
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251120-2006-406b0d35"
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-11-21T01:06:51Z"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-21T04:47:56Z"
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": "More testing"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "generalAnticipated": {
+          "integerValue": "1"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-21T06:00:42.800Z"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              }
+            }
+          }
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-21T06:00:42.426Z"
+        }
+      },
+      "createTime": "2025-11-21T04:47:56.211727Z",
+      "updateTime": "2025-11-21T06:00:42.860591Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251121-0100-20b6b1e4",
+      "fields": {
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "generalAnticipated": {
+          "integerValue": "1"
+        },
+        "startDate": {
+          "stringValue": "2025-11-21T06:00:11Z"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-21T10:40:15Z"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-21T12:47:53.128Z"
+        },
+        "userComment": {
+          "stringValue": "Testing audit rules"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-21T12:47:53.524Z"
+              }
+            }
+          }
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-21T10:40:15.746Z"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251121-0100-20b6b1e4"
+        }
+      },
+      "createTime": "2025-11-21T10:40:15.841247Z",
+      "updateTime": "2025-11-21T12:47:53.587711Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251123-1544-7f579858",
+      "fields": {
+        "userComment": {
+          "stringValue": "Test of notify, modify 7"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-24T00:00:20.491Z"
+              },
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              }
+            }
+          }
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "generalAnticipated": {
+          "integerValue": "3"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251123-1544-7f579858"
+        },
+        "fatiguePost": {
+          "integerValue": "4"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-27T21:21:14.950Z"
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-11-24T00:00:20Z"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-27T21:21:15.221Z"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              }
+            }
+          }
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-23T20:44:24Z"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "sleepPost": {
+          "integerValue": "3"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-11-24T00:00:20.746079Z",
+      "updateTime": "2025-11-27T21:21:15.269295Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-ISTE-251130-0625-64ad2d59",
+      "fields": {
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "tripId": {
+          "stringValue": "2330B376-ISTE-251130-0625-64ad2d59"
+        },
+        "startDate": {
+          "stringValue": "2025-11-30T11:25:41Z"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-05T21:37:30.705Z"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              }
+            }
+          }
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-11-30T22:28:39Z"
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-30T22:28:39.255Z"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "userComment": {
+          "stringValue": "Developer test"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "5"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-12-05T21:37:30.265Z"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point3Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-11-30T22:28:39.487439Z",
+      "updateTime": "2025-12-05T21:37:30.767215Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2330B376-WLGE-251111-1316-040a5678",
+      "fields": {
+        "timezonesCount": {
+          "integerValue": "18"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-15T14:49:14.484Z"
+              }
+            }
+          }
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-11T22:42:23Z"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "generalAnticipated": {
+          "integerValue": "2"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "WLG"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "tripId": {
+          "stringValue": "2330B376-WLGE-251111-1316-040a5678"
+        },
+        "startDate": {
+          "stringValue": "2025-11-11T18:16:33Z"
+        },
+        "userComment": {
+          "stringValue": "Testing the logging of a survey change"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-15T14:49:14.036Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "timestamp": {
+                "timestampValue": "2025-11-11T22:42:23.236Z"
+              },
+              "platform": {
+                "stringValue": "iOS 18.7.1"
+              },
+              "deviceId": {
+                "stringValue": "6DF8FF40-0396-4837-81EF-DC1D5758A145"
+              },
+              "appBuild": {
+                "stringValue": "6"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              }
+            }
+          }
+        }
+      },
+      "createTime": "2025-11-11T22:42:23.446511Z",
+      "updateTime": "2025-11-15T14:49:14.525103Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/23DB4E06-JFKE-251122-1814-11ad2ccf",
+      "fields": {
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "browserInfo": {
+                "stringValue": "Linux armv81; en-US"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-23T20:43:01.604Z"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Sa"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              }
+            }
+          }
+        },
+        "userComment": {
+          "stringValue": "Android survey test"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-23T20:43:01.006Z"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-22T23:14:43.682Z"
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "manualEndXButton"
+        },
+        "created": {
+          "stringValue": "2025-11-23T02:35:13.280Z"
+        },
+        "generalAnticipated": {
+          "integerValue": "3"
+        },
+        "tripId": {
+          "stringValue": "23DB4E06-JFKE-251122-1814-11ad2ccf"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "ageRange": {
+          "stringValue": "lt18"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "appBuild": {
+                "stringValue": "1"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-23T02:35:14.136Z"
+              },
+              "deviceId": {
+                "stringValue": "f50f27d89ade7d27"
+              },
+              "platform": {
+                "stringValue": "React Native Android 24"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-23T02:35:13.280Z"
+        }
+      },
+      "createTime": "2025-11-23T02:35:14.623887Z",
+      "updateTime": "2025-11-23T20:43:01.641535Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/23DB54B0-ISTE-251109-2205-931e1d71",
+      "fields": {
+        "completionMethod": {
+          "stringValue": "timeout"
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "IST"
+        },
+        "created": {
+          "stringValue": "2025-11-18T18:29:45.529Z"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-18T18:29:45.529Z"
+        },
+        "pointsCompleted": {
+          "integerValue": "1"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-10T03:05:22.837Z"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "8"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "23DB54B0-ISTE-251109-2205-931e1d71"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-18T18:29:45.926Z"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "platform": {
+                "stringValue": "React Native Android 33"
+              },
+              "deviceId": {
+                "stringValue": "40f196837f25f348"
+              },
+              "appBuild": {
+                "stringValue": "1"
+              }
+            }
+          }
+        }
+      },
+      "createTime": "2025-11-18T18:29:48.036447Z",
+      "updateTime": "2025-11-18T18:29:48.036447Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2AEB770E-LAXW-251031-1548",
+      "fields": {
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": ""
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-06T07:07:20.233Z"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "3"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "tripId": {
+          "stringValue": "2AEB770E-LAXW-251031-1548"
+        },
+        "irritabilityPost": {
+          "integerValue": "2"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-10-31T22:48:39Z"
+        },
+        "ageRange": {
+          "stringValue": "65+"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "motivationPost": {
+          "integerValue": "2"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "4"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-01T06:23:59Z"
+        },
+        "destinationCode": {
+          "stringValue": "LAX"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/Los_Angeles"
+        },
+        "giPost": {
+          "integerValue": "3"
+        }
+      },
+      "createTime": "2025-11-01T06:24:02.238971Z",
+      "updateTime": "2025-11-06T07:07:20.508098Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2AEB770E-LAXW-251106-1332",
+      "fields": {
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "19"
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-06T07:06:01Z"
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Australia/Sydney"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "startDate": {
+          "stringValue": "2025-11-06T02:32:16Z"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "destinationCode": {
+          "stringValue": "LAX"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "Australia/Sydney"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "2AEB770E-LAXW-251106-1332"
+        }
+      },
+      "createTime": "2025-11-06T07:06:02.887875Z",
+      "updateTime": "2025-11-08T20:21:38.200142Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2AEB770E-SYDE-251101-1724",
+      "fields": {
+        "userComment": {
+          "stringValue": "Was great, thank you! It seems to have really helped. Because it was a very long flight I slept through one or two points and wasn\u2019t sure when I woke up whether to go back and make up the ones I missed or not. Consider adding instruction on this!"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "fatiguePost": {
+          "integerValue": "1"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "ageRange": {
+          "stringValue": "65+"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "tripId": {
+          "stringValue": "2AEB770E-SYDE-251101-1724"
+        },
+        "motivationPost": {
+          "integerValue": "2"
+        },
+        "sleepPost": {
+          "integerValue": "2"
+        },
+        "originTimezone": {
+          "stringValue": "America/Los_Angeles"
+        },
+        "pointsCompleted": {
+          "integerValue": "8"
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "19"
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Australia/Sydney"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-05T12:43:48.323Z"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-02T07:42:09Z"
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "SYD"
+        },
+        "startDate": {
+          "stringValue": "2025-11-01T06:24:17Z"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "concentrationPost": {
+          "integerValue": "2"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        }
+      },
+      "createTime": "2025-11-02T07:42:09.665496Z",
+      "updateTime": "2025-11-08T20:19:27.414872Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/2B99CDD0-AKLE-251023-1331",
+      "fields": {
+        "giPost": {
+          "integerValue": "4"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "userComment": {
+          "stringValue": "On a long flight like NY to Auckland you tend to sleep for longer periods. This makes it difficult to use the app and apply the pressure points in a timely manner. Is there a way to do more pressure points before and after the flight rather than during the flight?  Both John and I recovered well from the flight. I was able to do the whole set ( didn\u2019t sleep so well). John missed a few but still coped well with the jet lag."
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "concentrationPost": {
+          "integerValue": "3"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-10-30T17:56:33.563Z"
+        },
+        "destinationCode": {
+          "stringValue": "AKL"
+        },
+        "pointsCompleted": {
+          "integerValue": "10"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "surveyCode": {
+          "stringValue": "JLP-2B99CDD0"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "created": {
+          "timestampValue": "2025-10-23T22:29:58Z"
+        },
+        "motivationPost": {
+          "integerValue": "3"
+        },
+        "completionDate": {
+          "stringValue": "2025-10-23T22:29:58Z"
+        },
+        "timezonesCount": {
+          "integerValue": "17"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "originTimeZone": {
+          "stringValue": "America/Los_Angeles"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "sleepPost": {
+          "integerValue": "4"
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "2B99CDD0-AKLE-251023-1331"
+        },
+        "fatiguePost": {
+          "integerValue": "4"
+        },
+        "buildNumber": {
+          "stringValue": "2"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "ageRange": {
+          "stringValue": "45-54"
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "irritabilityPost": {
+          "integerValue": "3"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-10-23T00:31:07Z"
+        }
+      },
+      "createTime": "2025-10-23T22:30:00.301681Z",
+      "updateTime": "2025-11-08T22:15:18.050278Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/35181B4C-JFKE-251122-2130-a25e34f7",
+      "fields": {
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "35181B4C-JFKE-251122-2130-a25e34f7"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "created": {
+          "stringValue": "2025-12-09T10:13:32.126Z"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "startDate": {
+          "stringValue": "2025-11-23T02:30:46.927Z"
+        },
+        "completionMethod": {
+          "stringValue": "timeout"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "sourceVersion": {
+                "stringValue": ".96"
+              },
+              "platform": {
+                "stringValue": "React Native iOS 26.0.1"
+              },
+              "deviceId": {
+                "stringValue": "335AB032-D840-4F1D-9EEE-9D9EE91614A4"
+              },
+              "appBuild": {
+                "stringValue": "0"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-09T10:13:32.199Z"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "pointsCompleted": {
+          "integerValue": "1"
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-12-09T10:13:32.126Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-12-09T10:13:32.566255Z",
+      "updateTime": "2025-12-09T10:13:32.566255Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/3A508084-DXBE-251209-0715-fd64d7a0",
+      "fields": {
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "DXB"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "9"
+        },
+        "startDate": {
+          "stringValue": "2025-12-09T03:15:36Z"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Asia/Dubai"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "source": {
+                "stringValue": "ios_app"
+              },
+              "deviceId": {
+                "stringValue": "F7A8CB56-54CF-41F7-858A-1BC147F80CDC"
+              },
+              "platform": {
+                "stringValue": "iOS 26.1"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "appBuild": {
+                "stringValue": "3"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-13T20:24:37.741Z"
+              }
+            }
+          }
+        },
+        "tripId": {
+          "stringValue": "3A508084-DXBE-251209-0715-fd64d7a0"
+        },
+        "completionDate": {
+          "stringValue": "2025-12-13T20:24:37Z"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-12-13T20:24:39.064367Z",
+      "updateTime": "2025-12-13T20:24:39.064367Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/5CBDFADC-SFOE-250920-0716",
+      "fields": {
+        "sleepPost": {
+          "integerValue": "1"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "userComment": {
+          "stringValue": "There was a layover that reset the time. Rather than showing my body time from my actual departure airport it showed the stopover time that was not relevant to me."
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "8"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "irritabilityPost": {
+          "integerValue": "2"
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "ageRange": {
+          "stringValue": "65+"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-09-30T03:52:17.885Z"
+        },
+        "timezonesCount": {
+          "integerValue": "3"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "fatiguePost": {
+          "integerValue": "2"
+        },
+        "destinationCode": {
+          "stringValue": "SFO"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "5CBDFADC-SFOE-250920-0716"
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "concentrationExpectations": {
+          "integerValue": "2"
+        },
+        "appVersion": {
+          "stringValue": "2025011905"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "created": {
+          "timestampValue": "2025-09-20T14:16:35Z"
+        },
+        "startDate": {
+          "stringValue": "2025-09-19T16:33:32Z"
+        },
+        "travelExperience": {
+          "stringValue": "frequent"
+        },
+        "concentrationPost": {
+          "integerValue": "2"
+        },
+        "completionDate": {
+          "stringValue": "2025-09-20T14:16:35Z"
+        },
+        "giPost": {
+          "integerValue": "3"
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2025-09-20T14:16:36.023014Z",
+      "updateTime": "2025-10-24T02:36:23.311912Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/67CC2497-JFKW-251116-0926-15ccb4f4",
+      "fields": {
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "67CC2497-JFKW-251116-0926-15ccb4f4"
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-16T14:26:03Z"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-17T15:26:41Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "deviceId": {
+                "stringValue": "D5CEA14B-A6A7-482F-B043-8224619CDBB2"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-17T15:26:41.900Z"
+              },
+              "appBuild": {
+                "stringValue": "8"
+              },
+              "platform": {
+                "stringValue": "iOS 18.6.2"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "originTimezone": {
+          "stringValue": "Europe/Dublin"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "pointsCompleted": {
+          "integerValue": "2"
+        }
+      },
+      "createTime": "2025-11-17T15:26:42.409327Z",
+      "updateTime": "2025-11-17T15:26:42.409327Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/67CC2497-MXPE-251029-1622",
+      "fields": {
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "tripId": {
+          "stringValue": "67CC2497-MXPE-251029-1622"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-01T18:52:10Z"
+        },
+        "startDate": {
+          "stringValue": "2025-10-29T20:22:59Z"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "MXP"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-11-01T18:52:11.003908Z",
+      "updateTime": "2025-11-01T18:52:11.003908Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/67CC2497-MXPE-251101-1952",
+      "fields": {
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-11-01T18:52:57Z"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "67CC2497-MXPE-251101-1952"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "destinationCode": {
+          "stringValue": "MXP"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-02T23:16:09Z"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Europe/Rome"
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "pointsCompleted": {
+          "integerValue": "5"
+        }
+      },
+      "createTime": "2025-11-02T23:16:09.894320Z",
+      "updateTime": "2025-11-02T23:16:09.894320Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/9F9211B7-BERE-251218-1058-d8fcfdc6",
+      "fields": {
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "1"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2026-01-07T21:31:27Z"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "9F9211B7-BERE-251218-1058-d8fcfdc6"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-12-18T15:58:47Z"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "BER"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        }
+      },
+      "createTime": "2026-01-07T21:31:28.184399Z",
+      "updateTime": "2026-01-07T21:31:28.184399Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/AA3F0064-JFKW-251104-0622",
+      "fields": {
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "motivationPost": {
+          "integerValue": "2"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "userComment": {
+          "stringValue": "I was sleeping through a few of the pressure point tasks. I\u2019m not sure how much of an effect that had on the result. I have found jet lag to be bad when traveling westbound from Europe to the United States. Not so much on the eastbound it does seem that my jet lag on this trip is not as bad as it has been in the past. It\u2019s been two full days and I\u2019m mostly adjusted to the timeframe. From what I remember, it would take me almost a week."
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "originTimezone": {
+          "stringValue": "Europe/Rome"
+        },
+        "sleepPost": {
+          "integerValue": "3"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-05T09:25:55Z"
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "fatiguePost": {
+          "integerValue": "2"
+        },
+        "irritabilityPost": {
+          "integerValue": "2"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "ageRange": {
+          "stringValue": "65+"
+        },
+        "generalAnticipated": {
+          "integerValue": "3"
+        },
+        "pointsCompleted": {
+          "integerValue": "9"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-07T10:37:39.162Z"
+        },
+        "_surveyMetadata": {
+          "mapValue": {
+            "fields": {
+              "timestamp": {
+                "timestampValue": "2025-11-07T10:37:39.499Z"
+              },
+              "sourceVersion": {
+                "stringValue": "1.0.0"
+              },
+              "source": {
+                "stringValue": "web_survey"
+              },
+              "userAgent": {
+                "stringValue": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Ve"
+              },
+              "surveyUrl": {
+                "stringValue": "https://jetlagpro.com/survey.html"
+              },
+              "browserInfo": {
+                "stringValue": "iPhone; en-US"
+              }
+            }
+          }
+        },
+        "tripId": {
+          "stringValue": "AA3F0064-JFKW-251104-0622"
+        },
+        "concentrationPost": {
+          "integerValue": "3"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-11-04T11:22:33Z"
+        }
+      },
+      "createTime": "2025-11-05T09:25:55.664397Z",
+      "updateTime": "2025-11-07T10:37:39.546353Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/AA3F0064-MXPE-251020-1026",
+      "fields": {
+        "startDate": {
+          "stringValue": "2025-10-20T08:26:32Z"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "MXP"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "created": {
+          "timestampValue": "2025-10-21T07:59:15Z"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "2"
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-10-21T07:59:15Z"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "surveyCode": {
+          "stringValue": "JLP-AA3F0064"
+        },
+        "tripId": {
+          "stringValue": "AA3F0064-MXPE-251020-1026"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        }
+      },
+      "createTime": "2025-10-21T07:59:16.080204Z",
+      "updateTime": "2025-10-21T07:59:16.080204Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/AE14C028-JFKW-251103-1636",
+      "fields": {
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Europe/Rome"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "AE14C028-JFKW-251103-1636"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-03T19:34:45Z"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "Europe/Rome"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-03T15:36:58Z"
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-11-03T19:34:46.916164Z",
+      "updateTime": "2025-11-03T19:34:46.916164Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/AE14C028-JFKW-251104-0525",
+      "fields": {
+        "originTimezone": {
+          "stringValue": "Europe/Rome"
+        },
+        "tripId": {
+          "stringValue": "AE14C028-JFKW-251104-0525"
+        },
+        "startDate": {
+          "stringValue": "2025-11-04T10:25:12Z"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-11-05T09:30:11Z"
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "10"
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        }
+      },
+      "createTime": "2025-11-05T09:30:11.574086Z",
+      "updateTime": "2025-11-05T09:30:11.574086Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/AE14C028-MXPE-251023-0110",
+      "fields": {
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "buildNumber": {
+          "stringValue": "3"
+        },
+        "pointsCompleted": {
+          "integerValue": "8"
+        },
+        "startDate": {
+          "stringValue": "2025-10-22T23:10:32Z"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "created": {
+          "stringValue": "2025-10-23T21:37:28Z"
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "AE14C028-MXPE-251023-0110"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "7"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "point12_stimulated"
+        },
+        "destinationCode": {
+          "stringValue": "MXP"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "completionDate": {
+          "stringValue": "2025-10-23T21:37:28Z"
+        }
+      },
+      "createTime": "2025-10-23T21:37:30.441057Z",
+      "updateTime": "2025-10-24T01:50:01.884773Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/BBDF7727-BERE-250916-1920",
+      "fields": {
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "completionDate": {
+          "stringValue": "2025-09-16T23:20:13Z"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-09-17T00:10:16.411Z"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "userComment": {
+          "stringValue": "Nichole"
+        },
+        "ageRange": {
+          "stringValue": "25-34"
+        },
+        "travelExperience": {
+          "stringValue": "frequent"
+        },
+        "startDate": {
+          "stringValue": "2025-09-16T01:47:19Z"
+        },
+        "created": {
+          "timestampValue": "2025-09-16T23:20:13Z"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "appVersion": {
+          "stringValue": "2025011905"
+        },
+        "surveyCode": {
+          "stringValue": "JLP-BBDF7727"
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "BBDF7727-BERE-250916-1920"
+        },
+        "completionMethod": {
+          "stringValue": "auto"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "fatiguePost": {
+          "integerValue": "3"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "gender": {
+          "stringValue": "female"
+        },
+        "sleepPost": {
+          "integerValue": "2"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "BER"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "8"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2025-09-16T23:20:14.837507Z",
+      "updateTime": "2025-10-22T13:51:58.921641Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/C2646124-FCOE-251027-1556",
+      "fields": {
+        "destinationCode": {
+          "stringValue": "FCO"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-06T16:52:53Z"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "C2646124-FCOE-251027-1556"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "Europe/Rome"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-10-27T19:56:32Z"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        }
+      },
+      "createTime": "2025-11-06T16:52:56.577728Z",
+      "updateTime": "2025-11-06T23:37:47.217702Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/C2646124-JFKE-251106-1153",
+      "fields": {
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-06T16:53:09Z"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "appBuild": {
+                "stringValue": "5"
+              },
+              "platform": {
+                "stringValue": "iOS 18.6.2"
+              },
+              "timestamp": {
+                "timestampValue": "2025-11-08T07:40:19.127Z"
+              },
+              "sourceVersion": {
+                "stringValue": "0.95"
+              },
+              "deviceId": {
+                "stringValue": "61F57D15-7495-4659-B65C-0D463D20DA2A"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "tripId": {
+          "stringValue": "C2646124-JFKE-251106-1153"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "4"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-11-08T07:40:18Z"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        }
+      },
+      "createTime": "2025-11-08T07:40:19.243351Z",
+      "updateTime": "2025-11-08T07:40:19.243351Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/CAEA023C-JFKE-250918-1141",
+      "fields": {
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "9"
+        },
+        "tripId": {
+          "stringValue": "CAEA023C-JFKE-250918-1141"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-05T17:04:20Z"
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-09-17T16:00:33Z"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "unknown_survey"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "0"
+        }
+      },
+      "createTime": "2025-11-05T17:04:20.514718Z",
+      "updateTime": "2025-11-05T17:04:20.514718Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/E7F4A825-EWRW-251125-1250-57f2ed7a",
+      "fields": {
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "7"
+        },
+        "completionDate": {
+          "stringValue": "2025-12-04T16:03:09Z"
+        },
+        "tripId": {
+          "stringValue": "E7F4A825-EWRW-251125-1250-57f2ed7a"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "userComment": {
+          "stringValue": "OP: I really enjoyed new feature of timers in the app - they make activating the points much easier. Overall - great and very helpful app for long distance travel. Love it!"
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "appBuild": {
+                "stringValue": "2"
+              },
+              "deviceId": {
+                "stringValue": "057D4B79-2DDC-4159-8E70-0F8454F44434"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-04T16:03:09.235Z"
+              },
+              "platform": {
+                "stringValue": "iOS 26.2"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "sleepPost": {
+          "integerValue": "3"
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-12-12T21:52:38.976Z"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-11-25T17:50:25Z"
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "travelDirection": {
+          "stringValue": "west"
+        },
+        "ageRange": {
+          "stringValue": "55-64"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "EWR"
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "fatiguePost": {
+          "integerValue": "2"
+        },
+        "generalAnticipated": {
+          "integerValue": "5"
+        },
+        "point10Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "motivationPost": {
+          "integerValue": "2"
+        },
+        "originTimezone": {
+          "stringValue": "Europe/London"
+        }
+      },
+      "createTime": "2025-12-04T16:03:09.351423Z",
+      "updateTime": "2025-12-12T21:52:39.375183Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/E7F4A825-FCOE-251009-2315",
+      "fields": {
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "destinationCode": {
+          "stringValue": "FCO"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "pointsCompleted": {
+          "integerValue": "9"
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "userComment": {
+          "stringValue": ""
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "startDate": {
+          "stringValue": "2025-10-09T22:15:12Z"
+        },
+        "buildNumber": {
+          "stringValue": "4"
+        },
+        "point7Completed": {
+          "booleanValue": true
+        },
+        "point9Completed": {
+          "booleanValue": true
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "unknown_survey"
+        },
+        "ageRange": {
+          "stringValue": "55-64"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "sleepPost": {
+          "integerValue": "3"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "concentrationPost": {
+          "integerValue": "1"
+        },
+        "fatiguePost": {
+          "integerValue": "2"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-11-05T17:05:09.153Z"
+        },
+        "completionDate": {
+          "stringValue": "2025-11-05T17:03:13Z"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "E7F4A825-FCOE-251009-2315"
+        },
+        "generalAnticipated": {
+          "integerValue": "2"
+        }
+      },
+      "createTime": "2025-11-05T17:03:13.541204Z",
+      "updateTime": "2025-11-05T17:05:09.392710Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/E7F4A825-JFKE-251013-1057",
+      "fields": {
+        "userComment": {
+          "stringValue": "Great app - I believe activating these points reduced my jet lag by at least 50 percent. My only issue was - reaching the points on my feet is not always easy when flying, especially if I am seated in economy class."
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "E7F4A825-JFKE-251013-1057"
+        },
+        "irritabilityPost": {
+          "integerValue": "1"
+        },
+        "generalAnticipated": {
+          "integerValue": "4"
+        },
+        "pointsCompleted": {
+          "integerValue": "6"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "fatiguePost": {
+          "integerValue": "2"
+        },
+        "completionDate": {
+          "stringValue": "2025-10-22T00:16:25Z"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "giPost": {
+          "integerValue": "1"
+        },
+        "surveySubmittedAt": {
+          "stringValue": "2025-10-22T00:20:08.927Z"
+        },
+        "point2Completed": {
+          "booleanValue": true
+        },
+        "completionMethod": {
+          "stringValue": "survey_sync"
+        },
+        "startDate": {
+          "stringValue": "2025-10-13T14:57:18Z"
+        },
+        "point5Completed": {
+          "booleanValue": true
+        },
+        "point8Completed": {
+          "booleanValue": true
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "buildNumber": {
+          "stringValue": "2"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "motivationPost": {
+          "integerValue": "1"
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "point4Completed": {
+          "booleanValue": true
+        },
+        "concentrationPost": {
+          "integerValue": "2"
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": true
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "destinationCode": {
+          "stringValue": "JFK"
+        },
+        "point3Completed": {
+          "booleanValue": true
+        },
+        "created": {
+          "timestampValue": "2025-10-22T00:16:25Z"
+        },
+        "ageRange": {
+          "stringValue": "55-64"
+        },
+        "sleepPost": {
+          "integerValue": "3"
+        },
+        "surveyCode": {
+          "stringValue": "JLP-E7F4A825"
+        }
+      },
+      "createTime": "2025-10-22T00:16:25.801180Z",
+      "updateTime": "2025-11-05T17:06:05.457349Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/E94B5DFA-DUBE-251213-2310-2cd6476c",
+      "fields": {
+        "completionDate": {
+          "stringValue": "2025-12-14T19:00:18Z"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-12-14T04:10:14Z"
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "5"
+        },
+        "destinationCode": {
+          "stringValue": "DUB"
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "_writeMetadata": {
+          "mapValue": {
+            "fields": {
+              "platform": {
+                "stringValue": "iOS 26.1"
+              },
+              "sourceVersion": {
+                "stringValue": "0.96"
+              },
+              "appBuild": {
+                "stringValue": "3"
+              },
+              "timestamp": {
+                "timestampValue": "2025-12-14T19:00:18.215Z"
+              },
+              "deviceId": {
+                "stringValue": "1952B626-CCFC-481B-A365-1CB98CC2CE33"
+              },
+              "source": {
+                "stringValue": "ios_app"
+              }
+            }
+          }
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "0"
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "E94B5DFA-DUBE-251213-2310-2cd6476c"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "America/New_York"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        }
+      },
+      "createTime": "2025-12-14T19:00:18.460287Z",
+      "updateTime": "2025-12-14T19:00:18.460287Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/FAAADA4E-LGAE-251023-1127",
+      "fields": {
+        "buildNumber": {
+          "stringValue": "3"
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": false
+        },
+        "point6Completed": {
+          "booleanValue": true
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "timezonesCount": {
+          "integerValue": "2"
+        },
+        "point1Completed": {
+          "booleanValue": false
+        },
+        "completionMethod": {
+          "stringValue": "manual_end_x_button"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "startDate": {
+          "stringValue": "2025-10-23T17:27:06Z"
+        },
+        "point11Completed": {
+          "booleanValue": false
+        },
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "pointsCompleted": {
+          "integerValue": "1"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "appVersion": {
+          "stringValue": "0.95"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "created": {
+          "stringValue": "2025-10-24T13:00:44Z"
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "platform": {
+          "stringValue": "iOS"
+        },
+        "tripId": {
+          "stringValue": "FAAADA4E-LGAE-251023-1127"
+        },
+        "destinationCode": {
+          "stringValue": "LGA"
+        },
+        "completionDate": {
+          "stringValue": "2025-10-24T13:00:44Z"
+        }
+      },
+      "createTime": "2025-10-24T13:00:44.953047Z",
+      "updateTime": "2025-10-24T13:00:44.953047Z"
+    },
+    {
+      "name": "projects/jetlagpro-research/databases/(default)/documents/tripCompletions/FC5B7A9E-BERE-251227-2320-a56df503",
+      "fields": {
+        "point9Completed": {
+          "booleanValue": false
+        },
+        "point12Completed": {
+          "booleanValue": true
+        },
+        "startDate": {
+          "stringValue": "2025-12-27T22:20:42Z"
+        },
+        "completionMethod": {
+          "stringValue": "timeout_24_hours"
+        },
+        "originTimezone": {
+          "stringValue": "America/New_York"
+        },
+        "point1Completed": {
+          "booleanValue": true
+        },
+        "timezonesCount": {
+          "integerValue": "6"
+        },
+        "point7Completed": {
+          "booleanValue": false
+        },
+        "arrivalTimeZone": {
+          "stringValue": "Europe/Berlin"
+        },
+        "point5Completed": {
+          "booleanValue": false
+        },
+        "surveyCompleted": {
+          "booleanValue": false
+        },
+        "tripId": {
+          "stringValue": "FC5B7A9E-BERE-251227-2320-a56df503"
+        },
+        "pointsCompleted": {
+          "integerValue": "3"
+        },
+        "point3Completed": {
+          "booleanValue": false
+        },
+        "point2Completed": {
+          "booleanValue": false
+        },
+        "point4Completed": {
+          "booleanValue": false
+        },
+        "destinationCode": {
+          "stringValue": "BER"
+        },
+        "point8Completed": {
+          "booleanValue": false
+        },
+        "point10Completed": {
+          "booleanValue": false
+        },
+        "completionDate": {
+          "stringValue": "2025-12-30T10:44:35Z"
+        },
+        "point11Completed": {
+          "booleanValue": true
+        },
+        "point6Completed": {
+          "booleanValue": false
+        },
+        "travelDirection": {
+          "stringValue": "east"
+        }
+      },
+      "createTime": "2025-12-30T10:44:37.252255Z",
+      "updateTime": "2025-12-30T10:44:37.252255Z"
+    }
+  ]
+}

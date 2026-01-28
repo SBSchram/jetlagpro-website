@@ -45,7 +45,8 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <script src="load-common-head.js"></script>
+    <link rel="stylesheet" href="styles.css?v=20251212140308">
+    <script src="load-common-head.js?v=20251211130933"></script>
 </head>
 <body>
     <div id="main-header"></div>
@@ -239,13 +240,13 @@
     </script>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js"></script>
+    <script src="js/components.js?v=20251212140200"></script>
     
     <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js"></script>
+    <script src="js/translate.js?v=20251212140000"></script>
     
     <!-- Notification Manager -->
-    <script src="notifications.js"></script>
+    <script src="notifications.js?v=20251212140000"></script>
 
     <main>
         <section class="hero-simple">
@@ -254,7 +255,7 @@
                 <p class="hero-subtitle">The chronoacupuncture app that works with your body's natural rhythms</p>
                 <div class="hero-buttons">
                     <a href="demo/" class="btn btn-primary">Try Interactive Demo</a>
-                    <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-secondary" target="_blank">Join Beta</a>
+                    <a href="#download" class="btn btn-primary">Get the App</a>
                 </div>
             </div>
         </section>
@@ -274,102 +275,109 @@
             </div>
         </section>
 
-        <section id="top" class="how-it-works">
-            <div class="container">
-                <h2>Just 3 Simple Steps</h2>
-                <div class="steps-container">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h3>Read the basics</h3>
-                        <img src="assets/screenshots/iPhone_6.5_Screenshot_1.png" alt="JetLagPro Home Screen" class="step-image">
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h3>Choose your destination</h3>
-                        <img src="assets/screenshots/iPhone_6.5_Screenshot_2.png" alt="Choose Destination" class="step-image">
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h3>Follow the pressure points</h3>
-                        <img src="assets/screenshots/iPhone_6.5_Screenshot_4.png" alt="Acupressure Instructions" class="step-image">
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="features" class="features">
             <div class="container">
                 <h2 class="section-title">Why Use JetLagPro?</h2>
-                <p class="section-subtitle">Access the chronoacupuncture technique that acupuncturists have recommended for decades - now made simple and accessible with professional guidance.</p>
+                <p class="section-subtitle">For many decades acupuncturists have used the horary point technique to reduce jet lag. While never a secret, it was largely unused outside of the acupuncture community. This app makes this technique accessible for everyone.</p>
                 
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-icon">🕐</div>
-                        <h3>Traditional Horary Point Technique</h3>
-                        <p>Learn the Chinese Organ Clock approach to stimulate specific pressure points at precisely the right times - the traditional method many acupuncturists use.</p>
+                        <h3>Do What Acupuncturists Do</h3>
+                        <p>Acupuncturists know how to reduce the effects of jet lag. Use the same horary point technique they've relied on for decades.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">📍</div>
-                        <h3>Professional Instruction</h3>
-                        <p>High-quality diagrams and videos from a licensed acupuncturist show you exactly where each point is located and how to stimulate it properly.</p>
+                        <h3>Made Simple for Everyone</h3>
+                        <p>Clear videos and diagrams show you exactly where and how to press. Just follow the simple instructions.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">⏰</div>
-                        <h3>Automated Timing</h3>
-                        <p>Get reminders at exactly the right times based on your destination - no need to calculate complex schedules or visit an acupuncturist.</p>
+                        <h3>Stay On Track</h3>
+                        <p>The app keeps you on track with timed reminders at exactly the right times based on your destination.</p>
                     </div>
 
                 </div>
             </div>
         </section>
 
-        <section id="localization" class="localization">
+        <section id="top" class="how-it-works">
             <div class="container">
-                <div class="localization-note">
-                    <h3>Perfect for International Travel</h3>
-                    <p>Whether you're traveling from Tokyo to Paris, Seoul to New York, or anywhere in between, JetLagPro provides a seamless, localized experience that helps you overcome jet lag in your native language.</p>
-                    <div class="languages-list">
-                        <ul>
-                            <li>🇺🇸 English</li>
-                            <li>🇪🇸 Español</li>
-                            <li>🇫🇷 Français</li>
-                            <li>🇩🇪 Deutsch</li>
-                            <li>🇯🇵 日本語</li>
-                            <li>🇰🇷 한국어</li>
-                            <li>🇨🇳 简体中文</li>
-                            <li>🇷🇺 Русский</li>
-                        </ul>
+                <img src="assets/images/Just 3 Steps.png" alt="Just 3 Steps" class="section-header-image">
+                <div class="steps-container">
+                    <div class="step">
+                        <h3>Choose your destination</h3>
+                        <img src="assets/images/Step 1.png" alt="JetLagPro Home Screen" class="step-image">
+                    </div>
+                    <div class="step">
+                        <h3>Stimulate the points</h3>
+                        <img src="assets/images/Step 2.png" alt="Choose Destination" class="step-image">
+                    </div>
+                    <div class="step">
+                        <h3>Do all 12 points</h3>
+                        <img src="assets/images/Step 3.png" alt="Acupressure Instructions" class="step-image">
                     </div>
                 </div>
             </div>
         </section>
 
 
-        <section class="disclaimer">
+        <!-- Beta Testing Section -->
+        <section id="download" class="download">
             <div class="container">
-                <h4>Research Participation Opportunity</h4>
-                <p>While using JetLagPro to learn chronoacupuncture techniques, you can also contribute to the first formal study of this traditional approach. Your experience helps bridge ancient wisdom with modern evidence-based medicine.</p>
-                <p><a href="survey.html">Share your experience</a> to help advance jet lag science and improve the app for future travelers.</p>
-                <p style="font-size: 0.9em; margin-top: 15px; color: #666;"><em>This app is for informational purposes and is not a substitute for professional medical advice. Individual responses may vary.</em></p>
+                <div class="download-content">
+                    <h2>Get JetLagPro in 2 Steps</h2>
+                    
+                    <div class="beta-steps">
+                        <div class="beta-step">
+                            <h3>Step 1: Install TestFlight</h3>
+                            <div class="step-logo">
+                                <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
+                            </div>
+                            <p>Apple requires TestFlight for all beta apps.</p>
+                            <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
+                        </div>
+                        
+                        <div class="beta-step">
+                            <h3>Step 2: Install JetLagPro</h3>
+                            <div class="step-logo">
+                                <img src="/favicon.ico" alt="JetLagPro" style="width: 64px; height: 64px;">
+                            </div>
+                            <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
+                        </div>
+                    </div>
+                    
+                    <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
+                        <div class="modal-content" id="testflightModalContent">
+                            <div class="modal-body">
+                                <h3 id="testflightModalTitle" style="font-size: 1.5em;">What Happens Next</h3>
+                                <p id="testflightModalDescription"><strong>After TestFlight Installs - you will see</strong></p>
+                                <div class="modal-visual" style="margin-top: 5px;">
+                                    <img src="assets/images/TestFlightRedeem.JPG?v=20251212140307" alt="TestFlight redeem screen" style="width: 200px; border-radius: 8px; opacity: 0.9;">
+                                    <div class="quit-overlay">❌ QUIT HERE<br><small style="font-size: 10px;">(Don't enter code)</small></div>
+                                </div>
+                                <p style="text-align: center; margin: 10px 0 0 0;"><strong style="color: #ef4444;">CLOSE TestFlight when you see</strong><br><strong style="color: #000; font-size: 1.4em;">Ready To Test</strong></p>
+                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer; margin-top: 15px;">Continue to App Store</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
         </section>
+
     </main>
+
 
     <div id="main-footer"></div>
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
         <div class="indicator active" data-section="top"></div>
-        <div class="indicator" data-section="science"></div>
-        <div class="indicator" data-section="features"></div>
-        <div class="indicator" data-section="localization"></div>
+         <div class="indicator" data-section="features"></div>
         <div class="indicator" data-section="download"></div>
     </div>
 
-    <!-- Swipe Instructions (shows briefly on mobile) -->
-    <div class="swipe-hint" id="swipeHint">
-        <span>← Swipe to navigate →</span>
-    </div>
 
     <script>
         // Mobile menu functionality
@@ -403,6 +411,45 @@
             }
         });
 
+        // Auto-scroll to download section if coming from flyer
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('source') === 'flyer') {
+            // Function to perform scroll
+            const scrollToDownload = () => {
+                const downloadSection = document.getElementById('download');
+                if (downloadSection) {
+                    const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+                    const targetPosition = downloadSection.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+            
+            // Wait for both page load AND header to be loaded
+            let pageLoaded = false;
+            let headerLoaded = false;
+            
+            const checkAndScroll = () => {
+                if (pageLoaded && headerLoaded) {
+                    // Add small delay to ensure layout is complete
+                    setTimeout(scrollToDownload, 100);
+                }
+            };
+            
+            window.addEventListener('load', () => {
+                pageLoaded = true;
+                checkAndScroll();
+            });
+            
+            document.addEventListener('headerLoaded', () => {
+                headerLoaded = true;
+                checkAndScroll();
+            });
+        }
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -420,163 +467,66 @@
             });
         });
 
-        // Swipe Navigation Implementation
-        class SwipeNavigation {
-            constructor() {
-                this.sections = ['top', 'science', 'features', 'localization', 'download'];
-                this.currentSection = 0;
-                this.touchStartX = 0;
-                this.touchEndX = 0;
-                this.minSwipeDistance = 50;
-                this.isScrolling = false;
-                
-                this.init();
+        // Clean two-step process - no auto-copy needed
+        
+        // TestFlight modal - Simple trap warning
+        (function () {
+            const testFlightButton = document.getElementById('openTestFlightModal');
+            const modal = document.getElementById('testflightModal');
+            const continueButton = document.getElementById('continueToTestFlight');
+            const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
+
+            if (!testFlightButton || !modal || !continueButton) {
+                return;
             }
 
-            init() {
-                // Only enable on mobile devices
-                if (window.innerWidth <= 768) {
-                    this.setupEventListeners();
-                    this.showSwipeHint();
-                    this.updateIndicators();
+            // Open modal - show trap warning
+            const openModal = (event) => {
+                if (event) {
+                    event.preventDefault();
                 }
+                modal.classList.add('is-visible');
+                document.body.classList.add('modal-open');
+                continueButton.focus({ preventScroll: true });
+            };
 
-                // Re-initialize on window resize
-                window.addEventListener('resize', () => {
-                    if (window.innerWidth <= 768) {
-                        this.setupEventListeners();
-                    } else {
-                        this.removeEventListeners();
-                    }
-                });
-            }
+            // Close modal
+            const closeModal = () => {
+                modal.classList.remove('is-visible');
+                document.body.classList.remove('modal-open');
+            };
 
-            setupEventListeners() {
-                document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-                document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-                document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
+            // Navigate to App Store - close modal and go
+            const goToAppStore = () => {
+                if (continueButton.disabled) return;
+                continueButton.disabled = true;
+                continueButton.textContent = 'Opening...';
                 
-                // Intersection Observer to track current section
-                this.setupSectionObserver();
-            }
+                closeModal();
+                window.location.href = TESTFLIGHT_URL;
+            };
 
-            removeEventListeners() {
-                document.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-                document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-                document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-            }
+            // Event listeners
+            testFlightButton.addEventListener('click', openModal);
+            continueButton.addEventListener('click', goToAppStore);
 
-            handleTouchStart(e) {
-                this.touchStartX = e.touches[0].clientX;
-                this.isScrolling = false;
-            }
-
-            handleTouchMove(e) {
-                // Detect if user is scrolling vertically
-                const deltaY = Math.abs(e.touches[0].clientY - e.touches[0].clientY);
-                const deltaX = Math.abs(e.touches[0].clientX - this.touchStartX);
-                
-                if (deltaY > deltaX) {
-                    this.isScrolling = true;
+            // Close on overlay click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                    testFlightButton.focus({ preventScroll: true });
                 }
-                
-                // Prevent horizontal scrolling during swipe
-                if (!this.isScrolling && deltaX > 10) {
-                    e.preventDefault();
+            });
+
+            // Escape key closes modal
+            document.addEventListener('keydown', (e) => {
+                if (modal.classList.contains('is-visible') && e.key === 'Escape') {
+                    closeModal();
+                    testFlightButton.focus({ preventScroll: true });
                 }
-            }
+            });
+        })();
 
-            handleTouchEnd(e) {
-                if (this.isScrolling) return;
-                
-                this.touchEndX = e.changedTouches[0].clientX;
-                const swipeDistance = this.touchStartX - this.touchEndX;
-                
-                if (Math.abs(swipeDistance) > this.minSwipeDistance) {
-                    if (swipeDistance > 0) {
-                        // Swipe left - next section
-                        this.navigateToSection(1);
-                    } else {
-                        // Swipe right - previous section
-                        this.navigateToSection(-1);
-                    }
-                }
-            }
-
-            navigateToSection(direction) {
-                const newSection = this.currentSection + direction;
-                
-                if (newSection >= 0 && newSection < this.sections.length) {
-                    this.currentSection = newSection;
-                    const targetSection = document.getElementById(this.sections[this.currentSection]);
-                    
-                    if (targetSection) {
-                        targetSection.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        this.updateIndicators();
-                        this.addSwipeAnimation();
-                    }
-                }
-            }
-
-            setupSectionObserver() {
-                const options = {
-                    threshold: 0.5,
-                    rootMargin: '-20% 0px -20% 0px'
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const sectionId = entry.target.id;
-                            const sectionIndex = this.sections.indexOf(sectionId);
-                            if (sectionIndex !== -1) {
-                                this.currentSection = sectionIndex;
-                                this.updateIndicators();
-                            }
-                        }
-                    });
-                }, options);
-
-                this.sections.forEach(sectionId => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        observer.observe(section);
-                    }
-                });
-            }
-
-            updateIndicators() {
-                const indicators = document.querySelectorAll('.indicator');
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === this.currentSection);
-                });
-            }
-
-            addSwipeAnimation() {
-                document.body.classList.add('swiping');
-                setTimeout(() => {
-                    document.body.classList.remove('swiping');
-                }, 300);
-            }
-
-            showSwipeHint() {
-                const hint = document.getElementById('swipeHint');
-                hint.classList.add('show');
-                
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    hint.classList.remove('show');
-                }, 3000);
-            }
-        }
-
-        // Initialize swipe navigation when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new SwipeNavigation();
-        });
     </script>
 </body>
     <!-- Trigger new deployment -->

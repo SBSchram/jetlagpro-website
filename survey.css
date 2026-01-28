@@ -101,230 +101,31 @@ body {
     display: none;
 }
 
-/* Modern Scale Slider Design - Inspired by Google Forms & SurveyMonkey */
-.scale-container {
-    margin: 30px 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    position: relative;
-}
+/* Removed unnecessary slider code */
 
-/* Add bubbles along the slider track */
-.scale-container::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: repeating-linear-gradient(
-        to right,
-        #e5e7eb 0%,
-        #e5e7eb calc(20% - 3px),
-        #d1d5db calc(20% - 3px),
-        #d1d5db 20%,
-        #e5e7eb 20%,
-        #e5e7eb calc(40% - 3px),
-        #d1d5db calc(40% - 3px),
-        #d1d5db 40%,
-        #e5e7eb 40%,
-        #e5e7eb calc(60% - 3px),
-        #d1d5db calc(60% - 3px),
-        #d1d5db 60%,
-        #e5e7eb 60%,
-        #e5e7eb calc(80% - 3px),
-        #d1d5db calc(80% - 3px),
-        #d1d5db 80%,
-        #e5e7eb 80%,
-        #e5e7eb calc(100% - 3px),
-        #d1d5db calc(100% - 3px),
-        #d1d5db 100%
-    );
-    border-radius: 3px;
-    pointer-events: none;
-    z-index: 1;
-}
+/* Removed slider track bubbles */
 
-.scale-slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: transparent;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 2;
-}
+/* Removed scale-slider class */
 
-/* Tick marks container */
-.scale-slider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: 
-        radial-gradient(circle at 0% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 25% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 50% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 75% 50%, #666 2px, transparent 2px),
-        radial-gradient(circle at 100% 50%, #666 2px, transparent 2px);
-    transform: translateY(-50%);
-    pointer-events: none;
-    z-index: 1;
-}
+/* Removed tick marks container */
 
-.scale-slider:focus {
-    /* Focus state handled by the pseudo-element */
-}
+/* Removed focus state */
 
-.scale-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #2563eb;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.3);
-    transition: all 0.2s ease;
-    position: relative;
-}
+/* Removed webkit slider thumb */
 
-.scale-slider::-webkit-slider-thumb:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+/* Removed webkit slider thumb hover */
 
-.scale-slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #2563eb;
-    cursor: pointer;
-    border: 3px solid #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.3);
-    transition: all 0.2s ease;
-    -moz-appearance: none;
-}
+/* Removed moz range thumb */
 
-.scale-slider::-moz-range-thumb:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+/* Removed moz range thumb hover */
 
-/* Compact Scale Labels with three labels */
-.scale-labels {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
-    padding: 0;
-    font-size: 11px;
-    color: #374151;
-    font-weight: 500;
-    width: 100%;
-    position: relative;
-}
-
-.scale-labels span {
-    text-align: center;
-    flex: 1;
-    padding: 4px 1px;
-    position: relative;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    z-index: 2;
-    font-size: 10px;
-}
-
-.scale-labels span:hover {
-    color: #1f2937;
-}
-
-.scale-labels span:first-child {
-    text-align: left;
-    padding-left: 0;
-}
-
-.scale-labels span:last-child {
-    text-align: right;
-    padding-right: 0;
-}
-
-/* Center label styling */
-.scale-labels span:nth-child(2) {
-    font-weight: 700;
-    color: #1f2937;
-    font-size: 13px;
-}
+/* Removed scale-labels - we only use rating bubbles */
 
 /* Removed selected-value styling - no longer needed with visual bubbles */
 
-/* Modern Symptom Assessment Layout - Horizontal */
-.symptom-assessment {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-top: 20px;
-    align-items: flex-start;
-    width: 100%; /* Ensure full width */
-}
+/* Removed symptom-assessment layout - we only use rating bubbles */
 
-.severity-section,
-.duration-section {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    flex: 1;
-    min-width: 0; /* Allow flex items to shrink */
-    width: 100%; /* Ensure full width */
-}
-
-.severity-section:hover,
-.duration-section:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-color: #d1d5db;
-}
-
-.severity-section h4,
-.duration-section h4 {
-    margin: 0 0 20px 0;
-    color: #111827;
-    font-size: 18px;
-    font-weight: 600;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-/* Compact Scale Layout - Labels inline with sliders */
-.symptom-row {
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.symptom-row label {
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #202124;
-    margin-bottom: 8px;
-    line-height: 1.3;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
+/* Removed compact scale layout - we only use rating bubbles */
 
 /* Center the symptom group headings */
 .symptom-group h4 {
@@ -337,12 +138,10 @@ body {
 
 /* Box styling for symptom groups */
 .symptom-group {
-    margin-bottom: 20px; /* Reduced from default to decrease vertical spacing between groups */
+    margin-bottom: 20px;
     padding: 20px;
     background: #ffffff;
-    border-radius: 12px;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .symptom-group h4 {
@@ -353,24 +152,20 @@ body {
     text-align: center;
 }
 
-.symptom-group:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    border-color: #d1d5db;
+/* Desktop: left-align symptom headings */
+@media (min-width: 768px) {
+    .symptom-group h4 {
+        text-align: left;
+    }
 }
+
+/* Removed hover effects - keep it simple */
 
 .symptom-group:last-child {
     margin-bottom: 0;
 }
 
-/* Ensure scale container takes full width */
-.scale-container {
-    margin: 8px 0;
-    padding: 0;
-    background: transparent;
-    border: none;
-    width: 100%;
-    max-width: 100%;
-}
+/* Removed scale container - we only use rating bubbles */
 
 /* Ensure date inputs match other form field sizes */
 .context-row input[type="date"] {
@@ -405,54 +200,9 @@ body {
     max-width: 100%;
 }
 
-/* Full-width slider with visual stops */
-.scale-slider {
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background: linear-gradient(to right, #e5e7eb 0%, #e5e7eb 25%, #e5e7eb 50%, #e5e7eb 75%, #e5e7eb 100%);
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    box-sizing: border-box;
-}
+/* Removed full-width slider - we only use rating bubbles */
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .symptom-assessment {
-        flex-direction: column;
-        gap: 20px;
-    }
-    
-    .severity-section,
-    .duration-section {
-        padding: 20px;
-    }
-    
-    .scale-container {
-        margin: 25px 0;
-    }
-    
-    .selected-value {
-        font-size: 16px;
-        padding: 10px 16px;
-        min-width: 100px;
-    }
-    
-    .symptom-row label {
-        font-size: 16px;
-        margin-bottom: 12px;
-    }
-    
-    .scale-labels {
-        font-size: 13px;
-        padding: 0 5px;
-    }
-}
+/* Removed responsive design for sliders - we only use rating bubbles */
 
 /* Survey Layout System - Cohesive Design */
 .survey-layout-container {
@@ -482,7 +232,7 @@ body {
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
-    resize: vertical;
+    resize: none;
     min-height: 100px;
     transition: border-color 0.3s ease;
 }
@@ -620,7 +370,7 @@ body {
 
 /* Survey Preview - Centered */
 .survey-preview {
-    padding: 40px 0;
+    padding: 20px 0;
     background: white;
 }
 
@@ -843,14 +593,13 @@ body {
 }
 
 .preview-notice {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .notice-box {
     background: #f8f9fa;
-    padding: 24px;
+    padding: 16px;
     border-radius: 8px;
-    border-left: 4px solid #007bff;
 }
 
 .notice-box h4 {
@@ -874,7 +623,7 @@ body {
 }
 
 .notice-box li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 /* Form Elements */
@@ -895,12 +644,7 @@ form {
     border-bottom: none;
 }
 
-.symptom-row:hover {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 12px 8px;
-    margin: 0 -8px;
-}
+/* Removed hover effect that was adding unwanted gray background */
 
 .symptom-row label {
     flex: 1;
@@ -1041,57 +785,54 @@ form {
     border-top: 1px solid #eee;
 }
 
-/* Buttons */
+/* Buttons - Simple and Clean */
 .btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-primary {
-    background: #007bff;
+    background: #2563eb;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #0056b3;
-    transform: translateY(-1px);
+    background: #1d4ed8;
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: #6b7280;
     color: white;
 }
 
 .btn-secondary:hover {
-    background: #545b62;
-    transform: translateY(-1px);
+    background: #4b5563;
 }
 
 .btn-success {
-    background: #28a745;
+    background: #10b981;
     color: white;
 }
 
 .btn-success:hover {
-    background: #1e7e34;
-    transform: translateY(-1px);
+    background: #059669;
 }
 
-/* Survey Completion */
+/* Survey Completion - Clean and Simple */
 .survey-complete {
     text-align: center;
-    padding: 40px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid #28a745;
+    padding: 40px 20px;
+    background: #ffffff;
+    border: 2px solid #10b981;
+    border-radius: 12px;
 }
 
 .completion-content {
@@ -1101,35 +842,37 @@ form {
 
 .completion-icon {
     font-size: 4rem;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .survey-complete h2 {
-    color: #28a745;
+    color: #10b981;
     margin-bottom: 20px;
     font-size: 2rem;
+    font-weight: 700;
 }
 
 .survey-complete p {
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 16px;
+    color: #374151;
+    margin-bottom: 32px;
+    font-size: 18px;
     line-height: 1.6;
 }
 
 .completion-benefits {
     text-align: left;
-    margin: 30px 0;
-    padding: 20px;
-    background: white;
+    margin: 32px 0;
+    padding: 24px;
+    background: #f8fafc;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
 }
 
 .completion-benefits h3 {
-    color: #374151;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    color: #1f2937;
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 .completion-benefits ul {
@@ -1161,12 +904,12 @@ form {
 /* Responsive Design */
 @media (max-width: 768px) {
     .survey-container {
-        padding: 15px;
-        margin: 10px;
+        padding: 0;
+        margin: 0;
     }
     
     .survey-section {
-        padding: 20px;
+        padding: 0;
     }
     
     .symptom-row,
@@ -1201,39 +944,60 @@ form {
     
     /* Mobile completion section adjustments */
     .survey-complete {
-        padding: 30px 20px;
-    }
-    
-    .completion-icon {
-        font-size: 3rem;
-    }
-    
-    .survey-complete h2 {
-        font-size: 1.5rem;
-    }
-    
-    .completion-benefits {
-        padding: 15px;
-        margin: 20px 0;
-    }
-    
-    .completion-benefits h3 {
-        font-size: 1.1rem;
-    }
-    
-    .completion-benefits li {
-        font-size: 14px;
-        padding: 6px 0;
-    }
-    
-    .completion-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .completion-actions .btn {
-        width: 100%;
-    }
+    padding: 24px 0;
+    margin: 0;
+}
+
+.completion-icon {
+    font-size: 3.5rem;
+}
+
+.survey-complete h2 {
+    font-size: 1.75rem;
+}
+
+.completion-benefits {
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.completion-benefits h3 {
+    font-size: 1.2rem;
+}
+
+.completion-benefits li {
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.completion-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.completion-actions .btn {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 16px;
+}
+
+/* Mobile submit button styling */
+#submitSurveyBtn {
+    width: 100%;
+    padding: 20px 24px;
+    font-size: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.submit-section {
+    padding: 24px 16px;
+    margin: 24px 16px;
+    border-radius: 12px;
+    background: #f0fdf4;
+    border: 2px solid #10b981;
+}
 }
 
 /* Loading States */
@@ -1285,66 +1049,33 @@ form {
     gap: 20px;
   }
   .survey-card {
-    padding: 18px 6vw;
+    padding: 20px 16px;
   }
 } 
 
-/* Modern Rating Bubble System - Replaces sliders with numbered buttons */
+/* Simple Rating Bubble System - Clean and minimal */
 
 .rating-container {
-    margin-bottom: 16px; /* Reduced from 24px to decrease vertical spacing */
-    padding: 16px;
-    background: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+    /* Remove the outer box - no padding, no border, no background */
 }
 
 .rating-container label {
     display: block;
     font-weight: 600;
     color: #374151;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     font-size: 16px;
     text-align: center;
 }
 
-/* Visibility classes for mobile vs desktop */
-.mobile-only {
-    display: none !important; /* Default: hide both */
-}
-.desktop-only {
-    display: none !important; /* Default: hide both */
-}
-
-/* Mobile styles (< 768px) */
-@media (max-width: 767px) {
-    .mobile-only {
-        display: block !important; /* Show mobile on small screens */
-    }
-    .desktop-only {
-        display: none !important; /* Hide desktop on small screens */
-    }
-}
-
-/* Desktop styles (≥ 768px) */
-@media (min-width: 768px) {
-    .mobile-only {
-        display: none !important; /* Hide mobile on large screens */
-    }
-    .desktop-only {
-        display: block !important; /* Show desktop on large screens */
-    }
-}
-
 .rating-bubbles {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 24px; /* Increased from 20px to better align with text edges */
-    margin-bottom: 16px;
-    padding: 0 12px; /* Reduced from 20px to bring bubbles closer to text edges */
-    max-width: 100%;
+    gap: 20px;
+    margin-bottom: 12px;
+    /* Remove padding - let bubbles breathe naturally */
 }
 
 .rating-input {
@@ -1352,61 +1083,24 @@ form {
 }
 
 .rating-bubble {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px; /* Slightly larger, perfectly round bubbles */
-    height: 36px; /* Keep them perfectly circular */
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #f3f4f6;
+    background: #ffffff;
     border: 2px solid #d1d5db;
-    color: transparent; /* Hide the numbers */
-    font-weight: 600;
-    font-size: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    position: relative;
-    flex-shrink: 0; /* Prevent bubbles from shrinking */
-    flex: 0 0 36px; /* Fixed size, no growing or shrinking */
 }
 
-.rating-bubble:hover {
-    background: #e5e7eb;
-    border-color: #9ca3af;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
+/* Removed hover effect - keep it simple */
 
-.rating-input:checked + .rating-bubble {
-    background: #2563eb;
-    border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
-}
-
+/* Simple selected state - just blue border, no background change */
 .rating-bubble.selected {
-    background: #2563eb;
+    background: #ffffff;
     border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
+    border-width: 3px;
 }
 
-/* Add subtle animation for selection */
-.rating-bubble {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.rating-bubble:active {
-    transform: translateY(0) scale(0.95);
-}
-
-/* Improve accessibility with focus indicators */
-.rating-bubble:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
 
 .rating-labels {
     display: flex;
@@ -1421,45 +1115,53 @@ form {
 }
 
 .rating-labels span:first-child {
-    text-align: left;
-    color: #059669; /* Green for "None" */
-    flex: 1;
+    color: #059669;
 }
 
 .rating-labels span:nth-child(2) {
-    text-align: center;
-    color: #6b7280; /* Neutral color for middle label */
-    font-weight: 500;
-    flex: 2;
+    color: #6b7280;
 }
 
 .rating-labels span:last-child {
-    text-align: right;
-    color: #dc2626; /* Red for "Severe" */
-    flex: 1;
+    color: #dc2626;
+}
+
+/* Emphasized labels for middle rating labels */
+.emphasized-label {
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
     .rating-bubbles {
-        gap: 6px;
+        gap: 8px; /* Slightly more space on mobile */
     }
     
     .rating-bubble {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
+        width: 44px; /* Slightly larger for mobile touch */
+        height: 44px;
     }
     
     .rating-container label {
-        font-size: 13px;
-        margin-bottom: 10px;
+        font-size: 14px;
+        margin-bottom: 12px;
     }
     
     .rating-labels {
-        font-size: 11px;
+        font-size: 12px;
     }
 }
+
+/* Desktop centering for rating containers */
+@media (min-width: 769px) {
+    .rating-container {
+        text-align: center; /* Center the container content */
+    }
+}
+
+
 
 /* Ensure proper spacing between symptom groups */
 .symptom-group {
@@ -1484,7 +1186,7 @@ form {
 /* ===== DESKTOP RATING BUBBLES ===== */
 .rating-container-desktop {
     margin-bottom: 20px;
-    padding: 16px;
+    padding: 20px;
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
@@ -1503,10 +1205,10 @@ form {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 60px;
+    gap: 80px;
     margin-bottom: 16px;
-    padding: 0 20px;
-    width: 100%;
+    padding: 0 40px;
+    min-width: 600px;
     max-width: 100%;
 }
 
@@ -1514,8 +1216,8 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: #f3f4f6;
     border: 2px solid #d1d5db;
@@ -1523,32 +1225,25 @@ form {
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
     user-select: none;
     position: relative;
     flex-shrink: 0;
-    flex: 0 0 50px;
+    flex: 0 0 60px;
 }
 
 .rating-bubble-desktop:hover {
     background: #e5e7eb;
     border-color: #9ca3af;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .rating-input:checked + .rating-bubble-desktop {
     background: #2563eb;
     border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
 }
 
 .rating-bubble-desktop.selected {
     background: #2563eb;
     border-color: #2563eb;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-3px);
 }
 
 .rating-labels-desktop {
@@ -1556,11 +1251,11 @@ form {
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
-    padding: 0 20px;
+    padding: 0 40px;
     font-size: 14px;
     color: #6b7280;
     font-weight: 600;
-    width: 100%;
+    min-width: 600px;
     max-width: 100%;
 }
 
@@ -1584,8 +1279,8 @@ form {
 }
 
 .symptom-group-desktop {
-    margin-bottom: 20px;
-    padding: 20px;
+    margin-bottom: 24px;
+    padding: 24px;
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #e5e7eb;

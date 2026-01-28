@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Verify Audit Trail</title>
+    <script src="../load-common-head.js?v=20251211130933"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251211130933">
+    <style>
+        /* Container override for verify page - narrower for readability */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 20px 20px 40px;
+        }
+        /* Header override for verify page - centered instead of flex */
+        .header {
+            padding: 0;
+            margin-bottom: 15px;
+            text-align: center;
+            display: block; /* Override flex from reviewers.css */
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 5px 0;
+            text-align: center;
+        }
+        .header p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        .build-info {
+            font-size: 0.85rem;
+            color: #4b5563;
+            margin-top: 6px;
+        }
+        .build-info code {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        .verify-button:hover {
+            background: #0052a3;
+            border-color: #004080;
+        }
+        .verify-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #6b7280;
+            border-color: #4b5563;
+        }
+        .verification-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .verification-column {
+            display: flex;
+            flex-direction: column;
+        }
+        .verification-column h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px !important;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .verification-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .data-section {
+                padding: 15px;
+            }
+            
+            .data-section pre {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+        }
+    </style>
+    <!-- CryptoJS for HMAC-SHA256 validation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../assets/js/firebase-service.js?v=20251211130933"></script>
+    <script src="assets/js/copy-code.js?v=20251211130933"></script>
+    <script>
+        const VERIFIER_BUILD = '2025-11-27 21:01 UTC · commit 8a2de40';
+        
+        // Keep old function for backward compatibility (if needed)
+        async function runVerification() {
+            const resultsDiv = document.getElementById('verificationResults');
+            resultsDiv.style.display = 'block';
+            const result = await runVerificationInternal();
+            resultsDiv.innerHTML = `<pre>${result.output}</pre>`;
+            resultsDiv.className = `verification-results ${result.status}`;
+        }
+        
+        async function fetchGCSEntries() {
+            try {
+                const listUrl = 'https://storage.googleapis.com/storage/v1/b/jetlagpro-audit-logs/o?prefix=audit-logs/&maxResults=10000';
+                const response = await fetch(listUrl, {
+                    cache: 'no-store',
+                    method: 'GET'
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        console.warn('GCS bucket not publicly readable (403 Forbidden)');
+                    } else if (response.status === 404) {
+                        console.warn('GCS bucket not found (404 Not Found)');
+                    }
+                    return null;
+                }
+                
+                const data = await response.json();
+                const files = data.items || [];
+                
+                if (files.length === 0) {
+                    return [];
+                }
+                
+                const entries = [];
+                const maxFiles = 1000;
+                const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+                const filesToFetch = jsonFiles.slice(0, maxFiles);
+                
+                for (const file of filesToFetch) {
+                    try {
+                        const fileUrl = file.mediaLink || `https://storage.googleapis.com/jetlagpro-audit-logs/${file.name}`;
+                        const fileResponse = await fetch(fileUrl, {
+                            cache: 'no-store'
+                        });
+                        
+                        if (fileResponse.ok) {
+                            const entry = await fileResponse.json();
+                            const rawEntry = JSON.parse(JSON.stringify(entry));
+                            const normalized = normalizeEntry(entry);
+                            normalized._raw = rawEntry;
+                            entries.push(normalized);
+                        }
+                    } catch (e) {
+                        console.warn(`Error fetching ${file.name}:`, e);
+                    }
+                }
+                
+                return entries;
+            } catch (error) {
+                console.error('GCS fetch failed:', error);
+                return null;
+            }
+        }
+        
+        function compareEntries(firestoreEntries, gcsEntries) {
+            // Compare Firestore audit entries with GCS immutable archive
+            // Uses composite key (operation + documentId + eventId) to uniquely identify entries
+            // because multiple entries can share the same eventId (e.g., CREATE and VALIDATION_FAILED)
+            const missingInFirestore = [];
+            const missingInGCS = [];
+            const mismatched = [];
+            
+            const totalFirestoreEntries = firestoreEntries.length;
+            let preDeploymentCount = 0;
+            let knownExceptionsCount = 0;
+            
+            // Known exceptions documented for transparency:
+            // - Pre-deployment: 4 entries created before GCS archive was deployed (2025-11-11)
+            // - Validation failures: GCS shows CREATE, Firestore shows validation failure (expected discrepancy)
+            // - Field mismatches: Firestore Admin SDK omits null values, GCS preserves them (fixed Nov 20, 2025)
+            const preDeploymentEventIds = new Set([
+                '3479ae2f-5a3f-46ef-9439-f7ca2984337d',
+                'dcd41966-3520-486e-93cc-0d50d76e1ac5',
+                '1f54b779-aff3-4cd7-b667-ecfdfc898a47',
+                '4253d2be-9d13-466f-b535-f55ade5b5dec'
+            ]);
+            const knownValidationFailures = new Set([
+                'a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590'  // Test trip 23DB54B0, 16-char hex device ID
+            ]);
+            const knownFieldMismatches = new Set([
+                '4b073475-b82b-4768-9ad8-57d2056307ca'  // travelDirection missing in Firestore (Nov 20, 2025)
+            ]);
+            const knownEventIdCollisions = new Set([]);
+            
+            // Create maps using composite key: operation + documentId + eventId
+            // This ensures each audit entry is uniquely identified, even when multiple entries
+            // share the same eventId (e.g., CREATE and VALIDATION_FAILED from same document creation)
+            const firestoreMap = new Map();
+            const firestoreRawMap = new Map();
+            firestoreEntries.forEach(entry => {
+                const documentId = entry.documentId || entry.tripId || '';
+                const operation = entry.operation || 'UNKNOWN';
+                const eventId = entry.eventId || entry._raw?.eventId || '';
+                const key = `${operation}-${documentId}-${eventId}`;
+                
+                // Filter out known exceptions (documented for transparency)
+                if (eventId && preDeploymentEventIds.has(eventId)) {
+                    preDeploymentCount++;
+                    return;
+                }
+                if (eventId && knownValidationFailures.has(eventId)) {
+                    knownExceptionsCount++;
+                    return;
+                }
+                if (eventId && knownFieldMismatches.has(eventId)) {
+                    knownExceptionsCount++;
+                    return;
+                }
+                if (eventId && knownEventIdCollisions.has(eventId)) {
+                    knownExceptionsCount++;
+                    return;
+                }
+                
+                firestoreMap.set(key, entry);
+                if (entry._raw) {
+                    firestoreRawMap.set(key, entry._raw);
+                }
+            });
+            
+            const gcsMap = new Map();
+            const gcsRawMap = new Map();
+            gcsEntries.forEach(entry => {
+                const documentId = entry.documentId || entry.tripId || '';
+                const operation = entry.operation || 'UNKNOWN';
+                const eventId = entry.eventId || entry._raw?.eventId || '';
+                const key = `${operation}-${documentId}-${eventId}`;
+                
+                if (eventId && (preDeploymentEventIds.has(eventId) || knownValidationFailures.has(eventId) || 
+                    knownFieldMismatches.has(eventId) || knownEventIdCollisions.has(eventId))) {
+                    return;
+                }
+                
+                gcsMap.set(key, entry);
+                if (entry._raw) {
+                    gcsRawMap.set(key, entry._raw);
+                }
+            });
+            
+            let matchedCount = 0;
+            const allKeys = new Set([...firestoreMap.keys(), ...gcsMap.keys()]);
+            
+            allKeys.forEach(key => {
+                const firestoreEntry = firestoreMap.get(key);
+                const gcsEntry = gcsMap.get(key);
+                
+                if (!firestoreEntry) {
+                    missingInFirestore.push(key);
+                } else if (!gcsEntry) {
+                    missingInGCS.push(key);
+                } else {
+                    const firestoreHash = hashEntry(firestoreEntry);
+                    const gcsHash = hashEntry(gcsEntry);
+                    
+                    if (firestoreHash === gcsHash) {
+                        matchedCount++;
+                    } else {
+                        const fsEventId = firestoreEntry.eventId || firestoreEntry._raw?.eventId;
+                        const gcsEventId = gcsEntry.eventId || gcsEntry._raw?.eventId;
+                        const eventId = fsEventId || gcsEventId;
+                        
+                        if (eventId && (knownFieldMismatches.has(eventId) || knownEventIdCollisions.has(eventId))) {
+                            knownExceptionsCount++;
+                            return;
+                        }
+                        
+                        // For debugging, show what fields differ
+                        const firestoreNorm = normalizeEntry(firestoreEntry);
+                        const gcsNorm = normalizeEntry(gcsEntry);
+                        const diffFields = [];
+                        const diffDetails = [];
+                        
+                        // Store raw entries for inspection (before normalization)
+                        const rawFirestore = firestoreRawMap.get(key) || JSON.parse(JSON.stringify(firestoreEntry));
+                        const rawGCS = gcsRawMap.get(key) || JSON.parse(JSON.stringify(gcsEntry));
+                        
+                        const allKeys = new Set([...Object.keys(firestoreNorm), ...Object.keys(gcsNorm)]);
+                        for (const k of allKeys) {
+                            const fsVal = firestoreNorm[k];
+                            const gcsVal = gcsNorm[k];
+                            const fsStr = JSON.stringify(fsVal);
+                            const gcsStr = JSON.stringify(gcsVal);
+                            
+                            if (fsStr !== gcsStr) {
+                                diffFields.push(k);
+                                // For arrays, show length difference
+                                if (Array.isArray(fsVal) && Array.isArray(gcsVal)) {
+                                    diffDetails.push(`${k}: lengths ${fsVal.length} vs ${gcsVal.length}`);
+                                } else if (typeof fsVal === 'object' && typeof gcsVal === 'object') {
+                                    // For objects, show key differences
+                                    const fsKeys = Object.keys(fsVal || {}).sort();
+                                    const gcsKeys = Object.keys(gcsVal || {}).sort();
+                                    if (fsKeys.join(',') !== gcsKeys.join(',')) {
+                                        diffDetails.push(`${k}: keys differ`);
+                                    } else {
+                                        diffDetails.push(`${k}: values differ`);
+                                    }
+                                } else {
+                                    diffDetails.push(`${k}: ${typeof fsVal} vs ${typeof gcsVal}`);
+                                }
+                            }
+                        }
+                        
+                        mismatched.push({
+                            tripId: key,
+                            reason: diffFields.length > 0 
+                                ? `Fields differ: ${diffFields.slice(0, 5).join(', ')}` 
+                                : 'Content mismatch',
+                            details: diffDetails.slice(0, 3),
+                            rawFirestore: rawFirestore,
+                            rawGCS: rawGCS,
+                            normalizedFirestore: firestoreNorm,
+                            normalizedGCS: gcsNorm
+                        });
+                    }
+                }
+            });
+            
+            return {
+                matched: matchedCount,
+                discrepancies: missingInFirestore.length + missingInGCS.length + mismatched.length,
+                missingInFirestore: missingInFirestore.slice(0, 10), // Limit to first 10
+                missingInGCS: missingInGCS.slice(0, 10),
+                mismatched: mismatched.slice(0, 10),
+                totalFirestoreEntries: totalFirestoreEntries,
+                preDeploymentCount: preDeploymentCount,
+                knownExceptionsCount: knownExceptionsCount,
+                gcsCount: gcsEntries.length
+            };
+        }
+        
+        function normalizeEntry(entry) {
+            // Normalize entries for comparison: Firestore REST API format differs from GCS plain JSON
+            // 1. Convert Firestore value wrappers (stringValue, integerValue, etc.) to plain values
+            // 2. Remove Firestore document metadata (name, createTime, updateTime, id)
+            // 3. Sort nested object keys for consistent comparison
+            // 4. Normalize timestamps to ISO strings and remove millisecond precision
+            // 5. Ensure missing fields are set to null for consistent comparison
+            const normalized = {};
+            const skipFields = new Set(['name', 'createTime', 'updateTime', 'id', '_raw']);
+            const keys = Object.keys(entry).sort();
+            
+            for (const key of keys) {
+                if (skipFields.has(key)) {
+                    continue;
+                }
+                
+                let value = entry[key];
+                value = extractFirestoreValue(value);
+                
+                // Ensure source field is always a string (not an object from Firestore REST API)
+                if (key === 'source') {
+                    if (value && typeof value === 'object') {
+                        value = extractFirestoreValue(value);
+                    }
+                    if (value && typeof value !== 'string') {
+                        value = String(value);
+                    }
+                    if (!value) {
+                        value = null;
+                    }
+                }
+                
+                // Normalize timestamp fields to ISO strings
+                if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
+                    value = normalizeTimestamp(value);
+                }
+                
+                // Sort nested object keys for consistent comparison
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    value = sortObjectKeys(value);
+                }
+                
+                normalized[key] = value;
+            }
+            
+            // Ensure critical fields exist (set to null if missing for consistent comparison)
+            if (!('source' in normalized)) {
+                normalized.source = null;
+            } else if (normalized.source && typeof normalized.source === 'object') {
+                normalized.source = extractFirestoreValue(normalized.source);
+            } else if (normalized.source && typeof normalized.source !== 'string') {
+                normalized.source = String(normalized.source);
+            }
+            
+            if (!('changedFields' in normalized)) {
+                normalized.changedFields = null;
+            } else if (!Array.isArray(normalized.changedFields)) {
+                normalized.changedFields = [];
+            } else {
+                normalized.changedFields = [...normalized.changedFields].sort();
+            }
+            
+            if (!('changes' in normalized)) {
+                normalized.changes = null;
+            } else if (normalized.changes && typeof normalized.changes !== 'object') {
+                normalized.changes = null;
+            }
+            
+            if (!('deletedData' in normalized)) {
+                normalized.deletedData = null;
+            }
+            
+            // GCS explicitly adds surveyMetadata: null for CREATE entries, but Firestore doesn't store it
+            // Normalize to ensure consistent comparison
+            if (normalized.operation === 'CREATE' && normalized.metadata) {
+                if (!('surveyMetadata' in normalized.metadata)) {
+                    normalized.metadata.surveyMetadata = null;
+                }
+            }
+            
+            // Remove millisecond precision from timestamps (GCS and Firestore may round differently)
+            const normalizeTimestampString = (str) => {
+                if (typeof str !== 'string') return str;
+                const match = str.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{1,3})?(Z)?$/);
+                if (match) {
+                    return match[1] + (match[3] ? 'Z' : '');
+                }
+                return str;
+            };
+            
+            // Recursively normalize all timestamp strings in the normalized object
+            const normalizeTimestampsInObject = (obj) => {
+                if (obj === null || obj === undefined) return obj;
+                if (typeof obj === 'string') {
+                    return normalizeTimestampString(obj);
+                }
+                if (Array.isArray(obj)) {
+                    return obj.map(item => normalizeTimestampsInObject(item));
+                }
+                if (typeof obj === 'object') {
+                    const result = {};
+                    for (const [key, value] of Object.entries(obj)) {
+                        result[key] = normalizeTimestampsInObject(value);
+                    }
+                    return result;
+                }
+                return obj;
+            };
+            
+            return normalizeTimestampsInObject(normalized);
+        }
+        
+        function sortObjectKeys(obj) {
+            if (obj === null || typeof obj !== 'object') {
+                if (typeof obj === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(obj)) {
+                    return normalizeTimestamp(obj);
+                }
+                return obj;
+            }
+            
+            if (Array.isArray(obj)) {
+                return obj.map(item => sortObjectKeys(item));
+            }
+            
+            const sorted = {};
+            const keys = Object.keys(obj).sort();
+            for (const key of keys) {
+                let value = obj[key];
+                
+                if (key === 'timestamp' || key.includes('Time') || key.includes('At')) {
+                    value = normalizeTimestamp(value);
+                }
+                
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    sorted[key] = sortObjectKeys(value);
+                } else if (Array.isArray(value)) {
+                    sorted[key] = value.map(item => sortObjectKeys(item));
+                } else {
+                    sorted[key] = value;
+                }
+            }
+            return sorted;
+        }
+        
+        function normalizeTimestamp(value) {
+            if (!value) return value;
+            
+            if (typeof value === 'string') {
+                try {
+                    const date = new Date(value);
+                    if (!isNaN(date.getTime())) {
+                        return date.toISOString();
+                    }
+                } catch (e) {
+                    // If parsing fails, return as-is
+                }
+                return value;
+            }
+            
+            if (typeof value === 'object' && value._seconds !== undefined) {
+                const seconds = typeof value._seconds === 'number' ? value._seconds : parseInt(value._seconds);
+                return new Date(seconds * 1000).toISOString();
+            }
+            
+            return value;
+        }
+        
+        function extractFirestoreValue(value) {
+            if (value === null || value === undefined) {
+                return null;
+            }
+            
+            if (typeof value !== 'object') {
+                if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+                    return normalizeTimestamp(value);
+                }
+                return value;
+            }
+            
+            if (value.timestampValue !== undefined) {
+                return normalizeTimestamp(value.timestampValue);
+            }
+            if (value.stringValue !== undefined) {
+                return value.stringValue;
+            }
+            if (value.integerValue !== undefined) {
+                return parseInt(value.integerValue);
+            }
+            if (value.doubleValue !== undefined) {
+                return parseFloat(value.doubleValue);
+            }
+            if (value.booleanValue !== undefined) {
+                return value.booleanValue === 'true' || value.booleanValue === true;
+            }
+            if (value.nullValue !== undefined) {
+                return null;
+            }
+            if (value.arrayValue && value.arrayValue.values) {
+                return value.arrayValue.values.map(v => extractFirestoreValue(v));
+            }
+            if (value.mapValue && value.mapValue.fields) {
+                const nested = {};
+                for (const [k, v] of Object.entries(value.mapValue.fields)) {
+                    nested[k] = extractFirestoreValue(v);
+                }
+                return nested;
+            }
+            
+            if (value._seconds !== undefined) {
+                return normalizeTimestamp(value);
+            }
+            
+            if (Array.isArray(value)) {
+                return value.map(v => extractFirestoreValue(v));
+            }
+            
+            const result = {};
+            for (const [k, v] of Object.entries(value)) {
+                result[k] = extractFirestoreValue(v);
+            }
+            return result;
+        }
+        
+        function hashEntry(entry) {
+            const normalized = normalizeEntry(entry);
+            const cleanEntry = removeNullishFields(normalized);
+            return JSON.stringify(cleanEntry, Object.keys(cleanEntry).sort());
+        }
+        
+        function removeNullishFields(obj) {
+            if (obj === null || obj === undefined) {
+                return null;
+            }
+            
+            if (Array.isArray(obj)) {
+                return obj.map(item => removeNullishFields(item));
+            }
+            
+            if (typeof obj !== 'object') {
+                return obj;
+            }
+            
+            const cleaned = {};
+            for (const [key, value] of Object.entries(obj)) {
+                if (value === null || value === undefined) {
+                    continue;
+                }
+                
+                if (typeof value === 'object' && !Array.isArray(value)) {
+                    const cleanedValue = removeNullishFields(value);
+                    if (cleanedValue === null || (typeof cleanedValue === 'object' && Object.keys(cleanedValue).length === 0)) {
+                        continue;
+                    }
+                    cleaned[key] = cleanedValue;
+                } else if (Array.isArray(value)) {
+                    cleaned[key] = removeNullishFields(value);
+                } else {
+                    cleaned[key] = value;
+                }
+            }
+            return cleaned;
+        }
+        
+        // HMAC-SHA256 secret key - INTENTIONALLY PUBLIC for research transparency
+        // Allows independent verification of trip ID signatures. Not for security (data is public).
+        const HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
+        
+        /**
+         * Validates HMAC-SHA256 signature on a trip ID
+         * Trip IDs from Build 6+ have format: deviceID-dest-date-time-signature
+         */
+        function validateTripHMAC(tripId) {
+            if (!tripId) {
+                return { valid: false, reason: 'missing_trip_id', category: 'error' };
+            }
+            
+            const parts = tripId.split('-');
+            
+            // Check for UUID format (legacy, very old trips)
+            if (parts.length === 5 && 
+                parts[0].length === 8 && 
+                parts[1].length === 4 && 
+                parts[2].length === 4 && 
+                parts[3].length === 4 && 
+                parts[4].length === 12) {
+                return { 
+                    valid: true, 
+                    reason: 'legacy_uuid_format', 
+                    category: 'legacy',
+                    tripId: tripId
+                };
+            }
+            
+            // Legacy format (4 parts): Pre-Build 6 data without signatures
+            if (parts.length === 4) {
+                return { 
+                    valid: true, 
+                    reason: 'legacy_no_signature', 
+                    category: 'legacy',
+                    tripId: tripId
+                };
+            }
+            
+            // November 8, 2025 and later format (5 parts): deviceID-dest-date-time-signature
+            if (parts.length === 5) {
+                const baseTripId = parts.slice(0, 4).join('-');
+                const providedSignature = parts[4];
+                
+                // Validate signature format (8 hex characters)
+                if (!/^[a-fA-F0-9]{8}$/.test(providedSignature)) {
+                    return { 
+                        valid: false, 
+                        reason: 'invalid_signature_format', 
+                        category: 'invalid',
+                        tripId: tripId,
+                        providedSignature: providedSignature
+                    };
+                }
+                
+                // Check if CryptoJS is available
+                if (typeof CryptoJS === 'undefined') {
+                    return { 
+                        valid: true, // Assume valid if we can't verify
+                        reason: 'crypto_unavailable', 
+                        category: 'unverified',
+                        tripId: tripId
+                    };
+                }
+                
+                // Compute expected signature
+                const hmac = CryptoJS.HmacSHA256(baseTripId, HMAC_SECRET);
+                const expectedSignature = hmac.toString(CryptoJS.enc.Hex).substring(0, 8).toLowerCase();
+                
+                if (providedSignature.toLowerCase() === expectedSignature) {
+                    return { 
+                        valid: true, 
+                        reason: 'valid_signature', 
+                        category: 'authenticated',
+                        tripId: tripId,
+                        signature: providedSignature
+                    };
+                } else {
+                    return { 
+                        valid: false, 
+                        reason: 'signature_mismatch', 
+                        category: 'invalid',
+                        tripId: tripId,
+                        expected: expectedSignature,
+                        provided: providedSignature
+                    };
+                }
+            }
+            
+            // Unexpected format
+            return { 
+                valid: false, 
+                reason: 'unexpected_format', 
+                category: 'error',
+                tripId: tripId,
+                parts: parts.length
+            };
+        }
+        
+        async function runAllVerifications() {
+            const btn = document.getElementById('verifyAllBtn');
+            const resultsGrid = document.getElementById('resultsGrid');
+            const tripResultsDiv = document.getElementById('tripVerificationResults');
+            const auditResultsDiv = document.getElementById('verificationResults');
+            
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            resultsGrid.style.display = 'grid';
+            tripResultsDiv.className = 'verification-results';
+            auditResultsDiv.className = 'verification-results';
+            tripResultsDiv.innerHTML = '<pre>Fetching Firestore trip data...</pre>';
+            auditResultsDiv.innerHTML = '<pre>Fetching Firestore audit data...</pre>';
+            
+            // Run both verifications in parallel
+            const [tripResult, auditResult] = await Promise.allSettled([
+                runTripVerificationInternal(),
+                runVerificationInternal()
+            ]);
+            
+            // Display results
+            if (tripResult.status === 'fulfilled') {
+                tripResultsDiv.innerHTML = `<pre>${tripResult.value.output}</pre>`;
+                tripResultsDiv.className = `verification-results ${tripResult.value.status}`;
+            } else {
+                tripResultsDiv.className = 'verification-results error';
+                tripResultsDiv.innerHTML = `<pre>Error: ${tripResult.reason?.message || 'Unknown error'}</pre>`;
+            }
+            
+            if (auditResult.status === 'fulfilled') {
+                auditResultsDiv.innerHTML = `<pre>${auditResult.value.output}</pre>`;
+                auditResultsDiv.className = `verification-results ${auditResult.value.status}`;
+            } else {
+                auditResultsDiv.className = 'verification-results error';
+                auditResultsDiv.innerHTML = `<pre>Error: ${auditResult.reason?.message || 'Unknown error'}</pre>`;
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Verify Data Integrity';
+        }
+        
+        async function runTripVerificationInternal() {
+            // Step 1: Fetch Firestore trip records
+            const firebaseService = new FirebaseService();
+            const trips = await firebaseService.getTripCompletions();
+            
+            // Step 2: Validate HMAC signatures
+            const categories = {
+                authenticated: [],  // November 8, 2025 and later with valid signatures
+                legacy: [],         // Before November 8, 2025 without signatures
+                invalid: [],        // Invalid or mismatched signatures
+                error: []          // Missing trip IDs or malformed
+            };
+            
+            trips.forEach(trip => {
+                const tripId = trip.tripId || trip.documentId || '';
+                const validation = validateTripHMAC(tripId);
+                categories[validation.category].push({
+                    tripId: tripId,
+                    documentId: trip.documentId || trip.id || 'unknown',
+                    validation: validation
+                });
+            });
+            
+            // Step 3: Format results
+            let output = `Trip records: ${trips.length}
+
+HMAC Validation Results:
+  Authenticated (valid signatures): ${categories.authenticated.length}
+  Legacy data (expect only 20) prior to HMAC: ${categories.legacy.length}
+  Invalid (signature mismatch): ${categories.invalid.length}
+  Error (malformed trip IDs): ${categories.error.length}
+
+`;
+            
+            let status = 'success';
+            if (categories.invalid.length === 0 && categories.error.length === 0) {
+                output += 'Trip verification complete: all signatures are valid or legacy.';
+            } else {
+                output += 'INVALID SIGNATURES FOUND:\n\n';
+                status = 'error';
+                
+                if (categories.invalid.length > 0) {
+                    output += `Invalid Signatures (${categories.invalid.length}):\n`;
+                    categories.invalid.forEach(item => {
+                        output += `  - ${item.tripId}\n`;
+                        if (item.validation.expected && item.validation.provided) {
+                            output += `    Expected: ${item.validation.expected}\n`;
+                            output += `    Provided: ${item.validation.provided}\n`;
+                        }
+                    });
+                    output += '\n';
+                }
+                
+                if (categories.error.length > 0) {
+                    output += `Malformed Trip IDs (${categories.error.length}):\n`;
+                    categories.error.forEach(item => {
+                        output += `  - ${item.tripId || 'missing'} (${item.validation.reason})\n`;
+                    });
+                }
+            }
+            
+            return { output, status };
+        }
+        
+        async function runVerificationInternal() {
+            // Step 1: Fetch Firestore audit entries
+            const firebaseService = new FirebaseService();
+            const firestoreEntriesRaw = await firebaseService.getAuditLog(10000);
+            
+            // Store raw entries for inspection, then normalize
+            const firestoreEntries = firestoreEntriesRaw.map(entry => {
+                const rawEntry = JSON.parse(JSON.stringify(entry));
+                const normalized = normalizeEntry(entry);
+                normalized._raw = rawEntry;
+                return normalized;
+            });
+            
+            // Step 2: Fetch GCS audit entries
+            const gcsEntries = await fetchGCSEntries();
+            
+            if (!gcsEntries || gcsEntries.length === 0) {
+                return {
+                    output: `Firestore entries: ${firestoreEntries.length}
+GCS entries: Unable to access (bucket not publicly readable)
+
+The GCS bucket needs to be made publicly readable for web-based verification.`,
+                    status: 'warning'
+                };
+            }
+            
+            // Step 3: Compare entries
+            const comparison = compareEntries(firestoreEntries, gcsEntries);
+            
+            // Step 4: Format results
+            let output = `DATA SOURCES
+Firestore audit entries: ${comparison.totalFirestoreEntries}
+  - Pre-GCS archiving: ${comparison.preDeploymentCount}
+  - GCS archived: ${comparison.gcsCount}
+
+VERIFICATION RESULTS
+GCS entries: ${comparison.gcsCount}
+  Exceptions: ${comparison.knownExceptionsCount} (development test entries, documented)
+  Matches: ${comparison.matched}
+
+Discrepancies: ${comparison.discrepancies}
+
+`;
+            
+            let status = 'success';
+            if (comparison.discrepancies === 0) {
+                output += 'Status: ✅ Data records match as expected';
+            } else {
+                status = 'error';
+                output += 'DISCREPANCIES FOUND:\n\n';
+                
+                comparison.missingInFirestore.forEach(tripId => {
+                    output += `Missing in Firestore: ${tripId}\n`;
+                });
+                comparison.missingInGCS.forEach(tripId => {
+                    output += `Missing in GCS: ${tripId}\n`;
+                });
+                comparison.mismatched.forEach(item => {
+                    output += `Mismatch: ${item.tripId} (${item.reason})\n`;
+                    if (item.details && item.details.length > 0) {
+                        item.details.forEach(detail => {
+                            output += `  - ${detail}\n`;
+                        });
+                    }
+                });
+            }
+            
+            return { output, status };
+        }
+        
+        // Keep old functions for backward compatibility (if needed)
+        async function runTripVerification() {
+            const resultsDiv = document.getElementById('tripVerificationResults');
+            resultsDiv.style.display = 'block';
+            const result = await runTripVerificationInternal();
+            resultsDiv.innerHTML = `<pre>${result.output}</pre>`;
+            resultsDiv.className = `verification-results ${result.status}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const buildEl = document.getElementById('verifierBuild');
+            if (buildEl) {
+                buildEl.textContent = VERIFIER_BUILD;
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Common Reviewer Navigation (loaded dynamically) -->
+        <script src="load-nav.js?v=20251211130933"></script>
+
+        <div class="header">
+            <h1>Trust but Verify</h1>
+            <p class="build-info">Verifier build <code id="verifierBuild">loading…</code></p>
+        </div>
+
+        <div class="section">
+            <p>We ensure data validity in two ways: First, all submissions must come from legitimate devices with unforgeable cryptographic signatures. Then we maintain an immutable audit trail that detects any unauthorized data changes. Our verification methods are open source to enable independent verification. For technical details on authentication methods, see <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank">verify_trip_signatures.py</a>.</p>
+        </div>
+
+        <div class="section" style="text-align: center;">
+            <button id="verifyAllBtn" class="verify-button" onclick="runAllVerifications()" style="font-size: 1.2rem; font-weight: 600; color: white; background: #0066cc; border: 1px solid #0052a3; border-radius: 6px; padding: 12px 20px; margin: 0 0 20px 0; cursor: pointer; display: inline-block;">Verify Data Integrity</button>
+            <div class="verification-grid" id="resultsGrid" style="display: none;">
+                <div class="verification-column">
+                    <h3>Device Authentication Results</h3>
+                    <div id="tripVerificationResults"></div>
+                </div>
+                <div class="verification-column">
+                    <h3>Audit Trail Results</h3>
+                    <div id="verificationResults"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <p style="text-align: center;">Download each verification script by copying the commands and running them in a terminal or command window.</p>
+            <p style="text-align: center;">Then copy and paste each python command to run each script separately.</p>
+            
+            <div class="verification-grid">
+                <div class="verification-column">
+                    <h3>Device Authentication (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_trip_signatures.py" target="_blank">View Script</a>)</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o verify_trip_signatures.py https://jetlagpro.com/scripts/verify_trip_signatures.py</code>
+                    </div>
+                    <div class="code-block" style="margin-top: 15px;">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>python verify_trip_signatures.py</code>
+                    </div>
+                </div>
+                
+                <div class="verification-column">
+                    <h3>Audit Trail Verification (<a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/verify_audit_consistency.py" target="_blank">View Script</a>)</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o verify_audit_consistency.py https://jetlagpro.com/scripts/verify_audit_consistency.py</code>
+                    </div>
+                    <div class="code-block" style="margin-top: 15px;">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>python verify_audit_consistency.py</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+

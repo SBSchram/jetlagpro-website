@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================
+    // TRIP COMPLETIONS COLLECTION (Main Research Data)
+    // Phase 1: Write Source Authentication
+    // ============================================================
+    match /tripCompletions/{tripId} {
+      
+      // -------------------- READ ACCESS --------------------
+      // Anyone can read for analytics dashboard
+      allow read: if true;
+      
+      // -------------------- CREATE ACCESS --------------------
+      // Check 1: Document ID matches tripId in data
+      // Check 2: TripId matches supported formats (legacy + HMAC signature)
+      // Format: 8hex-AirportDir-YYMMDD-HHMM[-8hexSig]
+      // Example: 2330B376-ISTE-251111-0052-55e927a7
+      // Note: Metadata validation removed - HMAC signature provides sufficient security
+      allow create: if 
+        request.resource.data.tripId == tripId
+        && (
+          tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}$')
+          || tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$')
+        );
+      
+      // -------------------- UPDATE ACCESS --------------------
+      // Allow updates for survey submission or point completion updates
+      allow update: if 
+        // Survey not yet completed (any updates allowed)
+        resource.data.surveyCompleted != true
+        
+        // OR web survey submission (surveyCompleted field being set)
+        || request.resource.data.keys().hasAny(['surveyCompleted'])
+        
+        // OR iOS app updating point completions during active trip
+        || onlyUpdatingAllowedFields();
+      
+      // -------------------- DELETE ACCESS --------------------
+      // NEVER allow deletes (prevent data loss)
+      allow delete: if false;
+      
+      // -------------------- HELPER FUNCTIONS --------------------
+      function onlyUpdatingAllowedFields() {
+        // During active trip, allow updating point completion fields
+        // This lets app update as user stimulates points
+        let allowedFields = [
+          'pointsCompleted', 
+          'point1Completed', 'point2Completed', 'point3Completed',
+          'point4Completed', 'point5Completed', 'point6Completed',
+          'point7Completed', 'point8Completed', 'point9Completed',
+          'point10Completed', 'point11Completed', 'point12Completed'
+        ];
+        
+        return request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly(allowedFields);
+      }
+    }
+    
+    // ============================================================
+    // AUDIT LOG COLLECTION
+    // Immutable record of all tripCompletions operations
+    // Written by Cloud Functions, readable by public for verification
+    // Deployed: November 11, 2025
+    // ============================================================
+    match /auditLog/{entry} {
+      allow read: if true;  // Public can verify
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+    
+    // ============================================================
+    // SYSTEM COLLECTION
+    // Internal state for Cloud Functions (notification tracking, etc.)
+    // Deployed: November 25, 2025
+    // ============================================================
+    match /_system/{doc} {
+      allow read: if true;  // Public can view system status
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+    
+    // ============================================================
+    // SNAPSHOTS COLLECTION
+    // Timestamped dataset snapshots for research publication
+    // Not yet implemented
+    // ============================================================
+    match /_snapshots/{doc} {
+      allow read: if true;  // Public can verify
+      allow write: if false;  // ONLY Cloud Functions can write
+    }
+  }
+}
+

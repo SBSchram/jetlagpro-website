@@ -1,0 +1,72 @@
+# Cursor IDE files
+.cursor/
+
+# Common files to ignore
+.DS_Store
+Thumbs.db
+*.log
+*firepit*.txt
+node_modules/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Data exports (sensitive research data)
+tripCompletions_web.csv
+firestore-audit.json
+trips.json
+firebase_web_data.json
+analysis_report.txt
+
+# Debug and test files
+firebase-debug.html
+test-*.html
+*-debug.log
+
+# Development scripts (internal use only)
+dev-server.sh
+update-cache-version.sh
+export_*.js
+back_to_emoji.py
+convert_to_symbols.py
+fix_faces.py
+analyze_jetlag_data.py
+
+# Workspace and IDE files
+*.code-workspace
+h origin main
+
+# HandyWorks files (now in handyworks-website repository)
+data/external/
+
+# Demo directory (if not needed for public)
+# demo/
+
+# Temporary work files - personal drafts, inquiries, etc.
+# These are work-in-progress files that shouldn't be committed
+*_inquiry*.md
+*_draft*.md
+*_temp*.md
+*_scratch*.md
+*_personal*.md
+*_private*.md
+*_work*.md
+*_notes*.md
+*_draft*.txt
+*_temp*.txt
+*_scratch*.txt
+
+# Article/work creation scripts (temporary)
+create_*.py
+*_create_*.py
+*mpa*.py
+*MPA*.py
+
+# Temporary work directories
+_temp/
+_scratch/
+_drafts/
+_work/
+*.work/

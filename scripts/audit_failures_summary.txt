@@ -1,0 +1,66 @@
+METADATA_VALIDATION_FAILED Summary
+===================================
+
+Export Date: 2025-12-11T14:45:07.169Z
+Total Audit Entries: 51
+Validation Failures: 9
+
+Issue Frequency:
+  - invalid_build_number: 8 occurrences
+  - invalid_device_id_format: 1 occurrences
+
+Sample Entries by Issue Type:
+==============================
+
+
+invalid_build_number (8 total):
+------------------------------------------------------------
+
+Example 1:
+  Trip ID: 2330B376-ISTE-251123-1544-7f579858
+  Timestamp: 2025-11-24T00:00:24.902Z
+  Source: ios_app
+  Metadata:
+    - source: ios_app
+    - deviceId: 6DF8FF40-0396-4837-81EF-DC1D5758A145
+    - appBuild: 0
+    - timestamp: 2025-11-24T00:00:20.491Z
+  All Issues: [invalid_build_number]
+
+Example 2:
+  Trip ID: 2330B376-ISTE-251120-1554-fc548bda
+  Timestamp: 2025-11-21T00:46:48.555Z
+  Source: ios_app
+  Metadata:
+    - source: ios_app
+    - deviceId: 6DF8FF40-0396-4837-81EF-DC1D5758A145
+    - appBuild: 0
+    - timestamp: 2025-11-21T00:46:45.325Z
+  All Issues: [invalid_build_number]
+
+Example 3:
+  Trip ID: 1CDD41FC-LHRE-251202-1447-81a58c27
+  Timestamp: 2025-12-03T09:24:30.009Z
+  Source: ios_app
+  Metadata:
+    - source: ios_app
+    - deviceId: 40CC3C5F-096C-42FB-9A2D-4430D11E6C51
+    - appBuild: 0
+    - timestamp: 2025-12-03T09:24:25.940Z
+  All Issues: [invalid_build_number]
+
+  ... and 5 more
+
+invalid_device_id_format (1 total):
+------------------------------------------------------------
+
+Example 1:
+  Trip ID: 23DB54B0-ISTE-251109-2205-931e1d71
+  Timestamp: 2025-11-18T18:29:50.706Z
+  Source: ios_app
+  Metadata:
+    - source: ios_app
+    - deviceId: 40f196837f25f348
+    - appBuild: 1
+    - timestamp: 2025-11-18T18:29:45.926Z
+  All Issues: [invalid_device_id_format]

@@ -1,0 +1,344 @@
+{
+  "exportDate": "2025-12-11T14:45:07.169Z",
+  "totalAuditEntries": 51,
+  "validationFailures": 9,
+  "summary": {
+    "issueFrequency": {
+      "invalid_build_number": 8,
+      "invalid_device_id_format": 1
+    },
+    "uniqueIssueTypes": 2
+  },
+  "issuesByType": {
+    "invalid_build_number": [
+      {
+        "tripId": "2330B376-ISTE-251123-1544-7f579858",
+        "timestamp": "2025-11-24T00:00:24.902Z",
+        "source": "ios_app",
+        "metadata": {
+          "timestamp": "2025-11-24T00:00:20.491Z",
+          "sourceVersion": "0.96",
+          "source": "ios_app",
+          "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+          "platform": "iOS 18.7.1",
+          "appBuild": "0"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "2330B376-ISTE-251120-1554-fc548bda",
+        "timestamp": "2025-11-21T00:46:48.555Z",
+        "source": "ios_app",
+        "metadata": {
+          "appBuild": "0",
+          "platform": "iOS 18.7.1",
+          "source": "ios_app",
+          "timestamp": "2025-11-21T00:46:45.325Z",
+          "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+          "sourceVersion": "0.96"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "1CDD41FC-LHRE-251202-1447-81a58c27",
+        "timestamp": "2025-12-03T09:24:30.009Z",
+        "source": "ios_app",
+        "metadata": {
+          "timestamp": "2025-12-03T09:24:25.940Z",
+          "appBuild": "0",
+          "platform": "iOS 26.0.1",
+          "sourceVersion": "0.96",
+          "deviceId": "40CC3C5F-096C-42FB-9A2D-4430D11E6C51",
+          "source": "ios_app"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "04F1668A-BKKE-251203-2125-b65e8ab3",
+        "timestamp": "2025-12-04T12:34:16.154Z",
+        "source": "ios_app",
+        "metadata": {
+          "deviceId": "07119643-68DD-4C9C-BE04-B3468F349431",
+          "source": "ios_app",
+          "appBuild": "0",
+          "platform": "iOS 18.6.2",
+          "sourceVersion": "0.96",
+          "timestamp": "2025-12-04T12:34:11.471Z"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "2330B376-ISTE-251130-0625-64ad2d59",
+        "timestamp": "2025-11-30T22:28:43.103Z",
+        "source": "ios_app",
+        "metadata": {
+          "sourceVersion": "0.96",
+          "appBuild": "0",
+          "source": "ios_app",
+          "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+          "platform": "iOS 18.7.1",
+          "timestamp": "2025-11-30T22:28:39.255Z"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "2330B376-ISTE-251120-2006-406b0d35",
+        "timestamp": "2025-11-21T04:47:59.378Z",
+        "source": "ios_app",
+        "metadata": {
+          "platform": "iOS 18.7.1",
+          "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+          "sourceVersion": "0.96",
+          "appBuild": "0",
+          "timestamp": "2025-11-21T04:47:56.113Z",
+          "source": "ios_app"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "35181B4C-JFKE-251122-2130-a25e34f7",
+        "timestamp": "2025-12-09T10:13:36.347Z",
+        "source": "ios_app",
+        "metadata": {
+          "appBuild": "0",
+          "platform": "React Native iOS 26.0.1",
+          "deviceId": "335AB032-D840-4F1D-9EEE-9D9EE91614A4",
+          "source": "ios_app",
+          "sourceVersion": ".96",
+          "timestamp": "2025-12-09T10:13:32.199Z"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      },
+      {
+        "tripId": "2330B376-ISTE-251121-0100-20b6b1e4",
+        "timestamp": "2025-11-21T10:40:19.121Z",
+        "source": "ios_app",
+        "metadata": {
+          "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+          "platform": "iOS 18.7.1",
+          "timestamp": "2025-11-21T10:40:15.746Z",
+          "source": "ios_app",
+          "sourceVersion": "0.96",
+          "appBuild": "0"
+        },
+        "allIssues": [
+          "invalid_build_number"
+        ]
+      }
+    ],
+    "invalid_device_id_format": [
+      {
+        "tripId": "23DB54B0-ISTE-251109-2205-931e1d71",
+        "timestamp": "2025-11-18T18:29:50.706Z",
+        "source": "ios_app",
+        "metadata": {
+          "source": "ios_app",
+          "platform": "React Native Android 33",
+          "timestamp": "2025-11-18T18:29:45.926Z",
+          "appBuild": "1",
+          "deviceId": "40f196837f25f348",
+          "sourceVersion": "0.95"
+        },
+        "allIssues": [
+          "invalid_device_id_format"
+        ]
+      }
+    ]
+  },
+  "allValidationFailures": [
+    {
+      "metadata": {
+        "timestamp": "2025-11-24T00:00:20.491Z",
+        "sourceVersion": "0.96",
+        "source": "ios_app",
+        "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+        "platform": "iOS 18.7.1",
+        "appBuild": "0"
+      },
+      "documentId": "2330B376-ISTE-251123-1544-7f579858",
+      "collection": "tripCompletions",
+      "eventId": "7dd515b7-ad15-41d7-933e-33f2b8235d70",
+      "timestamp": "2025-11-24T00:00:24.902Z",
+      "source": "ios_app",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "_id": "7om4mJ6ZF9OPmjGx2glD"
+    },
+    {
+      "collection": "tripCompletions",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "source": "ios_app",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "timestamp": "2025-11-21T00:46:48.555Z",
+      "metadata": {
+        "appBuild": "0",
+        "platform": "iOS 18.7.1",
+        "source": "ios_app",
+        "timestamp": "2025-11-21T00:46:45.325Z",
+        "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+        "sourceVersion": "0.96"
+      },
+      "documentId": "2330B376-ISTE-251120-1554-fc548bda",
+      "eventId": "3d246ec1-be67-43e1-8984-533b07856afd",
+      "_id": "842NjK7MXAAitFdSLs0u"
+    },
+    {
+      "documentId": "1CDD41FC-LHRE-251202-1447-81a58c27",
+      "source": "ios_app",
+      "timestamp": "2025-12-03T09:24:30.009Z",
+      "metadata": {
+        "timestamp": "2025-12-03T09:24:25.940Z",
+        "appBuild": "0",
+        "platform": "iOS 26.0.1",
+        "sourceVersion": "0.96",
+        "deviceId": "40CC3C5F-096C-42FB-9A2D-4430D11E6C51",
+        "source": "ios_app"
+      },
+      "eventId": "ff0b8b00-2d63-4174-9adb-e5f1c127361f",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "collection": "tripCompletions",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "_id": "GjpN1ab4cjtcXQi4Xy8I"
+    },
+    {
+      "timestamp": "2025-12-04T12:34:16.154Z",
+      "eventId": "a54a7838-81da-44a1-9db6-c345914361f8",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "documentId": "04F1668A-BKKE-251203-2125-b65e8ab3",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "source": "ios_app",
+      "metadata": {
+        "deviceId": "07119643-68DD-4C9C-BE04-B3468F349431",
+        "source": "ios_app",
+        "appBuild": "0",
+        "platform": "iOS 18.6.2",
+        "sourceVersion": "0.96",
+        "timestamp": "2025-12-04T12:34:11.471Z"
+      },
+      "collection": "tripCompletions",
+      "_id": "KkesBi6DYPHJNJwEX2ht"
+    },
+    {
+      "timestamp": "2025-11-18T18:29:50.706Z",
+      "source": "ios_app",
+      "eventId": "a4c3e87d-ffa6-4d9f-86b8-f326c1e7f590",
+      "documentId": "23DB54B0-ISTE-251109-2205-931e1d71",
+      "issues": [
+        "invalid_device_id_format"
+      ],
+      "operation": "METADATA_VALIDATION_FAILED",
+      "metadata": {
+        "source": "ios_app",
+        "platform": "React Native Android 33",
+        "timestamp": "2025-11-18T18:29:45.926Z",
+        "appBuild": "1",
+        "deviceId": "40f196837f25f348",
+        "sourceVersion": "0.95"
+      },
+      "collection": "tripCompletions",
+      "_id": "hYjxHCgTuxlhoBHpYsWJ"
+    },
+    {
+      "issues": [
+        "invalid_build_number"
+      ],
+      "source": "ios_app",
+      "metadata": {
+        "sourceVersion": "0.96",
+        "appBuild": "0",
+        "source": "ios_app",
+        "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+        "platform": "iOS 18.7.1",
+        "timestamp": "2025-11-30T22:28:39.255Z"
+      },
+      "operation": "METADATA_VALIDATION_FAILED",
+      "documentId": "2330B376-ISTE-251130-0625-64ad2d59",
+      "collection": "tripCompletions",
+      "eventId": "c217fb89-2520-4deb-913c-142a7a30d7db",
+      "timestamp": "2025-11-30T22:28:43.103Z",
+      "_id": "izcFYvEjE7VnrwqnL8Xu"
+    },
+    {
+      "eventId": "b557eacb-1226-4e54-a105-1983967cfd91",
+      "source": "ios_app",
+      "collection": "tripCompletions",
+      "timestamp": "2025-11-21T04:47:59.378Z",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "metadata": {
+        "platform": "iOS 18.7.1",
+        "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+        "sourceVersion": "0.96",
+        "appBuild": "0",
+        "timestamp": "2025-11-21T04:47:56.113Z",
+        "source": "ios_app"
+      },
+      "operation": "METADATA_VALIDATION_FAILED",
+      "documentId": "2330B376-ISTE-251120-2006-406b0d35",
+      "_id": "lfD5kE8lJIdftNGvZnro"
+    },
+    {
+      "documentId": "35181B4C-JFKE-251122-2130-a25e34f7",
+      "eventId": "3936e0d5-a961-4fca-a3ad-c8109ab2d410",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "metadata": {
+        "appBuild": "0",
+        "platform": "React Native iOS 26.0.1",
+        "deviceId": "335AB032-D840-4F1D-9EEE-9D9EE91614A4",
+        "source": "ios_app",
+        "sourceVersion": ".96",
+        "timestamp": "2025-12-09T10:13:32.199Z"
+      },
+      "source": "ios_app",
+      "collection": "tripCompletions",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "timestamp": "2025-12-09T10:13:36.347Z",
+      "_id": "rfGEWjchHMNHDCJL8B4u"
+    },
+    {
+      "collection": "tripCompletions",
+      "documentId": "2330B376-ISTE-251121-0100-20b6b1e4",
+      "operation": "METADATA_VALIDATION_FAILED",
+      "eventId": "03884f0a-8f21-4abc-aaaa-df950a676cf5",
+      "issues": [
+        "invalid_build_number"
+      ],
+      "timestamp": "2025-11-21T10:40:19.121Z",
+      "metadata": {
+        "deviceId": "6DF8FF40-0396-4837-81EF-DC1D5758A145",
+        "platform": "iOS 18.7.1",
+        "timestamp": "2025-11-21T10:40:15.746Z",
+        "source": "ios_app",
+        "sourceVersion": "0.96",
+        "appBuild": "0"
+      },
+      "source": "ios_app",
+      "_id": "ydVMffUK20zWLDEClupa"
+    }
+  ]
+}

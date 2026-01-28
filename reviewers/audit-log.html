@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Audit Log Viewer</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="JetLagPro Research Data Audit Trail">
+    <script src="../load-common-head.js?v=20251211152844"></script>
+    
+    <!-- External CSS and JavaScript files (REST API - no Firebase SDK needed) -->
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251211152844">
+    <link rel="stylesheet" href="assets/css/audit-log.css?v=20251211152844">
+    <script src="../assets/js/firebase-service.js?v=20251211152844"></script>
+    <script src="../assets/js/trip-validator.js?v=20251211152844"></script>
+    <script src="assets/js/audit-log.js?v=20251211153500"></script>
+    <script>
+        // Add event listener for refresh button (CSP-compliant, no inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (typeof refreshAuditLog === 'function') {
+                        refreshAuditLog();
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Common Reviewer Navigation (loaded dynamically) -->
+        <script src="load-nav.js?v=20251211152844"></script>
+
+        <div class="header">
+            <h1>Audit Log</h1>
+            <button class="refresh-btn" id="refreshBtn">Refresh Data</button>
+        </div>
+
+        <!-- Summary Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-label">Total:</span>
+                <span class="stat-value" id="totalEntries">-</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Creates:</span>
+                <span class="stat-value" id="createCount">-</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Updates:</span>
+                <span class="stat-value" id="updateCount">-</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Validations:</span>
+                <span class="stat-value" id="validationCount">-</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Deletions:</span>
+                <span class="stat-value" id="deletionCount">-</span>
+            </div>
+        </div>
+
+        <!-- Audit Log Table -->
+        <div class="text-center">
+            <div class="table-container">
+                <table class="audit-table" id="auditTable">
+                <thead>
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Action</th>
+                        <th>Source</th>
+                        <th>Device ID</th>
+                        <th>Origin</th>
+                        <th>Dest</th>
+                        <th>Arrival</th>
+                        <th>Eval</th>
+                        <th>Valid</th>
+                    </tr>
+                </thead>
+                <tbody id="auditLog">
+                    <tr>
+                        <td colspan="9" class="loading">Loading audit log...</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -2,322 +2,322 @@
     "airports": [
         {
             "code": "JFK",
-            "name": "John F. Kennedy International Airport",
+            "name": "John F. Kennedy",
             "city": "New York",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "LAX",
-            "name": "Los Angeles International Airport",
+            "name": "Los Angeles",
             "city": "Los Angeles",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "ORD",
-            "name": "O'Hare International Airport",
+            "name": "O'Hare",
             "city": "Chicago",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "DFW",
-            "name": "Dallas/Fort Worth International Airport",
+            "name": "Dallas/Fort Worth",
             "city": "Dallas",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "DEN",
-            "name": "Denver International Airport",
+            "name": "Denver",
             "city": "Denver",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "SFO",
-            "name": "San Francisco International Airport",
+            "name": "San Francisco",
             "city": "San Francisco",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SEA",
-            "name": "Seattle-Tacoma International Airport",
+            "name": "Seattle-Tacoma",
             "city": "Seattle",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "MIA",
-            "name": "Miami International Airport",
+            "name": "Miami",
             "city": "Miami",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "ATL",
-            "name": "Hartsfield-Jackson Atlanta International Airport",
+            "name": "Hartsfield-Jackson Atlanta",
             "city": "Atlanta",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BOS",
-            "name": "Logan International Airport",
+            "name": "Logan",
             "city": "Boston",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "IAD",
-            "name": "Washington Dulles International Airport",
+            "name": "Washington Dulles",
             "city": "Washington",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "EWR",
-            "name": "Newark Liberty International Airport",
+            "name": "Newark Liberty",
             "city": "Newark",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PHX",
-            "name": "Phoenix Sky Harbor International Airport",
+            "name": "Phoenix Sky Harbor",
             "city": "Phoenix",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "LAS",
-            "name": "Harry Reid International Airport",
+            "name": "Harry Reid",
             "city": "Las Vegas",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "MCO",
-            "name": "Orlando International Airport",
+            "name": "Orlando",
             "city": "Orlando",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "CLT",
-            "name": "Charlotte Douglas International Airport",
+            "name": "Charlotte Douglas",
             "city": "Charlotte",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PHL",
-            "name": "Philadelphia International Airport",
+            "name": "Philadelphia",
             "city": "Philadelphia",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "DTW",
-            "name": "Detroit Metropolitan Airport",
+            "name": "Detroit Metropolitan",
             "city": "Detroit",
             "country": "United States",
             "timezone": "America/Detroit"
         },
         {
             "code": "MSP",
-            "name": "Minneapolis-Saint Paul International Airport",
+            "name": "Minneapolis-Saint Paul",
             "city": "Minneapolis",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "SLC",
-            "name": "Salt Lake City International Airport",
+            "name": "Salt Lake City",
             "city": "Salt Lake City",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "BWI",
-            "name": "Baltimore/Washington International Airport",
+            "name": "Baltimore/Washington",
             "city": "Baltimore",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "DCA",
-            "name": "Ronald Reagan Washington National Airport",
+            "name": "Ronald Reagan Washington National",
             "city": "Washington",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "SAN",
-            "name": "San Diego International Airport",
+            "name": "San Diego",
             "city": "San Diego",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "PDX",
-            "name": "Portland International Airport",
+            "name": "Portland",
             "city": "Portland",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "HNL",
-            "name": "Daniel K. Inouye International Airport",
+            "name": "Daniel K. Inouye",
             "city": "Honolulu",
             "country": "United States",
             "timezone": "Pacific/Honolulu"
         },
         {
             "code": "STL",
-            "name": "St. Louis Lambert International Airport",
+            "name": "St. Louis Lambert",
             "city": "St. Louis",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "TPA",
-            "name": "Tampa International Airport",
+            "name": "Tampa",
             "city": "Tampa",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BNA",
-            "name": "Nashville International Airport",
+            "name": "Nashville",
             "city": "Nashville",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "AUS",
-            "name": "Austin-Bergstrom International Airport",
+            "name": "Austin-Bergstrom",
             "city": "Austin",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MSY",
-            "name": "Louis Armstrong New Orleans International Airport",
+            "name": "Louis Armstrong New Orleans",
             "city": "New Orleans",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "RDU",
-            "name": "Raleigh-Durham International Airport",
+            "name": "Raleigh-Durham",
             "city": "Raleigh",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "CLE",
-            "name": "Cleveland Hopkins International Airport",
+            "name": "Cleveland Hopkins",
             "city": "Cleveland",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PIT",
-            "name": "Pittsburgh International Airport",
+            "name": "Pittsburgh",
             "city": "Pittsburgh",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "IND",
-            "name": "Indianapolis International Airport",
+            "name": "Indianapolis",
             "city": "Indianapolis",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "CMH",
-            "name": "John Glenn Columbus International Airport",
+            "name": "John Glenn Columbus",
             "city": "Columbus",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "CVG",
-            "name": "Cincinnati/Northern Kentucky International Airport",
+            "name": "Cincinnati/Northern Kentucky",
             "city": "Cincinnati",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "MCI",
-            "name": "Kansas City International Airport",
+            "name": "Kansas City",
             "city": "Kansas City",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MEM",
-            "name": "Memphis International Airport",
+            "name": "Memphis",
             "city": "Memphis",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "OAK",
-            "name": "Oakland International Airport",
+            "name": "Oakland",
             "city": "Oakland",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SJC",
-            "name": "Norman Y. Mineta San Jose International Airport",
+            "name": "Norman Y. Mineta San Jose",
             "city": "San Jose",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SNA",
-            "name": "John Wayne Airport",
+            "name": "John Wayne",
             "city": "Santa Ana",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SMF",
-            "name": "Sacramento International Airport",
+            "name": "Sacramento",
             "city": "Sacramento",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SAT",
-            "name": "San Antonio International Airport",
+            "name": "San Antonio",
             "city": "San Antonio",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "RSW",
-            "name": "Southwest Florida International Airport",
+            "name": "Southwest Florida",
             "city": "Fort Myers",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PBI",
-            "name": "Palm Beach International Airport",
+            "name": "Palm Beach",
             "city": "West Palm Beach",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "FLL",
-            "name": "Fort Lauderdale-Hollywood International Airport",
+            "name": "Fort Lauderdale-Hollywood",
             "city": "Fort Lauderdale",
             "country": "United States",
             "timezone": "America/New_York"
@@ -331,49 +331,49 @@
         },
         {
             "code": "HOU",
-            "name": "William P. Hobby Airport",
+            "name": "William P. Hobby",
             "city": "Houston",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "IAH",
-            "name": "George Bush Intercontinental Airport",
+            "name": "George Bush Intercontinental",
             "city": "Houston",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MDW",
-            "name": "Chicago Midway International Airport",
+            "name": "Chicago Midway",
             "city": "Chicago",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "BUR",
-            "name": "Hollywood Burbank Airport",
+            "name": "Hollywood Burbank",
             "city": "Burbank",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "ONT",
-            "name": "Ontario International Airport",
+            "name": "Ontario",
             "city": "Ontario",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SDF",
-            "name": "Louisville International Airport",
+            "name": "Louisville",
             "city": "Louisville",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "MKE",
-            "name": "Milwaukee Mitchell International Airport",
+            "name": "Milwaukee Mitchell",
             "city": "Milwaukee",
             "country": "United States",
             "timezone": "America/Chicago"
@@ -387,1379 +387,1540 @@
         },
         {
             "code": "OKC",
-            "name": "Will Rogers World Airport",
+            "name": "Will Rogers World",
             "city": "Oklahoma City",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "TUL",
-            "name": "Tulsa International Airport",
+            "name": "Tulsa",
             "city": "Tulsa",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "ABQ",
-            "name": "Albuquerque International Sunport",
+            "name": "Albuquerque Sunport",
             "city": "Albuquerque",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "BOI",
-            "name": "Boise Airport",
+            "name": "Boise",
             "city": "Boise",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "OGG",
-            "name": "Kahului Airport",
+            "name": "Kahului",
             "city": "Kahului",
             "country": "United States",
             "timezone": "Pacific/Honolulu"
         },
         {
             "code": "KOA",
-            "name": "Kona International Airport",
+            "name": "Kona",
             "city": "Kailua-Kona",
             "country": "United States",
             "timezone": "Pacific/Honolulu"
         },
         {
             "code": "LIH",
-            "name": "Lihue Airport",
+            "name": "Lihue",
             "city": "Lihue",
             "country": "United States",
             "timezone": "Pacific/Honolulu"
         },
         {
             "code": "ANC",
-            "name": "Ted Stevens Anchorage International Airport",
+            "name": "Ted Stevens Anchorage",
             "city": "Anchorage",
             "country": "United States",
             "timezone": "America/Anchorage"
         },
         {
             "code": "FAI",
-            "name": "Fairbanks International Airport",
+            "name": "Fairbanks",
             "city": "Fairbanks",
             "country": "United States",
             "timezone": "America/Anchorage"
         },
         {
             "code": "JNU",
-            "name": "Juneau International Airport",
+            "name": "Juneau",
             "city": "Juneau",
             "country": "United States",
             "timezone": "America/Juneau"
         },
         {
             "code": "LHR",
-            "name": "Heathrow Airport",
+            "name": "Heathrow",
             "city": "London",
             "country": "United Kingdom",
             "timezone": "Europe/London"
         },
         {
             "code": "DXB",
-            "name": "Dubai International Airport",
+            "name": "Dubai",
             "city": "Dubai",
             "country": "United Arab Emirates",
             "timezone": "Asia/Dubai"
         },
         {
             "code": "HND",
-            "name": "Haneda Airport",
+            "name": "Haneda",
             "city": "Tokyo",
             "country": "Japan",
             "timezone": "Asia/Tokyo"
         },
         {
             "code": "CDG",
-            "name": "Charles de Gaulle Airport",
+            "name": "Charles de Gaulle",
             "city": "Paris",
             "country": "France",
             "timezone": "Europe/Paris"
         },
         {
             "code": "FRA",
-            "name": "Frankfurt Airport",
+            "name": "Frankfurt",
             "city": "Frankfurt",
             "country": "Germany",
             "timezone": "Europe/Berlin"
         },
         {
             "code": "SIN",
-            "name": "Changi Airport",
+            "name": "Changi",
             "city": "Singapore",
             "country": "Singapore",
             "timezone": "Asia/Singapore"
         },
         {
             "code": "ICN",
-            "name": "Incheon International Airport",
+            "name": "Incheon",
             "city": "Seoul",
             "country": "South Korea",
             "timezone": "Asia/Seoul"
         },
         {
             "code": "HKG",
-            "name": "Hong Kong International Airport",
+            "name": "Hong Kong",
             "city": "Hong Kong",
             "country": "China",
             "timezone": "Asia/Hong_Kong"
         },
         {
             "code": "SYD",
-            "name": "Sydney Airport",
+            "name": "Sydney",
             "city": "Sydney",
             "country": "Australia",
             "timezone": "Australia/Sydney"
         },
         {
             "code": "MEL",
-            "name": "Melbourne Airport",
+            "name": "Melbourne",
             "city": "Melbourne",
             "country": "Australia",
             "timezone": "Australia/Melbourne"
         },
         {
             "code": "YYZ",
-            "name": "Toronto Pearson International Airport",
+            "name": "Toronto Pearson",
             "city": "Toronto",
             "country": "Canada",
             "timezone": "America/Toronto"
         },
         {
             "code": "YVR",
-            "name": "Vancouver International Airport",
+            "name": "Vancouver",
             "city": "Vancouver",
             "country": "Canada",
             "timezone": "America/Vancouver"
         },
         {
             "code": "AMS",
-            "name": "Amsterdam Airport Schiphol",
+            "name": "Amsterdam Schiphol",
             "city": "Amsterdam",
             "country": "Netherlands",
             "timezone": "Europe/Amsterdam"
         },
         {
             "code": "MAD",
-            "name": "Adolfo Suárez Madrid–Barajas Airport",
+            "name": "Adolfo Suárez Madrid–Barajas",
             "city": "Madrid",
             "country": "Spain",
             "timezone": "Europe/Madrid"
         },
         {
             "code": "FCO",
-            "name": "Leonardo da Vinci–Fiumicino Airport",
+            "name": "Leonardo da Vinci–Fiumicino",
             "city": "Rome",
             "country": "Italy",
             "timezone": "Europe/Rome"
         },
         {
             "code": "IST",
-            "name": "Istanbul Airport",
+            "name": "Istanbul",
             "city": "Istanbul",
             "country": "Turkey",
             "timezone": "Europe/Istanbul"
         },
         {
             "code": "DEL",
-            "name": "Indira Gandhi International Airport",
+            "name": "Indira Gandhi",
             "city": "New Delhi",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "BOM",
-            "name": "Chhatrapati Shivaji Maharaj International Airport",
+            "name": "Chhatrapati Shivaji Maharaj",
             "city": "Mumbai",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "PEK",
-            "name": "Beijing Capital International Airport",
+            "name": "Beijing Capital",
             "city": "Beijing",
             "country": "China",
             "timezone": "Asia/Shanghai"
         },
         {
             "code": "PVG",
-            "name": "Shanghai Pudong International Airport",
+            "name": "Shanghai Pudong",
             "city": "Shanghai",
             "country": "China",
             "timezone": "Asia/Shanghai"
         },
         {
             "code": "GRU",
-            "name": "São Paulo/Guarulhos International Airport",
+            "name": "São Paulo/Guarulhos",
             "city": "São Paulo",
             "country": "Brazil",
             "timezone": "America/Sao_Paulo"
         },
         {
             "code": "GIG",
-            "name": "Rio de Janeiro/Galeão International Airport",
+            "name": "Rio de Janeiro/Galeão",
             "city": "Rio de Janeiro",
             "country": "Brazil",
             "timezone": "America/Sao_Paulo"
         },
         {
             "code": "EZE",
-            "name": "Ministro Pistarini International Airport",
+            "name": "Ministro Pistarini",
             "city": "Buenos Aires",
             "country": "Argentina",
             "timezone": "America/Argentina/Buenos_Aires"
         },
         {
             "code": "SCL",
-            "name": "Arturo Merino Benítez International Airport",
+            "name": "Arturo Merino Benítez",
             "city": "Santiago",
             "country": "Chile",
             "timezone": "America/Santiago"
         },
         {
             "code": "MEX",
-            "name": "Mexico City International Airport",
+            "name": "Mexico City",
             "city": "Mexico City",
             "country": "Mexico",
             "timezone": "America/Mexico_City"
         },
         {
             "code": "DOH",
-            "name": "Hamad International Airport",
+            "name": "Hamad",
             "city": "Doha",
             "country": "Qatar",
             "timezone": "Asia/Qatar"
         },
         {
             "code": "AUH",
-            "name": "Abu Dhabi International Airport",
+            "name": "Abu Dhabi",
             "city": "Abu Dhabi",
             "country": "United Arab Emirates",
             "timezone": "Asia/Dubai"
         },
         {
             "code": "BKK",
-            "name": "Suvarnabhumi Airport",
+            "name": "Suvarnabhumi",
             "city": "Bangkok",
             "country": "Thailand",
             "timezone": "Asia/Bangkok"
         },
         {
             "code": "KUL",
-            "name": "Kuala Lumpur International Airport",
+            "name": "Kuala Lumpur",
             "city": "Kuala Lumpur",
             "country": "Malaysia",
             "timezone": "Asia/Kuala_Lumpur"
         },
         {
             "code": "MNL",
-            "name": "Ninoy Aquino International Airport",
+            "name": "Ninoy Aquino",
             "city": "Manila",
             "country": "Philippines",
             "timezone": "Asia/Manila"
         },
         {
             "code": "CGK",
-            "name": "Soekarno–Hatta International Airport",
+            "name": "Soekarno–Hatta",
             "city": "Jakarta",
             "country": "Indonesia",
             "timezone": "Asia/Jakarta"
         },
         {
             "code": "CPT",
-            "name": "Cape Town International Airport",
+            "name": "Cape Town",
             "city": "Cape Town",
             "country": "South Africa",
             "timezone": "Africa/Johannesburg"
         },
         {
             "code": "JNB",
-            "name": "O.R. Tambo International Airport",
+            "name": "O.R. Tambo",
             "city": "Johannesburg",
             "country": "South Africa",
             "timezone": "Africa/Johannesburg"
         },
         {
             "code": "CAI",
-            "name": "Cairo International Airport",
+            "name": "Cairo",
             "city": "Cairo",
             "country": "Egypt",
             "timezone": "Africa/Cairo"
         },
         {
             "code": "NBO",
-            "name": "Jomo Kenyatta International Airport",
+            "name": "Jomo Kenyatta",
             "city": "Nairobi",
             "country": "Kenya",
             "timezone": "Africa/Nairobi"
         },
         {
+            "code": "ACC",
+            "name": "Kotoka",
+            "city": "Accra",
+            "country": "Ghana",
+            "timezone": "Africa/Accra"
+        },
+        {
+            "code": "DAR",
+            "name": "Julius Nyerere",
+            "city": "Dar es Salaam",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "JRO",
+            "name": "Kilimanjaro",
+            "city": "Kilimanjaro",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "ADD",
+            "name": "Bole",
+            "city": "Addis Ababa",
+            "country": "Ethiopia",
+            "timezone": "Africa/Addis_Ababa"
+        },
+        {
+            "code": "KRT",
+            "name": "Khartoum",
+            "city": "Khartoum",
+            "country": "Sudan",
+            "timezone": "Africa/Khartoum"
+        },
+        {
+            "code": "CMN",
+            "name": "Mohammed V",
+            "city": "Casablanca",
+            "country": "Morocco",
+            "timezone": "Africa/Casablanca"
+        },
+        {
+            "code": "ALG",
+            "name": "Houari Boumediene",
+            "city": "Algiers",
+            "country": "Algeria",
+            "timezone": "Africa/Algiers"
+        },
+        {
+            "code": "TUN",
+            "name": "Tunis Carthage",
+            "city": "Tunis",
+            "country": "Tunisia",
+            "timezone": "Africa/Tunis"
+        },
+        {
+            "code": "LUN",
+            "name": "Kenneth Kaunda",
+            "city": "Lusaka",
+            "country": "Zambia",
+            "timezone": "Africa/Lusaka"
+        },
+        {
+            "code": "HRE",
+            "name": "Robert Gabriel Mugabe",
+            "city": "Harare",
+            "country": "Zimbabwe",
+            "timezone": "Africa/Harare"
+        },
+        {
+            "code": "GBE",
+            "name": "Sir Seretse Khama",
+            "city": "Gaborone",
+            "country": "Botswana",
+            "timezone": "Africa/Gaborone"
+        },
+        {
+            "code": "MPM",
+            "name": "Maputo",
+            "city": "Maputo",
+            "country": "Mozambique",
+            "timezone": "Africa/Maputo"
+        },
+        {
+            "code": "FIH",
+            "name": "N'djili",
+            "city": "Kinshasa",
+            "country": "Democratic Republic of the Congo",
+            "timezone": "Africa/Kinshasa"
+        },
+        {
+            "code": "SSA",
+            "name": "Salvador Bahia",
+            "city": "Salvador",
+            "country": "Brazil",
+            "timezone": "America/Bahia"
+        },
+        {
+            "code": "ZNZ",
+            "name": "Zanzibar",
+            "city": "Zanzibar",
+            "country": "Tanzania",
+            "timezone": "Africa/Dar_es_Salaam"
+        },
+        {
+            "code": "MBA",
+            "name": "Moi",
+            "city": "Mombasa",
+            "country": "Kenya",
+            "timezone": "Africa/Nairobi"
+        },
+        {
+            "code": "SEZ",
+            "name": "Seychelles",
+            "city": "Victoria",
+            "country": "Seychelles",
+            "timezone": "Indian/Mahe"
+        },
+        {
+            "code": "MRU",
+            "name": "Mauritius",
+            "city": "Port Louis",
+            "country": "Mauritius",
+            "timezone": "Indian/Mauritius"
+        },
+        {
+            "code": "RUN",
+            "name": "Roland Garros",
+            "city": "Saint-Denis",
+            "country": "Réunion",
+            "timezone": "Indian/Reunion"
+        },
+        {
+            "code": "LAD",
+            "name": "Quatro de Fevereiro",
+            "city": "Luanda",
+            "country": "Angola",
+            "timezone": "Africa/Luanda"
+        },
+        {
+            "code": "LOS",
+            "name": "Murtala Muhammed",
+            "city": "Lagos",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+        {
+            "code": "ABV",
+            "name": "Nnamdi Azikiwe",
+            "city": "Abuja",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+        {
+            "code": "KAN",
+            "name": "Mallam Aminu Kano",
+            "city": "Kano",
+            "country": "Nigeria",
+            "timezone": "Africa/Lagos"
+        },
+        {
             "code": "TLV",
-            "name": "Ben Gurion Airport",
+            "name": "Ben Gurion",
             "city": "Tel Aviv",
             "country": "Israel",
             "timezone": "Asia/Jerusalem"
         },
         {
             "code": "ATH",
-            "name": "Athens International Airport",
+            "name": "Athens",
             "city": "Athens",
             "country": "Greece",
             "timezone": "Europe/Athens"
         },
         {
             "code": "VIE",
-            "name": "Vienna International Airport",
+            "name": "Vienna",
             "city": "Vienna",
             "country": "Austria",
             "timezone": "Europe/Vienna"
         },
         {
             "code": "ZRH",
-            "name": "Zürich Airport",
+            "name": "Zürich",
             "city": "Zürich",
             "country": "Switzerland",
             "timezone": "Europe/Zurich"
         },
         {
             "code": "CPH",
-            "name": "Copenhagen Airport",
+            "name": "Copenhagen",
             "city": "Copenhagen",
             "country": "Denmark",
             "timezone": "Europe/Copenhagen"
         },
         {
             "code": "OSL",
-            "name": "Oslo Airport",
+            "name": "Oslo",
             "city": "Oslo",
             "country": "Norway",
             "timezone": "Europe/Oslo"
         },
         {
             "code": "ARN",
-            "name": "Stockholm Arlanda Airport",
+            "name": "Stockholm Arlanda",
             "city": "Stockholm",
             "country": "Sweden",
             "timezone": "Europe/Stockholm"
         },
         {
             "code": "HEL",
-            "name": "Helsinki Airport",
+            "name": "Helsinki",
             "city": "Helsinki",
             "country": "Finland",
             "timezone": "Europe/Helsinki"
         },
         {
             "code": "DUB",
-            "name": "Dublin Airport",
+            "name": "Dublin",
             "city": "Dublin",
             "country": "Ireland",
             "timezone": "Europe/Dublin"
         },
         {
             "code": "BRU",
-            "name": "Brussels Airport",
+            "name": "Brussels",
             "city": "Brussels",
             "country": "Belgium",
             "timezone": "Europe/Brussels"
         },
         {
             "code": "LIS",
-            "name": "Humberto Delgado Airport",
+            "name": "Humberto Delgado",
             "city": "Lisbon",
             "country": "Portugal",
             "timezone": "Europe/Lisbon"
         },
         {
             "code": "BCN",
-            "name": "Barcelona–El Prat Airport",
+            "name": "Barcelona–El Prat",
             "city": "Barcelona",
             "country": "Spain",
             "timezone": "Europe/Madrid"
         },
         {
             "code": "MXP",
-            "name": "Milan Malpensa Airport",
+            "name": "Milan Malpensa",
             "city": "Milan",
             "country": "Italy",
             "timezone": "Europe/Rome"
         },
         {
             "code": "ZAG",
-            "name": "Zagreb Airport",
+            "name": "Zagreb",
             "city": "Zagreb",
             "country": "Croatia",
             "timezone": "Europe/Zagreb"
         },
         {
             "code": "BUD",
-            "name": "Budapest Ferenc Liszt International Airport",
+            "name": "Budapest Ferenc Liszt",
             "city": "Budapest",
             "country": "Hungary",
             "timezone": "Europe/Budapest"
         },
         {
             "code": "PRG",
-            "name": "Václav Havel Airport Prague",
+            "name": "Václav Havel Prague",
             "city": "Prague",
             "country": "Czech Republic",
             "timezone": "Europe/Prague"
         },
         {
             "code": "WAW",
-            "name": "Warsaw Chopin Airport",
+            "name": "Warsaw Chopin",
             "city": "Warsaw",
             "country": "Poland",
             "timezone": "Europe/Warsaw"
         },
         {
             "code": "KBP",
-            "name": "Boryspil International Airport",
+            "name": "Boryspil",
             "city": "Kyiv",
             "country": "Ukraine",
             "timezone": "Europe/Kyiv"
         },
         {
             "code": "SVO",
-            "name": "Sheremetyevo International Airport",
+            "name": "Sheremetyevo",
             "city": "Moscow",
             "country": "Russia",
             "timezone": "Europe/Moscow"
         },
         {
             "code": "DME",
-            "name": "Domodedovo International Airport",
+            "name": "Domodedovo",
             "city": "Moscow",
             "country": "Russia",
             "timezone": "Europe/Moscow"
         },
         {
             "code": "LED",
-            "name": "Pulkovo Airport",
+            "name": "Pulkovo",
             "city": "Saint Petersburg",
             "country": "Russia",
             "timezone": "Europe/Moscow"
         },
         {
             "code": "BAH",
-            "name": "Bahrain International Airport",
+            "name": "Bahrain",
             "city": "Manama",
             "country": "Bahrain",
             "timezone": "Asia/Bahrain"
         },
         {
             "code": "KWI",
-            "name": "Kuwait International Airport",
+            "name": "Kuwait",
             "city": "Kuwait City",
             "country": "Kuwait",
             "timezone": "Asia/Kuwait"
         },
         {
             "code": "RUH",
-            "name": "King Khalid International Airport",
+            "name": "King Khalid",
             "city": "Riyadh",
             "country": "Saudi Arabia",
             "timezone": "Asia/Riyadh"
         },
         {
             "code": "JED",
-            "name": "King Abdulaziz International Airport",
+            "name": "King Abdulaziz",
             "city": "Jeddah",
             "country": "Saudi Arabia",
             "timezone": "Asia/Riyadh"
         },
         {
             "code": "MCT",
-            "name": "Muscat International Airport",
+            "name": "Muscat",
             "city": "Muscat",
             "country": "Oman",
             "timezone": "Asia/Muscat"
         },
         {
             "code": "DMK",
-            "name": "Don Mueang International Airport",
+            "name": "Don Mueang",
             "city": "Bangkok",
             "country": "Thailand",
             "timezone": "Asia/Bangkok"
         },
         {
             "code": "CNX",
-            "name": "Chiang Mai International Airport",
+            "name": "Chiang Mai",
             "city": "Chiang Mai",
             "country": "Thailand",
             "timezone": "Asia/Bangkok"
         },
         {
             "code": "HKT",
-            "name": "Phuket International Airport",
+            "name": "Phuket",
             "city": "Phuket",
             "country": "Thailand",
             "timezone": "Asia/Bangkok"
         },
         {
             "code": "SGN",
-            "name": "Tan Son Nhat International Airport",
+            "name": "Tan Son Nhat",
             "city": "Ho Chi Minh City",
             "country": "Vietnam",
             "timezone": "Asia/Ho_Chi_Minh"
         },
         {
             "code": "HAN",
-            "name": "Noi Bai International Airport",
+            "name": "Noi Bai",
             "city": "Hanoi",
             "country": "Vietnam",
             "timezone": "Asia/Ho_Chi_Minh"
         },
         {
             "code": "REP",
-            "name": "Siem Reap International Airport",
+            "name": "Siem Reap",
             "city": "Siem Reap",
             "country": "Cambodia",
             "timezone": "Asia/Phnom_Penh"
         },
         {
             "code": "PNH",
-            "name": "Phnom Penh International Airport",
+            "name": "Phnom Penh",
             "city": "Phnom Penh",
             "country": "Cambodia",
             "timezone": "Asia/Phnom_Penh"
         },
         {
             "code": "RGN",
-            "name": "Yangon International Airport",
+            "name": "Yangon",
             "city": "Yangon",
             "country": "Myanmar",
             "timezone": "Asia/Yangon"
         },
         {
             "code": "PEN",
-            "name": "Penang International Airport",
+            "name": "Penang",
             "city": "Penang",
             "country": "Malaysia",
             "timezone": "Asia/Kuala_Lumpur"
         },
         {
             "code": "DPS",
-            "name": "Ngurah Rai International Airport",
+            "name": "Ngurah Rai",
             "city": "Denpasar",
             "country": "Indonesia",
             "timezone": "Asia/Makassar"
         },
         {
             "code": "CEB",
-            "name": "Mactan–Cebu International Airport",
+            "name": "Mactan–Cebu",
             "city": "Cebu",
             "country": "Philippines",
             "timezone": "Asia/Manila"
         },
         {
             "code": "GMP",
-            "name": "Gimpo International Airport",
+            "name": "Gimpo",
             "city": "Seoul",
             "country": "South Korea",
             "timezone": "Asia/Seoul"
         },
         {
             "code": "PUS",
-            "name": "Gimhae International Airport",
+            "name": "Gimhae",
             "city": "Busan",
             "country": "South Korea",
             "timezone": "Asia/Seoul"
         },
         {
             "code": "NRT",
-            "name": "Narita International Airport",
+            "name": "Narita",
             "city": "Tokyo",
             "country": "Japan",
             "timezone": "Asia/Tokyo"
         },
         {
             "code": "KIX",
-            "name": "Kansai International Airport",
+            "name": "Kansai",
             "city": "Osaka",
             "country": "Japan",
             "timezone": "Asia/Tokyo"
         },
         {
             "code": "FUK",
-            "name": "Fukuoka Airport",
+            "name": "Fukuoka",
             "city": "Fukuoka",
             "country": "Japan",
             "timezone": "Asia/Tokyo"
         },
         {
             "code": "CTS",
-            "name": "New Chitose Airport",
+            "name": "New Chitose",
             "city": "Sapporo",
             "country": "Japan",
             "timezone": "Asia/Tokyo"
         },
         {
             "code": "CAN",
-            "name": "Guangzhou Baiyun International Airport",
+            "name": "Guangzhou Baiyun",
             "city": "Guangzhou",
             "country": "China",
             "timezone": "Asia/Shanghai"
         },
         {
             "code": "SZX",
-            "name": "Shenzhen Bao'an International Airport",
+            "name": "Shenzhen Bao'an",
             "city": "Shenzhen",
             "country": "China",
             "timezone": "Asia/Shanghai"
         },
         {
             "code": "CTU",
-            "name": "Chengdu Shuangliu International Airport",
+            "name": "Chengdu Shuangliu",
             "city": "Chengdu",
             "country": "China",
             "timezone": "Asia/Shanghai"
         },
         {
             "code": "MFM",
-            "name": "Macau International Airport",
+            "name": "Macau",
             "city": "Macau",
             "country": "China",
             "timezone": "Asia/Macau"
         },
         {
             "code": "TPE",
-            "name": "Taiwan Taoyuan International Airport",
+            "name": "Taiwan Taoyuan",
             "city": "Taipei",
             "country": "Taiwan",
             "timezone": "Asia/Taipei"
         },
         {
             "code": "KHH",
-            "name": "Kaohsiung International Airport",
+            "name": "Kaohsiung",
             "city": "Kaohsiung",
             "country": "Taiwan",
             "timezone": "Asia/Taipei"
         },
         {
             "code": "MAA",
-            "name": "Chennai International Airport",
+            "name": "Chennai",
             "city": "Chennai",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "BLR",
-            "name": "Kempegowda International Airport",
+            "name": "Kempegowda",
             "city": "Bangalore",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "HYD",
-            "name": "Rajiv Gandhi International Airport",
+            "name": "Rajiv Gandhi",
             "city": "Hyderabad",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "CCU",
-            "name": "Netaji Subhas Chandra Bose International Airport",
+            "name": "Netaji Subhas Chandra Bose",
             "city": "Kolkata",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "COK",
-            "name": "Cochin International Airport",
+            "name": "Cochin",
             "city": "Kochi",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "TRV",
-            "name": "Trivandrum International Airport",
+            "name": "Trivandrum",
             "city": "Thiruvananthapuram",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "GOI",
-            "name": "Dabolim Airport",
+            "name": "Dabolim",
             "city": "Goa",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "AMD",
-            "name": "Sardar Vallabhbhai Patel International Airport",
+            "name": "Sardar Vallabhbhai Patel",
             "city": "Ahmedabad",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "JAI",
-            "name": "Jaipur International Airport",
+            "name": "Jaipur",
             "city": "Jaipur",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "LKO",
-            "name": "Chaudhary Charan Singh International Airport",
+            "name": "Chaudhary Charan Singh",
             "city": "Lucknow",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "VNS",
-            "name": "Lal Bahadur Shastri International Airport",
+            "name": "Lal Bahadur Shastri",
             "city": "Varanasi",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXC",
-            "name": "Chandigarh International Airport",
+            "name": "Chandigarh",
             "city": "Chandigarh",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXB",
-            "name": "Bagdogra International Airport",
+            "name": "Bagdogra",
             "city": "Siliguri",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "GAU",
-            "name": "Lokpriya Gopinath Bordoloi International Airport",
+            "name": "Lokpriya Gopinath Bordoloi",
             "city": "Guwahati",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "PAT",
-            "name": "Jay Prakash Narayan Airport",
+            "name": "Jay Prakash Narayan",
             "city": "Patna",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXM",
-            "name": "Madurai International Airport",
+            "name": "Madurai",
             "city": "Madurai",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "TRZ",
-            "name": "Tiruchirappalli International Airport",
+            "name": "Tiruchirappalli",
             "city": "Tiruchirappalli",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "CJB",
-            "name": "Coimbatore International Airport",
+            "name": "Coimbatore",
             "city": "Coimbatore",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXE",
-            "name": "Mangalore International Airport",
+            "name": "Mangalore",
             "city": "Mangalore",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXJ",
-            "name": "Jammu Airport",
+            "name": "Jammu",
             "city": "Jammu",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXL",
-            "name": "Kushok Bakula Rimpochee Airport",
+            "name": "Kushok Bakula Rimpochee",
             "city": "Leh",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXD",
-            "name": "Bamrauli Airport",
+            "name": "Bamrauli",
             "city": "Allahabad",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXK",
-            "name": "Keshod Airport",
+            "name": "Keshod",
             "city": "Keshod",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXH",
-            "name": "Kailashahar Airport",
+            "name": "Kailashahar",
             "city": "Kailashahar",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXI",
-            "name": "Lilabari Airport",
+            "name": "Lilabari",
             "city": "Lilabari",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXN",
-            "name": "Khowai Airport",
+            "name": "Khowai",
             "city": "Khowai",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXP",
-            "name": "Pathankot Airport",
+            "name": "Pathankot",
             "city": "Pathankot",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXQ",
-            "name": "Kamalpur Airport",
+            "name": "Kamalpur",
             "city": "Kamalpur",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXS",
-            "name": "Kumbhirgram Airport",
+            "name": "Kumbhirgram",
             "city": "Silchar",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXT",
-            "name": "Pasighat Airport",
+            "name": "Pasighat",
             "city": "Pasighat",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXV",
-            "name": "Along Airport",
+            "name": "Along",
             "city": "Along",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXW",
-            "name": "Sonari Airport",
+            "name": "Sonari",
             "city": "Jamshedpur",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "IXY",
-            "name": "Kandla Airport",
+            "name": "Kandla",
             "city": "Kandla",
             "country": "India",
             "timezone": "Asia/Kolkata"
         },
         {
             "code": "LGA",
-            "name": "LaGuardia Airport",
+            "name": "LaGuardia",
             "city": "New York",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "HPN",
-            "name": "Westchester County Airport",
+            "name": "Westchester County",
             "city": "White Plains",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "SWF",
-            "name": "Stewart International Airport",
+            "name": "Stewart",
             "city": "Newburgh",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "ISP",
-            "name": "Long Island MacArthur Airport",
+            "name": "Long Island MacArthur",
             "city": "Islip",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BUF",
-            "name": "Buffalo Niagara International Airport",
+            "name": "Buffalo Niagara",
             "city": "Buffalo",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "ROC",
-            "name": "Greater Rochester International Airport",
+            "name": "Greater Rochester",
             "city": "Rochester",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "SYR",
-            "name": "Syracuse Hancock International Airport",
+            "name": "Syracuse Hancock",
             "city": "Syracuse",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "ALB",
-            "name": "Albany International Airport",
+            "name": "Albany",
             "city": "Albany",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BDL",
-            "name": "Bradley International Airport",
+            "name": "Bradley",
             "city": "Hartford",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PVD",
-            "name": "T. F. Green Airport",
+            "name": "T. F. Green",
             "city": "Providence",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "MHT",
-            "name": "Manchester-Boston Regional Airport",
+            "name": "Manchester-Boston Regional",
             "city": "Manchester",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PWM",
-            "name": "Portland International Jetport",
+            "name": "Portland Jetport",
             "city": "Portland",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BGR",
-            "name": "Bangor International Airport",
+            "name": "Bangor",
             "city": "Bangor",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "BTV",
-            "name": "Burlington International Airport",
+            "name": "Burlington",
             "city": "Burlington",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "SBA",
-            "name": "Santa Barbara Municipal Airport",
+            "name": "Santa Barbara Municipal",
             "city": "Santa Barbara",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "PSP",
-            "name": "Palm Springs International Airport",
+            "name": "Palm Springs",
             "city": "Palm Springs",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "FAT",
-            "name": "Fresno Yosemite International Airport",
+            "name": "Fresno Yosemite",
             "city": "Fresno",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SBP",
-            "name": "San Luis Obispo County Regional Airport",
+            "name": "San Luis Obispo County Regional",
             "city": "San Luis Obispo",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "MRY",
-            "name": "Monterey Regional Airport",
+            "name": "Monterey Regional",
             "city": "Monterey",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "STS",
-            "name": "Charles M. Schulz–Sonoma County Airport",
+            "name": "Charles M. Schulz–Sonoma County",
             "city": "Santa Rosa",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "RNO",
-            "name": "Reno-Tahoe International Airport",
+            "name": "Reno-Tahoe",
             "city": "Reno",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "SRQ",
-            "name": "Sarasota-Bradenton International Airport",
+            "name": "Sarasota-Bradenton",
             "city": "Sarasota",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "PNS",
-            "name": "Pensacola International Airport",
+            "name": "Pensacola",
             "city": "Pensacola",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "TLH",
-            "name": "Tallahassee International Airport",
+            "name": "Tallahassee",
             "city": "Tallahassee",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "JAX",
-            "name": "Jacksonville International Airport",
+            "name": "Jacksonville",
             "city": "Jacksonville",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "DAB",
-            "name": "Daytona Beach International Airport",
+            "name": "Daytona Beach",
             "city": "Daytona Beach",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "MLB",
-            "name": "Melbourne Orlando International Airport",
+            "name": "Melbourne Orlando",
             "city": "Melbourne",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "VPS",
-            "name": "Destin-Fort Walton Beach Airport",
+            "name": "Destin-Fort Walton Beach",
             "city": "Valparaiso",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "ECP",
-            "name": "Northwest Florida Beaches International Airport",
+            "name": "Northwest Florida Beaches",
             "city": "Panama City",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "GNV",
-            "name": "Gainesville Regional Airport",
+            "name": "Gainesville Regional",
             "city": "Gainesville",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "DSM",
-            "name": "Des Moines International Airport",
+            "name": "Des Moines",
             "city": "Des Moines",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "CID",
-            "name": "The Eastern Iowa Airport",
+            "name": "The Eastern Iowa",
             "city": "Cedar Rapids",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MLI",
-            "name": "Quad City International Airport",
+            "name": "Quad City",
             "city": "Moline",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "PIA",
-            "name": "General Wayne A. Downing Peoria International Airport",
+            "name": "General Wayne A. Downing Peoria",
             "city": "Peoria",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "BMI",
-            "name": "Central Illinois Regional Airport",
+            "name": "Central Illinois Regional",
             "city": "Bloomington",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "GRR",
-            "name": "Gerald R. Ford International Airport",
+            "name": "Gerald R. Ford",
             "city": "Grand Rapids",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "FNT",
-            "name": "Bishop International Airport",
+            "name": "Bishop",
             "city": "Flint",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "LAN",
-            "name": "Capital Region International Airport",
+            "name": "Capital Region",
             "city": "Lansing",
             "country": "United States",
             "timezone": "America/New_York"
         },
         {
             "code": "GRB",
-            "name": "Austin Straubel International Airport",
+            "name": "Austin Straubel",
             "city": "Green Bay",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MSN",
-            "name": "Dane County Regional Airport",
+            "name": "Dane County Regional",
             "city": "Madison",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "BHM",
-            "name": "Birmingham-Shuttlesworth International Airport",
+            "name": "Birmingham-Shuttlesworth",
             "city": "Birmingham",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "HSV",
-            "name": "Huntsville International Airport",
+            "name": "Huntsville",
             "city": "Huntsville",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MOB",
-            "name": "Mobile Regional Airport",
+            "name": "Mobile Regional",
             "city": "Mobile",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "BTR",
-            "name": "Baton Rouge Metropolitan Airport",
+            "name": "Baton Rouge Metropolitan",
             "city": "Baton Rouge",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "LFT",
-            "name": "Lafayette Regional Airport",
+            "name": "Lafayette Regional",
             "city": "Lafayette",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "SHV",
-            "name": "Shreveport Regional Airport",
+            "name": "Shreveport Regional",
             "city": "Shreveport",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "LIT",
-            "name": "Clinton National Airport",
+            "name": "Clinton National",
             "city": "Little Rock",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "XNA",
-            "name": "Northwest Arkansas National Airport",
+            "name": "Northwest Arkansas National",
             "city": "Fayetteville",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "MAF",
-            "name": "Midland International Air and Space Port",
+            "name": "Midland Air and Space Port",
             "city": "Midland",
             "country": "United States",
             "timezone": "America/Chicago"
         },
         {
             "code": "ELP",
-            "name": "El Paso International Airport",
+            "name": "El Paso",
             "city": "El Paso",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "GEG",
-            "name": "Spokane International Airport",
+            "name": "Spokane",
             "city": "Spokane",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "EUG",
-            "name": "Eugene Airport",
+            "name": "Eugene",
             "city": "Eugene",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "RDM",
-            "name": "Redmond Municipal Airport",
+            "name": "Redmond Municipal",
             "city": "Redmond",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "MFR",
-            "name": "Rogue Valley International-Medford Airport",
+            "name": "Rogue Valley-Medford",
             "city": "Medford",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "BZN",
-            "name": "Bozeman Yellowstone International Airport",
+            "name": "Bozeman Yellowstone",
             "city": "Bozeman",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "MSO",
-            "name": "Missoula International Airport",
+            "name": "Missoula",
             "city": "Missoula",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "GTF",
-            "name": "Great Falls International Airport",
+            "name": "Great Falls",
             "city": "Great Falls",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "BIL",
-            "name": "Billings Logan International Airport",
+            "name": "Billings Logan",
             "city": "Billings",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "COS",
-            "name": "Colorado Springs Airport",
+            "name": "Colorado Springs",
             "city": "Colorado Springs",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "ASE",
-            "name": "Aspen/Pitkin County Airport",
+            "name": "Aspen/Pitkin County",
             "city": "Aspen",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "EGE",
-            "name": "Eagle County Regional Airport",
+            "name": "Eagle County Regional",
             "city": "Eagle",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "GJT",
-            "name": "Grand Junction Regional Airport",
+            "name": "Grand Junction Regional",
             "city": "Grand Junction",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "DRO",
-            "name": "Durango-La Plata County Airport",
+            "name": "Durango-La Plata County",
             "city": "Durango",
             "country": "United States",
             "timezone": "America/Denver"
         },
         {
             "code": "TUS",
-            "name": "Tucson International Airport",
+            "name": "Tucson",
             "city": "Tucson",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "FLG",
-            "name": "Flagstaff Pulliam Airport",
+            "name": "Flagstaff Pulliam",
             "city": "Flagstaff",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "PRC",
-            "name": "Prescott Regional Airport",
+            "name": "Prescott Regional",
             "city": "Prescott",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "YUM",
-            "name": "Yuma International Airport",
+            "name": "Yuma",
             "city": "Yuma",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "IFP",
-            "name": "Laughlin/Bullhead International Airport",
+            "name": "Laughlin/Bullhead",
             "city": "Bullhead City",
             "country": "United States",
             "timezone": "America/Phoenix"
         },
         {
             "code": "PSC",
-            "name": "Tri-Cities Airport",
+            "name": "Tri-Cities",
             "city": "Pasco",
             "country": "United States",
             "timezone": "America/Los_Angeles"
         },
         {
             "code": "ALW",
-            "name": "Walla Walla Regional Airport",
+            "name": "Walla Walla Regional",
             "city": "Walla Walla",
             "country": "United States",
             "timezone": "America/Los_Angeles"
@@ -1773,7 +1934,7 @@
         },
         {
             "code": "BLI",
-            "name": "Bellingham International Airport",
+            "name": "Bellingham",
             "city": "Bellingham",
             "country": "United States",
             "timezone": "America/Los_Angeles"
@@ -1787,129 +1948,311 @@
         },
         {
             "code": "MBJ",
-            "name": "Sangster International Airport",
+            "name": "Sangster",
             "city": "Montego Bay",
             "country": "Jamaica",
             "timezone": "America/Jamaica"
         },
         {
             "code": "BGI",
-            "name": "Grantley Adams International Airport",
+            "name": "Grantley Adams",
             "city": "Bridgetown",
             "country": "Barbados",
             "timezone": "America/Barbados"
         },
         {
             "code": "NAS",
-            "name": "Lynden Pindling International Airport",
+            "name": "Lynden Pindling",
             "city": "Nassau",
             "country": "Bahamas",
             "timezone": "America/Nassau"
         },
         {
             "code": "POS",
-            "name": "Piarco International Airport",
+            "name": "Piarco",
             "city": "Port of Spain",
             "country": "Trinidad and Tobago",
             "timezone": "America/Port_of_Spain"
         },
         {
             "code": "HAV",
-            "name": "José Martí International Airport",
+            "name": "José Martí",
             "city": "Havana",
             "country": "Cuba",
             "timezone": "America/Havana"
         },
         {
             "code": "SJU",
-            "name": "Luis Muñoz Marín International Airport",
+            "name": "Luis Muñoz Marín",
             "city": "San Juan",
             "country": "Puerto Rico",
             "timezone": "America/Puerto_Rico"
         },
         {
             "code": "SDQ",
-            "name": "Las Américas International Airport",
+            "name": "Las Américas",
             "city": "Santo Domingo",
             "country": "Dominican Republic",
             "timezone": "America/Santo_Domingo"
         },
         {
             "code": "PAP",
-            "name": "Toussaint Louverture International Airport",
+            "name": "Toussaint Louverture",
             "city": "Port-au-Prince",
             "country": "Haiti",
             "timezone": "America/Port-au-Prince"
         },
         {
             "code": "GND",
-            "name": "Maurice Bishop International Airport",
+            "name": "Maurice Bishop",
             "city": "St. George's",
             "country": "Grenada",
             "timezone": "America/Grenada"
         },
         {
             "code": "UVF",
-            "name": "Hewanorra International Airport",
+            "name": "Hewanorra",
             "city": "Vieux Fort",
             "country": "Saint Lucia",
             "timezone": "America/St_Lucia"
         },
         {
             "code": "ANU",
-            "name": "V.C. Bird International Airport",
+            "name": "V.C. Bird",
             "city": "St. John's",
             "country": "Antigua and Barbuda",
             "timezone": "America/Antigua"
         },
         {
             "code": "GCM",
-            "name": "Owen Roberts International Airport",
+            "name": "Owen Roberts",
             "city": "George Town",
             "country": "Cayman Islands",
             "timezone": "America/Cayman"
         },
         {
             "code": "AUA",
-            "name": "Queen Beatrix International Airport",
+            "name": "Queen Beatrix",
             "city": "Oranjestad",
             "country": "Aruba",
             "timezone": "America/Aruba"
         },
         {
             "code": "CUR",
-            "name": "Hato International Airport",
+            "name": "Hato",
             "city": "Willemstad",
             "country": "Curaçao",
             "timezone": "America/Curacao"
         },
         {
             "code": "BON",
-            "name": "Flamingo International Airport",
+            "name": "Flamingo",
             "city": "Kralendijk",
             "country": "Bonaire",
             "timezone": "America/Kralendijk"
         },
         {
             "code": "SKB",
-            "name": "Robert L. Bradshaw International Airport",
+            "name": "Robert L. Bradshaw",
             "city": "Basseterre",
             "country": "Saint Kitts and Nevis",
             "timezone": "America/St_Kitts"
         },
         {
             "code": "DOM",
-            "name": "Douglas-Charles Airport",
+            "name": "Douglas-Charles",
             "city": "Roseau",
             "country": "Dominica",
             "timezone": "America/Dominica"
         },
         {
             "code": "BDA",
-            "name": "L.F. Wade International Airport",
+            "name": "L.F. Wade",
             "city": "Hamilton",
             "country": "Bermuda",
             "timezone": "Atlantic/Bermuda"
+        },
+        {
+            "code": "BER",
+            "name": "Berlin Brandenburg",
+            "city": "Berlin",
+            "country": "Germany",
+            "timezone": "Europe/Berlin"
+        },
+        {
+            "code": "MUC",
+            "name": "Munich",
+            "city": "Munich",
+            "country": "Germany",
+            "timezone": "Europe/Berlin"
+        },
+        {
+            "code": "ORY",
+            "name": "Paris Orly",
+            "city": "Paris",
+            "country": "France",
+            "timezone": "Europe/Paris"
+        },
+        {
+            "code": "LGW",
+            "name": "London Gatwick",
+            "city": "London",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "STN",
+            "name": "London Stansted",
+            "city": "London",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "MAN",
+            "name": "Manchester",
+            "city": "Manchester",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "BHX",
+            "name": "Birmingham",
+            "city": "Birmingham",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "EDI",
+            "name": "Edinburgh",
+            "city": "Edinburgh",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "GLA",
+            "name": "Glasgow",
+            "city": "Glasgow",
+            "country": "United Kingdom",
+            "timezone": "Europe/London"
+        },
+        {
+            "code": "GVA",
+            "name": "Geneva",
+            "city": "Geneva",
+            "country": "Switzerland",
+            "timezone": "Europe/Zurich"
+        },
+        {
+            "code": "BSL",
+            "name": "EuroAirport Basel Mulhouse Freiburg",
+            "city": "Basel",
+            "country": "Switzerland",
+            "timezone": "Europe/Zurich"
+        },
+        {
+            "code": "IKA",
+            "name": "Imam Khomeini",
+            "city": "Tehran",
+            "country": "Iran",
+            "timezone": "Asia/Tehran"
+        },
+        {
+            "code": "AMM",
+            "name": "Queen Alia",
+            "city": "Amman",
+            "country": "Jordan",
+            "timezone": "Asia/Amman"
+        },
+        {
+            "code": "BEY",
+            "name": "Beirut-Rafic Hariri",
+            "city": "Beirut",
+            "country": "Lebanon",
+            "timezone": "Asia/Beirut"
+        },
+        {
+            "code": "DMM",
+            "name": "King Fahd",
+            "city": "Dammam",
+            "country": "Saudi Arabia",
+            "timezone": "Asia/Riyadh"
+        },
+        {
+            "code": "MED",
+            "name": "Prince Mohammad bin Abdulaziz",
+            "city": "Medina",
+            "country": "Saudi Arabia",
+            "timezone": "Asia/Riyadh"
+        },
+        {
+            "code": "SHJ",
+            "name": "Sharjah",
+            "city": "Sharjah",
+            "country": "United Arab Emirates",
+            "timezone": "Asia/Dubai"
+        },
+        {
+            "code": "DWC",
+            "name": "Al Maktoum",
+            "city": "Dubai",
+            "country": "United Arab Emirates",
+            "timezone": "Asia/Dubai"
+        },
+        {
+            "code": "ALY",
+            "name": "Alexandria",
+            "city": "Alexandria",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "HRG",
+            "name": "Hurghada",
+            "city": "Hurghada",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "LXR",
+            "name": "Luxor",
+            "city": "Luxor",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "SSH",
+            "name": "Sharm El Sheikh",
+            "city": "Sharm El Sheikh",
+            "country": "Egypt",
+            "timezone": "Africa/Cairo"
+        },
+        {
+            "code": "AKL",
+            "name": "Auckland",
+            "city": "Auckland",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "WLG",
+            "name": "Wellington",
+            "city": "Wellington",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "CHC",
+            "name": "Christchurch",
+            "city": "Christchurch",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
+        },
+        {
+            "code": "ZQN",
+            "name": "Queenstown",
+            "city": "Queenstown",
+            "country": "New Zealand",
+            "timezone": "Pacific/Auckland"
         }
     ]
 }

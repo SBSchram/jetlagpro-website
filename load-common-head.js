@@ -1,7 +1,8 @@
-// Load common head elements for all JetLagPro pages
+// Load common head elements for all JetLagPro pages (including reviewers section)
 async function loadCommonHead() {
     try {
-        const response = await fetch('./head-template.html');
+        // Use absolute path so it works from both root and reviewers/ subdirectory
+        const response = await fetch('/head-template.html');
         const headContent = await response.text();
         
         // Insert the common head elements into the document head

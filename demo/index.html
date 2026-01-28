@@ -23,7 +23,8 @@
     <meta property="twitter:description" content="Try JetLagPro's interactive horary points system. Experience how the app helps you overcome jet lag through traditional Chinese medicine.">
     <meta property="twitter:image" content="https://jetlagpro.com/assets/images/app-icon.png">
 
-    <script src="../load-common-head.js"></script>
+    <link rel="stylesheet" href="styles.css?v=20251211130933">
+    <link rel="icon" type="image/png" href="../assets/images/app-icon.png">
 </head>
 <body>
     <div class="container">
@@ -33,147 +34,112 @@
         <div class="phone-frame">
             <!-- iOS App Container -->
             <div class="app-container">
-                <!-- Main Content Area -->
-                <main class="app-main">
-                    <!-- Home Tab Content -->
-                    <div id="homeTab" class="tab-content active">
-                        <div class="home-header">
-                            <div class="header-gradient">
-                                <div class="home-header-content">
-                                    <h1 class="home-title">How to be a Jet Lag Pro</h1>
+                <!-- FTUE Welcome Modal -->
+                <div id="welcomeFTUE" class="ftue-modal" style="display: none;">
+                    <div class="ftue-overlay" onclick="demo.closeFTUE()"></div>
+                    <div class="ftue-content">
+                        <div class="ftue-pages" id="ftuePages">
+                            <!-- Page 1: Welcome to JetLagPro -->
+                            <div class="ftue-page active" data-page="0">
+                                <div class="ftue-header gradient-page-0">
+                                    <h2>Welcome to JetLagPro!</h2>
+                                </div>
+                                <div class="ftue-page-content">
+                                    <div class="ftue-concept">
+                                        <h3>12 Pressure Points<br>30 seconds each<br>every 2 hours (or so)</h3>
+                                        <p class="ftue-tagline">beat jet lag (or at least feel a whole lot better).</p>
+                                    </div>
+                                    <div class="ftue-instructions">
+                                        <h4>Learn how in 3 easy steps</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Page 2: Choose your destination -->
+                            <div class="ftue-page" data-page="1">
+                                <div class="ftue-header gradient-page-1">
+                                    <h2>Step 1</h2>
+                                </div>
+                                <div class="ftue-page-content">
+                                    <h3 class="ftue-page-title">Choose your destination</h3>
+                                </div>
+                            </div>
+                            
+                            <!-- Page 3: Stimulate the points -->
+                            <div class="ftue-page" data-page="2">
+                                <div class="ftue-header gradient-page-2">
+                                    <h2>Step 2</h2>
+                                </div>
+                                <div class="ftue-page-content">
+                                    <h3 class="ftue-page-title">Stimulate the points</h3>
+                                    <div class="ftue-steps">
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>Use firm pressure like in the videos</span>
+                                        </div>
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>Use the timer, work each point for 30 seconds</span>
+                                        </div>
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>Work points on both side of your body (e.g Left hand/Right hand).</span>
+                                        </div>
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>After you're done, mark the point as stimulated</span>
+                                        </div>
+                                    </div>
+                                    <p class="ftue-sleep-message">It's OK if you sleep and miss a point, just continue with the current point</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Page 4: Before you begin -->
+                            <div class="ftue-page" data-page="3">
+                                <div class="ftue-header gradient-page-3">
+                                    <h2>Before you begin…</h2>
+                                </div>
+                                <div class="ftue-page-content">
+                                    <div class="ftue-steps">
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>Whether online or not, you'll get reminders</span>
+                                        </div>
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>For the maximum benefit, complete the full 12 points, even after your flight ends.</span>
+                                        </div>
+                                        <div class="ftue-step-item">
+                                            <span class="ftue-bullet">•</span>
+                                            <span>Your first point will be shown after you set your destination!</span>
+                                        </div>
+                                    </div>
+                                    <div class="ftue-actions">
+                                        <button class="ftue-button" onclick="demo.completeFTUE()">Let's go!</button>
+                                        <div class="ftue-dont-show">
+                                            <label>
+                                                <span>Don't show again</span>
+                                                <input type="checkbox" id="dontShowAgain">
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="content-container">
-                            <!-- Get Notified Section -->
-                            <section class="notifications-section">
-                                <div class="section-header expandable" onclick="toggleSection('notifications')">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">Get Notified:</span>
-                                    </div>
-                                    <div class="chevron" id="notificationsChevron">▼</div>
-                                </div>
-                                <div class="section-content" id="notificationsContent">
-                                    <div class="notification-item">
-                                        <span class="bullet">•</span>
-                                        <span class="notification-text">Notifications are enabled and working properly</span>
-                                    </div>
-                                    <div class="notification-item">
-                                        <span class="bullet">•</span>
-                                        <span class="notification-text">You'll receive alerts when it's time to stimulate points</span>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Main Instructions -->
-                            <section class="main-instructions">
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Start the app at the airport.</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Choose your destination (airplane tab).</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Stimulate the point that is shown.</span>
-                                </div>
-                            </section>
-
-                            <!-- Stimulation Guidelines Section -->
-                            <section class="stimulation-section">
-                                <div class="section-header expandable" onclick="toggleSection('stimulation')">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">How to Stimulate</span>
-                                    </div>
-                                    <div class="chevron" id="stimulationChevron">▼</div>
-                                </div>
-                                <div class="section-content" id="stimulationContent">
-                                    <p>Use your fingers or a blunt tool (pen top) to apply pressure like in the video.</p>
-                                    
-                                    <h4>Important Tips</h4>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Use a firm pressure - You can do this through light clothes</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Pay attention and focus on what you are doing</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Rub and press each point for a minute</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Breathe slowly and take your time</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Points exist on both sides of the body so do both sides</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">For best results, do all 12 points over 24 hours</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="bullet">•</span>
-                                        <span class="tip-text">Stop pressing on a point if you feel any pain or odd discomfort</span>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <!-- Final Instructions -->
-                            <section class="final-instructions">
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">The app can be closed as you do other things. Notices will remind you to do the next point at the right time.</span>
-                                </div>
-                                <div class="instruction-item">
-                                    <span class="bullet">•</span>
-                                    <span class="instruction-text">Continue with each point, even after the flight ends for a full 24 hour cycle.</span>
-                                </div>
-                            </section>
-
-                            <!-- Survey Code Section -->
-                            <section class="survey-code-section">
-                                <div class="section-header">
-                                    <div class="section-title">
-                                        <span class="bullet">•</span>
-                                        <span class="title-text">Survey code to rate effectiveness</span>
-                                    </div>
-                                </div>
-                                <div class="section-content">
-                                    <p class="survey-description">View our research goal:</p>
-                                    
-                                    <div class="survey-code-display">
-                                        <div class="code-container">
-                                            <span class="survey-code">JLP-A7B3C9D2</span>
-                                        </div>
-                                        <button class="copy-button" onclick="demo.copySurveyCode()">Copy</button>
-                                    </div>
-                                    
-                                    <div class="survey-links">
-                                        <a href="../survey.html" class="survey-button">
-                                            <span class="link-icon">🔗</span>
-                                            <span>Take Survey</span>
-                                        </a>
-                                        <a href="../research-paper.html" class="research-button">
-                                            <span class="research-icon">📄</span>
-                                            <span>View our research goal</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </section>
+                        <!-- Page Indicators -->
+                        <div class="ftue-indicators">
+                            <span class="ftue-indicator active" data-indicator="0"></span>
+                            <span class="ftue-indicator" data-indicator="1"></span>
+                            <span class="ftue-indicator" data-indicator="2"></span>
+                            <span class="ftue-indicator" data-indicator="3"></span>
                         </div>
                     </div>
-
+                </div>
+                
+                <!-- Main Content Area -->
+                <main class="app-main">
                     <!-- Destination Tab Content -->
-                    <div id="destinationTab" class="tab-content">
+                    <div id="destinationTab" class="tab-content active">
                         <div class="destination-header">
                             <div class="header-gradient">
                                 <div class="destination-header-content">
@@ -181,7 +147,7 @@
                                     <div class="search-bar">
                                         <div class="search-input-wrapper">
                                             <div class="search-icon">🔍</div>
-                                            <input type="text" id="airportSearch" placeholder="Choose your destination&#8203;&#8203;" class="search-input">
+                                            <input type="text" id="airportSearch" placeholder="Type your destination" class="search-input">
                                             <div id="clearSearchButton" class="clear-button" style="display: none;" onclick="demo.clearSearch()">
                                                 <span>✕</span>
                                             </div>
@@ -211,9 +177,6 @@
                                 <div id="recentList" class="recent-list">
                                     <!-- Recent destinations will be populated here -->
                                 </div>
-                                <div class="clear-recent-button">
-                                    <button onclick="demo.clearRecentDestinations()">Clear Recent Destinations</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -239,6 +202,12 @@
                         <div class="journey-content">
                             <div class="points-list" id="pointsList">
                                 <!-- Points will be dynamically generated here -->
+                            </div>
+                            
+                            <!-- Reward Messages Overlay (matches iOS) -->
+                            <div id="rewardMessagesOverlay" class="reward-messages-overlay">
+                                <div id="encouragementMessage" class="encouragement-message" style="display: none;"></div>
+                                <div id="achievementPopup" class="achievement-popup" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -415,10 +384,6 @@
 
                 <!-- Bottom Tab Bar -->
                 <nav class="tab-bar">
-                    <div class="tab-item active" onclick="switchTab('home')">
-                        <div class="tab-icon">🏠</div>
-                        <div class="tab-label">Home</div>
-                    </div>
                     <div class="tab-item" onclick="switchTab('destination')">
                         <div class="tab-icon">✈️</div>
                         <div class="tab-label">Destination</div>
@@ -439,7 +404,7 @@
 
 
     <!-- Scripts -->
-    <script src="script.js?v=49"></script>
+    <script src="script.js?v=20251211130933"></script>
     <script>
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');

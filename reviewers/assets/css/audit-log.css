@@ -1,0 +1,513 @@
+/* ===================================
+   AUDIT LOG VIEWER - TABLE FORMAT
+   Concise, scannable, utilitarian
+   =================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Container override for audit-log page - wider for data tables */
+.container {
+    max-width: 1600px;
+    min-width: 1200px; /* Ensure desktop minimum width */
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+    
+    .stats-bar {
+        flex-wrap: wrap;
+        gap: 15px;
+        font-size: 0.8rem;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .audit-table {
+        font-size: 0.75rem;
+        min-width: 800px;
+    }
+    
+    .audit-table th,
+    .audit-table td {
+        padding: 6px 4px;
+    }
+}
+
+/* Header and refresh button styles moved to reviewers.css */
+
+/* Stats Summary */
+.stats-bar {
+    display: flex;
+    gap: 30px;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    justify-content: center; /* Center the stats bar */
+}
+
+.stat {
+    display: flex;
+    gap: 5px;
+}
+
+.stat-label {
+    color: #666;
+}
+
+.stat-value {
+    font-weight: 600;
+}
+
+/* Table Container */
+.table-container {
+    display: inline-block;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    margin: 0 auto; /* Center the table */
+}
+
+/* Audit Table */
+.audit-table {
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    table-layout: auto;
+    width: auto;
+}
+
+.audit-table thead {
+    background: #f5f5f5;
+    border-bottom: 2px solid #000;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.audit-table th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    border-right: 1px solid #ddd;
+}
+
+.audit-table th:last-child {
+    border-right: none;
+}
+
+.audit-table th:first-child,
+.audit-table td:first-child {
+    width: 130px;
+}
+
+.audit-table th:nth-child(2),
+.audit-table td:nth-child(2) {
+    width: 80px;
+}
+
+.audit-table th:nth-child(3),
+.audit-table td:nth-child(3) {
+    width: 80px;
+}
+
+.audit-table th:nth-child(4),
+.audit-table td:nth-child(4) {
+    width: 100px;
+}
+
+.audit-table th:nth-child(5),
+.audit-table td:nth-child(5) {
+    width: 100px;
+}
+
+.audit-table th:nth-child(6),
+.audit-table td:nth-child(6) {
+    width: 90px;
+}
+
+.audit-table th:nth-child(7),
+.audit-table td:nth-child(7) {
+    width: 100px;
+}
+
+.audit-table th:nth-child(8),
+.audit-table td:nth-child(8) {
+    width: 70px;
+}
+
+.audit-table th:nth-child(9),
+.audit-table td:nth-child(9) {
+    width: 60px;
+}
+
+.audit-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.audit-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Trip Group Separator - visual divider between different trip IDs */
+.audit-table tbody tr.trip-group-separator {
+    height: auto;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid #d0d0d0;
+}
+
+.audit-table tbody tr.trip-group-separator:hover {
+    background-color: #e5e5e5;
+}
+
+.audit-table tbody tr.trip-group-separator.dev-group-separator {
+    cursor: pointer;
+    background-color: #fff3cd;
+}
+
+.audit-table tbody tr.trip-group-separator.dev-group-separator:hover {
+    background-color: #ffeaa7;
+}
+
+.audit-table tbody tr.trip-group-separator td {
+    padding: 8px 12px;
+    border: none;
+}
+
+.audit-table tbody tr.trip-group-separator td.separator-content {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.audit-table tbody tr.trip-group-separator .separator-icon {
+    font-size: 0.75rem;
+    color: #333;
+    display: inline-block;
+    min-width: 12px;
+    text-align: center;
+}
+
+.audit-table tbody tr.trip-group-separator .separator-text {
+    flex: 1;
+}
+
+/* Group rows - collapseable */
+.audit-table tbody tr.group-row.group-collapsed {
+    display: none;
+}
+
+.audit-table tbody tr.expandable {
+    cursor: pointer;
+}
+
+.audit-table tbody tr.expandable:hover {
+    background-color: #f0f0f0;
+}
+
+.audit-table td {
+    padding: 6px 12px;
+    white-space: nowrap;
+    border-right: 1px solid #f0f0f0;
+}
+
+.audit-table td:last-child {
+    border-right: none;
+}
+
+/* Action Column */
+.action-CREATE {
+    color: #007700;
+    font-weight: 600;
+}
+
+.action-UPDATE,
+.action-MODIFY {
+    color: #ff6600;
+    font-weight: 600;
+}
+
+.action-DELETE {
+    color: #cc0000;
+    font-weight: 600;
+}
+
+/* Enhanced DELETE entry styling */
+.audit-table tbody tr.delete-entry {
+    background-color: #fff5f5;
+    border-left: 3px solid #cc0000;
+}
+
+.audit-table tbody tr.delete-entry:hover {
+    background-color: #ffe5e5;
+}
+
+.action-VALIDATION {
+    color: #999;
+    font-style: italic;
+}
+
+.expand-icon {
+    font-size: 0.75rem;
+    margin-left: 4px;
+    opacity: 0.6;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.audit-table tbody tr.expandable .expand-icon {
+    opacity: 1;
+}
+
+.audit-table tbody tr.expandable:hover .expand-icon {
+    opacity: 1;
+}
+
+/* Valid Column */
+.valid-yes {
+    color: #007700;
+    font-size: 1.2rem;
+}
+
+.valid-no {
+    color: #cc0000;
+    font-size: 1.2rem;
+}
+
+.valid-na {
+    color: #999;
+}
+
+/* Source Column */
+.source-app {
+    font-weight: 600;
+}
+
+.source-survey {
+    color: #0066cc;
+}
+
+.source-console {
+    color: #cc0000;
+    font-weight: 600;
+}
+
+/* Expanded Row */
+.expanded-row {
+    display: none;
+}
+
+.expanded-row.show {
+    display: table-row;
+}
+
+.expanded-row td {
+    padding: 15px 20px;
+    background: #fafafa;
+    border-bottom: 2px solid #ddd;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.expanded-content {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.expanded-content h4 {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Changes Table Container */
+.changes-table-container {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.changes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+}
+
+.changes-table thead {
+    background: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.changes-table th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.changes-table td {
+    text-align: left;
+}
+
+.changes-table th.col-field {
+    width: 20%;
+    min-width: 120px;
+}
+
+.changes-table th.col-before {
+    width: 40%;
+    color: #cc0000;
+}
+
+.changes-table th.col-after {
+    width: 40%;
+    color: #007700;
+    border-right: none;
+}
+
+.changes-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.changes-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.changes-table td {
+    padding: 8px 12px;
+    vertical-align: top;
+    border-right: 1px solid #f0f0f0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 0; /* Force word wrapping in table cells */
+    text-align: left;
+}
+
+.changes-table td:last-child {
+    border-right: none;
+}
+
+.field-name-cell {
+    font-weight: 600;
+    color: #333;
+    background: #fafafa;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.value-before {
+    background: #fff5f5;
+    color: #333;
+}
+
+.value-after {
+    background: #f5fff5;
+    color: #333;
+}
+
+/* Legacy support for old format */
+.change-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.change-item {
+    padding: 12px;
+    background: #fff;
+    border-left: 3px solid #999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.old-value {
+    color: #cc0000;
+}
+
+.new-value {
+    color: #007700;
+}
+
+/* Context Notes */
+.context-note {
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.context-note.context-warning {
+    background-color: #fff8e1;
+    border-left: 4px solid #ff9800;
+    color: #e65100;
+}
+
+.context-note.context-info {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    color: #1565c0;
+}
+
+.context-note.context-error {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+    color: #c62828;
+}
+
+.context-note strong {
+    font-weight: 600;
+}
+
+/* Loading/Empty States */
+.loading,
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .audit-table {
+        font-size: 0.75rem;
+    }
+    
+    .audit-table th,
+    .audit-table td {
+        padding: 5px 8px;
+    }
+}
+
+

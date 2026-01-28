@@ -3,6 +3,11 @@
 // Global variables
 let surveyData = {};
 let isCodeValidated = false;
+let isExistingSurvey = false;
+let currentTripId = null;
+
+// Survey Read Service instance (new integration)
+let surveyReadService = null;
 
 // Security functions for comment sanitization
 function sanitizeComment(input) {
@@ -53,13 +58,175 @@ function validateComment(input) {
     return { isValid: true, message: 'Comment is valid' };
 }
 
-// Check if coming from app and refresh if needed
+// ============================================================================
+// NEW SURVEY READ SERVICE INTEGRATION (Step 4)
+// ============================================================================
+
+// Initialize Survey Read Service
+function initializeSurveyReadService() {
+    try {
+        if (window.SurveyReadService) {
+            surveyReadService = new window.SurveyReadService();
+            console.log('✅ Survey Read Service initialized');
+            return true;
+        } else {
+            console.warn('⚠️ SurveyReadService not available, falling back to existing methods');
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Failed to initialize Survey Read Service:', error);
+        return false;
+    }
+}
+
+// NEW: Check existing survey by trip ID using SurveyReadService
+async function checkExistingSurveyByTripIdWithService(tripId) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await checkExistingSurveyByTripIdLegacy(tripId);
+    }
+    
+    try {
+        console.log('🔍 Checking existing survey by trip ID with service...');
+        const result = await surveyReadService.checkExistingSurveyByTripId(tripId);
+        console.log(`✅ Survey Read Service: Found ${result.count} existing surveys for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await checkExistingSurveyByTripIdLegacy(tripId);
+    }
+}
+
+// NEW: Check existing survey by code using SurveyReadService
+async function checkExistingSurveyByCodeWithService(surveyCode) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await checkExistingSurveyByCodeLegacy(surveyCode);
+    }
+    
+    try {
+        console.log('🔍 Checking existing survey by code with service...');
+        const result = await surveyReadService.checkExistingSurveyByCode(surveyCode);
+        console.log(`✅ Survey Read Service: Found ${result.count} existing surveys for code: ${surveyCode}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await checkExistingSurveyByCodeLegacy(surveyCode);
+    }
+}
+
+// NEW: Get trip data using SurveyReadService
+async function getTripDataWithService(tripId) {
+    if (!surveyReadService) {
+        console.warn('⚠️ Survey Read Service not available, falling back to existing method');
+        return await getTripDataLegacy(tripId);
+    }
+    
+    try {
+        console.log('🔍 Getting trip data with service...');
+        const result = await surveyReadService.getTripData(tripId);
+        console.log(`✅ Survey Read Service: Trip data ${result.exists ? 'found' : 'not found'} for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Survey Read Service failed, falling back to existing method:', error);
+        return await getTripDataLegacy(tripId);
+    }
+}
+
+// LEGACY: Check existing survey by trip ID (fallback method)
+async function checkExistingSurveyByTripIdLegacy(tripId) {
+    try {
+        console.log('🔍 Checking existing survey by trip ID (legacy method)...');
+        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        const surveyRef = collection(window.firebaseDB, 'surveys');
+        const q = query(surveyRef, where('tripId', '==', tripId));
+        const querySnapshot = await getDocs(q);
+        
+        const result = {
+            exists: !querySnapshot.empty,
+            data: null,
+            count: querySnapshot.size
+        };
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            result.data = doc.data();
+            result.docId = doc.id;
+        }
+
+        console.log(`✅ Legacy method: Found ${result.count} existing surveys for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// LEGACY: Check existing survey by code (fallback method)
+async function checkExistingSurveyByCodeLegacy(surveyCode) {
+    try {
+        console.log('🔍 Checking existing survey by code (legacy method)...');
+        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        const surveyRef = collection(window.firebaseDB, 'surveys');
+        const q = query(surveyRef, where('surveyCode', '==', surveyCode));
+        const querySnapshot = await getDocs(q);
+        
+        const result = {
+            exists: !querySnapshot.empty,
+            data: null,
+            count: querySnapshot.size
+        };
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            result.data = doc.data();
+            result.docId = doc.id;
+        }
+
+        console.log(`✅ Legacy method: Found ${result.count} existing surveys for code: ${surveyCode}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// LEGACY: Get trip data (fallback method)
+async function getTripDataLegacy(tripId) {
+    try {
+        console.log('🔍 Getting trip data (legacy method)...');
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDoc = await window.firebaseGetDoc(tripDocRef);
+        
+        const result = {
+            exists: tripDoc.exists(),
+            data: null
+        };
+
+        if (tripDoc.exists()) {
+            result.data = tripDoc.data();
+        }
+
+        console.log(`✅ Legacy method: Trip data ${result.exists ? 'found' : 'not found'} for tripId: ${tripId}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Legacy method failed:', error);
+        throw error;
+    }
+}
+
+// ============================================================================
+// END NEW SURVEY READ SERVICE INTEGRATION
+// ============================================================================
+
+// Check if coming from app (has tripId) and refresh if needed
 function checkAndRefreshFromApp() {
     const urlParams = new URLSearchParams(window.location.search);
-    const fromApp = urlParams.get('from') === 'app';
+    const tripId = urlParams.get('tripId');
+    const fromApp = tripId !== null; // If tripId exists, we're coming from the app
     
     if (fromApp && !sessionStorage.getItem('appRefreshDone')) {
-        console.log('🔄 Coming from app - forcing fresh load...');
+        console.log('🔄 Coming from app (has tripId) - forcing fresh load...');
         sessionStorage.setItem('appRefreshDone', 'true');
         
         // Add timestamp to force refresh
@@ -72,25 +239,26 @@ function checkAndRefreshFromApp() {
     }
 }
 
-// Force scroll to very top (mobile-optimized)
-function forceScrollToTop() {
-    console.log('📍 Forcing scroll to top...');
-    
-    // Multiple methods to ensure it works on all mobile browsers
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Chrome/Firefox
+// Simple scroll to top of survey
+function scrollToTop() {
+    console.log('📍 Scrolling to top of survey...');
     window.scrollTo(0, 0);
-    
-    // Also scroll the survey container itself
-    const surveyContainer = document.querySelector('.survey-container');
-    if (surveyContainer) {
-        surveyContainer.scrollTop = 0;
-    }
 }
 
 // Initialize survey when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 LJLQ Survey Initializing...');
+    
+    // Prevent browser from restoring previous scroll position
+    window.history.scrollRestoration = 'manual';
+    
+    // Initialize Survey Read Service for DRY read operations
+    const serviceAvailable = initializeSurveyReadService();
+    if (serviceAvailable) {
+        console.log('✅ Survey Read Service initialized successfully');
+    } else {
+        console.log('⚠️ Survey Read Service not available, using legacy methods');
+    }
     
     // Check if coming from app and force refresh if needed
     checkAndRefreshFromApp();
@@ -98,8 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup code validation first
     setupCodeValidation();
     
-    // Check for existing submission and pre-fill if found
-    checkForExistingSubmission();
     
     // Auto-fill survey code from URL parameter
     autoFillSurveyCode();
@@ -110,22 +276,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize comment section
     initializeCommentSection();
     
-    // Setup flight landing time validation
-    setupFlightLandingValidation();
     
-    // Setup scale sliders
-    setupScaleSliders();
-    
-    // Initialize enhanced sliders with tick marks
-    initializeEnhancedSliders();
 
     // Setup rating bubbles
     setupRatingBubbles();
     
-    // Always scroll to top on mobile
-    if (window.innerWidth <= 768) {
-        setTimeout(forceScrollToTop, 500);
-    }
+    
+    // Always scroll to top after all initialization is complete
+    setTimeout(scrollToTop, 1000);
     
     // CSS media queries now handle responsive design automatically
     // No JavaScript needed for show/hide logic
@@ -133,48 +291,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ LJLQ Survey initialized');
 });
 
-// Setup scale sliders functionality
-function setupScaleSliders() {
-    const sliders = document.querySelectorAll('.scale-slider');
-    
-    sliders.forEach(slider => {
-        // Update display on change
-        slider.addEventListener('input', function() {
-            const selectedValue = this.value;
-            const selectedValueDiv = this.parentElement.querySelector('.selected-value');
-            if (selectedValueDiv) {
-                // Handle duration sliders (show "X days")
-                if (this.name.includes('duration')) {
-                    if (selectedValue === '0') {
-                        selectedValueDiv.textContent = 'Selected: 0 days';
-                    } else if (selectedValue === '5') {
-                        selectedValueDiv.textContent = 'Selected: 5+ days';
-                    } else {
-                        selectedValueDiv.textContent = `Selected: ${selectedValue} day${selectedValue === '1' ? '' : 's'}`;
-                    }
-                } else {
-                    selectedValueDiv.textContent = `Selected: ${selectedValue}`;
-                }
-            }
-        });
-        
-        // Initialize display
-        const selectedValueDiv = slider.parentElement.querySelector('.selected-value');
-        if (selectedValueDiv) {
-            if (slider.name.includes('duration')) {
-                if (slider.value === '0') {
-                    selectedValueDiv.textContent = 'Selected: 0 days';
-                } else if (slider.value === '5') {
-                    selectedValueDiv.textContent = 'Selected: 5+ days';
-                } else {
-                    selectedValueDiv.textContent = `Selected: ${slider.value} day${slider.value === '1' ? '' : 's'}`;
-                }
-            } else {
-                selectedValueDiv.textContent = `Selected: ${slider.value}`;
-            }
-        }
-    });
-}
 
 // Auto-fill survey code from URL parameter  
 function autoFillSurveyCode() {
@@ -183,6 +299,7 @@ function autoFillSurveyCode() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const tripId = urlParams.get('tripId');
+    const testMode = urlParams.get('test') === 'true' || window.location.hostname === 'localhost';
     
     if (code) {
         console.log('✅ Found survey code in URL:', code);
@@ -195,8 +312,7 @@ function autoFillSurveyCode() {
         if (surveyCodeInput) {
             surveyCodeInput.value = code.toUpperCase();
             
-            // Auto-populate point data if available
-            autoFillPointData();
+            // Point data is already saved in Firebase from trip completion
             
             // Auto-populate timezone and direction data if available
             autoFillTimezoneData();
@@ -210,55 +326,20 @@ function autoFillSurveyCode() {
                     // After validation, hide the preview section and show clean survey
                     setTimeout(() => {
                         hideSurveyPreview();
-                        scrollToSurvey();
+                        // Don't scroll here - let the main scroll function handle it
                     }, 1000); // Wait for validation to complete
                 }
             }, 500);
         }
+    } else if (testMode) {
+        console.log('🧪 Test mode enabled - allowing survey submission for development');
+        enableSurveySubmission();
+        hideSurveyPreview();
     } else {
         console.log('ℹ️ No survey code found in URL');
     }
 }
 
-// Auto-fill point completion data from URL parameters
-function autoFillPointData() {
-    console.log('📊 Checking for point data in URL...');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const pointsCompleted = urlParams.get('points');
-    const totalPoints = urlParams.get('total');
-    
-    if (pointsCompleted && totalPoints) {
-        console.log(`✅ Found point data: ${pointsCompleted}/${totalPoints} points completed`);
-        
-        // Auto-fill the total points question with exact number
-        const totalPointsSelect = document.querySelector('select[name="points_total"]');
-        if (totalPointsSelect) {
-            // Use the exact number from the iOS app
-            const pointsNum = parseInt(pointsCompleted);
-            totalPointsSelect.value = pointsNum.toString();
-            console.log(`📝 Auto-filled total points: ${pointsCompleted} (exact number)`);
-        }
-        
-        // Show a helpful message to the user
-        const pointDataMessage = document.createElement('div');
-        pointDataMessage.className = 'point-data-message';
-        pointDataMessage.innerHTML = `
-            <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                <strong>📊 Point Data Auto-filled:</strong> Your app data shows you completed ${pointsCompleted} out of ${totalPoints} points during your journey. 
-                This data has been automatically filled in the survey below. You can modify these numbers if needed.
-            </div>
-        `;
-        
-        // Insert the message before the first survey section
-        const firstSection = document.querySelector('.survey-section');
-        if (firstSection) {
-            firstSection.parentNode.insertBefore(pointDataMessage, firstSection);
-        }
-    } else {
-        console.log('ℹ️ No point data found in URL - user will need to enter manually');
-    }
-}
 
 // Auto-fill timezone, direction, and destination data from URL parameters
 function autoFillTimezoneData() {
@@ -272,36 +353,20 @@ function autoFillTimezoneData() {
     
     let autoFilledData = [];
     
-    // Auto-fill timezone count
+    // Note: Timezone, direction, and destination data are now handled by Firebase
     if (timezones) {
-        const timezonesSelect = document.querySelector('select[name="timezones"]');
-        if (timezonesSelect) {
-            // Handle 12+ case
-            const value = parseInt(timezones) >= 12 ? '12+' : timezones;
-            timezonesSelect.value = value;
-            console.log(`✅ Auto-filled timezones: ${value}`);
-            autoFilledData.push(`${value} timezones`);
-        }
+        console.log(`✅ Timezone data available: ${timezones} timezones (stored in Firebase)`);
+        autoFilledData.push(`${timezones} timezones`);
     }
     
-    // Auto-fill travel direction
     if (direction) {
-        const directionSelect = document.querySelector('select[name="direction"]');
-        if (directionSelect) {
-            directionSelect.value = direction;
-            console.log(`✅ Auto-filled direction: ${direction}`);
-            autoFilledData.push(`${direction}ward travel`);
-        }
+        console.log(`✅ Direction data available: ${direction}ward travel (stored in Firebase)`);
+        autoFilledData.push(`${direction}ward travel`);
     }
     
-    // Auto-fill destination (hidden field)
     if (destination) {
-        const destinationInput = document.querySelector('input[name="destination"]');
-        if (destinationInput) {
-            destinationInput.value = destination;
-            console.log(`✅ Auto-filled destination: ${destination}`);
-            autoFilledData.push(`destination: ${destination}`);
-        }
+        console.log(`✅ Destination data available: ${destination} (stored in Firebase)`);
+        autoFilledData.push(`destination: ${destination}`);
     }
     
     // Landing time is intentionally left for user input - they know exactly when they landed
@@ -338,61 +403,6 @@ function hideSurveyPreview() {
 
 
 
-// Setup flight landing date validation
-function setupFlightLandingValidation() {
-    console.log('✈️ Setting up flight landing date validation...');
-    
-    const flightLandingDateInput = document.querySelector('input[name="flight_landing_date"]');
-    
-    if (!flightLandingDateInput) {
-        console.error('❌ Flight landing date input not found');
-        return;
-    }
-    
-    // Set max attribute to current date to prevent future dates
-    const now = new Date();
-    const nowString = now.toISOString().slice(0, 10); // Format: YYYY-MM-DD
-    flightLandingDateInput.setAttribute('max', nowString);
-    
-    // Add real-time validation
-    flightLandingDateInput.addEventListener('input', function() {
-        validateFlightLandingDate(this);
-    });
-    
-    // Add blur validation for immediate feedback
-    flightLandingDateInput.addEventListener('blur', function() {
-        validateFlightLandingDate(this);
-    });
-    
-    console.log('✅ Flight landing date validation setup complete');
-}
-
-// Validate flight landing date
-function validateFlightLandingDate(input) {
-    const value = input.value;
-    const now = new Date();
-    
-    // Remove any existing validation styling
-    input.classList.remove('valid', 'invalid');
-    
-    if (!value) {
-        // Field is empty, no validation needed yet
-        return;
-    }
-    
-    const selectedDate = new Date(value + 'T00:00:00');
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    if (selectedDate > today) {
-        // Future date selected
-        input.classList.add('invalid');
-        input.title = 'Flight landing date cannot be in the future';
-    } else {
-        // Valid date
-        input.classList.add('valid');
-        input.title = '';
-    }
-}
 
 // Setup survey code validation
 function setupCodeValidation() {
@@ -792,6 +802,13 @@ function validateSection(sectionId) {
 async function submitSurvey() {
     console.log('📤 Submitting survey...');
     
+    // Check if survey access is blocked
+    if (window.surveyBlocked) {
+        console.error('❌ Survey submission blocked - trip data not found');
+        alert('This survey is not available. The trip data required for this survey could not be found.');
+        return;
+    }
+    
     // Check if code is validated
     if (!isCodeValidated) {
         alert('Please enter a valid survey code to submit your responses.');
@@ -801,72 +818,91 @@ async function submitSurvey() {
     // Validate all required fields in the single survey form
     let isValid = true;
     
-    // Validate ratings using the new bubble system
-    if (!validateRatings()) {
-        isValid = false;
-        showMobileAlert('⚠️ Incomplete Ratings', 'Please complete all symptom ratings before submitting.', 'error');
-    }
+    // Ratings are pre-filled with default values, so no validation needed
     
     // Get all other required fields
     const requiredFields = document.querySelectorAll('input[required], select[required]');
+    const missingRequiredFields = [];
+    
     requiredFields.forEach(field => {
         if (!field.value || field.value.trim() === '') {
             isValid = false;
             field.style.borderColor = '#ef4444';
+            missingRequiredFields.push(field);
         } else {
             field.style.borderColor = '';
         }
     });
     
+    
     if (!isValid) {
-        alert('Please complete all required fields before submitting.');
+        // Show mobile alert for missing required fields
+        showMobileAlert('⚠️ Missing Required Information', 'Please complete all required fields before submitting.', 'error');
+        
+        // Scroll to first missing required field
+        setTimeout(() => {
+            if (missingRequiredFields.length > 0) {
+                const firstMissingField = missingRequiredFields[0];
+                const fieldContainer = firstMissingField.closest('.rating-container');
+                
+                if (fieldContainer) {
+                    fieldContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    
+                    // Add highlight effect
+                    fieldContainer.style.border = '2px solid #ef4444';
+                    fieldContainer.style.borderRadius = '8px';
+                    setTimeout(() => {
+                        fieldContainer.style.border = '';
+                        fieldContainer.style.borderRadius = '';
+                    }, 3000);
+                    
+                    console.log(`📍 Scrolled to missing required field: ${firstMissingField.name}`);
+                }
+            }
+        }, 100);
         return;
     }
     
-    // Check for duplicate survey code
+    // Check for duplicate survey (survey code + trip ID combination)
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
-    try {
-        // Check if survey code already exists
-        const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-        
-        const surveyRef = collection(window.firebaseDB, 'surveys');
-        const q = query(surveyRef, where('surveyCode', '==', surveyCode));
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-            // Ask user if they want to overwrite
-            const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
-            if (!overwrite) {
-                console.log('❌ User cancelled submission - duplicate survey code detected');
-                return;
-            }
-            console.log('✅ User chose to overwrite existing survey data');
-        }
-    } catch (error) {
-        console.warn('⚠️ Could not check for duplicate survey code:', error);
-        // Continue with submission even if check fails
-    }
-    
-    // Check for duplicate trip ID
     const tripId = window.currentTripId;
+    
     if (tripId) {
         try {
-            // Check if trip already exists
-            const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
-            const tripDoc = await window.firebaseGetDoc(tripDocRef);
+            // Check if survey already exists for this specific trip ID using new service
+            const result = await checkExistingSurveyByTripIdWithService(tripId);
             
-            if (tripDoc.exists()) {
+            if (result.exists) {
                 // Ask user if they want to overwrite
                 const overwrite = confirm('A survey for this trip already exists. Do you want to overwrite the existing data?');
                 if (!overwrite) {
-                    console.log('❌ User cancelled submission - duplicate trip detected');
+                    console.log('❌ User cancelled submission - duplicate trip survey detected');
                     return;
                 }
-                console.log('✅ User chose to overwrite existing trip data');
+                console.log('✅ User chose to overwrite existing trip survey data');
             }
         } catch (error) {
-            console.warn('⚠️ Could not check for duplicate trip:', error);
+            console.warn('⚠️ Could not check for duplicate trip survey:', error);
             // Continue with submission even if check fails
+        }
+    } else {
+        // Fallback: Check for duplicate survey code only if no trip ID using new service
+        try {
+            const result = await checkExistingSurveyByCodeWithService(surveyCode);
+            
+            if (result.exists) {
+                const overwrite = confirm('A survey with this code already exists. Do you want to overwrite the existing data?');
+                if (!overwrite) {
+                    console.log('❌ User cancelled submission - duplicate survey code detected');
+                    return;
+                }
+                console.log('✅ User chose to overwrite existing survey data');
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not check for duplicate survey code:', error);
         }
     }
     
@@ -877,6 +913,21 @@ async function submitSurvey() {
     try {
         await exportSurveyData();
         console.log('✅ Survey data export completed successfully');
+        
+        // Mark trip as surveyed in Firebase if tripId exists
+        const tripId = window.currentTripId;
+        if (tripId) {
+            try {
+                const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                await window.firebaseUpdateDoc(tripDocRef, {
+                    surveyCompleted: true
+                });
+                console.log('✅ Marked trip as surveyed in Firebase:', tripId);
+            } catch (error) {
+                console.warn('⚠️ Could not mark trip as surveyed:', error);
+                // Continue even if marking as surveyed fails
+            }
+        }
     } catch (error) {
         console.error('❌ Error during survey data export:', error);
         showMobileAlert('⚠️ Partial Save', 'Survey submitted locally, but there was an issue saving to the research database. Your responses are still recorded.', 'error');
@@ -895,9 +946,16 @@ async function exportSurveyData() {
     const surveyCode = document.getElementById('surveyCode').value.trim().toUpperCase();
     const tripId = window.currentTripId;
     
+    // SECURITY: Survey can ONLY be submitted via app link (with tripId)
+    // Note: Submit button is hidden if no tripId, so this should never be reached
+    if (!tripId || tripId === '') {
+        console.error('❌ Survey submission blocked: No tripId provided');
+        throw new Error('Survey requires app link with trip ID.');
+    }
+    
     // Wait for Firebase functions to be available (timing issue fix)
     let retryCount = 0;
-    while ((!window.firebaseDoc || !window.firebaseUpdateDoc) && retryCount < 10) {
+    while ((!window.firebaseDoc || !window.firebaseUpdateDoc || !window.firebaseGetDoc || !window.firebaseSetDoc || !window.firebaseArrayUnion) && retryCount < 10) {
         console.log(`🔄 Waiting for Firebase functions... attempt ${retryCount + 1}`);
         await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
         retryCount++;
@@ -925,48 +983,27 @@ async function exportSurveyData() {
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
             console.log('🚀 Attempting to update existing tripCompletions record...');
             
+            // Survey metadata removed - UPDATE operation type is sufficient to identify survey submissions
+            // surveyCompleted: true already proves a survey was submitted
+            
             // Prepare flat survey data to add to existing trip record
             const surveyUpdateData = {
                 // Survey completion status
                 surveyCompleted: true,
-                surveyCompletedAt: window.firebaseServerTimestamp(),
                 surveySubmittedAt: timestamp,
-                surveyVersion: 'ljlq_v1',
                 
-                // Individual survey responses (flat, not nested)
+                // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',
-                flightLandingDate: surveyData.flight_landing_date || '',
-                flightLandingHour: surveyData.flight_landing_hour || '',
-                destination: surveyData.destination || '',
-                jetlagSeverity: surveyData.jetlag_severity || '',
-                sleepQuality: surveyData.sleep_quality || '',
-                pointsTotal: surveyData.points_total || '',
-                timezones: surveyData.timezones || '',
-                direction: surveyData.direction || '',
-                age: surveyData.age_range || '',
-                gender: surveyData.gender || '',
-                travelFrequency: surveyData.travel_frequency || '',
-                previousJetlag: surveyData.previous_jetlag || '',
-                previousTreatments: surveyData.previous_treatments || '',
-                expectations: surveyData.expectations || '',
-                effectiveness: surveyData.effectiveness || '',
-                recommendation: surveyData.recommendation || '',
-                improvements: surveyData.improvements || '',
-                purpose: surveyData.purpose || '',
-                region: surveyData.region || '',
-                travelExperience: surveyData.travel_experience || '',
-                flightDuration: surveyData.flight_duration || '',
-                sleepHours: surveyData.sleep_hours || '',
-                baselineSleep: surveyData.baseline_sleep || '',
-                baselineFatigue: surveyData.baseline_fatigue || '',
-                baselineConcentration: surveyData.baseline_concentration || '',
-                baselineIrritability: surveyData.baseline_irritability || '',
-                baselineGi: surveyData.baseline_gi || '',
-                postSleepSeverity: surveyData.post_sleep_severity || '',
-                postFatigueSeverity: surveyData.post_fatigue_severity || '',
-                postConcentrationSeverity: surveyData.post_concentration_severity || '',
-                postIrritabilitySeverity: surveyData.post_irritability_severity || '',
-                postGiSeverity: surveyData.post_gi_severity || ''
+                ageRange: surveyData.ageRange || '',
+                
+                // Rating responses (only fields actually asked - 1-5 scale)
+                generalAnticipated: surveyData.generalAnticipated || 1,
+                sleepPost: surveyData.sleepPost || 1,
+                fatiguePost: surveyData.fatiguePost || 1,
+                concentrationPost: surveyData.concentrationPost || 1,
+                irritabilityPost: surveyData.irritabilityPost || 1,
+                motivationPost: surveyData.motivationPost || 1,
+                giPost: surveyData.giPost || 1
             };
             
             // Add sanitized comment if present
@@ -993,8 +1030,6 @@ async function exportSurveyData() {
                         // Add basic trip info if we have it from URL
                         tripId: tripId,
                         surveyCode: surveyCode,
-                        platform: 'ReactNative',
-                        appVersion: '2025011905',
                         created: window.firebaseServerTimestamp()
                     });
                     console.log('✅ Created new tripCompletions record with survey data:', tripId);
@@ -1004,139 +1039,8 @@ async function exportSurveyData() {
                 }
             }
         } else {
-            console.warn('⚠️ Cannot update unified collection - missing requirements:', {
-                firebaseDB: !window.firebaseDB,
-                firebaseCollection: !window.firebaseCollection,
-                firebaseDoc: !window.firebaseDoc,
-                firebaseUpdateDoc: !window.firebaseUpdateDoc,
-                firebaseServerTimestamp: !window.firebaseServerTimestamp,
-                tripId: !tripId
-            });
-            
-            // Fallback: if tripId is missing, create a standalone survey record
-            if (!tripId) {
-                console.log('⚠️ No tripId available - creating standalone survey record');
-                
-                // Create a new document with just survey data (no trip link)
-                const standaloneSurveyData = {
-                    // Survey completion status
-                    surveyCompleted: true,
-                    surveyCompletedAt: window.firebaseServerTimestamp(),
-                    surveySubmittedAt: timestamp,
-                    surveyVersion: 'ljlq_v1',
-                    surveyCode: surveyCode,
-                    platform: 'LegacyUser',
-                    appVersion: 'Legacy',
-                    created: window.firebaseServerTimestamp(),
-                    
-                    // Individual survey responses (flat, not nested)
-                    userComment: surveyData.userComment || '',
-                    flightLandingDate: surveyData.flight_landing_date || '',
-                    flightLandingHour: surveyData.flight_landing_hour || '',
-                    destination: surveyData.destination || '',
-                    jetlagSeverity: surveyData.jetlag_severity || '',
-                    sleepQuality: surveyData.sleep_quality || '',
-                    pointsTotal: surveyData.points_total || '',
-                    timezones: surveyData.timezones || '',
-                    direction: surveyData.direction || '',
-                    age: surveyData.age_range || '',
-                    gender: surveyData.gender || '',
-                    travelFrequency: surveyData.travel_frequency || '',
-                    previousJetlag: surveyData.previous_jetlag || '',
-                    previousTreatments: surveyData.previous_treatments || '',
-                    expectations: surveyData.expectations || '',
-                    effectiveness: surveyData.effectiveness || '',
-                    recommendation: surveyData.recommendation || '',
-                    improvements: surveyData.improvements || '',
-                    purpose: surveyData.purpose || '',
-                    region: surveyData.region || '',
-                    travelExperience: surveyData.travel_experience || '',
-                    flightDuration: surveyData.flight_duration || '',
-                    sleepHours: surveyData.sleep_hours || '',
-                    baselineSleep: surveyData.baseline_sleep || '',
-                    baselineFatigue: surveyData.baseline_fatigue || '',
-                    baselineConcentration: surveyData.baseline_concentration || '',
-                    baselineIrritability: surveyData.baseline_irritability || '',
-                    baselineGi: surveyData.baseline_gi || '',
-                    postSleepSeverity: surveyData.post_sleep_severity || '',
-                    postFatigueSeverity: surveyData.post_fatigue_severity || '',
-                    postConcentrationSeverity: surveyData.post_concentration_severity || '',
-                    postIrritabilitySeverity: surveyData.post_irritability_severity || '',
-                    postGiSeverity: surveyData.post_gi_severity || ''
-                };
-                
-                // Add sanitized comment if present
-                if (surveyData.userComment) {
-                    const sanitizedComment = sanitizeComment(surveyData.userComment);
-                    if (sanitizedComment) {
-                        standaloneSurveyData.userComment = sanitizedComment;
-                    }
-                }
-                
-                try {
-                    // First, check if this survey code already exists
-                    const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
-                    const existingDoc = await window.firebaseGetDoc(nakedSurveyDocRef);
-                    
-                    if (existingDoc.exists()) {
-                        const existingData = existingDoc.data();
-                        const existingCodes = existingData.legacySurveyCodes || [];
-                        
-                        // Check if this survey code already exists
-                        if (existingCodes.includes(surveyCode)) {
-                            console.log('⚠️ Survey code already exists in naked survey record:', surveyCode);
-                            throw new Error('This survey code has already been used. Each survey code can only be used once.');
-                        }
-                    }
-                    
-                    // Create a single "naked survey code" document for all legacy users
-                    await window.firebaseUpdateDoc(nakedSurveyDocRef, {
-                        // Survey completion status
-                        surveyCompleted: true,
-                        surveyCompletedAt: window.firebaseServerTimestamp(),
-                        surveySubmittedAt: timestamp,
-                        surveyVersion: 'ljlq_v1',
-                        platform: 'LegacyUser',
-                        appVersion: 'Legacy',
-                        lastUpdated: window.firebaseServerTimestamp(),
-                        
-                        // Store all legacy survey codes in an array
-                        legacySurveyCodes: window.firebaseArrayUnion(surveyCode),
-                        
-                        // Store survey data with survey code as key
-                        [`surveyData_${surveyCode}`]: standaloneSurveyData
-                    });
-                    console.log('✅ Added legacy survey data to naked survey code record:', surveyCode);
-                } catch (updateError) {
-                    console.warn('⚠️ Failed to update naked survey record, trying to create it:', updateError);
-                    
-                    try {
-                        // Create the naked survey code document if it doesn't exist
-                        const nakedSurveyDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', 'naked-survey-code');
-                        await window.firebaseSetDoc(nakedSurveyDocRef, {
-                            // Survey completion status
-                            surveyCompleted: true,
-                            surveyCompletedAt: window.firebaseServerTimestamp(),
-                            surveySubmittedAt: timestamp,
-                            surveyVersion: 'ljlq_v1',
-                            platform: 'LegacyUser',
-                            appVersion: 'Legacy',
-                            created: window.firebaseServerTimestamp(),
-                            lastUpdated: window.firebaseServerTimestamp(),
-                            
-                            // Store all legacy survey codes in an array (first entry)
-                            legacySurveyCodes: [surveyCode],
-                            
-                            // Store survey data with survey code as key
-                            [`surveyData_${surveyCode}`]: standaloneSurveyData
-                        });
-                        console.log('✅ Created naked survey code record with legacy data:', surveyCode);
-                    } catch (createError) {
-                        console.error('❌ Failed to create naked survey code record:', createError);
-                        throw createError;
-                    }
-                }
-            }
+            console.error('⚠️ Cannot save survey - missing required Firebase functions or tripId');
+            throw new Error('Firebase connection error. Please try again.');
         }
     } catch (error) {
         console.error('❌ Error updating tripCompletions record:', error);
@@ -1267,76 +1171,52 @@ function resetSurvey() {
     console.log('✅ Survey reset complete');
 }
 
-// Initialize enhanced sliders with visual tick marks and snap behavior
-function initializeEnhancedSliders() {
-    console.log('🎚️ Initializing enhanced sliders...');
-    
-    const sliders = document.querySelectorAll('.scale-slider');
-    
-    sliders.forEach(slider => {
-        // Add snap behavior for discrete values (1-5)
-        slider.addEventListener('input', function() {
-            const value = parseFloat(this.value);
-            const min = parseFloat(this.min);
-            const max = parseFloat(this.max);
-            const step = (max - min) / 4; // 5 values: 1, 2, 3, 4, 5
-            
-            // Find closest step value
-            const closestStep = Math.round((value - min) / step) * step + min;
-            this.value = Math.max(min, Math.min(max, closestStep));
-        });
-        
-        // Add visual feedback on interaction
-        slider.addEventListener('mousedown', function() {
-            this.style.transform = 'scale(1.02)';
-        });
-        
-        slider.addEventListener('mouseup', function() {
-            this.style.transform = 'scale(1)';
-        });
-        
-        slider.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)';
-        });
-    });
-    
-    console.log(`✅ Enhanced ${sliders.length} sliders with tick marks and snap behavior`);
-} 
 
 // Rating Bubble System Functions
 function setupRatingBubbles() {
     console.log('🎯 Setting up rating bubbles...');
     
-    // Add click handlers to all rating bubbles
-    const ratingBubbles = document.querySelectorAll('.rating-bubble');
-    ratingBubbles.forEach(bubble => {
-        bubble.addEventListener('click', function() {
-            const radioInput = this.previousElementSibling;
-            if (radioInput && radioInput.type === 'radio') {
-                radioInput.checked = true;
-                
-                // Update visual state
-                updateRatingBubbleStates();
-                
-                // Log selection for debugging
-                const name = radioInput.name;
-                const value = radioInput.value;
-                console.log(`📊 Rating selected: ${name} = ${value}`);
-            }
-        });
+    // Set default state to "None" (value 1) for all rating fields
+    const ratingContainers = document.querySelectorAll('.rating-container');
+    ratingContainers.forEach(container => {
+        const radioInputs = container.querySelectorAll('.rating-input');
+        const bubbles = container.querySelectorAll('.rating-bubble');
         
-        // Add keyboard support for accessibility
-        bubble.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-            }
-        });
+        // Set first radio (value 1 = "None") as default checked
+        if (radioInputs.length > 0) {
+            radioInputs[0].checked = true;
+        }
         
-        // Make bubbles focusable
-        bubble.setAttribute('tabindex', '0');
-        bubble.setAttribute('role', 'radio');
-        bubble.setAttribute('aria-label', `Rating ${bubble.textContent}`);
+        // Add click handlers to all rating bubbles
+        bubbles.forEach((bubble, index) => {
+            bubble.addEventListener('click', function() {
+                const radioInput = radioInputs[index];
+                if (radioInput && radioInput.type === 'radio') {
+                    radioInput.checked = true;
+                    
+                    // Update visual state
+                    updateRatingBubbleStates();
+                    
+                    // Log selection for debugging
+                    const name = radioInput.name;
+                    const value = radioInput.value;
+                    console.log(`📊 Rating selected: ${name} = ${value}`);
+                }
+            });
+            
+            // Add keyboard support for accessibility
+            bubble.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+            
+            // Make bubbles focusable
+            bubble.setAttribute('tabindex', '0');
+            bubble.setAttribute('role', 'radio');
+            bubble.setAttribute('aria-label', `Rating ${bubble.textContent}`);
+        });
     });
     
     // Initialize visual states
@@ -1373,173 +1253,394 @@ function getRatingValues() {
     const ratings = {};
     const ratingInputs = document.querySelectorAll('.rating-input');
     
+    // Group radio buttons by name to avoid overwriting
+    const radioGroups = {};
     ratingInputs.forEach(input => {
-        if (input.checked) {
-            ratings[input.name] = parseInt(input.value);
+        if (!radioGroups[input.name]) {
+            radioGroups[input.name] = [];
+        }
+        radioGroups[input.name].push(input);
+    });
+    
+    // For each group, get the checked value or default to 1
+    Object.keys(radioGroups).forEach(groupName => {
+        const checkedInput = radioGroups[groupName].find(input => input.checked);
+        if (checkedInput) {
+            ratings[groupName] = parseInt(checkedInput.value);
         } else {
-            // Set default value of 1 if none selected
-            ratings[input.name] = 1;
+            ratings[groupName] = 1; // Default if none checked
         }
     });
     
     return ratings;
 }
 
-function validateRatings() {
-    const requiredFields = [
-        'sleep_pre', 'sleep_expectations', 'sleep_post',
-        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
-        'concentration_pre', 'concentration_expectations', 'concentration_post',
-        'irritability_pre', 'irritability_expectations', 'irritability_post',
-        'gi_pre', 'gi_expectations', 'gi_post'
-    ];
+
+
+
+
+// Check for existing survey data and pre-fill form
+async function checkAndPreFillExistingSurvey() {
+    // Get tripId from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tripId = urlParams.get('tripId');
     
-    const ratings = getRatingValues();
-    const missingFields = [];
-    
-    requiredFields.forEach(field => {
-        if (!ratings[field] || ratings[field] < 1 || ratings[field] > 5) {
-            missingFields.push(field);
-        }
-    });
-    
-    if (missingFields.length > 0) {
-        console.warn('⚠️ Missing or invalid ratings:', missingFields);
-        return false;
+    if (!tripId) {
+        console.log('ℹ️ No tripId in URL - new survey');
+        return;
     }
     
-    console.log('✅ All ratings validated successfully');
-    return true;
-} 
-
-// Check for existing submission and pre-fill survey if found
-async function checkForExistingSubmission() {
+    currentTripId = tripId;
+    
     try {
-        console.log('🔍 Checking for existing submission...');
-        
-        // Get survey code from URL or form
-        const urlParams = new URLSearchParams(window.location.search);
-        const surveyCode = urlParams.get('code') || document.getElementById('surveyCode')?.value;
-        
-        if (!surveyCode) {
-            console.log('ℹ️ No survey code found - cannot check for existing submission');
+        // Check if Firebase is available
+        if (!window.firebaseDB || !window.firebaseDoc || !window.firebaseGetDoc) {
+            console.log('⚠️ Firebase not available yet - will retry');
+            setTimeout(checkAndPreFillExistingSurvey, 1000);
             return;
         }
         
-        // Check if we have existing data in localStorage
-        const existingData = localStorage.getItem(`survey_${surveyCode}`);
-        if (existingData) {
-            console.log('📋 Found existing submission data in localStorage');
-            const parsedData = JSON.parse(existingData);
-            prefillSurvey(parsedData);
-            return;
-        }
+        console.log('🔍 Checking for trip data for tripId:', tripId);
         
-        // Check Firebase for existing submission
-        if (window.firebaseDB) {
-            console.log('🔥 Checking Firebase for existing submission...');
-            const { collection, query, where, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        // Get the trip document from Firebase
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDoc = await window.firebaseGetDoc(tripDocRef);
+        
+        if (tripDoc.exists()) {
+            const tripData = tripDoc.data();
             
-            const surveyRef = collection(window.firebaseDB, 'surveys');
-            const q = query(surveyRef, where('surveyCode', '==', surveyCode));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-                console.log('✅ Found existing submission in Firebase');
-                const doc = querySnapshot.docs[0];
-                const data = doc.data();
+            // Check if survey data exists
+            if (tripData.surveyCompleted) {
+                console.log('✅ Found existing survey data - pre-filling form');
+                isExistingSurvey = true;
                 
-                // Store in localStorage for future use
-                localStorage.setItem(`survey_${surveyCode}`, JSON.stringify(data));
+                // Update the heading
+                updateSurveyHeading(tripId);
                 
-                // Pre-fill the survey
-                prefillSurvey(data);
-                
-                // Show message that this is an existing submission
-                showExistingSubmissionMessage();
+                // Pre-fill the form with existing data
+                prefillSurveyWithTripData(tripData);
             } else {
-                console.log('ℹ️ No existing submission found in Firebase');
+                console.log('ℹ️ Trip exists but no survey data - new survey');
+            }
+        } else {
+            // Trip data doesn't exist - check if this is an existing survey being edited
+            console.log('⚠️ Trip data not found - checking for existing survey data');
+            
+            try {
+                const surveyResult = await checkExistingSurveyByTripIdWithService(tripId);
+                
+                if (surveyResult.exists) {
+                    // Survey exists but trip data doesn't - allow editing (developer scenario)
+                    console.log('✅ Found existing survey data (editing mode) - trip data missing but survey exists');
+                    isExistingSurvey = true;
+                    
+                    // Update the heading
+                    updateSurveyHeading(tripId);
+                    
+                    // Pre-fill with survey data if available
+                    if (surveyResult.data) {
+                        prefillSurveyWithSurveyData(surveyResult.data);
+                    }
+                } else {
+                    // No trip data AND no survey data - block access
+                    console.error('❌ Trip data not found and no existing survey - blocking access');
+                    blockSurveyAccess();
+                    return;
+                }
+            } catch (surveyError) {
+                console.error('❌ Error checking for existing survey:', surveyError);
+                // If we can't check for existing survey, block access to be safe
+                blockSurveyAccess();
+                return;
             }
         }
     } catch (error) {
-        console.error('❌ Error checking for existing submission:', error);
+        console.error('❌ Error checking for existing survey:', error);
+        // On error, block access to be safe
+        blockSurveyAccess();
     }
 }
 
-// Pre-fill survey with existing data
-function prefillSurvey(data) {
-    console.log('📝 Pre-filling survey with existing data...');
+// Block survey access when trip data is missing
+function blockSurveyAccess() {
+    console.log('🚫 Blocking survey access - trip data not found');
     
-    // Pre-fill symptom ratings
-    const symptomFields = [
-        'sleep_pre', 'sleep_expectations', 'sleep_post',
-        'fatigue_pre', 'fatigue_expectations', 'fatigue_post',
-        'concentration_pre', 'concentration_expectations', 'concentration_post',
-        'irritability_pre', 'irritability_expectations', 'irritability_post',
-        'gi_pre', 'gi_expectations', 'gi_post'
+    // Hide survey content
+    const surveyContent = document.getElementById('surveyContent');
+    const previewSection = document.querySelector('.survey-preview');
+    
+    if (surveyContent) {
+        surveyContent.style.display = 'none';
+    }
+    
+    if (previewSection) {
+        previewSection.style.display = 'none';
+    }
+    
+    // Create and show error message
+    const surveyMainColumn = document.querySelector('.survey-main-column');
+    if (surveyMainColumn) {
+        // Remove any existing error message
+        const existingError = surveyMainColumn.querySelector('.survey-blocked-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Create error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'survey-blocked-error survey-card';
+        errorDiv.style.cssText = `
+            margin: 40px auto;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        `;
+        
+        errorDiv.innerHTML = `
+            <h2 style="color: #ef4444; margin-bottom: 20px;">Survey Not Available</h2>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                This survey link is not valid. The trip data required for this survey could not be found.
+            </p>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.5;">
+                If you believe this is an error, please contact support.
+            </p>
+        `;
+        
+        surveyMainColumn.insertBefore(errorDiv, surveyMainColumn.firstChild);
+    }
+    
+    // Disable submission button if it exists
+    const submitBtn = document.getElementById('submitSurveyBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.display = 'none';
+    }
+    
+    // Set a flag to prevent any form submission
+    window.surveyBlocked = true;
+}
+
+// Pre-fill survey with survey data (for editing existing surveys when trip data is missing)
+function prefillSurveyWithSurveyData(surveyData) {
+    console.log('📝 Pre-filling survey with existing survey data...');
+    console.log('🔍 Full surveyData object:', surveyData);
+    
+    // Pre-fill demographic fields
+    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
+    demographicFields.forEach(field => {
+        if (surveyData[field]) {
+            const element = document.querySelector(`select[name="${field}"]`);
+            if (element) {
+                element.value = surveyData[field];
+                console.log(`✅ Pre-filled ${field} with value: ${surveyData[field]}`);
+            }
+        }
+    });
+    
+    // Pre-fill rating fields
+    const ratingFields = [
+        'generalAnticipated',
+        'sleepPre', 'sleepExpectations', 'sleepPost',
+        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
+        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
+        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
+        'giPre', 'giExpectations', 'giPost'
     ];
     
-    symptomFields.forEach(field => {
-        if (data[field]) {
-            const radio = document.querySelector(`input[name="${field}"][value="${data[field]}"]`);
+    ratingFields.forEach(field => {
+        if (surveyData[field] !== undefined && surveyData[field] !== null) {
+            const value = surveyData[field];
+            const selector = `input[name="${field}"][value="${value}"]`;
+            const radio = document.querySelector(selector);
             if (radio) {
+                const allRadiosInGroup = document.querySelectorAll(`input[name="${field}"]`);
+                allRadiosInGroup.forEach(r => {
+                    const label = document.querySelector(`label[for="${r.id}"]`);
+                    if (label) {
+                        label.classList.remove('selected');
+                    }
+                });
+                
                 radio.checked = true;
-                // Trigger the visual update
-                const event = new Event('change');
+                const label = document.querySelector(`label[for="${radio.id}"]`);
+                if (label) {
+                    label.classList.add('selected');
+                }
+                
+                const event = new Event('change', { bubbles: true });
                 radio.dispatchEvent(event);
             }
         }
     });
     
-    // Pre-fill other form fields
-    const formFields = [
-        'total_points', 'points_completed', 'timezones_count', 'travel_direction',
-        'flight_landing_date', 'flight_landing_hour', 'travel_frequency', 'travel_experience'
-    ];
+    // Pre-fill comments
+    if (surveyData.userComment) {
+        const commentField = document.querySelector('#userComment');
+        if (commentField) {
+            commentField.value = surveyData.userComment;
+        }
+    }
+}
+
+// Update survey heading for existing surveys
+function updateSurveyHeading(tripId) {
+    // Find the specific h3 with "Let's Get Started!" text
+    const headings = document.querySelectorAll('h3');
+    for (const heading of headings) {
+        if (heading.textContent.includes("Let's Get Started!")) {
+            heading.textContent = `Editing ${tripId}`;
+            console.log(`✅ Updated heading to: Editing ${tripId}`);
+            return;
+        }
+    }
+    console.log('⚠️ Could not find "Let\'s Get Started!" heading to update');
+}
+
+// Pre-fill survey with trip data
+function prefillSurveyWithTripData(tripData) {
+    console.log('📝 Pre-filling survey with existing trip data...');
+    console.log('🔍 Full tripData object:', tripData);
     
-    formFields.forEach(field => {
-        if (data[field]) {
-            const element = document.querySelector(`[name="${field}"]`);
+    
+    // Pre-fill demographic fields
+    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
+    demographicFields.forEach(field => {
+        if (tripData[field]) {
+            const element = document.querySelector(`select[name="${field}"]`);
             if (element) {
-                element.value = data[field];
+                element.value = tripData[field];
+                console.log(`✅ Pre-filled ${field} with value: ${tripData[field]}`);
+            } else {
+                console.log(`⚠️ Could not find element for ${field}`);
             }
         }
     });
     
+    // Pre-fill rating fields using the working 4-step approach
+    const ratingFields = [
+        'generalAnticipated',
+        'sleepPre', 'sleepExpectations', 'sleepPost',
+        'fatiguePre', 'fatigueExpectations', 'fatiguePost',
+        'concentrationPre', 'concentrationExpectations', 'concentrationPost',
+        'irritabilityPre', 'irritabilityExpectations', 'irritabilityPost',
+        'giPre', 'giExpectations', 'giPost'
+    ];
+    
+    
+    ratingFields.forEach(field => {
+        if (tripData[field] !== undefined && tripData[field] !== null) {
+            const value = tripData[field];
+            const selector = `input[name="${field}"][value="${value}"]`;
+            
+            const radio = document.querySelector(selector);
+            if (radio) {
+                // STEP 1: Remove 'selected' class from all radio buttons in this group first
+                const allRadiosInGroup = document.querySelectorAll(`input[name="${field}"]`);
+                allRadiosInGroup.forEach(r => {
+                    const label = document.querySelector(`label[for="${r.id}"]`);
+                    if (label) {
+                        label.classList.remove('selected');
+                    }
+                });
+                
+                // STEP 2: Set the target radio button as checked
+                radio.checked = true;
+                
+                // STEP 3: Add 'selected' class to the corresponding label (which IS the rating-bubble)
+                const label = document.querySelector(`label[for="${radio.id}"]`);
+                if (label) {
+                    label.classList.add('selected');
+                }
+                
+                // STEP 4: Trigger change event
+                const event = new Event('change', { bubbles: true });
+                radio.dispatchEvent(event);
+            }
+        }
+    });
+    
+    
     // Pre-fill comments
-    if (data.comments) {
-        const commentsField = document.querySelector('#comments');
-        if (commentsField) {
-            commentsField.value = data.comments;
+    if (tripData.userComment) {
+        const commentField = document.querySelector('#userComment');
+        if (commentField) {
+            commentField.value = tripData.userComment;
+            // Update character count
+            updateCommentCounter();
         }
     }
     
-    console.log('✅ Survey pre-filled with existing data');
+    console.log('✅ Survey pre-filled with existing trip data');
 }
 
-// Show message that this is an existing submission
-function showExistingSubmissionMessage() {
-    const existingMessage = document.createElement('div');
-    existingMessage.className = 'existing-submission-message';
-    existingMessage.style.cssText = `
-        background: #fef3c7;
-        border: 1px solid #f59e0b;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 16px 0;
-        color: #92400e;
-        font-weight: 500;
-    `;
-    existingMessage.innerHTML = `
-        <strong>📋 Existing Submission Found:</strong> 
-        We found a previous survey submission for this code. 
-        The form has been pre-filled with your previous answers. 
-        You can modify any answers before re-submitting.
-    `;
+
+
+// Initialize survey when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📋 Survey page loaded - checking for existing data');
     
-    // Insert at the top of the form
-    const form = document.getElementById('travelForm');
-    if (form) {
-        form.parentNode.insertBefore(existingMessage, form);
+    // Check for existing survey data and pre-fill if found
+    checkAndPreFillExistingSurvey();
+    
+    // Initialize other survey functionality
+    initializeSurvey();
+});
+
+// Initialize survey functionality
+function initializeSurvey() {
+    // Check if this is a valid app-linked survey
+    const submitBtn = document.getElementById('submitSurveyBtn');
+    
+    if (!window.currentTripId) {
+        // No tripId = view-only mode (hide submit button)
+        if (submitBtn) {
+            submitBtn.style.display = 'none';
+        }
+        console.log('ℹ️ Survey opened without tripId - view-only mode (submit button hidden)');
+    } else {
+        // Valid tripId = submission allowed
+        if (submitBtn) {
+            submitBtn.style.display = 'block';
+        }
+        console.log('✅ Survey opened with tripId - submission enabled');
     }
-} 
+    
+    // Add event listeners for form elements
+    setupFormEventListeners();
+    
+    // Initialize comment counter
+    const commentField = document.querySelector('#userComment');
+    if (commentField) {
+        commentField.addEventListener('input', updateCommentCounter);
+        updateCommentCounter();
+    }
+}
+
+// Setup form event listeners
+function setupFormEventListeners() {
+    // Add any other form event listeners here
+    console.log('📋 Form event listeners initialized');
+}
+
+// Update comment character counter
+function updateCommentCounter() {
+    const commentField = document.querySelector('#userComment');
+    const counter = document.querySelector('#commentCharCount');
+    
+    if (commentField && counter) {
+        const length = commentField.value.length;
+        counter.textContent = length;
+        
+        // Change color if approaching limit
+        if (length > 900) {
+            counter.style.color = '#dc2626';
+        } else if (length > 800) {
+            counter.style.color = '#f59e0b';
+        } else {
+            counter.style.color = '#6b7280';
+        }
+    }
+}
