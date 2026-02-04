@@ -63,6 +63,16 @@ function isDeveloperTrip(trip) {
     return DEVELOPER_DEVICE_IDS.some(devId => tripId.startsWith(devId));
 }
 
+// Post-landing trips: device 4A473DF4 did acupressure after arrival (TZ=0 in raw data).
+// We treat them as "with surveys" and display "Post-Landing*" instead of "0 TZ".
+const POST_LANDING_DEVICE_ID = '4A473DF4';
+const POST_LANDING_DESTINATIONS = ['HNL', 'JFK'];
+function isPostLandingTrip(trip) {
+    const deviceId = (trip.tripId || '').split(/[-_]/)[0] || '';
+    const dest = (trip.destinationCode || '').toUpperCase().trim();
+    return deviceId === POST_LANDING_DEVICE_ID && POST_LANDING_DESTINATIONS.includes(dest);
+}
+
 // Get all data (unfiltered - includes developer trips)
 function getAllData() {
     return surveyData || [];
@@ -495,15 +505,20 @@ function renderRecentSubmissions() {
     // Separate into valid research trips and test data (use raw data for both to show ALL submissions)
     // Valid trips: must pass isValidTrip() AND must NOT be developer trips
     // Test trips: either fail isValidTrip() OR are developer trips (all developer trips are test trips)
-    const validTrips = sortedRawSurveys.filter(trip => 
+    let validTrips = sortedRawSurveys.filter(trip => 
         TripValidator.isValidTrip(trip) && !isDeveloperTrip(trip)
     );
-    const testData = sortedRawSurveys.filter(trip => 
+    let testData = sortedRawSurveys.filter(trip => 
         !TripValidator.isValidTrip(trip) || isDeveloperTrip(trip)
     );
     
-    // Separate valid research trips by survey completion status
-    const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
+    // Post-landing override: move device 4A473DF4 trips (HNL/JFK) with completed surveys from Test to With Surveys
+    const postLandingWithSurvey = testData.filter(t => isPostLandingTrip(t) && t.surveyCompleted === true);
+    testData = testData.filter(t => !(isPostLandingTrip(t) && t.surveyCompleted === true));
+    
+    // Separate valid research trips by survey completion status (includes post-landing)
+    let validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
+    validWithSurveys = validWithSurveys.concat(postLandingWithSurvey);
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
     // Build HTML
@@ -581,7 +596,7 @@ function renderRecentSubmissions() {
             }
             
             const points = String(pointsStimulated).padStart(2, ' ') + 'pts';
-            const tz = String(timezones).padStart(2, ' ') + 'TZ';
+            const tz = isPostLandingTrip(survey) ? 'Post-Landing*' : (String(timezones).padStart(2, ' ') + 'TZ');
             const tripDetails = `${routeDisplay} ${points} ${tz}`;
 
             tableHtml += `<tr ${rowStyle}>
@@ -641,6 +656,7 @@ function renderRecentSubmissions() {
     }
     
     html += '</div>';
+    html += '<p style="margin-top: 20px; font-size: 0.9rem; color: #6b7280;">* Post-Landing? Stimulation performed after arrival at destination.</p>';
     
     container.innerHTML = html;
 }
@@ -666,8 +682,10 @@ function renderTripStats() {
     const validationStats = getValidationStats(researchData);
     const breakdown = TripValidator.getValidationBreakdown(researchData);
     
-    // Calculate detailed breakdown (research trips only)
-    const validTrips = researchData.filter(trip => TripValidator.isValidTrip(trip));
+    // Calculate detailed breakdown (research trips only). Include post-landing trips in valid/with-surveys.
+    let validTrips = researchData.filter(trip => TripValidator.isValidTrip(trip));
+    const postLandingFromResearch = researchData.filter(t => isPostLandingTrip(t) && t.surveyCompleted === true);
+    validTrips = validTrips.concat(postLandingFromResearch);
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
     
@@ -748,11 +766,12 @@ function renderAdvancedAnalytics() {
     // Get validation statistics (based on all data, including test trips)
     const validationStats = getValidationStats(allData);
     
-    // Filter to only valid trips for analysis (exclude test data)
+    // Filter to only valid trips for analysis (exclude test data). Include post-landing trips with surveys.
     const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const postLandingWithSurvey = allData.filter(t => isPostLandingTrip(t) && t.surveyCompleted === true);
     
-    // Filter to only include completed surveys for this specific analysis
-    const completedSurveys = validData.filter(survey => survey.surveyCompleted === true);
+    // Filter to only include completed surveys for this specific analysis (valid + post-landing)
+    const completedSurveys = [...validData.filter(survey => survey.surveyCompleted === true), ...postLandingWithSurvey];
     
     if (completedSurveys.length === 0) {
         container.innerHTML = '<div class="error">No completed surveys available for advanced analytics</div>';
@@ -785,8 +804,11 @@ function renderAdvancedAnalytics() {
 
     container.innerHTML = html;
     
-    // Render the comprehensive dose-response analysis chart
-    renderDoseResponseAnalysisChart(completedSurveys);
+    // Render the comprehensive dose-response analysis chart (post-landing trips as 5 TZ for grouping)
+    const surveysForChart = completedSurveys.map(s =>
+        isPostLandingTrip(s) ? { ...s, timezonesCount: 5 } : s
+    );
+    renderDoseResponseAnalysisChart(surveysForChart);
 }
 
 // Load airport code to city mapping from airports.json (DRY - single source of truth)
@@ -938,17 +960,18 @@ function renderDoseResponseDataTable(surveys) {
         const destinationCode = survey.destinationCode || 'N/A';
         const destination = getCityName(destinationCode);
         
-        // Travel direction
+        // Travel direction. Post-landing trips: use 5 TZ (JFK-HNL) for baseline/chart; display "Post-Landing*".
         const timezones = survey.timezonesCount || 0;
-        const direction = (timezones === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
+        const effectiveTz = isPostLandingTrip(survey) ? 5 : timezones;
+        const direction = (effectiveTz === 0) ? 'N/A' : (survey.travelDirection || 'N/A');
         const eastWest = direction === 'east' ? 'E' : direction === 'west' ? 'W' : 'N/A';
         
         // Points stimulated
         const pointsStimulated = survey.pointsCompleted || 0;
         const pointsColor = getPointsColor(pointsStimulated);
         
-        // Baseline severity
-        const baseline = getBaselineSeverity(timezones);
+        // Baseline severity (use effective TZ for post-landing so baseline matches JFK-HNL)
+        const baseline = getBaselineSeverity(effectiveTz);
         const baselineStr = baseline !== null ? baseline.toFixed(1) : 'N/A';
         
         // Anticipated severity - calculate average of individual anticipated symptoms
@@ -1039,7 +1062,7 @@ function renderDoseResponseDataTable(surveys) {
             <td>${destination}</td>
             <td>${eastWest}</td>
             <td style="color: ${pointsColor}; font-weight: 600;">${pointsStimulated}</td>
-            <td>${timezones}</td>
+            <td>${isPostLandingTrip(survey) ? 'Post-Landing*' : timezones}</td>
             <td>${baselineStr}</td>
             <td>${anticipatedStr}</td>
             <td>${actualStr}</td>
