@@ -1006,8 +1006,8 @@ class JetLagProDemo {
     /**
      * Update image mirroring based on cycle state
      *
-     * Special case:
-     * - HT-8: base asset is oriented opposite, so we invert the mirroring logic
+     * Special cases:
+     * - HT-8, PC-8: base assets are oriented opposite, so we invert the mirroring logic
      *   to ensure the image matches the Right/Left label (Right first, then Left).
      */
     updateImageMirroring(pointId, imageElement) {
@@ -1016,8 +1016,8 @@ class JetLagProDemo {
         const baseShouldMirror = this.isMirrored(pointId);
 
         let shouldMirror = baseShouldMirror;
-        if (point && point.imageName === "HT-8") {
-            // Invert mirroring for HT-8 so the displayed hand matches the label
+        if (point && (point.imageName === "HT-8" || point.imageName === "PC-8")) {
+            // Invert mirroring for HT-8 / PC-8 so the displayed hand matches the label
             shouldMirror = !baseShouldMirror;
         }
 
