@@ -873,11 +873,26 @@ class JetLagProDemo {
      * Get the Left/Right label for the current cycle state
      * KI-3, LI-1, PC-8: States 0,1 = "Left"; States 2,3 = "Right"
      * All other points: States 0,1 = "Right"; States 2,3 = "Left"
+     *
+     * Special cases:
+     * - BL-2, KI-27, GB-20: no Left/Right label (both sides stimulated together)
+     * - ST-36: wording swapped so label matches image orientation
      */
     getLeftRightLabel(point) {
         const cycleState = this.getCycleState(point.id);
         const specialPoints = ["KI-3", "LI-1", "PC-8"];
-        
+
+        // Points where we do both sides together: no Left/Right label
+        if (["BL-2", "KI-27", "GB-20"].includes(point.imageName)) {
+            return "";
+        }
+
+        // ST-36: swap Left/Right wording to match image orientation
+        if (point.imageName === "ST-36") {
+            // States 0,1 = Left; 2,3 = Right
+            return (cycleState < 2) ? "Left" : "Right";
+        }
+
         if (specialPoints.includes(point.imageName)) {
             // KI-3, LI-1, PC-8: cycleState 0,1 = Left; 2,3 = Right
             return (cycleState < 2) ? "Left" : "Right";
@@ -990,10 +1005,22 @@ class JetLagProDemo {
     
     /**
      * Update image mirroring based on cycle state
+     *
+     * Special case:
+     * - HT-8: base asset is oriented opposite, so we invert the mirroring logic
+     *   to ensure the image matches the Right/Left label (Right first, then Left).
      */
     updateImageMirroring(pointId, imageElement) {
         if (!imageElement) return;
-        const shouldMirror = this.isMirrored(pointId);
+        const point = this.findPointById(pointId);
+        const baseShouldMirror = this.isMirrored(pointId);
+
+        let shouldMirror = baseShouldMirror;
+        if (point && point.imageName === "HT-8") {
+            // Invert mirroring for HT-8 so the displayed hand matches the label
+            shouldMirror = !baseShouldMirror;
+        }
+
         imageElement.style.transform = shouldMirror ? 'scaleX(-1)' : 'scaleX(1)';
     }
     
