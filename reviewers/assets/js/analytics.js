@@ -519,11 +519,11 @@ function renderRecentSubmissions() {
     // Separate valid research trips by survey completion status (includes post-landing)
     let validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     validWithSurveys = validWithSurveys.concat(postLandingWithSurvey);
-    // Sort by date ascending (oldest first) so chronology places earliest trips at top
+    // Sort by date descending (newest first) so most recent trips appear at top
     validWithSurveys.sort((a, b) => {
         const dateA = a.startDate || a.completionDate || a.created || a.timestamp;
         const dateB = b.startDate || b.completionDate || b.created || b.timestamp;
-        return new Date(dateA) - new Date(dateB);
+        return new Date(dateB) - new Date(dateA);
     });
     const validNotCompleted = validTrips.filter(trip => trip.surveyCompleted !== true);
 
