@@ -500,14 +500,14 @@
 		Jet lag is a problem for many international travelers. Traditional interventions like sunrise viewing, strategic melatonin use, sleep and meal scheduling show variable efficacy.<sup>1</sup> Acupuncturists have proposed an alternative method that has not been tested until now. </p>
 
         <h2>Circadian Biology: Mechanisms of Internal Clocks</h2>
-        <p>The scientific literature describes how circadian rhythms synchronize physiological processes to a 24-26 hour cycle through the suprachiasmatic nucleus (SCN), a cluster of neurons entrained by light.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>9</sup> Synchronization is maintained by Zeitgebers, external signals such as light, temperature, activity, and meals.<sup>6</sup></p>
+        <p>The scientific literature describes how circadian rhythms synchronize physiological processes to a 24-26 hour cycle through the suprachiasmatic nucleus (SCN), a cluster of neurons entrained by light.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>6</sup> Synchronization is maintained by Zeitgebers, external signals such as light, temperature, activity, and meals.<sup>7</sup></p>
 
         <p>Jet lag occurs when rapid time zone changes desynchronize these internal clocks.</p>
 
         <h2>Acupuncture Theory: Chronoacupuncture for Travelers</h2>        
-		<p>Over 40 years ago, Khoe<sup>7</sup> and then Amaro<sup>8</sup> proposed using targeted acupuncture point stimulation to minimize jet lag by aligning the body with destination time zones during travel. Their approach drew from Traditional Chinese Medicine (TCM) principles documented as early as the Han Dynasty<sup>9</sup> (200 BCE–200 CE), which describe a 24-hour cycle in which specific organs and their associated energy pathways (meridians) are more active during recurring two-hour intervals (see Table 1). Khoe and Amaro focused on subset of points (horary points) that correspond to each meridian's elemental properties and are considered most influential during its peak activity window (Figure 1).</P>
+		<p>Over 40 years ago, Khoe<sup>8</sup> and then Amaro<sup>9</sup> proposed using targeted acupuncture point stimulation to minimize jet lag by aligning the body with destination time zones during travel. Their approach drew from Traditional Chinese Medicine (TCM) principles documented as early as the Han Dynasty<sup>10</sup> (200 BCE–200 CE), which describe a 24-hour cycle in which specific organs and their associated energy pathways (meridians) are more active during recurring two-hour intervals (see Table 1). Khoe and Amaro focused on subset of points (horary points) that correspond to each meridian's elemental properties and are considered most influential during its peak activity window (Figure 1).</P>
 		
-		<p>A recent review supports the broader idea that acupuncture can influence circadian biology, showing effects on circadian clock genes, neurotransmitter systems, and sleep-wake regulation (Wu & Zhao, 2024).<sup>10</sup> Although those studies primarily examined points linked to sleep, they provide evidence that acupuncture may function as a non-photic zeitgeber capable of modulating circadian rhythms.</p>
+		<p>A recent review supports the broader idea that acupuncture can influence circadian biology, showing effects on circadian clock genes, neurotransmitter systems, and sleep-wake regulation (Wu & Zhao, 2024).<sup>11</sup> Although those studies primarily examined points linked to sleep, they provide evidence that acupuncture may function as a non-photic zeitgeber capable of modulating circadian rhythms.</p>
 		
 		<p>In the chronoacupuncture method described here, stimulation is timed to the peak activity period of each meridian, but adjusted to the local time at the destination. This sequential approach is intended to provide a non-photic cue that helps synchronize the body's internal clocks to the new time zone. While classical protocols emphasize using horary points, early testers in economy-class flights found foot and ankle points difficult to access due to footwear or seating constraints. To improve practicality, the protocol was modified by substituting more accessible points along the same active meridian. The rationale is straightforward: stimulating a more suitable point on the relevant meridian during its designated window is preferable to skipping the meridian entirely.</p>
 
@@ -678,50 +678,41 @@
 
         <p>For each stimulation group, we analyze post-travel symptom severity across different time zone categories to assess how stimulation levels affects the expected symptom increase from crossing more time zones. This grouping provides sufficient sample sizes for statistical analysis while maintaining meaningful intervention categories.</p>
 
-		<h4>Time Zone Offsets and Travel Direction</h4>
+		<h4>Time Zone Offset and Travel Direction</h4>
+		<p>The app calculates the time difference (offset) between departure and arrival locations in hours. This offset shows how much the traveler's internal clock is out of sync upon landing.</p>
+		<p>If the destination is ahead (e.g., +hours), the body must shift its rhythm earlier ("advance"). If behind (e.g., -hours), the body shifts later ("delay").</p>
+		<p>Eastward travel (destination ahead) usually feels harder for most people than westward (destination behind).</p>
+		<p>For example, flying from Los Angeles to Sydney creates a +19-hour offset (Sydney is 19 hours ahead in February). Despite the flight going west geographically, the app treats this as an "eastward" adjustment because the body clock must advance substantially to match local time.</p>
+		<p>For very long trips (&gt;12 hours difference), the body might adjust the shorter way around the clock, but the app uses the direct arrival offset to link it to jet lag severity.</p>
 
-		<p>The app records the timezone offset between origin and destination in hours. This offset represents the circadian disruption imposed on the traveler's biological clock at arrival. Travel direction (east/west) indicates whether the traveler must advance their internal clock (eastward travel, destination ahead) or delay it (westward travel, destination behind), regardless of geographic direction. For example, Los Angeles to Sydney involves westward geographic travel but is classified as "east" because Sydney time is 18 hours ahead, requiring circadian phase advance. For trips crossing more than 12 time zones, the circadian system may eventually adjust via the shorter path, but the initial offset captures the temporal displacement at arrival. Our analysis correlates jet lag severity with this time displacement.</p>
-		
-<p></p>
+        <h4>Dose-Response Visualization</h4>
+        <p>The main analysis plots symptom severity (Y-axis) against the number of time zones crossed (X-axis). Separate lines show results for different intervention levels (e.g., number of points stimulated), with a dashed baseline line representing expected severity without any intervention.</p>
+        <p>Each data point includes:</p>
+        <ul style="margin-left: 40px; padding-left: 20px;">
+            <li>Mean aggregate severity (average across five symptoms)</li>
+            <li>Standard deviation</li>
+            <li>Standard error of the mean</li>
+            <li>95% confidence intervals (shown as error bars)</li>
+        </ul>
+        <p>Two graphs present the findings.</p>
 
-        <h4>Dose-Response Analysis Methodology</h4>
-        <p>The primary analysis is a comprehensive dose-response visualization showing the interaction between time zones crossed (X-axis) and aggregate symptom severity (Y-axis) across intervention levels. Each intervention group is represented as a separate line, with the baseline data displayed as a dashed reference line showing expected natural progression without intervention. We present two graphs with the following data.</p>
-        
-        <p>For each data point, we calculate:</p>
-        <ul style="margin-left: 40px; padding-left: 20px;">
-            <li>Mean aggregate symptom severity across all five measured symptoms</li>
-            <li>Standard deviation of symptom severity within each group</li>
-            <li>Standard error of the mean for statistical precision</li>
-            <li>95% confidence intervals displayed as error bars (±1 SE)</li>
-        </ul>
-        
-        <br>
-        
-        <h4>Primary and Secondary Analysis</h4>
-        <p>The main analysis examines the interaction between time zones crossed and points stimulated on post-travel symptom severity. We will:</p>
-        <ul style="margin-left: 40px; padding-left: 20px;">
-            <li>Test the intervention effect: More points stimulated = reduced symptom increase per time zone</li>
-            <li>Examine dose-response relationships within each time zone category</li>
-            <li>Compare eastward vs. westward travel effects within the stimulation framework</li>
-        </ul>
-        
-        <p>Our secondary analysis examines if anticipated vs. actual symptoms show significant differences.</p>		
-		<h4>What We Can't Control</h4>
-		<p>While acupuncturists are skilled in precise point location and pressure, our typical travelers are not experts. Some acupressure points may be harder to locate and stimulate correctly during a flight. In real‑world use, travelers may:</p>
+        <h4>Primary and Secondary Analyses</h4>
+        <p>The primary analysis tests whether stimulating more points reduces the rise in symptoms per time zone crossed. It also explores dose-response patterns within time zone categories and compares effects for eastward vs. westward travel.</p>
+        <p>The secondary analysis checks for differences between anticipated and actual reported symptoms.</p>
+
+		<h4>Real-World Limitations and Variability</h4>
+		<p>Travelers are not trained acupuncturists, so point location and stimulation quality vary during flights. Users may:</p>
 		<ul style="margin-left: 40px; padding-left: 20px;">
-			<li>mark a point as stimulated without actually stimulating it,</li>
-			<li>stimulate a point ineffectively,</li>
-			<li>spend too little time on stimulation,</li>
-			<li>use insufficient or excessive pressure,</li>
-			<li>stimulate only one side,</li>
-			<li>miss points while sleeping, or</li>
-			<li>stimulate a point and forget to mark it as done,</li>
-			<li>combine other interventions (e.g., meal/sleep scheduling or melatonin).</li>
+			<li>Mark a point as done without stimulating it</li>
+			<li>Apply incorrect pressure or duration</li>
+			<li>Stimulate only one side</li>
+			<li>Miss points (e.g., while sleeping)</li>
+			<li>Forget to log stimulation</li>
+			<li>Use other remedies (e.g., melatonin, sleep adjustments)</li>
 		</ul>
-
 		<br>
-
-		<p>We expect and actually welcome this variability. Our question is whether chronoacupressure provides benefit for the average traveler under real-world conditions. The naturalistic design intentionally captures the intervention as it would be used in practice, including variability in compliance, point location accuracy, and stimulation technique. As stated earlier, TCM theory suggests the entire meridian is active during its peak period, so approximate stimulation during the correct time window should still engage the therapeutic mechanism even if the stimulation was less than ideal.</p> 		
+		<p>This variability is expected and intentional in our naturalistic design. We are testing whether chronoacupressure helps the average traveler in everyday conditions—not under perfect lab-like execution.</p>
+		<p>TCM theory holds that the entire meridian is active during its peak window, so even approximate or less-than-ideal stimulation at the right time should still provide benefit.</p> 		
 
 		<h2>Results</h2>
 		<i>
@@ -791,37 +782,37 @@
 		<p></p>
 			
             <li>Waterhouse, J., et al. (2007). Jet lag: trends and coping strategies. The Lancet, 369(9567), 1117–1129. <a href="https://doi.org/10.1016/S0140-6736(07)60529-7" target="_blank">https://doi.org/10.1016/S0140-6736(07)60529-7</a><br>
-            <em>Reviews jet lag symptoms, causes, and methods to alleviate negative effects of time-zone transitions, including advice for travelers flying in different directions across multiple time zones. It remains the most comprehensive quantitative assessment of jet lag severity stratified by time zones crossed and continues to serve as the reference standard in jet lag research. Provides baseline severity data from Liverpool Jet Lag Questionnaire administered to athletes and travelers, establishing control reference points for natural jet lag severity without intervention across different time zone transitions (1.8 severity for 1-2 zones, 2.5 for 3-5 zones, 3.1 for 6-8 zones, 3.6 for 9+ zones on 1-5 scale).</em></li>
+            <em>1. Reviews jet lag symptoms, causes, and methods to alleviate negative effects of time-zone transitions, including advice for travelers flying in different directions across multiple time zones. It remains the most comprehensive quantitative assessment of jet lag severity stratified by time zones crossed and continues to serve as the reference standard in jet lag research. Provides baseline severity data from Liverpool Jet Lag Questionnaire.</em></li>
             
             <li>Panda, S. (2022). Foundations of circadian medicine. PLoS Biology, 20(3), e3001567. <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">https://doi.org/10.1371/journal.pbio.3001567</a><br>
-            <em>Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
+            <em>2. Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
             
             <li>Honma, S., & Honma, K.I. (2019). The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker. Biology, 8(1), 13. <a href="https://doi.org/10.3390/biology8010013" target="_blank">https://doi.org/10.3390/biology8010013</a><br>
-            <em>Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
+            <em>3. Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
             
             <li>Paschos, G.K., & FitzGerald, G.A. (2010). Circadian clocks and vascular function. Circulation Research, 106(5), 833-841. <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">https://doi.org/10.1161/CIRCRESAHA.109.211706</a><br>
-            <em>Comprehensive review demonstrating that circadian clocks regulate vascular function through control of blood pressure rhythms, thrombogenesis, endothelial function, and response to vascular injury, based on genetic disruption studies in clock-deficient mice.</em></li>
+            <em>4. Comprehensive review demonstrating that circadian clocks regulate vascular function through control of blood pressure rhythms, thrombogenesis, endothelial function, and response to vascular injury, based on genetic disruption studies in clock-deficient mice.</em></li>
             
             <li>Hastings, M. H., et al. (2003). A clockwork web: circadian timing in brain and periphery. Nature Reviews Neuroscience, 4(8), 649–661. <a href="https://doi.org/10.1038/nrn1177" target="_blank">https://doi.org/10.1038/nrn1177</a><br>
-            <em>Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
+            <em>5. Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
             
             <li>Nangle, S. N., Rosensweig, C., Koike, N., Tei, H., Takahashi, J. S., Green, C. B., & Zheng, N. (2014). Molecular assembly of the period-cryptochrome circadian transcriptional repressor complex. eLife, 3, e03674. <a href="https://doi.org/10.7554/eLife.03674" target="_blank">https://doi.org/10.7554/eLife.03674</a><br>
-            <em>Crystal structure analysis of the Period-Cryptochrome complex revealing the molecular basis of circadian transcriptional repression, demonstrating how Period and Cryptochrome proteins interact to form the core negative feedback loop that drives mammalian circadian rhythms.</em></li>
+            <em>6. Crystal structure analysis of the Period-Cryptochrome complex revealing the molecular basis of circadian transcriptional repression, demonstrating how Period and Cryptochrome proteins interact to form the core negative feedback loop that drives mammalian circadian rhythms.</em></li>
             
             <li>Heyde, I., & Oster, H. (2019). Differentiating external zeitgeber impact on peripheral circadian clock resetting. Scientific Reports, 9, 20114. <a href="https://doi.org/10.1038/s41598-019-56323-z" target="_blank">https://doi.org/10.1038/s41598-019-56323-z</a><br>
-            <em>Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
+            <em>7. Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
             
             <li>Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]<br>
-            <em>Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
+            <em>8. Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
             
             <li>Khoe, W.H. (1978). Treatment of jet lag syndrome by acupuncture. American Journal of Acupuncture, 6(2), 135–139.<br>
-            <em>Historical paper on acupuncture treatment for jet lag syndrome (content not accessible for detailed summary).</em></li>
+            <em>9. Historical paper on acupuncture treatment for jet lag syndrome (content not accessible for detailed summary).</em></li>
             
             <li>Amaro, J. (2001). Time Travel: Contemporary Applications for Jet Lag from Ancient Principles. Acupuncture Today, October 2001. <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles</a><br>
-            <em>Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
+            <em>10. Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
                         
             <li>Wu, J., & Zhao, Z. (2024). Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms. Frontiers in Neuroscience, 18, 1346635. <a href="https://doi.org/10.3389/fnins.2024.1346635" target="_blank">https://doi.org/10.3389/fnins.2024.1346635</a><br>
-            <em>Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
+            <em>11. Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
             
 
    
