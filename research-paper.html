@@ -680,9 +680,8 @@
 
 		<h4>Time Zone Offset and Travel Direction</h4>
 		<p>The app calculates the time difference (offset) between departure and arrival locations in hours. This offset shows how much the traveler's internal clock is out of sync upon landing.</p>
-		<p>If the destination is ahead (e.g., +hours), the body must shift its rhythm earlier ("advance"). If behind (e.g., -hours), the body shifts later ("delay").</p>
-		<p>Eastward travel (destination ahead) usually feels harder for most people than westward (destination behind).</p>
-		<p>For example, flying from Los Angeles to Sydney creates a +19-hour offset (Sydney is 19 hours ahead in February). Despite the flight going west geographically, the app treats this as an "eastward" adjustment because the body clock must advance substantially to match local time.</p>
+		<p>If the destination is ahead (e.g., +hours), the body must shift its rhythm earlier ("advance"). If behind (e.g., -hours), the body shifts later ("delay"). Eastward travel (destination ahead) usually feels harder for most people than westward (destination behind).</p>
+		<p>For example, flying from Los Angeles to Sydney creates a +19-hour offset (Sydney is 19 hours ahead). Despite the flight going west geographically, the app treats this as an "eastward" adjustment because the body clock must advance substantially to match local time.</p>
 		<p>For very long trips (&gt;12 hours difference), the body might adjust the shorter way around the clock, but the app uses the direct arrival offset to link it to jet lag severity.</p>
 
         <h4>Dose-Response Visualization</h4>
@@ -693,6 +692,7 @@
             <li>Standard deviation</li>
             <li>Standard error of the mean</li>
             <li>95% confidence intervals (shown as error bars)</li>
+			<br>
         </ul>
         <p>Two graphs present the findings.</p>
 
@@ -711,7 +711,7 @@
 			<li>Use other remedies (e.g., melatonin, sleep adjustments)</li>
 		</ul>
 		<br>
-		<p>This variability is expected and intentional in our naturalistic design. We are testing whether chronoacupressure helps the average traveler in everyday conditions—not under perfect lab-like execution.</p>
+		<p>This variability is expected and intentional in our naturalistic design. We are testing whether chronoacupressure helps the average traveler in everyday conditions, not under perfect lab-like execution.</p>
 		<p>TCM theory holds that the entire meridian is active during its peak window, so even approximate or less-than-ideal stimulation at the right time should still provide benefit.</p> 		
 
 		<h2>Results</h2>
@@ -2766,17 +2766,23 @@ ${htmlContent.outerHTML}
         let firebaseService = null;
         
         // Load research data from Firebase (DRY from analytics.js)
+        const RESEARCH_DATA_TIMEOUT_MS = 15000;
+        
         async function loadResearchData() {
+            const container = document.getElementById('researchChartContainer');
             try {
                 isLoadingResearch = true;
                 showResearchLoadingState();
                 
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), RESEARCH_DATA_TIMEOUT_MS);
+                
                 const response = await fetch(FIREBASE_REST_URL, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -2802,15 +2808,21 @@ ${htmlContent.outerHTML}
             } catch (error) {
                 console.error('Error loading research data:', error);
                 isLoadingResearch = false;
-                throw new Error('Failed to load research data: ' + error.message);
+                const message = error.name === 'AbortError'
+                    ? 'Request timed out. Please check your connection and refresh the page.'
+                    : ('Failed to load research data: ' + error.message);
+                if (container) {
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>' + message + '</p><p>You can <button type="button" onclick="refreshResearchData();" style="background:#2563eb;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Try again</button></p></div>';
+                }
+                throw new Error(message);
             }
         }
         
         // Show loading state for research data
         function showResearchLoadingState() {
-            const container = document.getElementById('liveResearchChart');
+            const container = document.getElementById('researchChartContainer');
             if (container) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Loading live research data...</div>';
+                container.innerHTML = '<div class="loading">Loading live research data...</div>';
             }
         }
         
@@ -2900,41 +2912,47 @@ ${htmlContent.outerHTML}
         // END NEW FIREBASE SERVICE INTEGRATION
         // ============================================================================
         
-        // Load chart when page loads
+        // Load chart when page loads (with timeout so we never stay stuck on "Loading...")
+        const PAGE_LOAD_TIMEOUT_MS = 20000;
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Try to initialize Firebase service first
-            const serviceAvailable = initializeFirebaseService();
-            
-            if (serviceAvailable) {
-                console.log('🚀 Loading research data with Firebase service...');
-                loadResearchDataWithService().then(() => {
-                    renderLiveResearchChart();
-                }).catch(error => {
-                    console.error('❌ Firebase service failed, falling back to existing method:', error);
-                    // Fallback to existing method
-                    loadResearchData().then(() => {
-                        renderLiveResearchChart();
-                    }).catch(fallbackError => {
-                        console.error('Error loading research data on page load:', fallbackError);
-                        const container = document.getElementById('researchChartContainer');
-                        if (container) {
-                            container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + fallbackError.message + '</p><p>Please try refreshing the data.</p></div>';
-                        }
-                    });
-                });
-            } else {
-                console.log('🚀 Loading research data with existing methods...');
-                // Load data first, then render chart
-                loadResearchData().then(() => {
-                    renderLiveResearchChart();
-                }).catch(error => {
-                    console.error('Error loading research data on page load:', error);
-                    const container = document.getElementById('researchChartContainer');
-                    if (container) {
-                        container.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 40px;"><p>Error loading live data: ' + error.message + '</p><p>Please try refreshing the data.</p></div>';
-                    }
-                });
+            const container = document.getElementById('researchChartContainer');
+            function showLoadError(msg) {
+                if (container) {
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>' + msg + '</p><p><button type="button" onclick="refreshResearchData();" style="background:#2563eb;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Try again</button></p></div>';
+                }
             }
+            
+            const loadPromise = (async function() {
+                const serviceAvailable = initializeFirebaseService();
+                if (serviceAvailable) {
+                    console.log('🚀 Loading research data with Firebase service...');
+                    try {
+                        await loadResearchDataWithService();
+                    } catch (error) {
+                        console.error('❌ Firebase service failed, falling back to existing method:', error);
+                        await loadResearchData();
+                    }
+                } else {
+                    console.log('🚀 Loading research data with existing methods...');
+                    await loadResearchData();
+                }
+                renderLiveResearchChart();
+            })();
+            
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('LOAD_TIMEOUT')), PAGE_LOAD_TIMEOUT_MS);
+            });
+            
+            Promise.race([loadPromise, timeoutPromise]).catch(error => {
+                if (error && error.message === 'LOAD_TIMEOUT') {
+                    console.warn('Research data load timed out after ' + (PAGE_LOAD_TIMEOUT_MS/1000) + 's');
+                    showLoadError('Data is taking longer than expected. Please check your connection and click Try again.');
+                } else {
+                    console.error('Error loading research data on page load:', error);
+                    showLoadError('Error loading live data: ' + (error && error.message ? error.message : 'Unknown error') + '. Please try again.');
+                }
+            });
         });
     </script>
 
