@@ -2377,6 +2377,8 @@ ${htmlContent.outerHTML}
                 }
                 
                 if (surveyData.length === 0) {
+                    const dataPointEl = document.getElementById('dataPointCount');
+                    if (dataPointEl) dataPointEl.textContent = '0';
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
                     return;
                 }
@@ -2675,23 +2677,10 @@ ${htmlContent.outerHTML}
                     }]
                 });
                 
-                // Update the data point count in the disclaimer (count actual data points used in chart)
+                // Update the data point count in the disclaimer (same as survey count for consistent wording)
                 const dataPointElement = document.getElementById('dataPointCount');
                 if (dataPointElement) {
-                    // Count surveys that have valid data for the chart (filtered by timezone and valid symptoms)
-                    let validDataPoints = 0;
-                    Object.values(usageGroups).forEach(groupSurveys => {
-                        groupSurveys.forEach(survey => {
-                            if (timeZoneRanges.includes(survey.timezonesCount)) {
-                                const symptoms = ['postSleepSeverity', 'postFatigueSeverity', 'postConcentrationSeverity', 'postIrritabilitySeverity', 'postGISeverity'];
-                                const validSymptoms = symptoms.filter(symptom => survey[symptom] !== null);
-                                if (validSymptoms.length > 0) {
-                                    validDataPoints++;
-                                }
-                            }
-                        });
-                    });
-                    dataPointElement.textContent = validDataPoints;
+                    dataPointElement.textContent = surveyData.length;
                 }
                 
             } catch (error) {
