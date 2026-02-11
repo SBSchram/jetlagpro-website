@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronoacupuncture Research Paper - JetLagPro</title>
-    <script src="load-common-head.js?v=20251219160001"></script>
-    <link rel="stylesheet" href="styles.css?v=20251219160001">
+    <script src="load-common-head.js?v=20251217170000"></script>
+    <link rel="stylesheet" href="styles.css?v=20251217170000">
     <!-- Add jsPDF library for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'"></script>
     <!-- Add html2canvas for capturing content -->
@@ -1114,84 +1114,6 @@
                                 if (groupImg) {
                                     groupImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 0 auto;';
                                 }
-            }
-        }
-        
-        // ============================================
-        // CENTRALIZED IMAGE SIZE CONSTANTS (JavaScript)
-        // 
-        // MUST MATCH CSS VARIABLES ABOVE (lines 131-149)
-        // 
-        // TO CHANGE SIZES:
-        // 1. Update CSS :root variables (lines 131-149)
-        // 2. Update these JavaScript constants (keep same values)
-        // 3. Both must match!
-        // ============================================
-        const IMAGE_SIZES = {
-            methods: {
-                width: 170,  // Matches --img-methods-width (170px)
-                spacing: 15, // Word export spacing (tighter than HTML 20px)
-                padding: 15  // Word export padding (tighter than HTML 20px)
-            },
-            point: {
-                width: 100,  // Matches --img-point-width (100px)
-                height: 100  // Matches --img-point-height (100px)
-            },
-            wheel: {
-                width: 300   // Matches --word-img-wheel-width (300px)
-            }
-        };
-        
-        // Word Document Export Function (HTML format with embedded images)
-        async function exportToWord() {
-            try {
-                const paperContent = document.querySelector('.research-paper');
-                
-                // Show loading message
-                const loadingDiv = document.createElement('div');
-                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating Word document with embedded images and chart... Please wait.';
-                document.body.appendChild(loadingDiv);
-                
-                // Capture Chart.js canvas as image BEFORE cloning
-                // Wait a bit for chart to be fully rendered
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const originalChartCanvas = document.getElementById('liveResearchChart');
-                let chartImageData = null;
-                
-                // Capture point images table as single image BEFORE cloning
-                let pointImagesData = null;
-                const pointImagesTable = document.getElementById('pointImagesTable');
-                if (pointImagesTable) {
-                    try {
-                        // Get the parent div that contains the table and heading
-                        const pointImagesContainer = pointImagesTable.closest('div');
-                        if (pointImagesContainer) {
-                            // Create a temporary container with proper Word formatting
-                            const tempContainer = document.createElement('div');
-                            tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 624px; background: white; padding: 10px;';
-                            
-                            // Clone the container
-                            const clonedContainer = pointImagesContainer.cloneNode(true);
-                            clonedContainer.style.cssText = 'width: 624px; margin: 0 auto; background: white;';
-                            
-                            // Format the table for Word export
-                            const clonedTable = clonedContainer.querySelector('table');
-                            if (clonedTable) {
-                                clonedTable.style.cssText = 'width: 600px; margin: 0 auto; border-collapse: collapse; table-layout: fixed;';
-                                const cells = clonedTable.querySelectorAll('td');
-                                cells.forEach(cell => {
-                                    cell.style.cssText = 'width: 100px; padding: 2px; text-align: center; vertical-align: middle;';
-                                });
-                                const images = clonedTable.querySelectorAll('img');
-                                images.forEach(img => {
-                                    img.style.cssText = 'width: 100px; height: 100px; object-fit: contain; display: block; margin: 0 auto;';
-                                });
-                                const paragraphs = clonedTable.querySelectorAll('p');
-                                paragraphs.forEach(p => {
-                                    p.style.cssText = 'margin: 2px 0; font-size: 10pt; font-weight: bold; text-align: center;';
-                                });
                             }
                             
                             tempContainer.appendChild(clonedContainer);
