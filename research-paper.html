@@ -2414,6 +2414,24 @@ ${htmlContent.outerHTML}
             const container = document.getElementById('researchChartContainer');
             
             try {
+                if (!container) {
+                    console.error('researchChartContainer element not found');
+                    return;
+                }
+                
+                // Ensure required libraries are available before proceeding
+                if (typeof Chart === 'undefined') {
+                    console.error('Chart.js library is not available.');
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;">Live chart could not be loaded (Chart.js not available). Please check your connection and try again.</div>';
+                    return;
+                }
+                
+                if (typeof TripValidator === 'undefined' || typeof TripValidator.filterForAnalysis !== 'function') {
+                    console.error('TripValidator.filterForAnalysis is not available.');
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;">Live chart could not be loaded (validation service not available). Please try again later.</div>';
+                    return;
+                }
+                
                 // Show loading
                 container.innerHTML = '<div class="loading">Loading live research data...</div>';
                 
@@ -2917,27 +2935,35 @@ ${htmlContent.outerHTML}
         
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('researchChartContainer');
+            
             function showLoadError(msg) {
                 if (container) {
                     container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>' + msg + '</p><p><button type="button" onclick="refreshResearchData();" style="background:#2563eb;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Try again</button></p></div>';
                 }
             }
             
+            // Kick off data load and chart rendering with a timeout guard
             const loadPromise = (async function() {
-                const serviceAvailable = initializeFirebaseService();
-                if (serviceAvailable) {
-                    console.log('🚀 Loading research data with Firebase service...');
-                    try {
-                        await loadResearchDataWithService();
-                    } catch (error) {
-                        console.error('❌ Firebase service failed, falling back to existing method:', error);
+                try {
+                    const serviceAvailable = initializeFirebaseService();
+                    if (serviceAvailable) {
+                        console.log('🚀 Loading research data with Firebase service...');
+                        try {
+                            await loadResearchDataWithService();
+                        } catch (error) {
+                            console.error('❌ Firebase service failed, falling back to existing method:', error);
+                            await loadResearchData();
+                        }
+                    } else {
+                        console.log('🚀 Loading research data with existing methods...');
                         await loadResearchData();
                     }
-                } else {
-                    console.log('🚀 Loading research data with existing methods...');
-                    await loadResearchData();
+                    
+                    await renderLiveResearchChart();
+                } catch (error) {
+                    // Bubble error to be handled by Promise.race catch below
+                    throw error;
                 }
-                renderLiveResearchChart();
             })();
             
             const timeoutPromise = new Promise((_, reject) => {
