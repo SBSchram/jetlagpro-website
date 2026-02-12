@@ -1,4 +1,19 @@
-# KI-27.MOV → MP4 conversion
+# KI-27 video conversion
+
+## Demo (website) – use iOS-matching source
+
+**To make the website demo match iOS**, convert the iOS-matching source to the demo folder:
+
+- **Source:** `assets/videos/KI-27new.mov` (copy from iOS app `Resources/Videos/KI-27.mp4` or export as KI-27new.mov if needed)
+- **Output:** `demo/assets/videos/KI-27.mp4`
+
+**Run:** `.\scripts\convert_ki27new_to_demo.ps1` (PowerShell) from repo root.
+
+The script uses the same settings as below (no sound, H.264, 480×480, crop to keep bottom). After running, the demo will use the correct KI-27 video that matches iOS.
+
+---
+
+## Root assets – legacy conversion
 
 Converts `assets/videos/KI-27.MOV` to `assets/videos/KI-27.mp4` per the conversion plan:
 
@@ -9,19 +24,9 @@ Converts `assets/videos/KI-27.MOV` to `assets/videos/KI-27.mp4` per the conversi
 
 ## Requirements
 
-**ffmpeg** must be on `PATH` or in a standard install location. The PowerShell script also checks Chocolatey, Scoop, and the registry PATH (so it can find ffmpeg without reopening the terminal after install).
+**ffmpeg** must be on `PATH` or in a standard install location (e.g. `C:\ffmpeg\bin`, `Program Files\ffmpeg\bin`).
 
-**If you see "ffmpeg not found":**
-
-1. Install ffmpeg, e.g. in PowerShell (Admin optional):  
-   `winget install ffmpeg`
-2. Close and reopen PowerShell (or open a new terminal) so PATH is updated.
-3. From the repo root, run again:  
-   `.\scripts\convert_ki27_to_mp4.ps1`
-
-Other install options:
-
-- Windows: [ffmpeg.org](https://ffmpeg.org/download.html), or `winget install ffmpeg`, or Chocolatey/Scoop
+- Windows: [ffmpeg.org](https://ffmpeg.org/download.html) or `winget install ffmpeg`
 - macOS: `brew install ffmpeg`
 - WSL/Git Bash: `sudo apt install ffmpeg` or equivalent
 
