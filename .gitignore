@@ -70,3 +70,12 @@ _scratch/
 _drafts/
 _work/
 *.work/
+
+# Internal documentation (not for website / do not deploy)
+docs/
+demo/*.md
+scripts/*.md
+assets/images/README.md
+DATA-INTEGRITY-IMPLEMENTATION.md
+TF_POLICY_REVIEW.md
+Jet Lag Syndrome.md
