@@ -1406,6 +1406,15 @@ class JetLagProDemo {
             console.error('Tab item not found for:', tabName);
         }
         
+        // When switching to Journey tab with no destination, open the current point
+        if (tabName === 'journey' && !this.selectedAirport) {
+            this.updateActivePoint();
+            if (this.currentPoint) {
+                this.expandedPointId = this.currentPoint.id;
+                this.generatePointsList();
+            }
+        }
+        
         // Update home screen when switching to home tab
         // Home tab removed - no trip/achievement tracking in demo
     }
