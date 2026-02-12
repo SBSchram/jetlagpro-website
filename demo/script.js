@@ -275,12 +275,14 @@ class JetLagProDemo {
             } else {
                 // No active destination: start on Destinations tab (match iOS default)
                 this.switchToTab('destination');
+                this.updateActivePoint(); // so current point is set for points list
+                if (this.currentPoint) this.expandedPointId = this.currentPoint.id;
             }
             
             // Show default sections expanded
             this.showDefaultSections();
             
-            // Generate initial points list
+            // Generate initial points list (current point expanded when user switches to Journey)
             this.generatePointsList();
             
             // Load completed trips and update home screen
@@ -1406,13 +1408,13 @@ class JetLagProDemo {
             console.error('Tab item not found for:', tabName);
         }
         
-        // When switching to Journey tab with no destination, open the current point
-        if (tabName === 'journey' && !this.selectedAirport) {
+        // When switching to Journey tab, expand the currently active point (by local or destination time)
+        if (tabName === 'journey') {
             this.updateActivePoint();
             if (this.currentPoint) {
                 this.expandedPointId = this.currentPoint.id;
-                this.generatePointsList();
             }
+            this.generatePointsList();
         }
         
         // Update home screen when switching to home tab
