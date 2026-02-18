@@ -139,9 +139,9 @@
            - Chinese Organ Clock: Wheel visualization (Figure 1)
            ============================================ */
         :root {
-            /* Methods figure: single combined image (3 Steps.JPG) */
+            /* Methods figure: single combined image (3 Steps.JPG) - full width to margins */
             --img-methods-width: 170px;
-            --img-methods-single-max-width: 480px;  /* combined 3-step image */
+            --img-methods-single-max-width: 100%;
             --img-methods-spacing: 20px;
             --img-methods-padding: 20px;
             
@@ -166,16 +166,18 @@
             text-align: center;
             margin: 10px 0 30px 0;
             width: 100%;
+            max-width: 100%;
         }
         
         .methods-screenshots .methods-single-figure {
-            margin: 0 auto;
-            max-width: var(--img-methods-single-max-width);
+            margin: 0;
+            max-width: 100%;
+            width: 100%;
         }
         
         .methods-screenshots .methods-single-figure img {
             width: 100%;
-            max-width: var(--img-methods-single-max-width);
+            max-width: 100%;
             height: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -214,7 +216,26 @@
             border: none;
         }
         
-        /* Point images - larger for HTML display */
+        /* Point images section - full width to margins (single group image) */
+        .point-images-section {
+            width: 100%;
+            max-width: 100%;
+        }
+        .point-images-section #pointImagesTable {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+        }
+        .point-images-section #pointImagesTable img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0;
+        }
+        
+        /* Point images table (legacy) - larger for HTML display */
         .point-images-table {
             width: auto;
             max-width: 100%;
@@ -426,7 +447,14 @@
                 page-break-inside: avoid;
             }
             
-            .research-paper .methods-screenshots img {
+            .research-paper .methods-screenshots .methods-single-figure img {
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
+                display: block;
+            }
+            
+            .research-paper .methods-screenshots table img {
                 max-width: 200px;
                 margin: 5pt;
                 display: inline-block;
@@ -608,10 +636,10 @@
         <p>Scheduled reminders pop up at appropriate times prompting the traveler to complete a full 24-hour cycle. The reminders are persistent and remain on the traveler's phone (or watch) until clicked. When clicked, the traveler is shown the correct image beside a looping video showing how to stimulate the point on the Points Screen (#3). The watch also provides a "show me" option that displays the point image. Written instructions are provided above and below the phone images.</p>
 
  
-        <div style="text-align: center; margin: 30px 0;">
+        <div class="point-images-section" style="text-align: center; margin: 30px 0;">
             <h2>Point Images</h2>
             <div id="pointImagesTable">
-                <img src="assets/images/PointImagesGroup.jpg" alt="Twelve acupuncture points: LU-8, LI-1, ST-36, SP-10, HT-8, SI-5, BL-2, KI-27, PC-8, SJ-6, GB-20, LIV-8" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <img src="assets/images/PointImagesGroup.jpg" alt="Twelve acupuncture points: LU-8, LI-1, ST-36, SP-10, HT-8, SI-5, BL-2, KI-27, PC-8, SJ-6, GB-20, LIV-8" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             </div>
         </div>
 
@@ -677,14 +705,11 @@
             <li>6-8 points (moderate stimulation)</li>
             <li>9-12 points (high stimulation)</li>
         </ul>
-
+        <br>
         <p>For each stimulation group, we analyze post-travel symptom severity across different time zone categories to assess how stimulation levels affects the expected symptom increase from crossing more time zones. This grouping provides sufficient sample sizes for statistical analysis while maintaining meaningful intervention categories.</p>
 
 		<h4>Time Zone Offset and Travel Direction</h4>
-		<p>The app calculates the time difference (offset) between departure and arrival locations in hours. This offset shows how much the traveler's internal clock is out of sync upon landing.</p>
-		<p>If the destination is ahead (e.g., +hours), the body must shift its rhythm earlier ("advance"). If behind (e.g., -hours), the body shifts later ("delay"). Eastward travel (destination ahead) usually feels harder for most people than westward (destination behind).</p>
-		<p>For example, flying from Los Angeles to Sydney creates a +19-hour offset (Sydney is 19 hours ahead). Despite the flight going west geographically, the app treats this as an "eastward" adjustment because the body clock must advance substantially to match local time.</p>
-		<p>For very long trips (&gt;12 hours difference), the body might adjust the shorter way around the clock, but the app uses the direct arrival offset to link it to jet lag severity.</p>
+		<p>The app records the time difference (offset) in hours between origin and destination; a positive offset means the body must advance its rhythm (eastward), a negative one means delay (westward), and eastward adjustment typically feels harder than westward. For example, Los Angeles to Sydney is a +19-hour offset, so the app classifies it as eastward even though the flight goes west geographically. For trips over 12 hours the body may adapt the shorter way around the clock, but we use the direct arrival offset for analysis.</p>
 
         <h4>Dose-Response Visualization</h4>
         <p>The main analysis plots symptom severity (Y-axis) against the number of time zones crossed (X-axis). Separate lines show results for different intervention levels (e.g., number of points stimulated), with a dashed baseline line representing expected severity without any intervention.</p>
@@ -741,20 +766,12 @@
 		<h2>Discussion</h2>
         <p>The proposed mechanism for chronoacupuncture involves stimulation of acupressure points triggering afferent nerve pathways that may influence the hypothalamic-pituitary-adrenal axis and autonomic nervous system. This peripheral stimulation could modulate melatonin secretion patterns, cortisol rhythms, and peripheral clock gene expression, effectively serving as a non-photic zeitgeber to accelerate circadian realignment.</p>
 		
-		<p>This paper presents a prospective observational cohort study that evaluated chronoacupuncture for jet lag management in [XXX] long distance travelers. Travelers used the JetLagPro mobile application to self-administer horary point stimulation according to destination time zones and completed a jet lag assessment post-travel. The study design prioritized external validity by evaluating the intervention under real-world conditions rather than controlled laboratory settings. Statistical analysis of the dataset provides evidence regarding chronoacupuncture's effectiveness as a non-pharmacological approach to circadian rhythm adjustment during travel.</p>
+		<p>This paper presents a prospective observational cohort study of chronoacupuncture for jet lag in <span id="surveyCountDiscussion">[loading...]</span> long-distance travelers. Participants used the JetLagPro mobile app to self-administer acupressure at points aligned with destination time zones and completed a jet lag assessment after travel.</p>
+		<p>The design prioritized real-world conditions over a controlled lab setting. Statistical analysis of the dataset provides evidence on whether chronoacupuncture is an effective non-pharmacological option for circadian adjustment during travel.</p>
 
         <p>Traditional clinical trials face significant challenges in jet lag research due to the logistical complexity of controlling travel variables, traveler demographics, and environmental factors. Our app's naturalistic data collection approach using a well defined survey approach circumvents these limitations while capturing real-world efficacy across diverse travel conditions. However, this methodology introduces potential confounding variables including traveler compliance, placebo effects inherent in tactile interventions, and subjective symptom reporting.</p>
 		
-		<h4>Points or Meridians</h4>
-		
-		<p>This study evaluates chronoacupuncture's effectiveness for jet lag by stimulating horary points, which are acupuncture points aligned with the Chinese Organ Clock's 24-hour qi cycle. For practicality and accessibility in economy class seating, we made several point substitutions as detailed in the Application of Chronoacupuncture section above. TCM theory suggests that the entire meridian is active during its peak window, so stimulating accessible points along the same meridian during the correct time window should still engage the meridian's therapeutic potential.</p>
-		
-		<p>These substitutions raise a key question: does the specific point matter, or is meridian stimulation during the correct time the primary driver of circadian realignment? And if a horary point is difficult for a lay-person to stimulate effectively, would it be better if a more accessible point with similar stimulation value replaced it? </p>
-		
-		<h4>Could we test the opposite?</h4>
-		<p>When we think of the implications and applications of this therapeutic approach, an interesting question arises. What would happen if we had a traveler stimulate points that were 12 hours out of phase with the ideal point. Would the jet lag be worse?</p>
-		
-		<p>This study does not attempt to answer any of the supposition questions, but they remain interesting questions for future research where we could compare point types (e.g., horary vs. Source, etc.) and test stimulation parameters to optimize a protocol. By balancing TCM tradition with practical considerations, we may be able to hone an ideal set of points to use for travelers confined to cramped airline seats.</P>
+		<p>This study used meridian-aligned points with substitutions for accessibility (Table 1). Whether the specific point or timing is the primary driver of any benefit remains a question for future research.</p>
 		
         <p>The interdisciplinary framework merging ancient temporal concepts with circadian biology creates a testable hypothesis from traditionally anecdotal practices. If validated, chronoacupuncture could provide a non-invasive, cost-effective intervention accessible to travelers without medical supervision. Negative findings would redirect research toward alternative non-photic zeitgebers and inform the scientific evaluation of other TCM temporal therapies.</p>
 
@@ -2374,6 +2391,10 @@ ${htmlContent.outerHTML}
                 const surveyCountElement = document.getElementById('surveyCount');
                 if (surveyCountElement) {
                     surveyCountElement.textContent = surveyData.length;
+                }
+                const surveyCountDiscussionEl = document.getElementById('surveyCountDiscussion');
+                if (surveyCountDiscussionEl) {
+                    surveyCountDiscussionEl.textContent = surveyData.length;
                 }
                 
                 if (surveyData.length === 0) {
