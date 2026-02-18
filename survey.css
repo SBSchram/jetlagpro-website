@@ -139,7 +139,7 @@ body {
 /* Box styling for symptom groups */
 .symptom-group {
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
 }
@@ -163,6 +163,7 @@ body {
 
 .symptom-group:last-child {
     margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 /* Removed scale container - we only use rating bubbles */
@@ -635,7 +636,7 @@ form {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 0;
+    padding: 12px 0 0 0;
     border-bottom: 1px solid #eee;
     margin-bottom: 0;
 }
@@ -1056,7 +1057,7 @@ form {
 /* Simple Rating Bubble System - Clean and minimal */
 
 .rating-container {
-    margin-bottom: 20px;
+    margin-bottom: 0;
     /* Remove the outer box - no padding, no border, no background */
 }
 
@@ -1166,13 +1167,14 @@ form {
 /* Ensure proper spacing between symptom groups */
 .symptom-group {
     margin-bottom: 30px;
-    padding-bottom: 20px;
+    padding-bottom: 0;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .symptom-group:last-child {
     border-bottom: none;
     margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .symptom-row {
@@ -1300,7 +1302,7 @@ form {
     background: #f0f7ff;
     border-left: 6px solid #3b82f6;
     border-radius: 14px;
-    padding: 32px 28px;
+    padding: 32px 28px 0 28px;
     margin-bottom: 40px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
@@ -1309,7 +1311,7 @@ form {
     background: #f0fdf4;
     border-left: 6px solid #10b981;
     border-radius: 14px;
-    padding: 32px 28px;
+    padding: 32px 28px 0 28px;
     margin-bottom: 40px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.08);
 }
@@ -1331,7 +1333,7 @@ form {
 @media (max-width: 700px) {
     .survey-section-anticipated,
     .survey-section-actual {
-        padding: 20px 16px;
+        padding: 20px 16px 0 16px;
         margin-bottom: 24px;
         border-left-width: 4px;
     }
