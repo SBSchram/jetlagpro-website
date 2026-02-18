@@ -65,31 +65,39 @@
                     <!-- LJLQ-based survey - Single scrollable form -->
                     <div class="survey-content">
                       <form id="travelForm">
-                        <!-- General Anticipated Jet Lag Question -->
-                        <div class="symptom-group">
-                          <h4>Overall anticipated jet lag severity</h4>
-                          <div class="symptom-row">
-                            <div class="rating-container">
-                              <div class="rating-bubbles">
-                                <input type="radio" name="generalAnticipated" value="1" id="general_anticipated_1" class="rating-input">
-                                <label for="general_anticipated_1" class="rating-bubble"></label>
-                                <input type="radio" name="generalAnticipated" value="2" id="general_anticipated_2" class="rating-input">
-                                <label for="general_anticipated_2" class="rating-bubble"></label>
-                                <input type="radio" name="generalAnticipated" value="3" id="general_anticipated_3" class="rating-input">
-                                <label for="general_anticipated_3" class="rating-bubble"></label>
-                                <input type="radio" name="generalAnticipated" value="4" id="general_anticipated_4" class="rating-input">
-                                <label for="general_anticipated_4" class="rating-bubble"></label>
-                                <input type="radio" name="generalAnticipated" value="5" id="general_anticipated_5" class="rating-input">
-                                <label for="general_anticipated_5" class="rating-bubble"></label>
-                              </div>
-                              <div class="rating-labels">
-                                <span>None</span>
-                                <span>Severe</span>
+                        <!-- Box 1: Anticipated Symptoms -->
+                        <div class="survey-section-anticipated">
+                          <h3 class="survey-section-heading">Anticipated Symptoms</h3>
+                          <!-- General Anticipated Jet Lag Question -->
+                          <div class="symptom-group">
+                            <h4>Overall anticipated jet lag severity</h4>
+                            <div class="symptom-row">
+                              <div class="rating-container">
+                                <div class="rating-bubbles">
+                                  <input type="radio" name="generalAnticipated" value="1" id="general_anticipated_1" class="rating-input">
+                                  <label for="general_anticipated_1" class="rating-bubble"></label>
+                                  <input type="radio" name="generalAnticipated" value="2" id="general_anticipated_2" class="rating-input">
+                                  <label for="general_anticipated_2" class="rating-bubble"></label>
+                                  <input type="radio" name="generalAnticipated" value="3" id="general_anticipated_3" class="rating-input">
+                                  <label for="general_anticipated_3" class="rating-bubble"></label>
+                                  <input type="radio" name="generalAnticipated" value="4" id="general_anticipated_4" class="rating-input">
+                                  <label for="general_anticipated_4" class="rating-bubble"></label>
+                                  <input type="radio" name="generalAnticipated" value="5" id="general_anticipated_5" class="rating-input">
+                                  <label for="general_anticipated_5" class="rating-bubble"></label>
+                                </div>
+                                <div class="rating-labels">
+                                  <span>None</span>
+                                  <span>Severe</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="symptom-group">
+
+                        <!-- Box 2: Post-Travel Symptoms -->
+                        <div class="survey-section-actual">
+                          <h3 class="survey-section-heading">Post-Travel Symptoms</h3>
+                          <div class="symptom-group">
                           <h4>Sleep disturbance</h4>
                           <div class="symptom-row">
                             <div class="rating-container">
@@ -231,6 +239,7 @@
                               </div>
                             </div>
                           </div>
+                        </div>
                         </div>
                       </form>
 
