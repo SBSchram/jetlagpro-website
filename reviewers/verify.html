@@ -390,6 +390,17 @@
                 normalized[key] = value;
             }
             
+            // Optional string fields: treat undefined, null, and "" as equivalent (avoids false discrepancies between Firestore "" and GCS missing/undefined)
+            const optionalStringFields = new Set(['originTimezone']);
+            for (const f of optionalStringFields) {
+                if (f in normalized) {
+                    const v = normalized[f];
+                    if (v === undefined || v === null || v === '') normalized[f] = '';
+                } else {
+                    normalized[f] = '';
+                }
+            }
+            
             // Ensure critical fields exist (set to null if missing for consistent comparison)
             if (!('source' in normalized)) {
                 normalized.source = null;

@@ -22,7 +22,7 @@ body {
     min-width: 1200px; /* Ensure desktop minimum width */
 }
 
-/* Mobile Responsive Styles */
+``/* Mobile Responsive Styles */
 @media (max-width: 768px) {
     .container {
         min-width: 100%;
