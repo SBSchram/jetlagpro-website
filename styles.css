@@ -3144,16 +3144,31 @@ body.modal-open {
 
 .points-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin: 40px 0;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
 }
 
 .point-card {
     background: #f8f9fa;
     border-radius: 10px;
-    padding: 20px;
-    border-left: 4px solid #007bff;
+    padding: 12px;
+    border-left: none;
+    text-align: center;
+}
+
+.point-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.point-image {
+    width: 90px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
 .point-header {
@@ -3183,8 +3198,8 @@ body.modal-open {
 
 .point-time {
     color: #666;
-    font-size: 0.9em;
-    margin-top: 5px;
+    font-size: 0.8em;
+    margin-top: 4px;
 }
 
 .point-description {
