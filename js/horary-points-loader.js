@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Clear existing content
         pointsGrid.innerHTML = '';
 
-        // Generate point cards from JSON data
+        // Generate simple, image-focused cards from JSON data
         points.forEach((point) => {
             const pointCard = document.createElement('div');
             pointCard.className = 'point-card';
@@ -76,18 +76,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const formattedTime = formatTime(point.timeDescription);
 
+            // Use point images instead of long text descriptions.
+            // Image filenames follow the pattern assets/images/{imageName}.jpg (e.g., LU-8.jpg).
+            const imageSrc = `assets/images/${point.imageName}.jpg`;
+
             pointCard.innerHTML = `
-                <div class="point-header">
-                    <div class="point-number">${point.id}</div>
-                    <div>
-                        <div class="point-name">${point.name} (${point.chineseName})</div>
-                        <div class="point-time">${formattedTime}</div>
-                    </div>
+                <div class="point-image-wrapper">
+                    <img src="${imageSrc}" alt="${point.name} point image" class="point-image" loading="lazy">
                 </div>
-                <div class="point-description">
-                    <strong>Location:</strong> ${point.pointLocation}<br><br>
-                    <strong>Stimulation:</strong> ${point.stimulationMethod}
-                </div>
+                <div class="point-time">${formattedTime}</div>
             `;
 
             pointsGrid.appendChild(pointCard);
