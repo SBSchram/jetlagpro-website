@@ -59,7 +59,7 @@
           console.log('🔍 PWA: Current URL:', window.location.href);
           console.log('🔍 PWA: Manifest URL:', document.querySelector('link[rel="manifest"]')?.href);
           
-          navigator.serviceWorker.register('./sw.js')
+          navigator.serviceWorker.register('./sw.js?v=20260307')
             .then(registration => {
               console.log('✅ PWA: Service Worker registered successfully');
               console.log('📱 JetLagPro PWA ready for offline use');

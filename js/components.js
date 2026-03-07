@@ -1,5 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
+// Bump DEPLOY_VERSION on each deploy so footer/header cache bust
+const DEPLOY_VERSION = '20260307';
 
 class ComponentLoader {
   constructor() {
@@ -50,7 +52,7 @@ class ComponentLoader {
     const isSubdirectory = window.location.pathname.includes('/blog/');
     const basePath = isSubdirectory ? '../' : '';
     
-    const response = await fetch(`${basePath}${componentName}.html`);
+    const response = await fetch(`${basePath}${componentName}.html?v=${DEPLOY_VERSION}`);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
