@@ -51,6 +51,18 @@ function getValidationStats(trips) {
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
 
+// Point set (cramped vs standard): Cramped points added as default Feb 4, 2026. useCrampedPoints not yet in Firebase.
+// For analysis: trips before this date = standard; on/after this date use field when present, else standard.
+const CRAMPED_POINTS_RELEASE_DATE = new Date('2026-02-04T00:00:00Z');
+
+/** Returns effective useCrampedPoints for a trip (for analysis). Pre-release or missing => false (standard). */
+function getEffectiveUseCrampedPoints(trip) {
+    const tripDate = trip.completionDate || trip.startDate || trip.timestamp;
+    const d = tripDate ? new Date(tripDate) : null;
+    if (!d || d < CRAMPED_POINTS_RELEASE_DATE) return false;
+    return trip.useCrampedPoints === true;
+}
+
 // Developer device IDs - use single source of truth from TripValidator
 // Note: trip-validator.js must be loaded before this file
 const DEVELOPER_DEVICE_IDS = typeof TripValidator !== 'undefined' 
@@ -253,6 +265,7 @@ function convertFirestoreDocument(document) {
             completionMethod: extractValue('completionMethod') || extractValue('tripData', 'completionMethod'),
             arrivalTimeZone: extractValue('arrivalTimeZone') || extractValue('tripData', 'arrivalTimeZone') || extractValue('arrivalTimeZone'),
             originTimezone: extractValue('originTimezone') || extractValue('tripData', 'originTimezone') || extractValue('originTimezone'),
+            useCrampedPoints: extractValue('useCrampedPoints'),
             surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
             created: extractValue('created') || extractValue('tripData', 'created'),
             

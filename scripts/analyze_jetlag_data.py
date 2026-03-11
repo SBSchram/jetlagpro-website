@@ -33,6 +33,12 @@ The following exclusions remove test or developer data:
 - Incomplete surveys: Missing symptom data
 - Invalid HMAC signatures
 
+POINT SET (CRAMPED VS STANDARD):
+The app added a "cramped seating" point set as the default on 2026-02-04. Logging of
+useCrampedPoints to Firebase is not yet deployed. For analysis: treat all trips
+before 2026-02-04 as standard points; for trips on or after that date, use the
+useCrampedPoints field when present, otherwise treat as standard.
+
 REPRODUCIBILITY:
 Matches the live dashboard at:
 https://jetlagpro.com/reviewers/analysis.html

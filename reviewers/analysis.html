@@ -97,6 +97,11 @@
             Analysis build 2025-11-23 03:58 UTC · commit 19d0ac4
         </div>
 
+        <!-- Point set (cramped vs standard) for analysis -->
+        <div class="info-box" style="max-width: 800px; margin: 0 auto 24px auto; padding: 12px 16px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; font-size: 0.9rem;">
+            <strong>Point set in analysis (cramped vs standard)</strong>: The app added a &quot;cramped seating&quot; point set as the default on <strong>Feb 4, 2026</strong>. Logging of <code>useCrampedPoints</code> to Firebase is not yet deployed. For analysis: treat all trips before 2026-02-04 as <strong>standard</strong> points; for trips on or after that date, use the <code>useCrampedPoints</code> field when present, otherwise treat as <strong>standard</strong>.
+        </div>
+
         <div class="data-section" id="trip-stats">
             <h2>Trip Stats</h2>
             <div id="tripStats" class="loading">Loading trip stats...</div>
