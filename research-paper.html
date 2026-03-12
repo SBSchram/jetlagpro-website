@@ -625,6 +625,9 @@
 				
 
         <h2>Methods</h2>
+
+		<p>Participants are self-selected travelers who sought and downloaded the free jet-lag app. It is likely that they are more motivated and health-conscious than the average international traveler. While this introduces a selection bias, it simultaneously enhances validity for the exact population most likely to adopt such an intervention in real life. </p>
+
 		<p>The mobile application provides travelers with timing and instructions to stimulate specific points based on the destination time. Point selection follows the strategic substitutions described in Table 1. Ideally starting at the airport (or anytime thereafter), travelers select the destination. The app immediately identifies the first active point matching the destination time. This process is illustrated below.</p>
 		<div class="methods-screenshots" id="methodsScreenshots">
             <figure class="methods-single-figure">
@@ -646,7 +649,7 @@
 
 <p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our application automatically accounts for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
 
-<p>A final step when the trip ends is the scheduling of a notification for 2 days later to remind the traveler to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
+<p>A final step when the trip ends is the scheduling of a notification for 2 days later (short time frame to minimize recall bias) to remind the traveler to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
 
              <h2 style="text-align: left;">Data Collected</h2>
             
@@ -677,12 +680,14 @@
 
 		
 		<h2>Data Analysis</h2>
-		
+
+		<p>Primary analyses will use multivariable regression with point-adherence level, time zones crossed, and self-reported co-interventions as predictors; secondary dose-response and subgroup models will follow. </p>
+
         
         <h4>Primary Research Question</h4>
         <p>Does chronoacupuncture as provided by the app reduce jet lag symptoms compared to no intervention?</p>
 		
-		<p>We use a within-subject design where each participant serves as their own control. Participants complete surveys that include two separate elements: (1) anticipated symptom severity based on prior travel experience, and (2) post-travel symptom severity as reported sometime after completing their journey.</p>
+		<p>This observational study lacks a randomized true control arm, as ethical and practical constraints of anonymous volunteer participation preclude randomization or a no-app sham condition. This requires us to use a within-subject design where each participant serves as their own control. Participants complete surveys that include two separate elements: (1) anticipated symptom severity based on prior travel experience, and (2) post-travel symptom severity as reported sometime after completing their journey.</p>
 
 	
         <h4>Baseline Data for Time Zones Crossed</h4>
@@ -767,9 +772,18 @@
         <p>The proposed mechanism for chronoacupuncture involves stimulation of acupressure points triggering afferent nerve pathways that may influence the hypothalamic-pituitary-adrenal axis and autonomic nervous system. This peripheral stimulation could modulate melatonin secretion patterns, cortisol rhythms, and peripheral clock gene expression, effectively serving as a non-photic zeitgeber to accelerate circadian realignment.</p>
 		
 		<p>This paper presents a prospective observational cohort study of chronoacupuncture for jet lag in <span id="surveyCountDiscussion">[loading...]</span> long-distance travelers. Participants used the JetLagPro mobile app to self-administer acupressure at points aligned with destination time zones and completed a jet lag assessment after travel.</p>
-		<p>The design prioritized real-world conditions over a controlled lab setting. Statistical analysis of the dataset provides evidence on whether chronoacupuncture is an effective non-pharmacological option for circadian adjustment during travel.</p>
 
-        <p>Traditional clinical trials face significant challenges in jet lag research due to the logistical complexity of controlling travel variables, traveler demographics, and environmental factors. Our app's naturalistic data collection approach using a well defined survey approach circumvents these limitations while capturing real-world efficacy across diverse travel conditions. However, this methodology introduces potential confounding variables including traveler compliance, placebo effects inherent in tactile interventions, and subjective symptom reporting.</p>
+     
+<h4>Confounding variables</h4>
+
+		<p>Traditional clinical trials face significant challenges in jet lag research due to the logistical complexity of controlling travel variables, traveler demographics, and environmental factors. Our app's naturalistic data collection approach using automated, objective logging of point-stimulation timestamps and a streamlined survey based on the validated core domains of the Liverpool Jet Lag Questionnaire circumvents many of these limitations while capturing real-world efficacy across diverse travel conditions and with large sample sizes. This design prioritizes ecological validity and scalability over experimental control reflecting how travelers actually use (or combine) interventions in practice.</p>
+
+		<p>We recognize that this methodology introduces potential confounding variables, including variable traveler compliance with the protocol, possible placebo effects inherent in any tactile or app-based intervention, subjective symptom reporting with a short (2-day) recall window, and the unrestricted use of concurrent strategies commonly adopted by international travelers (e.g., melatonin supplementation, strategic bright-light exposure, caffeine or meal timing, sleep hygiene adjustments). We do not collect any data on these co-interventions as the primary aim is to evaluate the app's chronoacupuncture protocol in the context of unrestricted real-world behavior rather than isolate its effect from all other influences. This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible, yet large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation, dose-response exploration (via objectively logged point usage), and guiding future refinements.</p>
+
+
+
+
+
 		
 		<p>This study used meridian-aligned points with substitutions for accessibility (Table 1). Whether the specific point or timing is the primary driver of any benefit remains a question for future research.</p>
 		
