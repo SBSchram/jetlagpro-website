@@ -551,8 +551,80 @@
 		<p>In the chronoacupuncture method described here, stimulation is timed to the peak activity period of each meridian, shifted to the local time at the destination. This sequential approach is intended to provide a non-photic cue that may help synchronize the body's internal clocks with the new time zone.</p>
 
 		<div style="text-align: center; margin: 30px auto; max-width: 800px;">
-			<img src="assets/images/phase_shift_schematic.png" alt="Conceptual model of chronoacupuncture as a circadian timing cue" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 2.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After rapid travel across time zones, the endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle. The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time. These timed somatosensory cues may act as non-photic zeitgebers that facilitate circadian realignment.</p>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 318" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" aria-label="Conceptual model of chronoacupuncture as a circadian timing cue">
+				<defs>
+					<linearGradient id="windowFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="steelblue" stop-opacity="0.18"/><stop offset="1" stop-color="steelblue" stop-opacity="0.09"/></linearGradient>
+				</defs>
+				<!-- Title: two lines to avoid cropping -->
+				<text x="200" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#222">Circadian misalignment after eastward travel (+6 h)</text>
+				<text x="200" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#222">and scheduled acupressure cues</text>
+				<!-- Day/night shading: night 0–6, day 6–18, night 18–24 (biologically correct 24 h cycle) -->
+				<rect x="40" y="45" width="80" height="155" fill="#e8ecf0" stroke="none"/>
+				<rect x="120" y="45" width="213.33" height="155" fill="#f8fafc" stroke="none"/>
+				<rect x="333.33" y="45" width="26.67" height="155" fill="#e8ecf0" stroke="none"/>
+				<text x="80" y="52" text-anchor="middle" font-size="7" fill="#777" font-weight="500">Night</text>
+				<text x="226.67" y="52" text-anchor="middle" font-size="7" fill="#777" font-weight="500">Day</text>
+				<text x="347" y="52" text-anchor="middle" font-size="7" fill="#777" font-weight="500">Night</text>
+				<!-- Y axis: phase position (not amplitude) -->
+				<line x1="40" y1="45" x2="40" y2="200" stroke="#333" stroke-width="0.8"/>
+				<line x1="40" y1="122" x2="360" y2="122" stroke="#ccc" stroke-width="0.5" stroke-dasharray="2 2"/>
+				<text x="32" y="50" text-anchor="end" font-size="9" fill="#555">1</text>
+				<text x="32" y="125" text-anchor="end" font-size="9" fill="#555">0</text>
+				<text x="32" y="200" text-anchor="end" font-size="9" fill="#555">−1</text>
+				<text x="14" y="118" text-anchor="middle" font-size="9" fill="#333" transform="rotate(-90, 14, 118)">Relative circadian phase position</text>
+				<!-- X axis -->
+				<line x1="40" y1="200" x2="360" y2="200" stroke="#333" stroke-width="0.8"/>
+				<text x="40" y="209" text-anchor="middle" font-size="9" fill="#444">0</text>
+				<text x="120" y="209" text-anchor="middle" font-size="9" fill="#444">6</text>
+				<text x="200" y="209" text-anchor="middle" font-size="9" fill="#444">12</text>
+				<text x="280" y="209" text-anchor="middle" font-size="9" fill="#444">18</text>
+				<text x="360" y="209" text-anchor="middle" font-size="9" fill="#444">24</text>
+				<!-- Acupressure windows: full TCM 12-meridian clock, 2 h each (0–2, 2–4, …, 22–24) -->
+				<rect x="40" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="66.67" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="93.33" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="120" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="146.67" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="173.33" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="200" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="226.67" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="253.33" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="280" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="306.67" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<rect x="333.33" y="45" width="26.67" height="155" fill="url(#windowFill)"/>
+				<!-- Origin circadian phase (solid): y = 125 - 75*phase, full range 50–200; smooth 13-point sine -->
+				<path d="M 40 50 L 66.7 60 L 93.3 87.5 L 120 125 L 146.7 162.5 L 173.3 190 L 200 200 L 226.7 190 L 253.3 162.5 L 280 125 L 306.7 87.5 L 333.3 60 L 360 50" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+				<!-- Destination (target) phase (dashed): same scaling 50–200; smooth sine -->
+				<path d="M 40 125 L 66.7 162.5 L 93.3 190 L 120 200 L 146.7 190 L 173.3 162.5 L 200 125 L 226.7 87.5 L 253.3 60 L 280 50 L 306.7 60 L 333.3 87.5 L 360 125" fill="none" stroke="#555" stroke-width="1.4" stroke-dasharray="5 4" stroke-linecap="round" stroke-linejoin="round"/>
+				<!-- Row 2: meridian labels (clear gap below hour numbers so 6/LI and 18/HT don’t stack) -->
+				<line x1="40" y1="42" x2="120" y2="42" stroke="#444" stroke-width="0.8"/>
+				<polygon points="42,42 40,40 40,44" fill="#444"/>
+				<polygon points="118,42 120,40 120,44" fill="#444"/>
+				<text x="80" y="37" text-anchor="middle" font-size="8" fill="#444">← 6 h phase offset →</text>
+				<text x="53.33" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">LIV</text>
+				<text x="80" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">LU</text>
+				<text x="106.67" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">LI</text>
+				<text x="133.33" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">ST</text>
+				<text x="160" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">SP</text>
+				<text x="186.67" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">HT</text>
+				<text x="213.33" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">SI</text>
+				<text x="240" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">BL</text>
+				<text x="266.67" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">KI</text>
+				<text x="293.33" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">PC</text>
+				<text x="320" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">SJ</text>
+				<text x="346.67" y="218" text-anchor="middle" font-size="7" font-weight="bold" fill="#333">GB</text>
+				<text x="200" y="230" text-anchor="middle" font-size="6.5" fill="#666">Liver · Lung · Large intestine · Stomach · Spleen · Heart · Small intestine · Bladder · Kidney · Pericardium · San Jiao · Gallbladder</text>
+				<text x="200" y="242" text-anchor="middle" font-size="8" fill="#555">Meridian activity windows (TCM)</text>
+				<text x="200" y="256" text-anchor="middle" font-size="8" font-style="italic" fill="#555">Scheduled acupressure windows (non-photic cues)</text>
+				<text x="200" y="278" text-anchor="middle" font-size="10" fill="#333">Destination local time (hours)</text>
+				<!-- Legend: solid after Origin phase, dashes before Destination phase, all on same line -->
+				<rect x="83" y="282" width="238" height="20" fill="#fafafa" stroke="#ddd" stroke-width="0.5" rx="2"/>
+				<text x="120" y="296" text-anchor="middle" font-size="8" fill="#333">Origin phase</text>
+				<line x1="150" y1="293" x2="170" y2="293" stroke="#000" stroke-width="1.5"/>
+				<text x="248" y="296" text-anchor="middle" font-size="8" fill="#555">Destination phase</text>
+				<line x1="285" y1="293" x2="305" y2="293" stroke="#555" stroke-width="1.2" stroke-dasharray="4 3"/>
+			</svg>
+			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 2.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After eastward travel across time zones, endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle (solid vs dashed curves). The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time (blue bands). These repeated somatosensory cues may function as non-photic zeitgebers that facilitate circadian realignment.</p>
 		</div>
 
 		<p>Classical protocols emphasize the use of horary points. However, early testers traveling in economy-class seating reported that some foot and ankle points were difficult to access because of footwear or limited space. To improve practicality, the protocol was modified by substituting more accessible points along the same active meridian. The rationale is straightforward: stimulating a more accessible point on the active meridian during its designated window is preferable to omitting the meridian entirely.</p>
