@@ -550,6 +550,11 @@
     
 		<p>In the chronoacupuncture method described here, stimulation is timed to the peak activity period of each meridian, shifted to the local time at the destination. This sequential approach is intended to provide a non-photic cue that may help synchronize the body's internal clocks with the new time zone.</p>
 
+		<div style="text-align: center; margin: 30px auto; max-width: 800px;">
+			<img src="assets/images/phase_shift_schematic.png" alt="Conceptual model of chronoacupuncture as a circadian timing cue" style="max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 2.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After rapid travel across time zones, the endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle. The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time. These timed somatosensory cues may act as non-photic zeitgebers that facilitate circadian realignment.</p>
+		</div>
+
 		<p>Classical protocols emphasize the use of horary points. However, early testers traveling in economy-class seating reported that some foot and ankle points were difficult to access because of footwear or limited space. To improve practicality, the protocol was modified by substituting more accessible points along the same active meridian. The rationale is straightforward: stimulating a more accessible point on the active meridian during its designated window is preferable to omitting the meridian entirely.</p>
 
 		<p>This pragmatic modification is consistent with broader TCM channel theory, which posits that stimulation anywhere along a meridian during its horary window can influence that channel and its associated organ system.</p>
@@ -739,6 +744,8 @@
 		
 	<h2>Anticipated Data Analysis</h2>
 
+	<p>Covariate selection was guided by a directed acyclic graph (DAG) representing plausible causal relationships between travel characteristics, protocol adherence, and jet-lag outcomes (see project repository for reproducible figure code). Based on this framework, models adjust for the number of time zones crossed and travel direction (eastward vs westward), which may influence both adherence and symptom severity. We do not adjust for sleep timing or individual symptom domains, as these are likely on the causal path from adherence to overall severity (mediators) and adjusting for them would obscure the total effect of the protocol. Other potential confounders (e.g., trip duration, age, sex) are not included in the primary analysis because they were not pre-specified or are not collected in the current dataset.</p>
+
 	<p>We summarized trip characteristics across adherence groups using medians with interquartile ranges for continuous variables and proportions for categorical variables.</p>
 
 	<p>For the primary analysis, we fitted linear regression models with robust standard errors to estimate the association between adherence category and post-travel composite jet-lag severity. Minimal adherence (0–2 points) served as the minimal or no intervention group. Models are adjusted for the number of time zones crossed (continuous) and travel direction (eastward vs westward).</p>
@@ -751,6 +758,8 @@
 	<p>For secondary outcomes, including individual symptom domains and anticipated versus observed symptom differences, we controlled the false discovery rate at 5% using the Benjamini–Hochberg procedure. All statistical tests were two-sided with α = 0.05. Effect sizes (e.g., Cohen’s d) are reported alongside regression estimates to facilitate clinical interpretation.</p>
 
 	<p>Sample size and power. Assuming a medium effect size (Cohen’s d ≈ 0.5) for differences in composite severity between high and minimal adherence groups within a given time-zone stratum, a two-sided α of 0.05 and 80% power require approximately 128 participants per group. To allow for multiple adherence categories and covariate adjustment, we targeted at least 300–400 complete trips per major subgroup (for example, high versus minimal adherence within the 6–8 and ≥9 time-zone bands).</p>
+
+	<p>Analyses were conducted in R. The analysis script and an export pipeline to produce the trip-level CSV from Firestore are available on the project website (jetlagpro.com) for independent reproduction; the same pipeline is used to generate regression tables, effect sizes, and the severity-by–time-zone-and-adherence chart.</p>
 
         <h4>Live Dose-Response Visualization</h4>
         
@@ -804,7 +813,7 @@
 
 		<p>We recognize that this methodology introduces potential confounding variables, including variable traveler compliance with the protocol, possible placebo effects inherent in any tactile or app-based intervention, subjective symptom reporting with a relatively short (2-day) recall window, and the unrestricted use of concurrent strategies commonly adopted by international travelers (e.g., melatonin supplementation, strategic bright-light exposure, caffeine, meal timing or sleep hygiene adjustments). We do not collect any data on these co-interventions as the primary aim is to evaluate the app's chronoacupuncture protocol in the context of unrestricted real-world behavior rather than isolate its effect from all other influences. Participants who complete more points may differ systematically in health behaviors and use of other interventions (e.g., melatonin, light), so we cannot separate the protocol effect from these factors (confounding by indication). Without sham acupressure or blinding, we cannot distinguish specific effects of meridian timing from placebo or expectation. Five classical horary points were substituted for accessibility (Table 1), so the protocol differs from horary-only protocols; this may affect effect size if point-specific timing matters.</p>
 
-	<p>This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible, yet large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation and future dose-response exploration.</p>
+	<p>This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible, yet large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation and future dose-response exploration. In this design, travel direction and number of time zones crossed are largely determined by the trip rather than by symptom expectations; participants do not choose them based on anticipated jet lag, which limits confounding from these covariates compared with many observational settings.</p>
 		
 	<p>This approach may influence CDC Yellow Book guidance on jet lag which emphasizes timed light exposure, melatonin, and behavioral adjustments, with no endorsement of acupressure due to limited high-quality evidence. We address that evidence gap by providing the first prospective, large-scale dataset on a structured chronoacupuncture protocol in real-world travelers.</p>
 		

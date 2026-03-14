@@ -50,6 +50,10 @@ if (!file.exists(csv_path)) {
        "\nUsage: Rscript analyze_jetlag_r.R [path/to/export.csv]")
 }
 
+# Figures go into figures/ (create if missing)
+fig_dir <- "figures"
+if (!dir.exists(fig_dir)) dir.create(fig_dir, recursive = TRUE)
+
 # ---- load and clean ----
 df <- read_csv(csv_path, show_col_types = FALSE)
 
@@ -117,8 +121,8 @@ if (nrow(tbl_adherence) > 0) {
       title = "Adherence effects on jet lag severity (robust SE)"
     ) +
     theme_minimal()
-  ggsave("forest_plot_adherence.png", p_forest, width = 6, height = 4, dpi = 150)
-  message("Saved forest_plot_adherence.png")
+  ggsave(file.path(fig_dir, "forest_plot_adherence.png"), p_forest, width = 6, height = 4, dpi = 150)
+  message("Saved ", file.path(fig_dir, "forest_plot_adherence.png"))
 }
 
 # ---- dose–response (continuous stimulated_points) ----
@@ -207,7 +211,7 @@ p_chart <- ggplot(chart_data,
     title = "Jet lag severity by time zone band and acupressure adherence"
   ) +
   theme_minimal()
-ggsave("severity_by_tz_adherence.png", p_chart, width = 7, height = 5, dpi = 150)
-message("Saved severity_by_tz_adherence.png")
+ggsave(file.path(fig_dir, "severity_by_tz_adherence.png"), p_chart, width = 7, height = 5, dpi = 150)
+message("Saved ", file.path(fig_dir, "severity_by_tz_adherence.png"))
 
 message("\nDone. Do not report inferential conclusions until pre-specified sample size is reached.")
