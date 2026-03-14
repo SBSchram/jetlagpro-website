@@ -6,7 +6,7 @@
     <title>JetLagPro Data Analysis</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="JetLagPro Research Data Analysis">
-    <script src="../load-common-head.js?v=20251211130933"></script>
+    <script src="../load-common-head.js?v=20260312140000"></script>
     
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,13 +16,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
     <!-- External CSS and JavaScript files -->
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20251211130933">
-    <link rel="stylesheet" href="assets/css/analytics.css?v=20251211130933">
-    <script src="../assets/js/firebase-service.js?v=20251211130933"></script>
-    <script src="../assets/js/trip-validator.js?v=20251211130933"></script>
-    <script src="assets/js/analytics.js?v=20251211130933"></script>
-    <script src="assets/js/charts.js?v=20251211130933"></script>
-    <script src="assets/js/copy-code.js?v=20251211130933"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20260312140000">
+    <link rel="stylesheet" href="assets/css/analytics.css?v=20260312140000">
+    <script src="../assets/js/firebase-service.js?v=20260312140000"></script>
+    <script src="../assets/js/trip-validator.js?v=20260312140000"></script>
+    <script src="assets/js/analytics.js?v=20260312140000"></script>
+    <script src="assets/js/charts.js?v=20260312140000"></script>
+    <script src="assets/js/copy-code.js?v=20260312140000"></script>
     
     <script>
         // Inline JavaScript removed - now using external files:
@@ -75,7 +75,7 @@
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20251211130933"></script>
+        <script src="load-nav.js?v=20260312140000"></script>
 
         <!-- Analysis Page Sub-Menu -->
         <nav class="analysis-subnav">
@@ -162,6 +162,48 @@
                         </button>
                         <code>python analyze_jetlag_data.py --trips trips.json --output analysis_report.txt</code>
                     </div>
+
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 40px 0 10px 0;">Paper-aligned R analysis (regression, dose–response, FDR)</h3>
+                    <p style="font-size: 0.95rem; color: #4b5563; margin: 0 0 15px 0;">The same analyses described in the <a href="../research-paper.html">research paper</a> (linear regression, robust SE, ordinal sensitivity, Cohen’s d, BH FDR) can be run in R. First export validated trips to CSV, then run the R script. See <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/README_ANALYSIS_R.md" target="_blank">README_ANALYSIS_R.md</a> for details.</p>
+                    <h4 style="font-size: 1rem; font-weight: 600; color: #374151; margin: 20px 0 8px 0;">4a. Export trips to CSV</h4>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o export_trips_for_r.py https://jetlagpro.com/scripts/export_trips_for_r.py</code>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>python export_trips_for_r.py --trips trips.json --output firebase_export.csv</code>
+                    </div>
+                    <h4 style="font-size: 1rem; font-weight: 600; color: #374151; margin: 20px 0 8px 0;">4b. Run R script</h4>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>curl -o analyze_jetlag_r.R https://jetlagpro.com/scripts/analyze_jetlag_r.R</code>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                        </button>
+                        <code>Rscript analyze_jetlag_r.R firebase_export.csv</code>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #6b7280; margin: 12px 0 0 0;">Scripts: <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/export_trips_for_r.py" target="_blank">export_trips_for_r.py</a>, <a href="https://github.com/SBSchram/jetlagpro-website/blob/main/scripts/analyze_jetlag_r.R" target="_blank">analyze_jetlag_r.R</a></p>
                 </div>
             </div>
         </div>
