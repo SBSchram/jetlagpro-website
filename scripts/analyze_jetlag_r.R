@@ -4,35 +4,32 @@
 # Runs the core analyses described in research-paper.html:
 #   - Primary linear regression (adherence + time_zones + direction)
 #   - Dose–response (stimulated_points continuous)
-#   - Subgroup by direction
+#   - Subgroup by direction (east vs west)
 #   - Ordinal logistic sensitivity
 #   - Cohen's d (high vs minimal adherence)
 #   - Benjamini–Hochberg FDR for secondary outcomes
+#   - Regression table (gt) and forest plot
+#   - Chart: mean severity by time-zone band and adherence (website-style)
 #
 # INPUT: CSV with one row per trip. Required columns:
-#   - jetlag_score    : composite severity (1–5), mean of 5 symptom domains
+#   - jetlag_score     : composite severity (1–5), mean of symptom domains
 #   - stimulated_points: number of points marked completed (0–12)
-#   - time_zones      : number of time zones crossed
-#   - direction       : "east" or "west"
+#   - time_zones       : number of time zones crossed
+#   - direction        : "east" or "west"
 # Optional for secondary/FDR: sleep_post, fatigue_post, concentration_post,
 #   irritability_post, motivation_post, gi_post (1–5 each).
 # Optional for sensitivity: device_id (for first-time-user subset).
 #
 # HOW TO GET THE CSV:
-#   1. Download Firestore: python download_firestore.py tripCompletions trips.json
-#   2. Run Python analyzer to get validated trips, then export to CSV with the
-#      column names above (or add an export step to analyze_jetlag_data.py).
-#   Alternatively, export from your Firebase/analytics pipeline and rename
-#   columns to match (timezonesCount -> time_zones, travelDirection -> direction,
-#   pointsCompleted -> stimulated_points; compute jetlag_score as mean of
-#   sleepPost, fatiguePost, concentrationPost, irritabilityPost, motivationPost, giPost).
+#   python download_firestore.py tripCompletions trips.json
+#   python scripts/export_trips_for_r.py --trips trips.json --output firebase_export.csv
 #
 # USAGE:
 #   Rscript scripts/analyze_jetlag_r.R [path/to/firebase_export.csv]
 #   Default path if omitted: firebase_export.csv (in current directory).
 #
-# REQUIREMENTS: tidyverse, sandwich, lmtest, MASS, effectsize
-#   install.packages(c("tidyverse","sandwich","lmtest","MASS","effectsize"))
+# REQUIREMENTS: tidyverse, sandwich, lmtest, MASS, effectsize, broom, gt
+#   install.packages(c("tidyverse","sandwich","lmtest","MASS","effectsize","broom","gt"))
 # =============================================================================
 
 # ---- libraries ----
@@ -41,6 +38,8 @@ library(sandwich)
 library(lmtest)
 library(MASS)
 library(effectsize)
+library(broom)
+library(gt)
 
 # ---- arguments ----
 args <- commandArgs(trailingOnly = TRUE)
@@ -78,8 +77,49 @@ if (n < 30) {
 
 # ---- primary linear regression (paper: time_zones + direction only) ----
 model <- lm(jetlag_score ~ adherence_cat + time_zones + direction, data = df)
+robust <- coeftest(model, vcov = vcovHC(model, type = "HC1"))
 message("\n---- Primary model (robust SE) ----")
-print(coeftest(model, vcov = vcovHC(model, type = "HC1")))
+print(robust)
+
+# Build table for gt and forest plot (robust SE and CIs)
+tbl <- tibble(
+  term = rownames(robust),
+  estimate = robust[, "Estimate"],
+  std.error = robust[, "Std. Error"],
+  conf.low = estimate - 1.96 * std.error,
+  conf.high = estimate + 1.96 * std.error,
+  p.value = robust[, "Pr(>|t|)"]
+)
+
+# ---- regression table (gt) ----
+message("\n---- Regression table (robust SE) ----")
+print(tbl)
+tryCatch({
+  tbl %>%
+    gt() %>%
+    tab_header(title = "Regression results: adherence and jet lag severity") %>%
+    fmt_number(columns = c(estimate, std.error, conf.low, conf.high, p.value), decimals = 4) %>%
+    print()
+}, error = function(e) message("(gt table skipped in this environment: ", e$message, ")"))
+
+# ---- forest plot: adherence effects ----
+tbl_adherence <- tbl %>% filter(str_detect(term, "adherence_cat"))
+if (nrow(tbl_adherence) > 0) {
+  message("\n---- Forest plot: adherence effects ----")
+  p_forest <- tbl_adherence %>%
+    ggplot(aes(x = estimate, y = term)) +
+    geom_point(size = 3) +
+    geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
+    geom_vline(xintercept = 0, linetype = "dashed") +
+    labs(
+      x = "Effect on jet lag severity",
+      y = "Adherence category",
+      title = "Adherence effects on jet lag severity (robust SE)"
+    ) +
+    theme_minimal()
+  ggsave("forest_plot_adherence.png", p_forest, width = 6, height = 4, dpi = 150)
+  message("Saved forest_plot_adherence.png")
+}
 
 # ---- dose–response (continuous stimulated_points) ----
 dose_model <- lm(jetlag_score ~ stimulated_points + time_zones + direction, data = df)
@@ -127,7 +167,6 @@ if (length(secondary_vars) > 0) {
   pvals <- setNames(rep(NA_real_, length(secondary_vars)), secondary_vars)
   for (v in secondary_vars) {
     m <- lm(as.formula(paste0(v, " ~ adherence_cat + time_zones + direction")), data = df)
-    # p for adherence_cat 3-5 (first non-reference coefficient) or use joint test
     cf <- summary(m)$coefficients
     idx <- grep("adherence_cat", rownames(cf))
     if (length(idx) >= 1) pvals[v] <- min(cf[idx, "Pr(>|t|)"])
@@ -144,5 +183,31 @@ if (length(secondary_vars) > 0) {
 } else {
   message("\n---- Secondary outcomes: no optional symptom columns found; skip FDR ----")
 }
+
+# ---- figure: severity by time-zone band and adherence (website-style) ----
+chart_data <- df %>%
+  group_by(tz_band, adherence_cat) %>%
+  summarise(
+    mean_score = mean(jetlag_score),
+    se = sd(jetlag_score) / sqrt(n()),
+    n = n(),
+    .groups = "drop"
+  )
+
+p_chart <- ggplot(chart_data,
+                  aes(x = tz_band, y = mean_score, color = adherence_cat, group = adherence_cat)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(aes(ymin = mean_score - 1.96 * se, ymax = mean_score + 1.96 * se),
+                width = 0.1) +
+  labs(
+    x = "Time zones crossed",
+    y = "Mean jet lag severity",
+    color = "Stimulated points",
+    title = "Jet lag severity by time zone band and acupressure adherence"
+  ) +
+  theme_minimal()
+ggsave("severity_by_tz_adherence.png", p_chart, width = 7, height = 5, dpi = 150)
+message("Saved severity_by_tz_adherence.png")
 
 message("\nDone. Do not report inferential conclusions until pre-specified sample size is reached.")

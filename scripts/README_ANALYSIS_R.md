@@ -24,7 +24,7 @@ Run the same analyses described in the research paper as data come in. Use for *
 Install once:
 
 ```r
-install.packages(c("tidyverse", "sandwich", "lmtest", "MASS", "effectsize"))
+install.packages(c("tidyverse", "sandwich", "lmtest", "MASS", "effectsize", "broom", "gt"))
 ```
 
 ## What the R script does
@@ -36,6 +36,7 @@ install.packages(c("tidyverse", "sandwich", "lmtest", "MASS", "effectsize"))
 - **Sensitivity:** Ordinal logistic regression for composite score (when feasible).
 - **Effect size:** Cohen’s d for high (9–12) vs minimal (0–2) adherence.
 - **Secondary outcomes:** Optional symptom domains with Benjamini–Hochberg FDR at 5%.
+- **Outputs:** Regression table (gt), forest plot of adherence effects, and website-style chart (mean severity by time-zone band and adherence). Plots are saved as `forest_plot_adherence.png` and `severity_by_tz_adherence.png` in the current directory.
 
 Covariates match the paper: **time_zones** and **direction** only (no age, sex, or trip duration).
 
