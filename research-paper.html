@@ -6,10 +6,6 @@
     <title>Chronoacupuncture Research Paper - JetLagPro</title>
     <script src="load-common-head.js?v=20251217180000"></script>
     <link rel="stylesheet" href="styles.css?v=20251217180000">
-    <!-- Add jsPDF library for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'"></script>
-    <!-- Add html2canvas for capturing content -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Chart.js for live data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -19,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <!-- Trip validation service -->
     <script src="assets/js/trip-validator.js"></script>
-    <!-- Note: Word export uses HTML format with embedded images for full compatibility -->
+    <!-- PDF/Word exports: run npm run export-paper to regenerate assets/downloads/ -->
     <style>
         .research-paper {
             max-width: 800px;
@@ -498,9 +494,7 @@
         <div class="export-dropdown">
             <button class="export-button">Export Paper</button>
             <div class="export-content">
-                <a href="#" onclick="exportToPDF()">PDF</a>
-                <a href="#" onclick="exportToWord()">Word</a>
-                <a href="#" onclick="exportToHTML()">HTML</a>
+                <a href="assets/downloads/JetLagPro_Research_Paper.pdf" download="JetLagPro_Research_Paper.pdf">PDF</a>
             </div>
         </div>
     </div>
@@ -514,25 +508,22 @@
         
         <h2>Abstract</h2>
 
-        <p><strong>Background:</strong> Jet lag is common among long‑haul travelers, and existing strategies (light exposure, melatonin, behavioral scheduling) show inconsistent real‑world effectiveness. Chronoacupuncture, which times acupressure along specific meridians according to the destination time zone, has long been proposed but not quantitatively evaluated in travelers.</p>
+        <p><strong>Background:</strong> Jet lag is common among long-haul travelers, and existing strategies (light exposure, melatonin, behavioral scheduling) show inconsistent real-world effectiveness. Chronoacupuncture, which times acupressure along specific meridians according to the destination time zone, has long been proposed but not quantitatively evaluated in travelers.</p>
         
-        <p><strong>Objective:</strong> To assess whether adherence to a structured chronoacupressure protocol delivered via a mobile app is associated with lower jet lag symptom severity across typical long‑haul travel patterns.</p>
+        <p><strong>Objective:</strong> To assess whether adherence to a structured chronoacupressure protocol delivered via a mobile app is associated with lower jet lag symptom severity across typical long-haul travel patterns.</p>
         
-
-        <p><strong>Methods:</strong> In a prospective, app‑based observational cohort, long‑haul travelers used JetLagPro to receive time‑locked prompts for 12 acupressure points aligned with the destination time zone. After travel, participants completed a jet lag survey based on the core domains of the Liverpool Jet Lag Questionnaire. We compared composite symptom scores across stimulation levels and time zones crossed. </p>
+        <p><strong>Methods:</strong> In a prospective, app-based observational cohort, long-haul travelers used JetLagPro to receive timed prompts for 12 acupressure points aligned with the destination time zone. After travel, participants completed a jet lag survey based on the core domains of the Liverpool Jet Lag Questionnaire. We compared composite symptom scores across stimulation levels and time zones crossed. </p>
         
+        <p><strong>Results:</strong> <i>PLACEHOLDER TEXT: Among [N] eligible trips (median [X] time zones, interquartile range [Y–Z]), higher stimulation was significantly associated with lower composite jet lag severity (p < 0.001 for trend). Compared with minimal stimulation (0–2 points), high stimulation (9–12 points) was associated with a [Δ]-point lower composite score (95% confidence interval [a–b]), corresponding to an effect size of approximately d ≈ [0.4–0.6]. Similar patterns were observed across eastward and westward travel and across 6–8 and ≥9 time-zone crossings.</i></p>
 
-        <p><strong>Results:</strong> <i>PLACEHOLDER TEXT: Among [N] eligible trips (median [X] time zones, interquartile range [Y–Z]), higher stimulation was significantly associated with lower composite jet lag severity (p < 0.001 for trend). Compared with minimal stimulation (0–2 points), high stimulation (9–12 points) was associated with a [Δ]‑point lower composite score (95% confidence interval [a–b]), corresponding to an effect size of approximately d ≈ [0.4–0.6]. Similar patterns were observed across eastward and westward travel and across 6–8 and ≥9 time‑zone crossings.</i></p>
-
-<p><strong>Conclusions:</strong> <i>PLACEHOLDER TEXT: In real‑world long‑haul travel, higher compliance to a chronoacupressure protocol was consistently associated with meaningfully lower jet lag symptom scores and attenuated symptom escalation with increasing time zones crossed. While causal inference is limited by the non-randomized, self‑selected design, the graded dose–response and robustness across sensitivity analyses support chronoacupressure as a promising, low‑risk non-photic adjunct for jet lag management.</i></p>
+		<p><strong>Conclusions:</strong> <i>PLACEHOLDER TEXT: In real-world long-haul travel, higher compliance to a chronoacupressure protocol was consistently associated with meaningfully lower jet lag symptom scores and attenuated symptom escalation with increasing time zones crossed. While causal inference is limited by the non-randomized, self-selected design, the graded dose–response and robustness across sensitivity analyses support chronoacupressure as a promising, low-risk non-photic adjunct for jet lag management.</i></p>
         
         <p><strong>Significance:</strong> This study is the first systematic investigation of chronoacupuncture for jet lag.</p>
 		
         <p><strong>Keywords:</strong> chronoacupuncture, circadian rhythm, jet lag, horary points, Traditional Chinese Medicine, acupressure</p>
 
-        <h2>Introduction</h2>
-		
-		Jet lag is a problem for many international travelers. Traditional interventions like sunrise viewing, strategic melatonin use, sleep and meal scheduling show variable efficacy.<sup>1</sup> Acupuncturists have proposed an alternative method that has not been tested until now. </p>
+		<h2>Introduction</h2>
+		<p>Jet lag is a problem for many international travelers. Traditional interventions like sunrise viewing, strategic melatonin use, sleep and meal scheduling show variable efficacy.<sup>1</sup> Acupuncturists have proposed an alternative method that has not been tested until now.</p>
 
         <h2>Circadian Biology: Mechanisms of Internal Clocks</h2>
         <p>The scientific literature describes how circadian rhythms synchronize physiological processes to a 24-26 hour cycle through the suprachiasmatic nucleus (SCN), a cluster of neurons entrained by light.<sup>2,3</sup> The SCN coordinates peripheral clocks in organs like the liver and heart, which regulate tissue-specific functions including vascular function and blood pressure regulation.<sup>4,5</sup> Core clock genes (Clock, Bmal1, Period, Cryptochrome) drive a molecular feedback loop, producing rhythmic gene expression.<sup>6</sup> Synchronization is maintained by Zeitgebers, external signals such as light, temperature, activity, and meals.<sup>7</sup></p>
@@ -540,7 +531,6 @@
         <p>Jet lag occurs when rapid time zone changes desynchronize these internal clocks.</p>
 
         <h2>Acupuncture Theory: Chronoacupuncture for Travelers</h2>   
-
 
 		<p>More than 40 years ago, Khoe<sup>8</sup> and later Amaro<sup>9</sup> proposed that targeted stimulation of acupuncture points during travel could help minimize jet lag by aligning the body with the destination time zone. Their approach drew on Traditional Chinese Medicine (TCM) principles documented as early as the Han Dynasty<sup>10</sup> (200 BCE–200 CE). These texts describe a 24-hour cycle in which specific organs and their associated energy pathways (meridians) show heightened activity during recurring two-hour intervals (see Table 1). Khoe and Amaro focused on a subset of points known as horary points, which correspond to each meridian’s elemental properties and are considered most influential during its peak activity window (Figure 1).</p>
 
@@ -627,6 +617,7 @@
 			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 2.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After eastward travel across time zones, endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle (solid vs dashed curves). The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time (blue bands). These repeated somatosensory cues may function as non-photic zeitgebers that facilitate circadian realignment.</p>
 		</div>
 
+		<h4>Practical Point Substitutions</h4>
 		<p>Classical protocols emphasize the use of horary points. However, early testers traveling in economy-class seating reported that some foot and ankle points were difficult to access because of footwear or limited space. To improve practicality, the protocol was modified by substituting more accessible points along the same active meridian. The rationale is straightforward: stimulating a more accessible point on the active meridian during its designated window is preferable to omitting the meridian entirely.</p>
 
 		<p>This pragmatic modification is consistent with broader TCM channel theory, which posits that stimulation anywhere along a meridian during its horary window can influence that channel and its associated organ system.</p>
@@ -667,7 +658,7 @@
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">9:00 AM – 11:00 AM</td>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">Spleen</td>
-                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">SP-10*</td>
+                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">(SP-3) → SP-10*</td>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">11:00 AM – 1:00 PM</td>
@@ -682,12 +673,12 @@
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">3:00 PM – 5:00 PM</td>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">Bladder</td>
-                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">BL-2*</td>
+                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">(BL-66) → BL-2*</td>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">5:00 PM – 7:00 PM</td>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">Kidney</td>
-                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">KI-27*</td>
+                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">(KI-10) → KI-27*</td>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">7:00 PM – 9:00 PM</td>
@@ -702,16 +693,16 @@
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">11:00 PM – 1:00 AM</td>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">Gallbladder</td>
-                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">GB-20*</td>
+                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">(GB-41) → GB-20*</td>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">1:00 AM – 3:00 AM</td>
                     <td style="border: 1px solid #333; padding: 10px; text-align: center;">Liver</td>
-                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">LIV-8*</td>
+                    <td style="border: 1px solid #333; padding: 10px; text-align: center;">(LIV-1) → LIV-8*</td>
                 </tr>
             </tbody>
         </table>
-        <p style="font-size: 11pt; color: #666; margin-top: -15px; margin-bottom: 30px;"><em>*Several points were substituted for improved accessibility in economy class seating: SP-3 → SP-10, BL-66 → BL-2, KI-10 → KI-27, GB-41 → GB-20, LIV-1 → LIV-8. </em></p>
+        <p style="font-size: 11pt; color: #666; margin-top: -15px; margin-bottom: 30px;"><em>*These 5 points were substituted for improved accessibility in economy class seating. </em></p>
 				
 
         <h2>Methods</h2>
@@ -720,10 +711,12 @@
  
 	<p>This is an app-based observational cohort study embedded in the JetLagPro mobile application. The app was freely available to the public without restriction.</p>
 
-	<p>Participants were self-selected travelers who sought and downloaded the app. This population is likely more motivated and health‑conscious than the average traveler. While this does introduce a selection bias, it simultaneously enhances external validity for the group most likely to adopt such an intervention in real life.</p>
+	<p>Participants were self-selected travelers who sought and downloaded the app. This population is likely more motivated and health-conscious than the average traveler. While this does introduce a selection bias, it simultaneously enhances external validity for the group most likely to adopt such an intervention in real life.</p>
 
 <h4>Intervention</h4>
-	<p>The mobile application provides travelers with timing and instructions to stimulate specific points based on the destination time. Point selection follows the strategic substitutions described in Table 1 (seven horary points and five alternative points chosen for accessibility in typical travel conditions). Ideally starting at the airport (or anytime thereafter), travelers select their destination. The app immediately identifies the first active point matching the local time at destination and then schedules a full 24‑hour sequence of prompts in two‑hour increments. This process is illustrated below.</p>
+	<p>The mobile application provides travelers with timing and instructions to stimulate specific points based on the destination time. Point selection follows the strategic substitutions described in Table 1. (The user can opt for the traditional points via a setting in the app.) </p>
+	
+	<p>Ideally starting at the airport (or anytime thereafter), travelers select their destination. The app immediately identifies the first active point matching the local time at destination and then schedules a full 24-hour sequence of prompts in two-hour increments. This process is illustrated below.</p>
 	
 	<div class="methods-screenshots" id="methodsScreenshots">
             <figure class="methods-single-figure">
@@ -742,14 +735,14 @@
             </div>
         </div>
 
-	<p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our application automatically accounts for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
+		<p>After the trip ends, the app logs trip data to Firebase, including arrival timezone to validate actual travel. One critical data element we store at trip end is the timezone difference between the origin and destination calculated using IANA timezone identifiers. Our application automatically accounts for Daylight Saving Time when calculating timezone offsets using the device's native timezone libraries. However, trips that begin or end during DST transitions may experience ±1 hour variance in reported timezone counts due to the timing of when offsets are captured.</p>
 
-	<p>A final step when the trip ends is the scheduling of a notification for 2 days later (short time frame to minimize recall bias) to remind the traveler to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
+		<p>A final step when the trip ends is the scheduling of a notification for 2 days later (short time frame to minimize recall bias) to remind the traveler to complete the website survey. This survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1-5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
 
-	<h4>Outcomes</h4>
-	<p>The post-travel survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains, using 1–5 severity ranges adapted for real‑world mobile use as a single post‑travel evaluation. The survey retains the LJLQ's core validated domains—sleep quality/disturbance, daytime fatigue, concentration difficulties, irritability/motivation, and gastrointestinal function but omits less central items (e.g., detailed appetite or bowel frequency changes) to minimize participant burden.</p>
+<h4>Outcomes</h4>
+		<p>The post-travel survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains, using 1–5 severity ranges adapted for real-world mobile use as a single post-travel evaluation. The survey retains the LJLQ's core validated domains: sleep quality/disturbance, daytime fatigue, concentration difficulties, irritability/motivation, and gastrointestinal function but omits less central items (e.g., detailed appetite or bowel frequency changes) to minimize participant burden.</p>
 
-<p>The primary outcome is a composite jet lag severity score calculated as the mean of the five 1–5 domain ratings. Secondary outcomes are the individual domain scores and the difference between anticipated and actual composite scores (within-subject change).</p>
+		<p>The primary outcome is a composite jet lag severity score calculated as the mean of the five 1–5 domain ratings. Secondary outcomes are the individual domain scores and the difference between anticipated and actual composite scores (within-subject change).</p>
 
 
              <h2 style="text-align: left;">Data Collected</h2>
@@ -769,24 +762,23 @@
                 <tbody>
                     <tr>
                         <td style="border: 1px solid #333; padding: 8px; vertical-align: top;">
-                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">User anticipated overall jet lag severity; <strong>Actual:</strong> Sleep disturbance, Daytime fatigue, Difficulty concentrating, Irritability, Lack of Motivation/energy, Gastrointestinal issues; Age Range</p>
+                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">User anticipated overall jet lag severity; Actual: Sleep disturbance, Daytime fatigue, Difficulty concentrating, Irritability, Lack of Motivation/energy, Gastrointestinal issues; Age Range</p>
                         </td>
                         <td style="border: 1px solid #333; padding: 8px; vertical-align: top;">
-                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">Direction of travel; Number of time zones crossed; Number of points marked as stimulated; Local timezone to validate location</p>
+                            <p style="margin: 0; padding: 0; font-size: 11pt; line-height: 1.4;">Direction of travel; Number of time zones crossed; Number of points marked as stimulated; Local timezone to validate location; use of traditional or cramped point sets</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
   	
 		
-        <h4>Primary Research Question</h4>
+<h4>Primary Research Question</h4>
         <p>Is adherence to chronoacupuncture as directed by the app associated with lower jet lag symptoms compared to minimal or no use?</p>
 		
-		<p>Some may object that this study does not include a randomized true control. But practical constraints of anonymous volunteer participation preclude randomization or even a no-app sham condition. That is why we resort to a within-subject design where each participant serves as their own control. Participants voluntarily complete surveys that include two separate elements: (1) anticipated symptom severity based on prior travel experience, and (2) actual post-travel symptom severity as reported after completing their journey. The anticipated-versus-actual comparison is exploratory and subject to recall and expectation bias; the primary analytical strategy relies on between-adherence comparison and external baseline (Waterhouse et al.).</p>
+		<p>This study does not include a randomized true control because practical constraints of anonymous volunteer participation precludes randomization or even a no-app sham condition. That is why we resort to a within-subject design where each participant serves as their own control. Participants voluntarily complete surveys that include two separate elements: (1) anticipated symptom severity (based on prior travel experience), and (2) actual post-travel symptom severity as reported after completing their journey. The anticipated-versus-actual comparison is exploratory and subject to recall and expectation bias; the primary analytical strategy relies on between-adherence comparison and external baseline (Waterhouse et al.).</p>
 
-	
-        <h4>Baseline Data for Time Zones Crossed</h4>
-        <p>Our analysis compares survey results to baseline severity data from Waterhouse et al.'s 2007 comprehensive quantitative assessment of jet lag severity stratified by time zones<sup>12</sup>. That study shows non-interventional severity falls into the following ranges on a 1-5 severity scale.</p>
+<h4>Baseline Data for Time Zones Crossed</h4>
+        <p>Our analysis compares survey results to baseline severity data from Waterhouse et al.'s 2007 comprehensive quantitative assessment of jet lag severity stratified by time zones<sup>1</sup>. That study shows non-interventional severity falls into the following ranges on a 1-5 severity scale.</p>
 
         <ul style="margin-left: 40px; padding-left: 20px;">
             <li>1-2 time zones: 1.8 </li>
@@ -797,7 +789,7 @@
         
         <br>
         
-        <h4>Stimulation Level Groupings ("adherence level")</h4>
+<h4>Stimulation Level Groupings ("adherence level")</h4>
 
         <p>Participants are grouped by the number of acupressure points reported by the app as stimulated during travel:</p>
         <ul style="margin-left: 40px; padding-left: 20px;">
@@ -810,13 +802,13 @@
 
         <p>For each stimulation group, we analyze post-travel symptom severity across different time zone categories to assess how stimulation levels affects the expected symptom increase from crossing more time zones. This grouping provides sufficient sample sizes for statistical analysis while maintaining meaningful intervention categories.</p>
 
-		<h4>Time Zone Offset and Travel Direction</h4>
+<h4>Time Zone Offset and Travel Direction</h4>
 		<p>The app records the time difference (offset) in hours between origin and destination. A positive offset means the body must advance its rhythm (eastward), a negative value means delay (westward). The eastward adjustment typically feels harder than westward. For example, Los Angeles to Sydney is a +19-hour offset, so the app classifies it as eastward even though the flight goes west geographically. For trips over 12 hours the body may adapt the shorter way around the clock, but we use the direct arrival offset for analysis.</p>
 
 		
 	<h2>Anticipated Data Analysis</h2>
 
-	<p>Covariate selection was guided by a directed acyclic graph (DAG) representing plausible causal relationships between travel characteristics, protocol adherence, and jet-lag outcomes (see project repository for reproducible figure code). Based on this framework, models adjust for the number of time zones crossed and travel direction (eastward vs westward), which may influence both adherence and symptom severity. We do not adjust for sleep timing or individual symptom domains, as these are likely on the causal path from adherence to overall severity (mediators) and adjusting for them would obscure the total effect of the protocol. Other potential confounders (e.g., trip duration, age, sex) are not included in the primary analysis because they were not pre-specified or are not collected in the current dataset.</p>
+	<p>Covariate selection was guided by a directed acyclic graph (DAG) representing plausible causal relationships between travel characteristics, protocol adherence, and jet-lag outcomes (see project repository for reproducible figure code). Based on this framework, models adjust for the number of time zones crossed and travel direction (eastward vs westward), which may influence both adherence and symptom severity. We do not adjust for sleep timing or individual symptom domains, as these are likely on the causal path from adherence to overall severity (mediators) and adjusting for them would obscure the total effect of the protocol. Other potential confounders (e.g., trip duration, age, sex) are not included in the primary analysis.</p>
 
 	<p>We summarized trip characteristics across adherence groups using medians with interquartile ranges for continuous variables and proportions for categorical variables.</p>
 
@@ -826,16 +818,15 @@
 
 	<p>Several sensitivity analyses were performed to assess the robustness of the findings. First, we repeated the primary models using proportional-odds (ordinal logistic) regression for the composite jet-lag score to account for its ordinal 1–5 structure. Second, we refitted the models after excluding trips with missing or ambiguous time-zone or travel-direction information. Third, we restricted the analysis to first-time app users (one trip per device) to reduce potential biases from repeat users. Finally, we repeated the analyses after excluding trips that overlapped daylight saving time transitions where time-zone offsets are less stable.</p>
 
-
 	<p>For secondary outcomes, including individual symptom domains and anticipated versus observed symptom differences, we controlled the false discovery rate at 5% using the Benjamini–Hochberg procedure. All statistical tests were two-sided with α = 0.05. Effect sizes (e.g., Cohen’s d) are reported alongside regression estimates to facilitate clinical interpretation.</p>
 
-	<p>Sample size and power. Assuming a medium effect size (Cohen’s d ≈ 0.5) for differences in composite severity between high and minimal adherence groups within a given time-zone stratum, a two-sided α of 0.05 and 80% power require approximately 128 participants per group. To allow for multiple adherence categories and covariate adjustment, we targeted at least 300–400 complete trips per major subgroup (for example, high versus minimal adherence within the 6–8 and ≥9 time-zone bands).</p>
+	<p>Sample size and power. Assuming a medium effect size (Cohen’s d ≈ 0.5) for differences in composite severity between high and minimal adherence groups within a given time-zone stratum, a two-sided α of 0.05 and 80% power require approximately 128 participants per group. To allow for multiple adherence categories and covariate adjustment, we targeted at least 300–400 complete trips per major subgroup (e.g., high versus minimal adherence within the 6–8 and ≥9 time-zone bands).</p>
 
 	<p>Analyses were conducted in R. The analysis script and an export pipeline to produce the trip-level CSV from Firestore are available on the project website (jetlagpro.com) for independent reproduction; the same pipeline is used to generate regression tables, effect sizes, and the severity-by–time-zone-and-adherence chart.</p>
 
-        <h4>Live Dose-Response Visualization</h4>
+<h4>Live Dose-Response Visualization</h4>
         
-<p>The main analysis plots symptom severity (Y-axis) against the number of time zones crossed (X-axis). Separate lines show results for different intervention levels (e.g., number of points stimulated), with a dashed baseline line representing expected severity without any intervention.</p>
+	<p>The main analysis plots symptom severity (Y-axis) against the number of time zones crossed (X-axis). Separate lines show results for different intervention levels (e.g., number of points stimulated), with a dashed baseline line representing expected severity without any intervention.</p>
         <p>Each data point includes:</p>
         <ul style="margin-left: 40px; padding-left: 20px;">
             <li>Mean aggregate severity (average across five symptoms)</li>
@@ -854,10 +845,10 @@
 
 	<h2>Results</h2>
 		<i>
-		<h4>The following sections are placeholders!</h4>
-		<p>We are waiting on survey results from app usage. App distribution is starting in late 2025. It may take a few monthy of use to get sufficient data to analyze. The graph shows current live data.</p>
+<h4>The following sections are placeholders!</h4>
+		<p>We are waiting on survey results from app usage. App distribution is starting in late 2025. It may take many months of use to get sufficient data to analyze. The graph shows current live data.</p>
 		
-		<h4>Placeholder text below</h4>
+<h4>Placeholder text below</h4>
 		<p>We analyzed data from <span id="surveyCount">[loading...]</span> survey results and stimulation records and present that data in the graph below. We examined how different levels of acupressure stimulation affect jet lag symptoms across time zones crossed. The baseline (dashed gray line) represents expected natural jet lag severity without intervention.</p> 
 
 		
@@ -879,33 +870,31 @@
 		
 		<p>This paper presents a prospective observational cohort study of chronoacupuncture for jet lag in <span id="surveyCountDiscussion">[loading...]</span> long-distance travelers. Participants used the JetLagPro mobile app to self-administer acupressure at points aligned with destination time zones and completed a jet lag assessment after travel.</p>
      
-		<h4>Confounding variables</h4>
+<h4>Confounding variables</h4>
 
 		<p>Traditional clinical trials face significant challenges in jet lag research due to the logistical complexity of controlling travel variables, traveler demographics, and environmental factors. Our app's naturalistic data collection approach using automated, objective logging of point-stimulation timestamps and a streamlined survey based on the validated core domains of the Liverpool Jet Lag Questionnaire circumvents many of these limitations while capturing real-world efficacy across diverse travel conditions, and with large sample sizes. This design prioritizes ecological validity and scalability over experimental control reflecting how travelers actually use (or even combine) interventions in practice.</p>
 
 		<p>We recognize that this methodology introduces potential confounding variables, including variable traveler compliance with the protocol, possible placebo effects inherent in any tactile or app-based intervention, subjective symptom reporting with a relatively short (2-day) recall window, and the unrestricted use of concurrent strategies commonly adopted by international travelers (e.g., melatonin supplementation, strategic bright-light exposure, caffeine, meal timing or sleep hygiene adjustments). We do not collect any data on these co-interventions as the primary aim is to evaluate the app's chronoacupuncture protocol in the context of unrestricted real-world behavior rather than isolate its effect from all other influences. Participants who complete more points may differ systematically in health behaviors and use of other interventions (e.g., melatonin, light), so we cannot separate the protocol effect from these factors (confounding by indication). Without sham acupressure or blinding, we cannot distinguish specific effects of meridian timing from placebo or expectation. Five classical horary points were substituted for accessibility (Table 1), so the protocol differs from horary-only protocols; this may affect effect size if point-specific timing matters.</p>
 
-	<p>This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible, yet large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation and future dose-response exploration. In this design, travel direction and number of time zones crossed are largely determined by the trip rather than by symptom expectations; participants do not choose them based on anticipated jet lag, which limits confounding from these covariates compared with many observational settings.</p>
+		<p>This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible, yet large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation and future dose-response exploration. In this design, travel direction and number of time zones crossed are largely determined by the trip rather than by symptom expectations; participants do not choose them based on anticipated jet lag, which limits confounding from these covariates compared with many observational settings.</p>
 		
-	<p>This approach may influence CDC Yellow Book guidance on jet lag which emphasizes timed light exposure, melatonin, and behavioral adjustments, with no endorsement of acupressure due to limited high-quality evidence. We address that evidence gap by providing the first prospective, large-scale dataset on a structured chronoacupuncture protocol in real-world travelers.</p>
+		<p>This approach may influence CDC Yellow Book guidance on jet lag which emphasizes timed light exposure, melatonin, and behavioral adjustments, with no endorsement of acupressure due to limited high-quality evidence. We address that evidence gap by providing the first prospective, large-scale dataset on a structured chronoacupuncture protocol in real-world travelers.</p>
 		
 		<p>This study used meridian-aligned points with substitutions for accessibility (Table 1). Whether the specific point or timing is the primary driver of any benefit remains a question for future research.</p>
 
-        <h4>Real-World Limitations and Variability</h4>
+<h4>Real-World Limitations and Variability</h4>
 		<p>Travelers are not trained acupuncturists so point location and stimulation quality will vary during flights. Users may:</p>
 		<ul style="margin-left: 40px; padding-left: 20px;">
 			<li>Mark a point as done without stimulating it</li>
-			<li>Miss stimulating the correct point by being off-target</li>
+			<li>Stimulate something off-target</li>
 			<li>Apply too little pressure or have a shortened duration</li>
-			<li>Stimulate only one side when both are recommended</li>
+			<li>Stimulate only one side when both sides are recommended</li>
 			<li>Miss points (e.g., while sleeping)</li>
-			<li>Forget to log stimulation</li>
+			<li>Forget to log a stimulation</li>
 			<li>Use other remedies (e.g., melatonin, sleep adjustments)</li>
 		</ul>
 		<br>
-		<p>This variability is expected and intentional in our naturalistic design. We are testing whether chronoacupressure as provided by the app is associated with benefit for the average traveler in everyday conditions, not under perfect lab-like execution.</p>
-		
-		<p>TCM theory holds that the entire meridian is active during its peak window, so even approximate or less-than-ideal stimulation at the right time and close location should still provide some benefit.</p> 		
+		<p>This variability is expected and intentional in our naturalistic design. We are testing whether chronoacupressure as provided by the app is associated with benefit for the average traveler in everyday conditions, not under perfect lab-like execution. TCM theory holds that the entire meridian is active during its peak window, so even approximate or less-than-ideal stimulation at the right time and close location should still provide some benefit.</p> 		
 		
         <p>The interdisciplinary framework merging ancient temporal concepts with circadian biology creates a testable hypothesis from traditionally anecdotal practices. If validated, chronoacupuncture could provide a non-invasive, cost-effective intervention accessible to travelers without medical supervision. Negative findings would redirect research toward alternative non-photic zeitgebers and inform the scientific evaluation of other TCM temporal therapies.</p>
 
@@ -918,51 +907,48 @@
 	   <p>This research was self-funded, conducted independently with no institutional affiliation, and the author declares no conflicts of interest. The research design posed minimal risk, as it involved self massage of acupressure points, with participants free to engage at will. With survey and research data tied only to an untrackable device ID, participant privacy was intrinsic. Data integrity safeguards include cryptographic signatures on trip records, immutable audit logging, and <a href="reviewers/verify.html">publicly accessible verification tools</a>.</p>
 
 	   <h2>Acknowledgments</h2>
-	   <p><strong>Generative AI Tool Disclosure:</strong> This work utilized Cursor AI coding assistant for programming and grammar review. The AI tool performed much of the code implementation under the author's supervision and guidance. All scientific decisions, research methodology, data analysis, and interpretation were made independently by the author. Claude 4.5, Grok, and ChatGPT were also used for feedback during manuscript preparation.</p>
+	   <p><strong>Generative AI Tool Disclosure:</strong> This work utilized Cursor AI coding assistant for programming and grammar review. The AI tool performed much of the code implementation under the author's supervision and guidance. All scientific decisions, research methodology, data analysis, and interpretation were made independently by the author. Statistical analysis was aided by multiple AI's including Claude 4.5, Grok, and ChatGPT. OpenEvidence.ai was also used for feedback during manuscript preparation.</p>
 	   
 	    <p><strong>Figures and images:</strong> All point images are original creations by the author. The Chinese Organ Clock visualization (Figure 1) is an original image by the author and based on widely-used traditional representations in the public domain.</p>
-</p>
+
 	   
 	   <h2>Author Biography</h2>
-	   <p><strong>Steven B. Schram, PhD, DC, LAc</strong> is a licensed acupuncturist (1996) and chiropractor (1984) in private practice in New York City. He holds a PhD in Chemistry from the University of Maryland (1978), a Doctor of Chiropractic from Life University (1983). Dr. Schram served as Assistant Professor of Research at Life University (1980-1984) and has been a peer reviewer for the World Health Organization on Traditional Medicine terminology and ICD-11 classification. He is the current Chair of the Accreditation Commission for Acupuncture and Herbal Medicine (ACAHM) and received the Lifetime Achievement Award from the Acupuncture Society of New York in 2018. Dr. Schram is also the founder and owner of Chapter 1 Software, Inc., a chiropractic practice management software company established in 1983. He has published multiple peer-reviewed articles in scientific journals spanning chemistry, chiropractic, and traditional Chinese medicine.</p>
+	   <p><strong>Steven Schram, PhD, DC, LAc</strong> is a licensed acupuncturist (1996) and chiropractor (1984) in private practice in New York City. He holds a PhD in Chemistry from the University of Maryland (1978), and holds a Doctor of Chiropractic from Life University (1983). Dr. Schram served as Assistant Professor of Research at Life University (1980-1984) and has been a peer reviewer for the World Health Organization on Traditional Medicine terminology and ICD-11 classification. He is the current Chair of the Accreditation Commission for Acupuncture and Herbal Medicine (ACAHM.ORG) and received the Lifetime Achievement Award from the Acupuncture Society of New York in 2018. Dr. Schram is also the founder and owner of Chapter 1 Software, Inc., a chiropractic practice management software company established in 1983. He has published multiple peer-reviewed articles in scientific journals spanning chemistry, chiropractic, and traditional Chinese medicine.</p>
 	   
 	    <h2>References</h2>
         <ol>
-		
-		<p></p>
-			
             <li>Waterhouse, J., et al. (2007). Jet lag: trends and coping strategies. The Lancet, 369(9567), 1117–1129. <a href="https://doi.org/10.1016/S0140-6736(07)60529-7" target="_blank">https://doi.org/10.1016/S0140-6736(07)60529-7</a><br>
-            <em>1. Reviews jet lag symptoms, causes, and methods to alleviate negative effects of time-zone transitions, including advice for travelers flying in different directions across multiple time zones. It remains the most comprehensive quantitative assessment of jet lag severity stratified by time zones crossed and continues to serve as the reference standard in jet lag research. Provides baseline severity data from Liverpool Jet Lag Questionnaire.</em></li>
+            <em>Reviews jet lag symptoms, causes, and methods to alleviate negative effects of time-zone transitions, including advice for travelers flying in different directions across multiple time zones. It remains the most comprehensive quantitative assessment of jet lag severity stratified by time zones crossed and continues to serve as the reference standard in jet lag research. Provides baseline severity data from Liverpool Jet Lag Questionnaire.</em></li>
             
             <li>Panda, S. (2022). Foundations of circadian medicine. PLoS Biology, 20(3), e3001567. <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">https://doi.org/10.1371/journal.pbio.3001567</a><br>
-            <em>2. Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
+            <em>Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
             
             <li>Honma, S., & Honma, K.I. (2019). The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker. Biology, 8(1), 13. <a href="https://doi.org/10.3390/biology8010013" target="_blank">https://doi.org/10.3390/biology8010013</a><br>
-            <em>3. Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
+            <em>Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
             
             <li>Paschos, G.K., & FitzGerald, G.A. (2010). Circadian clocks and vascular function. Circulation Research, 106(5), 833-841. <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">https://doi.org/10.1161/CIRCRESAHA.109.211706</a><br>
-            <em>4. Comprehensive review demonstrating that circadian clocks regulate vascular function through control of blood pressure rhythms, thrombogenesis, endothelial function, and response to vascular injury, based on genetic disruption studies in clock-deficient mice.</em></li>
+            <em>Comprehensive review demonstrating that circadian clocks regulate vascular function through control of blood pressure rhythms, thrombogenesis, endothelial function, and response to vascular injury, based on genetic disruption studies in clock-deficient mice.</em></li>
             
             <li>Hastings, M. H., et al. (2003). A clockwork web: circadian timing in brain and periphery. Nature Reviews Neuroscience, 4(8), 649–661. <a href="https://doi.org/10.1038/nrn1177" target="_blank">https://doi.org/10.1038/nrn1177</a><br>
-            <em>5. Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
+            <em>Comprehensive review establishing the hierarchical organization of mammalian circadian timing, from the suprachiasmatic nucleus master clock to peripheral tissue oscillators, and demonstrating how clock disruption contributes to disease pathogenesis across multiple physiological systems.</em></li>
             
             <li>Nangle, S. N., Rosensweig, C., Koike, N., Tei, H., Takahashi, J. S., Green, C. B., & Zheng, N. (2014). Molecular assembly of the period-cryptochrome circadian transcriptional repressor complex. eLife, 3, e03674. <a href="https://doi.org/10.7554/eLife.03674" target="_blank">https://doi.org/10.7554/eLife.03674</a><br>
-            <em>6. Crystal structure analysis of the Period-Cryptochrome complex revealing the molecular basis of circadian transcriptional repression, demonstrating how Period and Cryptochrome proteins interact to form the core negative feedback loop that drives mammalian circadian rhythms.</em></li>
+            <em>Crystal structure analysis of the Period-Cryptochrome complex revealing the molecular basis of circadian transcriptional repression, demonstrating how Period and Cryptochrome proteins interact to form the core negative feedback loop that drives mammalian circadian rhythms.</em></li>
             
             <li>Heyde, I., & Oster, H. (2019). Differentiating external zeitgeber impact on peripheral circadian clock resetting. Scientific Reports, 9, 20114. <a href="https://doi.org/10.1038/s41598-019-56323-z" target="_blank">https://doi.org/10.1038/s41598-019-56323-z</a><br>
-            <em>7. Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
-            
-            <li>Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]<br>
-            <em>8. Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
-            
+            <em>Experimental study demonstrating differential effects of light versus food timing on peripheral tissue clocks, showing that zeitgeber desynchrony leads to tissue-specific phase responses and metabolic consequences including cyclic weight changes.</em></li>
+                       
             <li>Khoe, W.H. (1978). Treatment of jet lag syndrome by acupuncture. American Journal of Acupuncture, 6(2), 135–139.<br>
-            <em>9. Historical paper on acupuncture treatment for jet lag syndrome (content not accessible for detailed summary).</em></li>
+            <em>Historical paper on acupuncture treatment for jet lag syndrome (content not accessible for detailed summary).</em></li>
             
             <li>Amaro, J. (2001). Time Travel: Contemporary Applications for Jet Lag from Ancient Principles. Acupuncture Today, October 2001. <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles</a><br>
-            <em>10. Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
-                        
+            <em>Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
+  
+			<li>Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]<br>
+            <em>Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
+            
             <li>Wu, J., & Zhao, Z. (2024). Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms. Frontiers in Neuroscience, 18, 1346635. <a href="https://doi.org/10.3389/fnins.2024.1346635" target="_blank">https://doi.org/10.3389/fnins.2024.1346635</a><br>
-            <em>11. Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
+            <em>Comprehensive review demonstrating that acupuncture significantly affects circadian biology through modulation of circadian clock genes (Per1, Per2, Clock, Bmal1), neurotransmitter regulation (5-HT, dopamine, GABA), and melatonin pathways, establishing acupuncture as a non-photic zeitgeber for circadian rhythm disorders.</em></li>
             
 
    
@@ -978,1439 +964,8 @@
         .then(html => { document.getElementById('main-footer').innerHTML = html; });
     </script>
 
-    <!-- Export Functions -->
     <script>
-        // PDF Export Function - Hybrid approach with proper layout handling
-        async function exportToPDF() {
-            try {
-                // Wait for jsPDF to be available (with timeout)
-                let attempts = 0;
-                const maxAttempts = 10;
-                while (!window.jspdf && attempts < maxAttempts) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-                
-                // Check if jsPDF is available after waiting
-                if (!window.jspdf) {
-                    throw new Error('jsPDF library failed to load. Please refresh the page and try again.');
-                }
-                
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const paperContent = document.querySelector('.research-paper');
-                
-                // Show loading message
-                const loadingDiv = document.createElement('div');
-                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating PDF with proper layouts... Please wait.';
-                document.body.appendChild(loadingDiv);
-                
-                // Set margins (in mm)
-                const margin = 20;
-                const bottomMargin = 15;
-                const pageWidth = 210 - (2 * margin);
-                const pageHeight = 297 - margin - bottomMargin;
-                
-                doc.setFont('helvetica');
-                doc.setFontSize(12);
-                doc.setTextColor(51, 51, 51);
-                
-                let yPosition = margin + 10;
-                
-                // Helper function to add text
-                function addText(text, fontSize = 12, isBold = false, isCentered = false) {
-                    if (isBold) doc.setFont('helvetica', 'bold');
-                    else doc.setFont('helvetica', 'normal');
-                    
-                    doc.setFontSize(fontSize);
-                    
-                    if (isCentered) {
-                        const textWidth = doc.getTextWidth(text);
-                        const xPosition = (210 - textWidth) / 2;
-                        doc.text(text, xPosition, yPosition);
-                        yPosition += fontSize * 0.5 + 8;
-                    } else {
-                        const lines = doc.splitTextToSize(text, pageWidth);
-                        for (let line of lines) {
-                            if (yPosition > pageHeight) {
-                                doc.addPage();
-                                yPosition = margin + 10;
-                            }
-                            doc.text(line, margin, yPosition);
-                            yPosition += 6;
-                        }
-                        yPosition += 8;
-                    }
-                }
-                
-                // Helper function to add heading with better spacing
-                function addHeading(text, level = 2) {
-                    if (yPosition > pageHeight - 30) {
-                        doc.addPage();
-                        yPosition = margin + 10;
-                    }
-                    
-                    yPosition += level === 1 ? 10 : (level === 2 ? 15 : 10); // Space before heading
-                    const fontSize = level === 1 ? 18 : level === 2 ? 16 : 14;
-                    addText(text, fontSize, true, level === 1);
-                    yPosition += 5; // Space after heading
-                }
-                
-                // Helper function to render complex layouts as images
-                async function addLayoutAsImage(element, title = '') {
-                    try {
-                        if (yPosition > pageHeight - 100) {
-                            doc.addPage();
-                            yPosition = margin + 10;
-                        }
-                        
-                        if (title) {
-                            addText(title, 12, true, true);
-                            yPosition += 10;
-                        }
-                        
-                        // Create canvas from element
-                        const canvas = await html2canvas(element, {
-                            scale: 2,
-                            useCORS: true,
-                            allowTaint: true,
-                            backgroundColor: '#ffffff',
-                            width: element.offsetWidth,
-                            height: element.offsetHeight
-                        });
-                        
-                        const imgData = canvas.toDataURL('image/png');
-                        
-                        // Calculate size to fit page width
-                        const maxWidth = pageWidth;
-                        const imgWidth = Math.min(maxWidth, pageWidth);
-                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                        
-                        // Check if image fits on current page
-                        if (yPosition + imgHeight > pageHeight) {
-                            doc.addPage();
-                            yPosition = margin + 10;
-                        }
-                        
-                        // Center the image
-                        const xPosition = margin + (pageWidth - imgWidth) / 2;
-                        
-                        doc.addImage(imgData, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
-                        yPosition += imgHeight + 15;
-                        
-                    } catch (error) {
-                        console.warn('Could not render layout as image:', error);
-                        addText(`[${title || 'Complex layout'} - content preserved in document]`, 10, true, true);
-                        yPosition += 20;
-                    }
-                }
-                
-                // Add title and subtitle
-                const title = paperContent.querySelector('h1').textContent;
-                addHeading(title, 1);
-                
-                const subtitle = paperContent.querySelector('p[style*="text-align: center"][style*="font-style: italic"]');
-                if (subtitle && subtitle.textContent.includes('Pilot Study')) {
-                    addText(subtitle.textContent, 12, false, true);
-                }
-                
-                // Process content with special handling for complex layouts
-                const elements = Array.from(paperContent.children);
-                
-                for (let element of elements) {
-                    // Skip already processed elements
-                    if (element.tagName === 'H1' || 
-                        (element.tagName === 'P' && element.style.textAlign === 'center' && element.style.fontStyle === 'italic')) {
-                        continue;
-                    }
-                    
-                    // Handle different content types
-                    if (element.tagName === 'H2') {
-                        addHeading(element.textContent, 2);
-                    } else if (element.tagName === 'H3') {
-                        addHeading(element.textContent, 3);
-                    } else if (element.tagName === 'P') {
-                        addText(element.textContent);
-                    } else if (element.tagName === 'UL' || element.tagName === 'OL') {
-                        const items = Array.from(element.querySelectorAll('li')).map((li, index) => {
-                            return element.tagName === 'OL' ? `${index + 1}. ${li.textContent}` : `• ${li.textContent}`;
-                        });
-                        
-                        for (let item of items) {
-                            if (yPosition > pageHeight) {
-                                doc.addPage();
-                                yPosition = margin + 10;
-                            }
-                            const lines = doc.splitTextToSize(item, pageWidth - 10);
-                            for (let line of lines) {
-                                doc.text(line, margin + 5, yPosition);
-                                yPosition += 6;
-                            }
-                            yPosition += 2;
-                        }
-                        yPosition += 10;
-                    } else if (element.tagName === 'DIV') {
-                        // Special handling for complex divs
-                        if (element.querySelector('table')) {
-                            // Tables with images - render as image to preserve layout
-                            const title = element.querySelector('h3')?.textContent || 'Table with Images';
-                            await addLayoutAsImage(element, title);
-                        } else if (element.style.display && element.style.display.includes('grid')) {
-                            // Grid layouts (like survey questions) - render as image
-                            const title = element.querySelector('h2')?.textContent || 'Survey Questions';
-                            await addLayoutAsImage(element, title);
-                        } else if (element.classList.contains('abstract')) {
-                            // Abstract section
-                            addText(element.textContent);
-                        } else {
-                            // Other divs - process text content
-                            const textContent = element.textContent.trim();
-                            if (textContent) {
-                                addText(textContent);
-                            }
-                        }
-                    }
-                }
-                
-                // Save the PDF
-                doc.save('JetLagPro_Research_Paper.pdf');
-                
-                // Remove loading message
-                document.body.removeChild(loadingDiv);
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Error generating PDF. Please try again. Error: ' + error.message);
-                // Remove loading message if still present
-                const loadingDiv = document.querySelector('div[style*="position:fixed"]');
-                if (loadingDiv) document.body.removeChild(loadingDiv);
-            }
-        }
-        
-        // ============================================
-        // CENTRALIZED IMAGE SIZE CONSTANTS (JavaScript)
-        // 
-        // MUST MATCH CSS VARIABLES ABOVE (lines 131-149)
-        // 
-        // TO CHANGE SIZES:
-        // 1. Update CSS :root variables (lines 131-149)
-        // 2. Update these JavaScript constants (keep same values)
-        // 3. Both must match!
-        // ============================================
-        const IMAGE_SIZES = {
-            methods: {
-                width: 170,  // Matches --img-methods-width (170px)
-                spacing: 15, // Word export spacing (tighter than HTML 20px)
-                padding: 15  // Word export padding (tighter than HTML 20px)
-            },
-            point: {
-                width: 100,  // Matches --img-point-width (100px)
-                height: 100  // Matches --img-point-height (100px)
-            },
-            wheel: {
-                width: 300   // Matches --word-img-wheel-width (300px)
-            }
-        };
-        
-        // Word Document Export Function (HTML format with embedded images)
-        async function exportToWord() {
-            try {
-                const paperContent = document.querySelector('.research-paper');
-                
-                // Show loading message
-                const loadingDiv = document.createElement('div');
-                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating Word document with embedded images and chart... Please wait.';
-                document.body.appendChild(loadingDiv);
-                
-                // Capture Chart.js canvas as image BEFORE cloning
-                // Wait a bit for chart to be fully rendered
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const originalChartCanvas = document.getElementById('liveResearchChart');
-                let chartImageData = null;
-                
-                // Capture point images (table or single group image) BEFORE cloning
-                let pointImagesData = null;
-                const pointImagesTable = document.getElementById('pointImagesTable');
-                if (pointImagesTable) {
-                    try {
-                        const pointImagesContainer = pointImagesTable.closest('div');
-                        if (pointImagesContainer) {
-                            const tempContainer = document.createElement('div');
-                            tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 624px; background: white; padding: 10px;';
-                            
-                            const clonedContainer = pointImagesContainer.cloneNode(true);
-                            clonedContainer.style.cssText = 'width: 624px; margin: 0 auto; background: white;';
-                            
-                            const clonedTable = clonedContainer.querySelector('table');
-                            if (clonedTable) {
-                                clonedTable.style.cssText = 'width: 600px; margin: 0 auto; border-collapse: collapse; table-layout: fixed;';
-                                const cells = clonedTable.querySelectorAll('td');
-                                cells.forEach(cell => {
-                                    cell.style.cssText = 'width: 100px; padding: 2px; text-align: center; vertical-align: middle;';
-                                });
-                                const images = clonedTable.querySelectorAll('img');
-                                images.forEach(img => {
-                                    img.style.cssText = 'width: 100px; height: 100px; object-fit: contain; display: block; margin: 0 auto;';
-                                });
-                                const paragraphs = clonedTable.querySelectorAll('p');
-                                paragraphs.forEach(p => {
-                                    p.style.cssText = 'margin: 2px 0; font-size: 10pt; font-weight: bold; text-align: center;';
-                                });
-                            } else {
-                                const groupImg = clonedContainer.querySelector('#pointImagesTable img');
-                                if (groupImg) {
-                                    groupImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 0 auto;';
-                                }
-                            }
-                            
-                            tempContainer.appendChild(clonedContainer);
-                            document.body.appendChild(tempContainer);
-                            
-                            const canvas = await html2canvas(clonedContainer, {
-                                scale: 2,
-                                useCORS: true,
-                                allowTaint: true,
-                                backgroundColor: '#ffffff',
-                                width: 624,
-                                height: clonedContainer.offsetHeight
-                            });
-                            
-                            pointImagesData = canvas.toDataURL('image/png', 1.0);
-                            document.body.removeChild(tempContainer);
-                            console.log('Point images captured for Word export');
-                        }
-                    } catch (error) {
-                        console.warn('Could not capture point images:', error);
-                    }
-                }
-                
-                // Capture methods screenshots as single image BEFORE cloning
-                let methodsScreenshotsData = null;
-                const methodsScreenshotsContainer = document.getElementById('methodsScreenshots');
-                if (methodsScreenshotsContainer) {
-                    try {
-                        // Create a temporary container with proper Word formatting
-                        const tempContainer = document.createElement('div');
-                        tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 624px; background: white; padding: 10px;';
-                        
-                        // Clone the container
-                        const clonedContainer = methodsScreenshotsContainer.cloneNode(true);
-                        clonedContainer.style.cssText = 'width: 624px; margin: 0 auto; background: white;';
-                        
-                        // Format for Word export: table (legacy) or single figure
-                        const clonedTable = clonedContainer.querySelector('table');
-                        const clonedFigure = clonedContainer.querySelector('.methods-single-figure');
-                        if (clonedTable) {
-                            clonedTable.style.cssText = 'width: 100%; margin: 0 auto; border-collapse: separate; border-spacing: 15px;';
-                            const cells = clonedTable.querySelectorAll('td');
-                            cells.forEach(cell => {
-                                cell.style.cssText = 'width: 33.33%; padding: 10px; text-align: center; vertical-align: top;';
-                            });
-                            const images = clonedTable.querySelectorAll('img');
-                            images.forEach(img => {
-                                img.style.cssText = 'width: 170px; max-width: 170px; height: auto; display: block; margin: 0 auto;';
-                            });
-                            const paragraphs = clonedTable.querySelectorAll('p');
-                            paragraphs.forEach(p => {
-                                p.style.cssText = 'margin: 8px 0 0 0; font-size: 10pt; font-weight: bold; text-align: center;';
-                            });
-                        } else if (clonedFigure) {
-                            const img = clonedFigure.querySelector('img');
-                            const cap = clonedFigure.querySelector('figcaption');
-                            if (img) img.style.cssText = 'width: 480px; max-width: 480px; height: auto; display: block; margin: 0 auto;';
-                            if (cap) cap.style.cssText = 'margin: 8px 0 0 0; font-size: 10pt; font-weight: bold; text-align: center;';
-                        }
-                        
-                        tempContainer.appendChild(clonedContainer);
-                        document.body.appendChild(tempContainer);
-                        
-                        // Capture with html2canvas at high resolution
-                        const canvas = await html2canvas(clonedContainer, {
-                            scale: 2,
-                            useCORS: true,
-                            allowTaint: true,
-                            backgroundColor: '#ffffff',
-                            width: 624,
-                            height: clonedContainer.offsetHeight
-                        });
-                        
-                        methodsScreenshotsData = canvas.toDataURL('image/png', 1.0);
-                        document.body.removeChild(tempContainer);
-                        console.log('Methods screenshots captured for Word export');
-                    } catch (error) {
-                        console.warn('Could not capture methods screenshots:', error);
-                    }
-                }
-                
-                // Check if chart exists and is ready
-                if (originalChartCanvas) {
-                    try {
-                        // Verify chart is actually rendered (check canvas dimensions first)
-                        if (originalChartCanvas.width > 0 && originalChartCanvas.height > 0) {
-                            // Get the chart canvas from the original DOM (high quality PNG)
-                            chartImageData = originalChartCanvas.toDataURL('image/png', 1.0);
-                            console.log('Chart captured for Word export - canvas size:', originalChartCanvas.width, 'x', originalChartCanvas.height);
-                        } else {
-                            console.warn('Chart canvas has zero dimensions - chart may not be rendered yet');
-                        }
-                    } catch (error) {
-                        console.warn('Could not capture chart canvas:', error);
-                    }
-                } else {
-                    console.warn('Chart canvas not found - chart may not be loaded yet');
-                }
-                
-                // Clone the content to modify for Word (after capturing chart)
-                const wordContent = paperContent.cloneNode(true);
-                
-                // Convert images to base64 for embedding while preserving sizes
-                // Skip point images and methods screenshots as they're already captured as composite images
-                const images = wordContent.querySelectorAll('img');
-                for (let img of images) {
-                    // Skip if this is a captured composite image (already processed)
-                    if (pointImagesData && img.src === pointImagesData) {
-                        continue;
-                    }
-                    if (methodsScreenshotsData && img.src === methodsScreenshotsData) {
-                        continue;
-                    }
-                    // Skip individual point images and point images section (replaced by composite or single group image)
-                    const isPointImage = img.src.includes('LU-8') || img.src.includes('LI-1') || 
-                                       img.src.includes('ST-36') || img.src.includes('SP-3') || img.src.includes('SP-10') ||
-                                       img.src.includes('HT-8') || img.src.includes('SI-5') ||
-                                       img.src.includes('BL-66') || img.src.includes('BL-2') || img.src.includes('KI-3') || img.src.includes('KI-27') ||
-                                       img.src.includes('PC-8') || img.src.includes('SJ-6') || 
-                                       img.src.includes('GB-41') || img.src.includes('GB-20') || img.src.includes('LIV-1') || img.src.includes('LIV-8') ||
-                                       img.src.includes('PointImagesGroup.jpg');
-                    const isMethodsScreenshot = img.closest('#methodsScreenshots') || 
-                                               img.src.includes('research-photo-1.png') || 
-                                               img.src.includes('research-photo-2.png') || 
-                                               img.src.includes('research-photo-4.png') ||
-                                               img.src.includes('3%20Steps.JPG') || img.src.includes('3 Steps.JPG');
-                    if ((isPointImage && pointImagesData) || (isMethodsScreenshot && methodsScreenshotsData)) {
-                        continue;
-                    }
-                    try {
-                        // Capture original styling and dimensions
-                        const originalStyle = img.getAttribute('style') || '';
-                        const originalWidth = img.getAttribute('width') || '';
-                        const originalHeight = img.getAttribute('height') || '';
-                        const originalClass = img.getAttribute('class') || '';
-                        
-                        // Create canvas to convert image to base64
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const tempImg = new Image();
-                        
-                        // Wait for image to load
-                        await new Promise((resolve, reject) => {
-                            tempImg.onload = resolve;
-                            tempImg.onerror = reject;
-                            tempImg.crossOrigin = 'anonymous';
-                            tempImg.src = img.src;
-                        });
-                        
-                        // Determine target size based on image type
-                        let targetWidth, targetHeight;
-                        let finalStyle = '';
-                        
-                        // Check if image is in methods-screenshots container or is the 3-step methods image
-                        const isMethodsScreenshot = img.closest('.methods-screenshots') || 
-                                                   img.src.includes('research-photo-1.png') || 
-                                                   img.src.includes('research-photo-2.png') || 
-                                                   img.src.includes('research-photo-4.png') ||
-                                                   img.src.includes('3%20Steps.JPG') || img.src.includes('3 Steps.JPG');
-                        
-                        if (isMethodsScreenshot) {
-                            // App screenshots - use centralized constant
-                            targetWidth = IMAGE_SIZES.methods.width;
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * IMAGE_SIZES.methods.width;
-                            finalStyle = `width: ${IMAGE_SIZES.methods.width}px; max-width: ${IMAGE_SIZES.methods.width}px; height: auto; display: block; margin: 0 auto; border: none;`;
-                        } else if (img.src.includes('PointImagesGroup.jpg')) {
-                            targetWidth = 624;
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 624;
-                            finalStyle = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 20px auto; border: none;';
-                        } else if (img.src.includes('LU-8') || img.src.includes('LI-1') || img.src.includes('ST-36') || 
-                                  img.src.includes('SP-3') || img.src.includes('HT-8') || img.src.includes('SI-5') ||
-                                  img.src.includes('BL-66') || img.src.includes('KI-10') || img.src.includes('KI-3') ||
-                                  img.src.includes('PC-8') || img.src.includes('SJ-6') || img.src.includes('GB-41') || 
-                                  img.src.includes('LIV-1')) {
-                            targetHeight = IMAGE_SIZES.point.height;
-                            finalStyle = `width: ${IMAGE_SIZES.point.width}px; height: ${IMAGE_SIZES.point.height}px; object-fit: contain; display: block; margin: 0 auto; border: none;`;
-                        } else if (img.src.includes('Wheel-Simple.jpg') || img.src.includes('Wheel-Complex.jpg')) {
-                            // Chinese Organ Clock - use centralized constant
-                            targetWidth = IMAGE_SIZES.wheel.width;
-                            targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * IMAGE_SIZES.wheel.width;
-                            finalStyle = `width: ${IMAGE_SIZES.wheel.width}px; height: auto; display: block; margin: 20px auto; border: none;`;
-                        } else {
-                            // Other images - use original size or reasonable default, no border
-                            if (originalWidth) {
-                                targetWidth = Math.min(parseInt(originalWidth), 400);
-                                targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * targetWidth;
-                                finalStyle = `width: ${targetWidth}px; height: auto; display: block; margin: 20px auto; border: none;`;
-                            } else {
-                                targetWidth = 300;
-                                targetHeight = (tempImg.naturalHeight / tempImg.naturalWidth) * 300;
-                                finalStyle = 'width: 300px; height: auto; display: block; margin: 20px auto; border: none;';
-                            }
-                        }
-                        
-                        // Set canvas to target size (not full resolution)
-                        canvas.width = targetWidth;
-                        canvas.height = targetHeight;
-                        
-                        // Draw scaled image
-                        ctx.drawImage(tempImg, 0, 0, targetWidth, targetHeight);
-                        
-                        // Convert to base64
-                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                        img.src = base64;
-                        
-                        img.setAttribute('style', finalStyle);
-                        
-                    } catch (error) {
-                        console.warn('Could not embed image:', img.src, error);
-                        // Keep original src if embedding fails
-                    }
-                }
-                
-                // Replace chart canvas with captured image
-                if (chartImageData) {
-                    const chartContainer = wordContent.querySelector('#researchChartContainer');
-                    if (chartContainer) {
-                        // Clear the container and add the chart image
-                        chartContainer.innerHTML = '';
-                        // Create an img element with the chart data
-                        const chartImg = document.createElement('img');
-                        chartImg.src = chartImageData;
-                        chartImg.alt = 'Live Research Chart - Current Data Visualization';
-                        chartImg.style.width = '100%';
-                        chartImg.style.maxWidth = '800px';
-                        chartImg.style.height = 'auto';
-                        chartImg.style.display = 'block';
-                        chartImg.style.margin = '0 auto';
-                        chartImg.style.border = 'none';
-                        // Add image to container
-                        chartContainer.appendChild(chartImg);
-                        // Also update the container style to remove flex centering that might affect Word export
-                        chartContainer.style.display = 'block';
-                        chartContainer.style.height = 'auto';
-                        console.log('Chart image inserted into Word export');
-                    } else {
-                        console.warn('Chart container not found in cloned content');
-                    }
-                } else {
-                    console.warn('Chart image data not available - chart may not have been rendered');
-                }
-                
-                // Replace point images table with captured image
-                if (pointImagesData) {
-                    const pointImagesTableClone = wordContent.querySelector('#pointImagesTable');
-                    if (pointImagesTableClone) {
-                        const pointImagesContainer = pointImagesTableClone.closest('div');
-                        if (pointImagesContainer) {
-                            // Create image element
-                            const pointImagesImg = document.createElement('img');
-                            pointImagesImg.src = pointImagesData;
-                            pointImagesImg.alt = 'Point Images - All 12 Acupuncture Points';
-                            pointImagesImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 20px auto; border: none;';
-                            
-                            // Replace the container content with the image
-                            pointImagesContainer.innerHTML = '';
-                            const heading = document.createElement('h2');
-                            heading.textContent = 'Point Images';
-                            heading.style.cssText = 'text-align: center; margin-bottom: 10px;';
-                            pointImagesContainer.appendChild(heading);
-                            pointImagesContainer.appendChild(pointImagesImg);
-                            console.log('Point images table replaced with captured image in Word export');
-                        }
-                    }
-                }
-                
-                // Replace methods screenshots with captured image
-                if (methodsScreenshotsData) {
-                    const methodsScreenshotsClone = wordContent.querySelector('#methodsScreenshots');
-                    if (methodsScreenshotsClone) {
-                        // Create image element
-                        const methodsImg = document.createElement('img');
-                        methodsImg.src = methodsScreenshotsData;
-                        methodsImg.alt = 'JetLagPro App Screenshots - Methods';
-                        methodsImg.style.cssText = 'width: 624px; max-width: 624px; height: auto; display: block; margin: 20px auto; border: none;';
-                        
-                        // Replace the container content with the image
-                        methodsScreenshotsClone.innerHTML = '';
-                        methodsScreenshotsClone.appendChild(methodsImg);
-                        console.log('Methods screenshots replaced with captured image in Word export');
-                    }
-                }
-                
-                // Ensure tables maintain fixed widths for Word
-                const tables = wordContent.querySelectorAll('table');
-                tables.forEach(table => {
-                    // Chinese Organ Clock table (Table 1) - tight spacing
-                    const caption = table.querySelector('caption');
-                    if (caption && caption.textContent.includes('Table 1')) {
-                        // Add a class for CSS targeting
-                        table.className = 'organ-clock-table';
-                        table.style.margin = '5px auto';
-                        table.style.fontSize = '9pt';
-                        table.style.width = '100%';
-                        table.style.maxWidth = '624px';
-                        table.style.borderCollapse = 'collapse';
-                        table.style.borderSpacing = '0';
-                        // Tighten caption
-                        caption.style.margin = '0 0 3px 0';
-                        caption.style.padding = '3px 0';
-                        caption.style.fontSize = '10pt';
-                        caption.style.lineHeight = '1.1';
-                        // Tighten header cells - very minimal padding
-                        const headerCells = table.querySelectorAll('th');
-                        headerCells.forEach(cell => {
-                            cell.style.padding = '2px 4px';
-                            cell.style.fontSize = '8.5pt';
-                            cell.style.lineHeight = '1.1';
-                            cell.style.margin = '0';
-                        });
-                        // Tighten data cells - very minimal padding
-                        const dataCells = table.querySelectorAll('td');
-                        dataCells.forEach(cell => {
-                            cell.style.padding = '2px 4px';
-                            cell.style.fontSize = '8.5pt';
-                            cell.style.lineHeight = '1.1';
-                            cell.style.margin = '0';
-                        });
-                        // Remove all row spacing
-                        const rows = table.querySelectorAll('tr');
-                        rows.forEach(row => {
-                            row.style.margin = '0';
-                            row.style.padding = '0';
-                            row.style.height = 'auto';
-                        });
-                        // Remove spacing from table body
-                        const tbody = table.querySelector('tbody');
-                        if (tbody) {
-                            tbody.style.margin = '0';
-                            tbody.style.padding = '0';
-                        }
-                        const thead = table.querySelector('thead');
-                        if (thead) {
-                            thead.style.margin = '0';
-                            thead.style.padding = '0';
-                        }
-                    }
-                    // Data Collected table (Table 2) - tight spacing with compact text format
-                    else if (caption && caption.textContent.includes('Table 2')) {
-                        // Add a class for CSS targeting
-                        table.className = 'data-collected-table';
-                        table.style.margin = '5px auto';
-                        table.style.fontSize = '9pt';
-                        table.style.width = '100%';
-                        table.style.maxWidth = '624px';
-                        table.style.borderCollapse = 'collapse';
-                        table.style.borderSpacing = '0';
-                        // Tighten caption
-                        caption.style.margin = '0 0 3px 0';
-                        caption.style.padding = '3px 0';
-                        caption.style.fontSize = '10pt';
-                        caption.style.lineHeight = '1.1';
-                        // Tighten header cells - minimal padding
-                        const headerCells = table.querySelectorAll('th');
-                        headerCells.forEach(cell => {
-                            cell.style.padding = '2px 4px';
-                            cell.style.fontSize = '8.5pt';
-                            cell.style.lineHeight = '1.1';
-                            cell.style.margin = '0';
-                        });
-                        // Tighten data cells - minimal padding
-                        const dataCells = table.querySelectorAll('td');
-                        dataCells.forEach(cell => {
-                            cell.style.padding = '2px 4px';
-                            cell.style.fontSize = '9pt';
-                            cell.style.lineHeight = '1.3';
-                            cell.style.margin = '0';
-                        });
-                        // Tighten paragraphs - compact text format
-                        const paragraphs = table.querySelectorAll('p');
-                        paragraphs.forEach(p => {
-                            p.style.margin = '0';
-                            p.style.padding = '0';
-                            p.style.fontSize = '9pt';
-                            p.style.lineHeight = '1.3';
-                        });
-                        // Remove all row spacing
-                        const rows = table.querySelectorAll('tr');
-                        rows.forEach(row => {
-                            row.style.margin = '0';
-                            row.style.padding = '0';
-                            row.style.height = 'auto';
-                        });
-                        // Remove spacing from table body
-                        const tbody = table.querySelector('tbody');
-                        if (tbody) {
-                            tbody.style.margin = '0';
-                            tbody.style.padding = '0';
-                        }
-                        const thead = table.querySelector('thead');
-                        if (thead) {
-                            thead.style.margin = '0';
-                            thead.style.padding = '0';
-                        }
-                    }
-                    // Methods screenshots table - expanded to margins with more spacing
-                    else if (table.closest('.methods-screenshots') || 
-                        (table.querySelector('img') && table.querySelector('img').src.includes('research-photo'))) {
-                        table.style.width = '90%';
-                        table.style.maxWidth = '90%';
-                        table.style.tableLayout = 'auto';
-                        table.style.marginLeft = 'auto';
-                        table.style.marginRight = 'auto';
-                        table.style.borderSpacing = IMAGE_SIZES.methods.spacing + 'px';
-                        table.style.borderCollapse = 'separate';
-                        // Set cell widths to 33.33% each with centralized padding
-                        const cells = table.querySelectorAll('td');
-                        cells.forEach(cell => {
-                            cell.style.width = '33.33%';
-                            cell.style.padding = IMAGE_SIZES.methods.padding + 'px';
-                        });
-                    }
-                    // Point images table - width calculated from point size (6 columns)
-                    if (table.querySelector('img') && 
-                        (table.querySelector('img').src.includes('LU-8.jpg') || 
-                         table.querySelector('img').src.includes('LI-1.jpg') ||
-                         table.querySelector('img').src.includes('ST-36.jpg') ||
-                         table.querySelector('img').src.includes('BL-66.jpg'))) {
-                        const pointTableWidth = IMAGE_SIZES.point.width * 6; // 6 columns
-                        table.style.width = pointTableWidth + 'px';
-                        table.style.maxWidth = pointTableWidth + 'px';
-                        table.style.tableLayout = 'fixed';
-                        table.style.margin = '5px auto';
-                        table.style.borderCollapse = 'collapse';
-                        table.style.borderSpacing = '0';
-                        table.style.padding = '0';
-                        table.style.fontSize = '9pt';
-                        // Set image row cells using centralized constants
-                        const rows = table.querySelectorAll('tr');
-                        rows.forEach((row, rowIndex) => {
-                            row.style.margin = '0';
-                            row.style.padding = '0';
-                            row.style.height = 'auto';
-                            const cells = row.querySelectorAll('td');
-                            const hasImage = cells[0].querySelector('img');
-                            cells.forEach(cell => {
-                                cell.style.width = IMAGE_SIZES.point.width + 'px';
-                                cell.style.border = 'none';
-                                cell.style.margin = '0';
-                                cell.style.lineHeight = '1';
-                                if (hasImage) {
-                                    cell.style.height = IMAGE_SIZES.point.height + 'px';
-                                    cell.style.padding = '1px';
-                                    cell.style.verticalAlign = 'middle';
-                                } else {
-                                    cell.style.height = 'auto';
-                                    cell.style.padding = '0 1px';
-                                    cell.style.verticalAlign = 'top';
-                                }
-                            });
-                            // Reduce paragraph spacing in label rows - very tight
-                            if (!hasImage) {
-                                const paragraphs = row.querySelectorAll('p');
-                                paragraphs.forEach(p => {
-                                    p.style.margin = '0';
-                                    p.style.padding = '0';
-                                    p.style.fontSize = '9pt';
-                                    p.style.lineHeight = '1';
-                                });
-                            }
-                        });
-                    }
-                });
-                
-                // Apply Word template styles to elements
-                function applyWordStyles(element) {
-                    // Process headings first
-                    const headings = element.querySelectorAll('h1, h2, h3, h4');
-                    headings.forEach(heading => {
-                        const tagName = heading.tagName.toLowerCase();
-                        if (tagName === 'h1') {
-                            // Article title
-                            const currentStyle = heading.getAttribute('style') || '';
-                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Articletitle";');
-                            heading.setAttribute('class', 'Articletitle');
-                        } else if (tagName === 'h2') {
-                            // Heading 1 style
-                            const currentStyle = heading.getAttribute('style') || '';
-                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading1";');
-                            heading.setAttribute('class', 'Heading1');
-                        } else if (tagName === 'h3') {
-                            // Heading 2 style
-                            const currentStyle = heading.getAttribute('style') || '';
-                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading2";');
-                            heading.setAttribute('class', 'Heading2');
-                        } else if (tagName === 'h4') {
-                            // Heading 3 style
-                            const currentStyle = heading.getAttribute('style') || '';
-                            heading.setAttribute('style', currentStyle + 'mso-style-name:"Heading3";');
-                            heading.setAttribute('class', 'Heading3');
-                        }
-                    });
-                    
-                    // Process paragraphs - need to track context
-                    const paragraphs = element.querySelectorAll('p');
-                    paragraphs.forEach((p, index) => {
-                        const textContent = p.textContent.trim();
-                        const currentStyle = p.getAttribute('style') || '';
-                        
-                        // Check for special paragraph types first
-                        if (textContent.toLowerCase().includes('keywords:')) {
-                            p.setAttribute('style', currentStyle + 'mso-style-name:"Keywords";');
-                            p.setAttribute('class', 'Keywords');
-                        } else if (p.previousElementSibling && p.previousElementSibling.tagName === 'H2' && 
-                                   p.previousElementSibling.textContent.trim() === 'Abstract') {
-                            // First paragraph after Abstract heading
-                            p.setAttribute('style', currentStyle + 'mso-style-name:"Abstract";');
-                            p.setAttribute('class', 'Abstract');
-                        } else if (textContent.match(/^Figure \d+:/i)) {
-                            // Figure captions
-                            p.setAttribute('style', currentStyle + 'mso-style-name:"Figurecaption";');
-                            p.setAttribute('class', 'Figurecaption');
-                        } else {
-                            // Determine if this is first paragraph after a heading
-                            let prevSibling = p.previousElementSibling;
-                            let isFirstAfterHeading = false;
-                            
-                            // Check if previous sibling is a heading
-                            if (prevSibling && ['H1', 'H2', 'H3', 'H4'].includes(prevSibling.tagName)) {
-                                isFirstAfterHeading = true;
-                            } else {
-                                // Check if previous sibling is whitespace/comment and before that is a heading
-                                while (prevSibling && !prevSibling.textContent.trim() && prevSibling.previousElementSibling) {
-                                    prevSibling = prevSibling.previousElementSibling;
-                                }
-                                if (prevSibling && ['H1', 'H2', 'H3', 'H4'].includes(prevSibling.tagName)) {
-                                    isFirstAfterHeading = true;
-                                }
-                            }
-                            
-                            if (isFirstAfterHeading) {
-                                p.setAttribute('style', currentStyle + 'mso-style-name:"Paragraph";');
-                                p.setAttribute('class', 'Paragraph');
-                            } else {
-                                p.setAttribute('style', currentStyle + 'mso-style-name:"Newparagraph";');
-                                p.setAttribute('class', 'Newparagraph');
-                            }
-                        }
-                    });
-                    
-                    // Process lists
-                    const ulLists = element.querySelectorAll('ul');
-                    ulLists.forEach(ul => {
-                        const currentStyle = ul.getAttribute('style') || '';
-                        ul.setAttribute('style', currentStyle + 'mso-style-name:"Bulletedlist";');
-                        ul.setAttribute('class', 'Bulletedlist');
-                    });
-                    
-                    const olLists = element.querySelectorAll('ol');
-                    olLists.forEach(ol => {
-                        const currentStyle = ol.getAttribute('style') || '';
-                        ol.setAttribute('style', currentStyle + 'mso-style-name:"Numberedlist";');
-                        ol.setAttribute('class', 'Numberedlist');
-                    });
-                    
-                    // Process table captions
-                    const captions = element.querySelectorAll('caption');
-                    captions.forEach(caption => {
-                        const currentStyle = caption.getAttribute('style') || '';
-                        caption.setAttribute('style', currentStyle + 'mso-style-name:"Tabletitle";');
-                        caption.setAttribute('class', 'Tabletitle');
-                    });
-                    
-                    // Handle References section specially
-                    const allH2s = Array.from(element.querySelectorAll('h2'));
-                    const referencesHeading = allH2s.find(h2 => h2.textContent.trim() === 'References');
-                    if (referencesHeading) {
-                        let nextEl = referencesHeading.nextElementSibling;
-                        while (nextEl && nextEl.tagName !== 'H2') {
-                            if (nextEl.tagName === 'OL') {
-                                // Apply References style to list items
-                                nextEl.querySelectorAll('li').forEach(li => {
-                                    // Create or find paragraph in list item
-                                    let p = li.querySelector('p');
-                                    if (!p) {
-                                        p = document.createElement('p');
-                                        p.innerHTML = li.innerHTML;
-                                        li.innerHTML = '';
-                                        li.appendChild(p);
-                                    }
-                                    const currentStyle = p.getAttribute('style') || '';
-                                    p.setAttribute('style', currentStyle + 'mso-style-name:"References";');
-                                    p.setAttribute('class', 'References');
-                                });
-                            }
-                            nextEl = nextEl.nextElementSibling;
-                        }
-                    }
-                    
-                    // Handle Acknowledgments section
-                    const ackHeading = allH2s.find(h2 => 
-                        h2.textContent.trim().toLowerCase().includes('acknowledgment')
-                    );
-                    if (ackHeading) {
-                        let nextEl = ackHeading.nextElementSibling;
-                        while (nextEl && nextEl.tagName !== 'H2') {
-                            if (nextEl.tagName === 'P') {
-                                const currentStyle = nextEl.getAttribute('style') || '';
-                                nextEl.setAttribute('style', currentStyle + 'mso-style-name:"Acknowledgements";');
-                                nextEl.setAttribute('class', 'Acknowledgements');
-                            }
-                            nextEl = nextEl.nextElementSibling;
-                        }
-                    }
-                }
-                
-                // Apply Word styles to the cloned content
-                applyWordStyles(wordContent);
-                
-                // Create Word-compatible HTML with embedded styles and images
-                const wordHTML = `<!DOCTYPE html>
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JetLagPro Research Paper</title>
-    <style>
-        body {
-            font-family: 'Times New Roman', serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            font-size: 12pt;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 18pt;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        h2 {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        h3 {
-            font-size: 13pt;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        .abstract {
-            background: #f8f9fa;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-left: 4px solid #2563eb;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-            border: none;
-        }
-        /* Tables for Word - proper formatting for journal submission */
-        /* Standard Word page: 8.5" wide, 1" margins = 6.5" usable width = 468pt = 624px at 96 DPI */
-        table {
-            border-collapse: collapse;
-            margin: 20px auto;
-            font-size: 11pt;
-            page-break-inside: avoid;
-        }
-        /* Chinese Organ Clock table - tight spacing for Word export */
-        .organ-clock-table {
-            margin: 5px auto !important;
-            font-size: 9pt !important;
-            width: 100% !important;
-            max-width: 624px !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-        }
-        .organ-clock-table caption {
-            margin: 0 0 3px 0 !important;
-            padding: 3px 0 !important;
-            font-size: 10pt !important;
-            line-height: 1.1 !important;
-        }
-        .organ-clock-table th {
-            padding: 2px 4px !important;
-            font-size: 8.5pt !important;
-            line-height: 1.1 !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-        }
-        .organ-clock-table td {
-            padding: 2px 4px !important;
-            font-size: 8.5pt !important;
-            line-height: 1.1 !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-        }
-        .organ-clock-table tr {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: auto !important;
-        }
-        .organ-clock-table tbody,
-        .organ-clock-table thead {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        /* Data Collected table - tight spacing with compact text format for Word export */
-        .data-collected-table {
-            margin: 5px auto !important;
-            font-size: 9pt !important;
-            width: 100% !important;
-            max-width: 624px !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-        }
-        .data-collected-table caption {
-            margin: 0 0 3px 0 !important;
-            padding: 3px 0 !important;
-            font-size: 10pt !important;
-            line-height: 1.1 !important;
-        }
-        .data-collected-table th {
-            padding: 2px 4px !important;
-            font-size: 8.5pt !important;
-            line-height: 1.1 !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-        }
-        .data-collected-table td {
-            padding: 2px 4px !important;
-            font-size: 9pt !important;
-            line-height: 1.3 !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-        }
-        /* Compact text format in Data Collected table */
-        .data-collected-table p {
-            margin: 0 !important;
-            padding: 0 !important;
-            font-size: 9pt !important;
-            line-height: 1.3 !important;
-        }
-        .data-collected-table tr {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .data-collected-table tbody,
-        .data-collected-table thead {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        /* Methods screenshots table - expanded to margins with more spacing */
-        /* Uses: --word-table-spacing (15px) from CSS variables */
-        .methods-screenshots table {
-            width: 90% !important;
-            max-width: 90% !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            table-layout: auto !important;
-            border-spacing: var(--word-table-spacing) !important;
-            border-collapse: separate !important;
-        }
-        /* Point images table - width calculated from point size (6 columns x 100px = 600px) */
-        /* Matches: IMAGE_SIZES.point.width * 6 */
-        table[style*="table-layout: fixed"] {
-            width: 600px !important;
-            max-width: 600px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            table-layout: fixed !important;
-        }
-        table th,
-        table td {
-            padding: 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-        /* Point image cells - square containers */
-        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
-        table[style*="table-layout: fixed"] td {
-            border: none !important;
-            padding: 5px !important;
-            width: 100px !important;
-            height: 100px !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-        }
-        /* Methods screenshots cells */
-        /* Matches: IMAGE_SIZES.methods.padding */
-        .methods-screenshots td {
-            border: none !important;
-            width: 33.33% !important;
-            text-align: center !important;
-            vertical-align: top !important;
-            padding: 15px !important;
-        }
-        /* Point images - exact 100x100px square */
-        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
-        table[style*="table-layout: fixed"] img {
-            width: 100px !important;
-            height: 100px !important;
-            max-width: 100px !important;
-            max-height: 100px !important;
-            min-width: 100px !important;
-            min-height: 100px !important;
-            object-fit: contain !important;
-            display: block !important;
-            margin: 0 auto !important;
-        }
-        /* Methods screenshots - moderate size with spacing */
-        /* Matches: IMAGE_SIZES.methods.width */
-        .methods-screenshots img {
-            width: 170px !important;
-            max-width: 170px !important;
-            height: auto !important;
-            object-fit: contain !important;
-            display: block !important;
-            margin: 0 auto !important;
-        }
-        table th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-        }
-        /* Preserve 2x2 survey table layout */
-        div[style*="grid-template-columns: 1fr 1fr"] {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: 1fr 1fr !important;
-            gap: 20px !important;
-            margin: 20px 0 !important;
-        }
-        div[style*="border: 1px solid #ddd"] {
-            border: 1px solid #ddd !important;
-            padding: 20px !important;
-            border-radius: 8px !important;
-            background: white !important;
-        }
-        ul, ol {
-            margin-bottom: 15px;
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 5px;
-        }
-        /* Reset indentation for elements following lists - critical for Word */
-        ul + p, ol + p,
-        ul + h2, ol + h2,
-        ul + h3, ol + h3,
-        ul + h4, ol + h4 {
-            margin-left: 0 !important;
-            padding-left: 0 !important;
-            text-indent: 0 !important;
-        }
-        /* Ensure ALL h2, h4 headings have no indentation in Word */
-        h2, h3, h4 {
-            margin-left: 0 !important;
-            padding-left: 0 !important;
-            text-indent: 0 !important;
-        }
-        /* Ensure paragraphs after empty paragraphs also reset */
-        p + h2, p + h3, p + h4 {
-            margin-left: 0 !important;
-            padding-left: 0 !important;
-            text-indent: 0 !important;
-        }
-        .methods-screenshots {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .methods-screenshots table {
-            width: 90% !important;
-            max-width: 90% !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            table-layout: auto !important;
-            border-spacing: 15px !important;
-            border-collapse: separate !important;
-        }
-        .methods-screenshots td {
-            width: 33.33% !important;
-            padding: 15px !important;
-        }
-        .methods-screenshots img {
-            width: 170px !important;
-            max-width: 170px !important;
-            height: auto !important;
-            object-fit: contain !important;
-            display: block !important;
-            margin: 0 auto !important;
-        }
-        /* Point images table - fixed 600px width (6 columns x 100px) - tight spacing for Word */
-        /* Matches: IMAGE_SIZES.point.width * 6 */
-        table[style*="table-layout: fixed"],
-        .point-images-table {
-            width: 600px !important;
-            max-width: 600px !important;
-            margin: 0 auto !important;
-            table-layout: fixed !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-            padding: 0 !important;
-            font-size: 9pt !important;
-        }
-        /* All table rows - remove spacing */
-        table[style*="table-layout: fixed"] tr {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: auto !important;
-        }
-        table[style*="table-layout: fixed"] td {
-            width: 100px !important;
-            padding: 1px !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-            border: none !important;
-            margin: 0 !important;
-            line-height: 1 !important;
-        }
-        /* Image row cells - square 100x100px, minimal padding */
-        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
-        table[style*="table-layout: fixed"] tr:has(img) td {
-            width: 100px !important;
-            height: 100px !important;
-            padding: 1px !important;
-            vertical-align: middle !important;
-        }
-        /* Label row cells - minimal height, tight spacing */
-        table[style*="table-layout: fixed"] tr:not(:has(img)) td {
-            width: 100px !important;
-            padding: 0 1px !important;
-            height: auto !important;
-            vertical-align: top !important;
-        }
-        /* Point images - exact 100x100px square for Word */
-        /* Matches: IMAGE_SIZES.point.width and IMAGE_SIZES.point.height */
-        table[style*="table-layout: fixed"] img {
-            width: 100px !important;
-            height: 100px !important;
-            max-width: 100px !important;
-            max-height: 100px !important;
-            min-width: 100px !important;
-            min-height: 100px !important;
-            object-fit: contain !important;
-            display: block !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        /* Reduce spacing in label paragraphs - very tight */
-        /* Override inline margin-top styles */
-        table[style*="table-layout: fixed"] p,
-        .point-images-table p {
-            margin: 0 !important;
-            margin-top: 0 !important;
-            padding: 0 !important;
-            font-size: 9pt !important;
-            line-height: 1 !important;
-        }
-        /* Ensure point images table cells have minimal spacing */
-        .point-images-table td {
-            padding: 1px !important;
-            margin: 0 !important;
-        }
-        /* Point images in Word - ensure proper size */
-        .point-images-table img {
-            width: 100px !important;
-            height: 100px !important;
-            max-width: 100px !important;
-            max-height: 100px !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        /* Word-specific styles */
-        @page {
-            margin: 1in;
-        }
-        /* Ensure proper page breaks */
-        h1, h2 {
-            page-break-after: avoid;
-        }
-        img {
-            page-break-inside: avoid;
-        }
-    </style>
-    <!-- Word-specific meta tags -->
-    <xml>
-        <w:WordDocument>
-            <w:View>Print</w:View>
-            <w:Zoom>100</w:Zoom>
-            <w:DoNotHyphenateCaps/>
-            <w:PunctuationKerning/>
-            <w:DrawingGridHorizontalSpacing>9.35 pt</w:DrawingGridHorizontalSpacing>
-            <w:DrawingGridVerticalSpacing>9.35 pt</w:DrawingGridVerticalSpacing>
-        </w:WordDocument>
-    </xml>
-</head>
-<body>
-${wordContent.outerHTML}
-</body>
-</html>`;
-                
-                // Create and download file
-                const blob = new Blob([wordHTML], { type: 'application/msword' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'JetLagPro_Research_Paper.doc';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                
-                // Remove loading message
-                document.body.removeChild(loadingDiv);
-                
-            } catch (error) {
-                console.error('Error generating Word document:', error);
-                alert('Error generating Word document. Please try again. Error: ' + error.message);
-            }
-        }
-        
-        // HTML Export Function with embedded images
-        async function exportToHTML() {
-            try {
-                const paperContent = document.querySelector('.research-paper');
-                
-                // Show loading message
-                const loadingDiv = document.createElement('div');
-                loadingDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:2px solid #2563eb;border-radius:8px;z-index:9999;';
-                loadingDiv.innerHTML = 'Generating HTML with embedded images... Please wait.';
-                document.body.appendChild(loadingDiv);
-                
-                // Clone content to modify
-                const htmlContent = paperContent.cloneNode(true);
-                
-                // Convert images to base64 for embedding while preserving sizes
-                const images = htmlContent.querySelectorAll('img');
-                for (let img of images) {
-                    try {
-                        // Capture original styling and dimensions
-                        const originalStyle = img.getAttribute('style') || '';
-                        const originalWidth = img.getAttribute('width') || '';
-                        const originalHeight = img.getAttribute('height') || '';
-                        const originalClass = img.getAttribute('class') || '';
-                        
-                        // Create canvas to convert image to base64
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const tempImg = new Image();
-                        
-                        // Wait for image to load
-                        await new Promise((resolve, reject) => {
-                            tempImg.onload = resolve;
-                            tempImg.onerror = reject;
-                            tempImg.crossOrigin = 'anonymous';
-                            tempImg.src = img.src;
-                        });
-                        
-                        // Set canvas size and draw image
-                        canvas.width = tempImg.naturalWidth;
-                        canvas.height = tempImg.naturalHeight;
-                        ctx.drawImage(tempImg, 0, 0);
-                        
-                        // Convert to base64
-                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                        img.src = base64;
-                        
-                        // Restore original styling and dimensions
-                        if (originalStyle) img.setAttribute('style', originalStyle);
-                        if (originalWidth) img.setAttribute('width', originalWidth);
-                        if (originalHeight) img.setAttribute('height', originalHeight);
-                        if (originalClass) img.setAttribute('class', originalClass);
-                        
-                    } catch (error) {
-                        console.warn('Could not embed image:', img.src, error);
-                        // Keep original src if embedding fails
-                    }
-                }
-                
-                // Create complete HTML document
-                const fullHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JetLagPro Research Paper</title>
-    <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            line-height: 1.6; 
-            color: #333; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
-        }
-        h1 { text-align: center; margin-bottom: 20px; }
-        h2 { font-size: 1.5rem; font-weight: 600; margin-top: 30px; margin-bottom: 15px; color: #2c3e50; }
-        h3 { margin-top: 20px; margin-bottom: 10px; }
-        p { margin-bottom: 15px; }
-        .abstract { background: #f8f9fa; padding: 20px; margin-bottom: 30px; }
-        img { 
-            max-width: 100%; 
-            height: auto; 
-            display: block;
-            margin: 20px auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .methods-screenshots img {
-            max-width: 200px;
-            margin: 10px;
-        }
-        @media print { 
-            body { max-width: none; padding: 0; } 
-            img { box-shadow: none; }
-        }
-    </style>
-</head>
-<body>
-${htmlContent.outerHTML}
-</body>
-</html>`;
-                
-                // Create download link
-                const blob = new Blob([fullHTML], { type: 'text/html' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'JetLagPro_Research_Paper.html';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                
-                // Remove loading message
-                document.body.removeChild(loadingDiv);
-                
-            } catch (error) {
-                console.error('Error generating HTML:', error);
-                alert('Error generating HTML. Please try again. Error: ' + error.message);
-            }
-        }
-        
-        // Live Research Data Functions
+        // Live Research Data Functions (PDF/Word: run npm run export-paper to regenerate assets/downloads/)
         let researchChart = null;
         const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
         

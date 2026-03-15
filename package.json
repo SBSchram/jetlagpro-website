@@ -1,0 +1,12 @@
+{
+  "name": "jetlagpro-website",
+  "version": "1.0.0",
+  "description": "JetLagPro website and research paper export",
+  "private": true,
+  "scripts": {
+    "export-paper": "node scripts/export-research-paper.js"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}
