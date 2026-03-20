@@ -61,6 +61,12 @@ const NOTIFICATION_EMAIL = "sbschram@gmail.com";
 const NOTIFICATION_SETTINGS_DOC = "notificationSettings";
 const NOTIFICATION_SETTINGS_COLLECTION = "_system";
 
+// Optional origin timezone → city labels for email notifications
+// Extend this map with any additional timezones you care about.
+const ORIGIN_TIMEZONE_LABELS = {
+  "Europe/Helsinki": "Helsinki",
+};
+
 // Gmail Email Transporter (requires app-specific password with 2FA enabled)
 let emailTransporter = null;
 
@@ -515,7 +521,12 @@ exports.realtimeTripNotification = onDocumentCreated({
   
   try {
     logger.info(`📧 Sending real-time notification for new trip: ${tripId}`);
-    
+    const originTimezone = data.originTimezone || "Unknown";
+    const originLabel = originTimezone !== "Unknown" ? (ORIGIN_TIMEZONE_LABELS[originTimezone] || null) : null;
+    const originLine = originLabel
+      ? `Route: ${originLabel} (${originTimezone}) → ${data.destinationCode || "Unknown"}`
+      : `Origin timezone: ${originTimezone}`;
+
     const emailBody = `New trip created:
 
 Trip ID: ${tripId}
@@ -524,6 +535,7 @@ Direction: ${data.travelDirection || "Unknown"}
 Points Completed: ${data.pointsCompleted || 0}/12
 Timezone Count: ${data.timezonesCount ?? "Unknown"}
 Survey: ${data.surveyCompleted ? "Yes" : "No"}
+${originLine}
 
 ---
 JetLagPro Research Analytics
