@@ -70,7 +70,7 @@ Optional: `sleep_post`, `fatigue_post`, `concentration_post`, `irritability_post
 
 ## DAG figure (Methods)
 
-To generate the causal diagram cited in the paper (confounders: time zones, direction; mediator: sleep):
+To generate the causal diagram cited in the paper (confounders: time zones, direction):
 
 ```bash
 Rscript scripts/dag_jetlag.R

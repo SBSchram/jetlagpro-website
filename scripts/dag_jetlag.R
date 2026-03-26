@@ -3,7 +3,6 @@
 # =============================================================================
 # Generates the causal diagram cited in the Methods (Anticipated Data Analysis).
 # Confounders we adjust for: time zones crossed, travel direction.
-# Mediator we do not adjust for: sleep (on path adherence -> jetlag).
 #
 # REQUIREMENTS: dagitty, ggdag
 #   install.packages(c("dagitty", "ggdag"))
@@ -15,16 +14,14 @@
 library(dagitty)
 library(ggdag)
 
-# Paper-aligned DAG: timezones and direction are confounders; sleep is mediator
+# Paper-aligned DAG: show confounders used for covariate adjustment.
 dag <- dagitty("
 dag {
-  timezones -> adherence
-  timezones -> jetlag
+  time_zones -> adherence
+  time_zones -> jetlag
   direction -> adherence
   direction -> jetlag
   adherence -> jetlag
-  adherence -> sleep
-  sleep -> jetlag
 }
 ")
 
