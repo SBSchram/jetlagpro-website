@@ -14,6 +14,7 @@ Requirements: Python 3.6+ (no extra packages). Run from repo root or scripts/.
 import csv
 import sys
 import os
+import re
 
 # Import shared logic from analyze_jetlag_data (same directory)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +27,14 @@ from analyze_jetlag_data import (
 
 def trip_to_row(trip):
     """Build one CSV row from a validated trip (Firestore-style keys)."""
+    trip_id = trip.get("tripId", "")
+    device_id = ""
+    if isinstance(trip_id, str) and trip_id:
+        parts = re.split(r"[-_]", trip_id) if "/" not in trip_id else trip_id.split("/")
+        device_id = parts[0] if parts else ""
+    if not device_id and trip.get("deviceId") is not None:
+        device_id = str(trip.get("deviceId")).strip()
+
     jetlag_score = calculate_aggregate_severity(trip)
     if jetlag_score is None:
         return None
@@ -45,7 +54,9 @@ def trip_to_row(trip):
     if time_zones is None or direction not in ("east", "west") or stimulated_points is None:
         return None
     row = {
-        "trip_id": trip.get("tripId", ""),
+        "trip_id": trip_id,
+        "device_id": device_id,
+        "start_date": trip.get("startDate", ""),
         "time_zones": time_zones,
         "direction": direction,
         "stimulated_points": stimulated_points,
@@ -57,8 +68,6 @@ def trip_to_row(trip):
         "motivation_post": trip.get("motivationPost"),
         "gi_post": trip.get("giPost"),
     }
-    if trip.get("deviceId") is not None:
-        row["device_id"] = trip.get("deviceId")
     return row
 
 
