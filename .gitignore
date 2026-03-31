@@ -7,6 +7,7 @@ Thumbs.db
 *.log
 *firepit*.txt
 node_modules/
+figures/
 .env
 .env.local
 .env.development.local
@@ -36,7 +37,6 @@ analyze_jetlag_data.py
 
 # Workspace and IDE files
 *.code-workspace
-h origin main
 
 # HandyWorks files (now in handyworks-website repository)
 data/external/

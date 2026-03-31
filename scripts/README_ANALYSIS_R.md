@@ -21,8 +21,8 @@ ggsave("figures/jetlag_by_timezone.png", p, width = 7, height = 5)
 
 1. **Export trip data to CSV**
    ```bash
-   python download_firestore.py tripCompletions trips.json
-   python export_trips_for_r.py --trips trips.json --output firebase_export.csv
+   python scripts/download_firestore.py tripCompletions trips.json
+   python scripts/export_trips_for_r.py --trips trips.json --output firebase_export.csv
    ```
 
 2. **Run R analysis**
