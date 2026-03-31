@@ -1,7 +1,7 @@
 # =============================================================================
 # JetLagPro — DAG for covariate selection (paper-aligned)
 # =============================================================================
-# Generates the causal diagram cited in the Methods (Anticipated Data Analysis).
+# Generates the causal diagram cited in the Methods (Statistical analysis).
 # Confounders we adjust for: time zones crossed, travel direction.
 #
 # REQUIREMENTS: dagitty, ggdag

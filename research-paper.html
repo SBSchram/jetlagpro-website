@@ -501,14 +501,14 @@
 
     <main style="padding-top: 120px;">
         <div class="research-paper">
-        <h1>Jet Lag Pro: A Mobile Platform for Evaluating Chronoacupuncture as a Tool for Jet Lag Management</h1>
+        <h1>Jet Lag Pro: A Mobile Platform for Evaluating Chronoacupuncture (Time-Aligned Acupressure) as a Tool for Jet Lag Management</h1>
         
         <p style="text-align: center; margin-bottom: 2px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
         <p style="text-align: center; margin-bottom: 30px;">© 2026 Steven Schram. All rights reserved.</p>
         
         <h2>Abstract</h2>
 
-        <p><strong>Background:</strong> Jet lag is common among long-haul travelers, and existing strategies (light exposure, melatonin, behavioral scheduling) show inconsistent real-world effectiveness. Non-photic zeitgebers can influence circadian phase; repeated timed somatosensory stimulation aligned with destination time has been proposed as a potential cue but not quantitatively evaluated in travelers.</p>
+        <p><strong>Background:</strong> Jet lag is common among long-haul travelers, and existing strategies (light exposure, melatonin, behavioral scheduling) show inconsistent real-world effectiveness. Non-photic zeitgebers can influence circadian phase; repeated timed somatosensory stimulation aligned with destination time has been proposed as a potential cue but not quantitatively evaluated in travelers. In this study, “chronoacupuncture” refers to a time-aligned, self-administered <em>acupressure</em> protocol delivered by a mobile app (no needles).</p>
         
         <p><strong>Objective:</strong> To assess whether adherence to a structured timed acupressure protocol delivered via a mobile app is associated with lower jet lag symptom severity across typical long-haul travel patterns.</p>
         
@@ -813,11 +813,11 @@
 
 		
 <h4>Statistical analysis</h4>
-	<p>Covariate selection was guided by a directed acyclic graph (DAG) representing plausible causal relationships between travel characteristics, protocol adherence, and jet-lag outcomes (see project repository for reproducible figure code). Based on this framework, models adjust for the number of time zones crossed and travel direction (eastward vs westward), which may influence both adherence and symptom severity. We do not adjust for post-travel symptom-domain items (including sleep-related items) because they overlap with the composite outcome and would constitute overadjustment. Other potential confounders (e.g., trip duration, age, sex) are not included in the primary analysis.</p>
+	<p>Covariate selection was guided by a directed acyclic graph (DAG) representing plausible causal relationships between travel characteristics, protocol adherence, and jet-lag outcomes (see project repository for reproducible figure code). Models adjust for the number of time zones crossed and travel direction (eastward vs westward), which may influence both adherence and symptom severity. We do not adjust for post-travel symptom-domain ratings (including sleep-related ratings) because they overlap with the composite outcome and would constitute overadjustment. Other potential confounders (e.g., trip duration, age, sex) are not included in the primary analysis.</p>
 
 	<p>We summarized trip characteristics across adherence groups using medians and interquartile ranges for continuous variables, and proportions for categorical variables.</p>
 
-	<p>Because individual travelers may contribute multiple trips, the primary analysis included all validated trips and used linear regression with cluster-robust standard errors (clustered by traveler/device identifier) to account for within-person correlation. This repeated-use information is informative for real-world utility and sustained engagement; therefore, all trips were retained in the main model. The primary analysis estimated the association between adherence category and post-travel composite jet-lag severity, with minimal adherence (0–2 points) as the reference group. Fixed effects included the number of time zones crossed (continuous) and travel direction (eastward vs westward). Adherence was also modeled as a continuous predictor (number of points completed) to improve dose-response resolution.</p>
+	<p>Because individual travelers may contribute multiple trips, the primary analysis included all validated trips and used linear regression with cluster-robust standard errors (clustered by traveler/device identifier) to account for within-person correlation. The primary model estimated the association between adherence category and post-travel composite jet-lag severity, with minimal adherence (0–2 points) as the reference group, adjusting for time zones crossed (continuous) and travel direction. Adherence was also modeled as a continuous predictor (number of points completed) to evaluate dose–response.</p>
 
 	<p>To evaluate potential dose-response effects, the number of stimulated points was modeled both as an ordinal variable and as a continuous predictor. Prespecified subgroup analyses stratified trips by travel direction and time-zone band (1–2, 3–5, 6–8, and ≥9 zones) to examine whether associations differed across travel patterns.</p>
 
