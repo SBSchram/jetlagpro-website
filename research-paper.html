@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <!-- Trip validation service -->
     <script src="assets/js/trip-validator.js"></script>
-    <!-- PDF/Word exports: run npm run export-paper to regenerate assets/downloads/ -->
+    <!-- PDF export: run npm run export-paper to regenerate assets/downloads/ -->
     <style>
         .research-paper {
             max-width: 800px;
@@ -150,14 +150,14 @@
             --img-wheel-max-width: 50%;
             --img-wheel-margin: 0 auto;
             
-            /* Word export specific - must fit 624px page width with margins */
+            /* Print/PDF export sizing */
             --word-img-methods-width: 170px;  /* Matches HTML for consistency */
             --word-img-point-size: 100px;    /* Matches HTML for consistency */
             --word-img-wheel-width: 300px;
-            --word-table-spacing: 15px;        /* Tighter spacing for Word */
+            --word-table-spacing: 15px;        /* Tighter spacing for print */
         }
         
-        /* Responsive image sizing for HTML display (Word export resizes separately) */
+        /* Responsive image sizing for HTML display */
         .methods-screenshots {
             text-align: center;
             margin: 10px 0 30px 0;
@@ -886,7 +886,7 @@
 		<p>These include variable traveler compliance, possible placebo effects in tactile or app-based interventions, and subjective symptom reporting with a recall interval that is scheduled at 2 days but may be longer when participants delay completing the survey. They also include unrestricted use of concurrent strategies common among international travelers (e.g., melatonin supplementation, strategic bright-light exposure, caffeine, meal timing, and sleep-hygiene adjustments).</p>
 		<p>We did not collect data on these co-interventions. The primary aim was to evaluate the app-guided timed acupressure protocol in unrestricted real-world behavior, rather than isolate its effect from all other influences.</p>
 		<p>Participants who complete more points may differ systematically in health behaviors and use of other interventions (e.g., melatonin, light). Therefore, we cannot separate the protocol effect from these factors (confounding by indication).</p>
-		<p>Without sham acupressure or blinding, we cannot distinguish specific effects of meridian timing from placebo or expectation. Five classical horary points were substituted for accessibility (Table 1), so the protocol differs from idealized horary-only descriptions. While horary points are often treated as theoretically optimal in TCM, there are no controlled data in this context comparing strict horary-only versus substituted-point protocols, and any small difference in effect would likely be difficult to detect given real-world variability and a 1–5 symptom scale.</p>
+		<p>Without sham acupressure or blinding, we cannot distinguish specific effects of meridian timing from placebo or expectation. Five classical horary points were substituted for accessibility (Table 1), so the protocol differs from idealized horary-only descriptions. While horary points are often treated as theoretically optimal in TCM, there are no controlled data in this context comparing strict horary-only versus substituted-point protocols, and any small difference in effect would be very difficult to detect given real-world variability and the inherently coarse, symptom-based survey measures.</p>
 
 		<p>This pragmatic approach aligns with observational studies in travel medicine, where full experimental control is often infeasible. Even so, large-scale, prospectively logged adherence data and patient-centered outcomes remain highly informative for hypothesis generation and future dose-response exploration.</p>
 		<p>In this design, travel direction and number of time zones crossed are largely determined by the trip rather than by symptom expectations. Participants do not choose these factors based on anticipated jet lag, which limits confounding from these covariates compared with many observational settings.</p>
@@ -975,7 +975,7 @@
     </script>
 
     <script>
-        // Live Research Data Functions (PDF/Word: run npm run export-paper to regenerate assets/downloads/)
+        // Live Research Data Functions (PDF: run npm run export-paper to regenerate assets/downloads/)
         let researchChart = null;
         const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
         
