@@ -10,25 +10,43 @@ let airportCodeToCity = null; // Cache for airport code to city mapping
 // Firebase service instance (new integration)
 let firebaseService = null;
 
-// Acupuncture Point ID to Name Mapping
-const POINT_MAPPING = {
-    1: 'LU-8',
-    2: 'LI-1', 
-    3: 'ST-36',
-    4: 'SP-3',
-    5: 'HT-8',
-    6: 'SI-5',
-    7: 'BL-66',
-    8: 'KI-3',
-    9: 'PC-8',
-    10: 'SJ-6',
-    11: 'GB-34',
-    12: 'LIV-3'
-};
+/**
+ * Whether the trip used the cramped (economy-friendly) point set for substitutable slots 4,7,8,11,12.
+ * - useCrampedPoints === true  → cramped (SP-10, BL-2, KI-27, GB-20, LIV-8).
+ * - useCrampedPoints === false → original horary (SP-3, BL-66, KI-10, GB-41, LIV-1), e.g. non-cramped seating.
+ * - Field missing/undefined    → legacy data (only original points were logged) → treat as horary for analysis.
+ */
+function tripUsesCrampedPointSet(trip) {
+    return trip.useCrampedPoints === true;
+}
 
-// Helper function to get acupuncture point name from point ID
+/** Meridian label for journey slot 1–12 (must match iOS HoraryPoint pointMap). */
+function slotToMeridianName(slotId, useCramped) {
+    const shared = {
+        1: 'LU-8',
+        2: 'LI-1',
+        3: 'ST-36',
+        5: 'HT-8',
+        6: 'SI-5',
+        9: 'PC-8',
+        10: 'SJ-6'
+    };
+    if (shared[slotId]) return shared[slotId];
+    if (slotId === 4) return useCramped ? 'SP-10' : 'SP-3';
+    if (slotId === 7) return useCramped ? 'BL-2' : 'BL-66';
+    if (slotId === 8) return useCramped ? 'KI-27' : 'KI-10';
+    if (slotId === 11) return useCramped ? 'GB-20' : 'GB-41';
+    if (slotId === 12) return useCramped ? 'LIV-8' : 'LIV-1';
+    return `Point-${slotId}`;
+}
+
+// Legacy: single-ID label without trip context (horary names — avoid for per-trip lists)
 function getPointName(pointId) {
-    return POINT_MAPPING[pointId] || `Point-${pointId}`;
+    return slotToMeridianName(pointId, false);
+}
+
+function getPointNameForTrip(pointId, trip) {
+    return slotToMeridianName(pointId, tripUsesCrampedPointSet(trip));
 }
 
 // Helper function to get all completed acupuncture points for a survey
@@ -37,7 +55,7 @@ function getCompletedPoints(survey) {
     for (let i = 1; i <= 12; i++) {
         const pointField = `point${i}Completed`;
         if (survey[pointField]) {
-            completedPoints.push(getPointName(i));
+            completedPoints.push(getPointNameForTrip(i, survey));
         }
     }
     return completedPoints;
@@ -50,18 +68,6 @@ function getValidationStats(trips) {
 
 // Firebase REST API endpoint (same as iOS app)
 const FIREBASE_REST_URL = "https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/tripCompletions";
-
-// Point set (cramped vs standard): Cramped points added as default Feb 4, 2026. useCrampedPoints not yet in Firebase.
-// For analysis: trips before this date = standard; on/after this date use field when present, else standard.
-const CRAMPED_POINTS_RELEASE_DATE = new Date('2026-02-04T00:00:00Z');
-
-/** Returns effective useCrampedPoints for a trip (for analysis). Pre-release or missing => false (standard). */
-function getEffectiveUseCrampedPoints(trip) {
-    const tripDate = trip.completionDate || trip.startDate || trip.timestamp;
-    const d = tripDate ? new Date(tripDate) : null;
-    if (!d || d < CRAMPED_POINTS_RELEASE_DATE) return false;
-    return trip.useCrampedPoints === true;
-}
 
 // Developer device IDs - use single source of truth from TripValidator
 // Note: trip-validator.js must be loaded before this file
@@ -1120,53 +1126,57 @@ function renderPointStimulationAnalysis() {
         headingElement.innerHTML = `Point Usage (${data.length} trips)`;
     }
 
-    // Point mapping data
-    const pointMapping = [
-        { id: 1, name: 'LU-8', field: 'point1Completed' },
-        { id: 2, name: 'LI-1', field: 'point2Completed' },
-        { id: 3, name: 'ST-36', field: 'point3Completed' },
-        { id: 4, name: 'SP-3', field: 'point4Completed' },
-        { id: 5, name: 'HT-8', field: 'point5Completed' },
-        { id: 6, name: 'SI-5', field: 'point6Completed' },
-        { id: 7, name: 'BL-66', field: 'point7Completed' },
-        { id: 8, name: 'KI-3', field: 'point8Completed' },
-        { id: 9, name: 'PC-8', field: 'point9Completed' },
-        { id: 10, name: 'SJ-6', field: 'point10Completed' },
-        { id: 11, name: 'GB-34', field: 'point11Completed' },
-        { id: 12, name: 'LIV-3', field: 'point12Completed' }
+    // One row per distinct meridian: shared slots once; substitutable slots 4,7,8,11,12 split cramped vs horary.
+    // variant: null = all trips; 'cramped' | 'horary' = only trips with that point set (matches Firebase useCrampedPoints).
+    const pointUsageRows = [
+        { slot: 1, label: 'LU-8', variant: null },
+        { slot: 2, label: 'LI-1', variant: null },
+        { slot: 3, label: 'ST-36', variant: null },
+        { slot: 4, label: 'SP-10', variant: 'cramped' },
+        { slot: 4, label: 'SP-3', variant: 'horary' },
+        { slot: 5, label: 'HT-8', variant: null },
+        { slot: 6, label: 'SI-5', variant: null },
+        { slot: 7, label: 'BL-2', variant: 'cramped' },
+        { slot: 7, label: 'BL-66', variant: 'horary' },
+        { slot: 8, label: 'KI-27', variant: 'cramped' },
+        { slot: 8, label: 'KI-10', variant: 'horary' },
+        { slot: 9, label: 'PC-8', variant: null },
+        { slot: 10, label: 'SJ-6', variant: null },
+        { slot: 11, label: 'GB-20', variant: 'cramped' },
+        { slot: 11, label: 'GB-41', variant: 'horary' },
+        { slot: 12, label: 'LIV-8', variant: 'cramped' },
+        { slot: 12, label: 'LIV-1', variant: 'horary' }
     ];
 
-    // Calculate stimulation counts for each point
-    const pointStats = pointMapping.map(point => {
+    function rowMatchesTripVariant(variant, survey) {
+        if (variant === null) return true;
+        const cramped = tripUsesCrampedPointSet(survey);
+        if (variant === 'cramped') return cramped;
+        return !cramped;
+    }
+
+    const pointStats = pointUsageRows.map(row => {
+        const field = `point${row.slot}Completed`;
         let stimulationCount = 0;
         let totalSurveys = 0;
-        
-        data.forEach(survey => {
-            if (survey.surveyCompleted && survey[point.field] !== undefined) {
-                totalSurveys++;
-                if (survey[point.field] === true) {
-                    stimulationCount++;
-                }
-            }
-        });
-        
-        const stimulationRate = totalSurveys > 0 ? Math.round((stimulationCount / totalSurveys) * 100) : 0;
-        
-        return {
-            ...point,
-            stimulationCount,
-            totalSurveys,
-            stimulationRate
-        };
-    });
 
-    // Sort by point ID (LU-8 first, then LI-1, ST-36, etc.)
-    pointStats.sort((a, b) => a.id - b.id);
+        data.forEach(survey => {
+            if (!survey.surveyCompleted || survey[field] === undefined) return;
+            if (!rowMatchesTripVariant(row.variant, survey)) return;
+            totalSurveys++;
+            if (survey[field] === true) stimulationCount++;
+        });
+
+        const stimulationRate = totalSurveys > 0 ? Math.round((stimulationCount / totalSurveys) * 100) : 0;
+
+        return { ...row, stimulationCount, totalSurveys, stimulationRate, field };
+    });
 
     // Generate HTML table - use stats-table for tight columns, centered (DRY - matches other sections)
     let html = '<div style="text-align: center;">';
     html += '<table class="stats-table" style="margin: 0 auto;">';
     html += '<thead><tr>';
+    html += '<th>Slot</th>';
     html += '<th>Point</th>';
     html += '<th>Count</th>';
     html += '<th>Rate</th>';
@@ -1175,9 +1185,11 @@ function renderPointStimulationAnalysis() {
     pointStats.forEach(point => {
         const usageRate = point.totalSurveys > 0 ? `${point.stimulationRate}%` : 'N/A';
         const countDisplay = point.stimulationCount > 0 ? point.stimulationCount : '0';
-        
+        const setNote = point.variant === 'cramped' ? ' <span style="color:#64748b;font-size:0.85em;">(cramped)</span>' : point.variant === 'horary' ? ' <span style="color:#64748b;font-size:0.85em;">(horary)</span>' : '';
+
         html += '<tr>';
-        html += `<td>${point.name}</td>`;
+        html += `<td>${point.slot}</td>`;
+        html += `<td>${point.label}${setNote}</td>`;
         html += `<td>${countDisplay}</td>`;
         html += `<td>${usageRate}</td>`;
         html += '</tr>';

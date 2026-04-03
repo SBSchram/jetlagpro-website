@@ -97,9 +97,9 @@
             Analysis build 2025-11-23 03:58 UTC · commit 19d0ac4
         </div>
 
-        <!-- Point set (cramped vs standard) for analysis -->
+        <!-- Point set (cramped vs horary) for analysis -->
         <div class="info-box" style="max-width: 800px; margin: 0 auto 24px auto; padding: 12px 16px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; font-size: 0.9rem;">
-            <strong>Point set in analysis (cramped vs standard)</strong>: The app added a &quot;cramped seating&quot; point set as the default on <strong>Feb 4, 2026</strong>. Logging of <code>useCrampedPoints</code> to Firebase is not yet deployed. For analysis: treat all trips before 2026-02-04 as <strong>standard</strong> points; for trips on or after that date, use the <code>useCrampedPoints</code> field when present, otherwise treat as <strong>standard</strong>.
+            <strong>Point usage (all meridians)</strong>: Slots 1–3 and 5–6 and 9–10 are the same in both sets. Slots 4, 7, 8, 11, and 12 are split into two rows each: <strong>cramped</strong> (SP-10, BL-2, KI-27, GB-20, LIV-8) vs <strong>original horary</strong> (SP-3, BL-66, KI-10, GB-41, LIV-1). Firebase <code>useCrampedPoints</code>: <strong>true</strong> = cramped; <strong>false</strong> = original (e.g. non-cramped seating). <strong>Missing</strong> = legacy trips (only original points) → counted under horary rows only.
         </div>
 
         <div class="data-section" id="trip-stats">
