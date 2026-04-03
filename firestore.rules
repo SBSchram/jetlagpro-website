@@ -58,6 +58,41 @@ service cloud.firestore {
           .hasOnly(allowedFields);
       }
     }
+
+    // ============================================================
+    // TRIP COMPLETIONS DEV (simulator / dev builds; same rules as prod)
+    // ============================================================
+    match /tripCompletionsDev/{tripId} {
+      allow read: if true;
+
+      allow create: if 
+        request.resource.data.tripId == tripId
+        && (
+          tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}$')
+          || tripId.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$')
+        );
+
+      allow update: if 
+        resource.data.surveyCompleted != true
+        || request.resource.data.keys().hasAny(['surveyCompleted'])
+        || onlyUpdatingAllowedFieldsDev();
+
+      allow delete: if false;
+
+      function onlyUpdatingAllowedFieldsDev() {
+        let allowedFields = [
+          'pointsCompleted', 
+          'point1Completed', 'point2Completed', 'point3Completed',
+          'point4Completed', 'point5Completed', 'point6Completed',
+          'point7Completed', 'point8Completed', 'point9Completed',
+          'point10Completed', 'point11Completed', 'point12Completed'
+        ];
+        
+        return request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly(allowedFields);
+      }
+    }
     
     // ============================================================
     // AUDIT LOG COLLECTION
@@ -91,4 +126,3 @@ service cloud.firestore {
     }
   }
 }
-

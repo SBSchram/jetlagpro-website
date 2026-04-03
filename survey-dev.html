@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jet Lag Research Survey - JetLagPro</title>
+    <title>Jet Lag Research Survey (Dev) - JetLagPro</title>
     
     <!-- Aggressive cache busting -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="description" content="Participate in our jet lag research survey. Your feedback helps improve jet lag management for travelers worldwide.">
+    <meta name="description" content="Development survey page — uses Firestore tripCompletionsDev. Not for production research data.">
     <meta name="keywords" content="jet lag research, chronoacupuncture survey, travel research, jet lag study">
-    <script>window.JETLAG_TRIP_COLLECTION = 'tripCompletions';</script>
+    <script>window.JETLAG_TRIP_COLLECTION = 'tripCompletionsDev';</script>
     <script>
         // Eternal cache busting solution - auto-generates timestamp
         const cacheVersion = Math.floor(Date.now() / 1000);
@@ -26,7 +26,10 @@
     <main>
         <section class="hero-simple">
             <div class="container">
-                <h1>Jet Lag Research Survey</h1>
+                <h1>Jet Lag Research Survey <span style="font-size:0.65em; color:#b45309;">(Dev)</span></h1>
+                <p style="margin-top:0.75rem; padding:0.75rem 1rem; background:#fff7ed; border:1px solid #fdba74; border-radius:8px; color:#9a3412; font-size:0.95rem;">
+                    Engineering only: this page reads and writes <strong>tripCompletionsDev</strong>, not production trip data.
+                </p>
             </div>
         </section>
 
@@ -376,4 +379,4 @@
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js"></script>
 </body>
-</html> 
+</html>

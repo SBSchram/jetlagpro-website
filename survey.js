@@ -1,5 +1,10 @@
 // Liverpool Jet Lag Questionnaire (LJLQ) Survey JavaScript
 
+/** Firestore collection for trip docs. `survey-dev.html` sets window.JETLAG_TRIP_COLLECTION = 'tripCompletionsDev'. */
+function jetlagTripCollection() {
+    return window.JETLAG_TRIP_COLLECTION || 'tripCompletions';
+}
+
 // Global variables
 let surveyData = {};
 let isCodeValidated = false;
@@ -195,7 +200,7 @@ async function checkExistingSurveyByCodeLegacy(surveyCode) {
 async function getTripDataLegacy(tripId) {
     try {
         console.log('🔍 Getting trip data (legacy method)...');
-        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, jetlagTripCollection(), tripId);
         const tripDoc = await window.firebaseGetDoc(tripDocRef);
         
         const result = {
@@ -918,7 +923,7 @@ async function submitSurvey() {
         const tripId = window.currentTripId;
         if (tripId) {
             try {
-                const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                const tripDocRef = window.firebaseDoc(window.firebaseDB, jetlagTripCollection(), tripId);
                 await window.firebaseUpdateDoc(tripDocRef, {
                     surveyCompleted: true
                 });
@@ -970,7 +975,7 @@ async function exportSurveyData() {
     
     // Save to Firestore using unified collection approach
     try {
-        console.log('💾 Saving to unified tripCompletions collection...');
+        console.log('💾 Saving to unified trip collection:', jetlagTripCollection());
         console.log('🔍 Firebase availability check:', {
             firebaseDB: !!window.firebaseDB,
             firebaseCollection: !!window.firebaseCollection, 
@@ -981,7 +986,7 @@ async function exportSurveyData() {
         });
         
         if (window.firebaseDB && window.firebaseCollection && window.firebaseDoc && window.firebaseUpdateDoc && window.firebaseServerTimestamp && tripId) {
-            console.log('🚀 Attempting to update existing tripCompletions record...');
+            console.log('🚀 Attempting to update existing trip record in', jetlagTripCollection());
             
             // Survey metadata removed - UPDATE operation type is sufficient to identify survey submissions
             // surveyCompleted: true already proves a survey was submitted
@@ -1015,8 +1020,8 @@ async function exportSurveyData() {
             }
             
             try {
-                // Try to update the existing tripCompletions document using tripId as document ID
-                const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                // Try to update the existing trip document using tripId as document ID
+                const tripDocRef = window.firebaseDoc(window.firebaseDB, jetlagTripCollection(), tripId);
                 await window.firebaseUpdateDoc(tripDocRef, surveyUpdateData);
                 console.log('✅ Flat survey data added to existing trip record:', tripId);
             } catch (updateError) {
@@ -1024,7 +1029,7 @@ async function exportSurveyData() {
                 
                 // If update fails, try to create a new document with the tripId
                 try {
-                    const newDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+                    const newDocRef = window.firebaseDoc(window.firebaseDB, jetlagTripCollection(), tripId);
                     await window.firebaseUpdateDoc(newDocRef, {
                         ...surveyUpdateData,
                         // Add basic trip info if we have it from URL
@@ -1032,7 +1037,7 @@ async function exportSurveyData() {
                         surveyCode: surveyCode,
                         created: window.firebaseServerTimestamp()
                     });
-                    console.log('✅ Created new tripCompletions record with survey data:', tripId);
+                    console.log('✅ Created new trip record with survey data:', tripId, jetlagTripCollection());
                 } catch (createError) {
                     console.error('❌ Failed to create new document:', createError);
                     throw createError;
@@ -1043,7 +1048,7 @@ async function exportSurveyData() {
             throw new Error('Firebase connection error. Please try again.');
         }
     } catch (error) {
-        console.error('❌ Error updating tripCompletions record:', error);
+        console.error('❌ Error updating trip record:', jetlagTripCollection(), error);
         
         // Check if this is a duplicate survey code error
         if (error.message && error.message.includes('already been used')) {
@@ -1053,7 +1058,7 @@ async function exportSurveyData() {
         }
     }
     
-    console.log('✅ Flat survey data added to unified tripCompletions record');
+    console.log('✅ Flat survey data added to unified trip record:', jetlagTripCollection());
 }
 
 // Show completion message with visual feedback
@@ -1303,7 +1308,7 @@ async function checkAndPreFillExistingSurvey() {
         console.log('🔍 Checking for trip data for tripId:', tripId);
         
         // Get the trip document from Firebase
-        const tripDocRef = window.firebaseDoc(window.firebaseDB, 'tripCompletions', tripId);
+        const tripDocRef = window.firebaseDoc(window.firebaseDB, jetlagTripCollection(), tripId);
         const tripDoc = await window.firebaseGetDoc(tripDocRef);
         
         if (tripDoc.exists()) {

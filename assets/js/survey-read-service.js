@@ -2,6 +2,10 @@
 // Handles read operations for survey system using Firebase SDK
 // Write operations remain in survey.js for safety
 
+function jetlagTripCollection() {
+    return window.JETLAG_TRIP_COLLECTION || 'tripCompletions';
+}
+
 class SurveyReadService {
     constructor() {
         this.db = null;
@@ -130,7 +134,7 @@ class SurveyReadService {
         try {
             console.log('🔍 SurveyReadService: Getting trip data for tripId:', tripId);
             
-            const tripDocRef = window.firebaseDoc(this.db, 'tripCompletions', tripId);
+            const tripDocRef = window.firebaseDoc(this.db, jetlagTripCollection(), tripId);
             const tripDoc = await window.firebaseGetDoc(tripDocRef);
             
             const result = {
@@ -163,7 +167,7 @@ class SurveyReadService {
         try {
             console.log('🔍 SurveyReadService: Checking naked survey code document');
             
-            const nakedSurveyDocRef = window.firebaseDoc(this.db, 'tripCompletions', 'naked-survey-code');
+            const nakedSurveyDocRef = window.firebaseDoc(this.db, jetlagTripCollection(), 'naked-survey-code');
             const existingDoc = await window.firebaseGetDoc(nakedSurveyDocRef);
             
             const result = {
