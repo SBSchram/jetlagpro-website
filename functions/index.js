@@ -293,7 +293,8 @@ exports.auditLoggerCreate = onDocumentCreated("tripCompletions/{tripId}", async 
   
   // Only add fields if they exist (prevents Firestore from omitting them)
   if (data.destinationCode !== undefined) auditEntry.destinationCode = data.destinationCode;
-  if (data.originTimezone !== undefined) auditEntry.originTimezone = data.originTimezone;
+  const originTz = data.originTimezone !== undefined ? data.originTimezone : data.originTimeZone;
+  if (originTz !== undefined) auditEntry.originTimezone = originTz;
   if (data.arrivalTimeZone !== undefined) auditEntry.arrivalTimeZone = data.arrivalTimeZone;
   if (data.travelDirection !== undefined) auditEntry.travelDirection = data.travelDirection;
   
@@ -521,7 +522,7 @@ exports.realtimeTripNotification = onDocumentCreated({
   
   try {
     logger.info(`📧 Sending real-time notification for new trip: ${tripId}`);
-    const originTimezone = data.originTimezone || "Unknown";
+    const originTimezone = data.originTimezone || data.originTimeZone || "Unknown";
     const originLabel = originTimezone !== "Unknown" ? (ORIGIN_TIMEZONE_LABELS[originTimezone] || null) : null;
     const originLine = originLabel
       ? `Route: ${originLabel} (${originTimezone}) → ${data.destinationCode || "Unknown"}`

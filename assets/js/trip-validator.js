@@ -18,6 +18,12 @@ class TripValidator {
     // These are device IDs from developer test devices and simulators
     // Used to filter out test data from research analysis
     static DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC', '35181B4C'];
+
+    /** Canonical origin IANA id (Firestore used both originTimezone and originTimeZone). */
+    static getOriginTimezone(trip) {
+        if (!trip) return undefined;
+        return trip.originTimezone || trip.originTimeZone;
+    }
     
     /**
      * Validates HMAC-SHA256 signature on a trip ID
@@ -186,15 +192,17 @@ class TripValidator {
         if (!trip.arrivalTimeZone) {
             return true;
         }
+
+        const originTz = TripValidator.getOriginTimezone(trip);
         
         // Rule 3: Real travel (different timezones AND timezonesCount > 0)
-        if (trip.arrivalTimeZone !== trip.originTimezone && 
+        if (trip.arrivalTimeZone !== originTz && 
             trip.timezonesCount && trip.timezonesCount > 0) {
             return true;
         }
         
         // Rule 4: Survey fallback (same timezone but survey completion)
-        if (trip.arrivalTimeZone === trip.originTimezone && 
+        if (trip.arrivalTimeZone === originTz && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {
             return true;
@@ -211,6 +219,7 @@ class TripValidator {
      * @returns {Object} - Validation details
      */
     static getValidationDetails(trip) {
+        const originTz = TripValidator.getOriginTimezone(trip);
         const details = {
             isValid: false,
             reason: '',
@@ -218,10 +227,10 @@ class TripValidator {
             data: {
                 hasArrivalTimeZone: !!trip.arrivalTimeZone,
                 arrivalTimeZone: trip.arrivalTimeZone,
-                originTimezone: trip.originTimezone,
+                originTimezone: originTz,
                 timezonesCount: trip.timezonesCount,
                 completionMethod: trip.completionMethod,
-                timezonesMatch: trip.arrivalTimeZone === trip.originTimezone,
+                timezonesMatch: trip.arrivalTimeZone === originTz,
                 hasSurveyFallback: trip.completionMethod && trip.completionMethod.includes('_survey')
             }
         };
@@ -262,7 +271,7 @@ class TripValidator {
         }
         
         // Rule 4: Real travel (different timezones AND timezonesCount > 0)
-        if (trip.arrivalTimeZone !== trip.originTimezone && 
+        if (trip.arrivalTimeZone !== originTz && 
             trip.timezonesCount && trip.timezonesCount > 0) {
             details.isValid = true;
             details.reason = 'Real travel (different timezones)';
@@ -271,7 +280,7 @@ class TripValidator {
         }
         
         // Rule 5: Survey fallback
-        if (trip.arrivalTimeZone === trip.originTimezone && 
+        if (trip.arrivalTimeZone === originTz && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {
             details.isValid = true;

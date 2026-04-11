@@ -6,6 +6,12 @@
 let auditLogData = [];
 const firebaseService = new FirebaseService();
 
+/** Origin IANA id from a snapshot object (Firestore used both key spellings). */
+function readOriginTimezone(obj) {
+    if (!obj || typeof obj !== 'object') return undefined;
+    return obj.originTimezone || obj.originTimeZone;
+}
+
 async function refreshAuditLog() {
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn) {
@@ -270,7 +276,7 @@ function renderTableRow(entry, index) {
         data = entry.dataSnapshot || {};
         const metaBefore = entry.beforeSnapshot || {};
         const meta = entry.metadata?.writeMetadata || {};
-        origin = entry.originTimezone || data.originTimezone || metaBefore.originTimezone || meta.originTimezone || '-';
+        origin = readOriginTimezone(entry) || readOriginTimezone(data) || readOriginTimezone(metaBefore) || readOriginTimezone(meta) || '-';
         dest = entry.destinationCode || data.destinationCode || metaBefore.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || metaBefore.arrivalTimeZone || meta.arrivalTimeZone || '-';
         // Use trip ID direction as fallback if not in data
@@ -280,7 +286,7 @@ function renderTableRow(entry, index) {
         // Try afterSnapshot first, then entry properties, then changes
         const afterSnapshot = entry.afterSnapshot || {};
         const beforeSnapshot = entry.beforeSnapshot || {};
-        origin = afterSnapshot.originTimezone || entry.originTimezone || beforeSnapshot.originTimezone || '-';
+        origin = readOriginTimezone(afterSnapshot) || readOriginTimezone(entry) || readOriginTimezone(beforeSnapshot) || '-';
         dest = afterSnapshot.destinationCode || entry.destinationCode || beforeSnapshot.destinationCode || '-';
         arrival = afterSnapshot.arrivalTimeZone || entry.arrivalTimeZone || beforeSnapshot.arrivalTimeZone || '-';
         // Use trip ID direction as fallback if not in data
@@ -289,7 +295,7 @@ function renderTableRow(entry, index) {
     } else if (entry.operation === 'DELETE') {
         data = entry.deletedData || {};
         const meta = entry.metadata?.writeMetadata || {};
-        origin = entry.originTimezone || data.originTimezone || meta.originTimezone || '-';
+        origin = readOriginTimezone(entry) || readOriginTimezone(data) || readOriginTimezone(meta) || '-';
         dest = entry.destinationCode || data.destinationCode || meta.destinationCode || '-';
         arrival = entry.arrivalTimeZone || data.arrivalTimeZone || meta.arrivalTimeZone || '-';
         // Use trip ID direction as fallback if not in data
@@ -589,7 +595,7 @@ function classifyEntry(entry) {
         return 'Dev';
     }
 
-    const origin = entry.originTimezone || entry.afterSnapshot?.originTimezone || entry.dataSnapshot?.originTimezone || entry.metadata?.writeMetadata?.originTimezone || entry.deletedData?.originTimezone || '-';
+    const origin = readOriginTimezone(entry) || readOriginTimezone(entry.afterSnapshot) || readOriginTimezone(entry.dataSnapshot) || readOriginTimezone(entry.metadata?.writeMetadata) || readOriginTimezone(entry.deletedData) || '-';
     const arrival = entry.arrivalTimeZone || entry.afterSnapshot?.arrivalTimeZone || entry.dataSnapshot?.arrivalTimeZone || entry.metadata?.writeMetadata?.arrivalTimeZone || entry.deletedData?.arrivalTimeZone || '-';
 
     if (origin !== '-' && arrival !== '-' && origin === arrival) {

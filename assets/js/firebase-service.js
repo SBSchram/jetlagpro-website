@@ -116,7 +116,11 @@ class FirebaseService {
                 completionDate: extractTimestamp('completionDate') || extractTimestamp('tripData', 'completionDate'),
                 completionMethod: extractString('completionMethod') || extractString('tripData', 'completionMethod'),
                 arrivalTimeZone: extractString('arrivalTimeZone') || extractString('tripData', 'arrivalTimeZone'),
-                originTimezone: extractString('originTimezone') || extractString('tripData', 'originTimezone'),
+                originTimezone:
+                    extractString('originTimezone') ||
+                    extractString('originTimeZone') ||
+                    extractString('tripData', 'originTimezone') ||
+                    extractString('tripData', 'originTimeZone'),
                 surveyCompleted: extractBoolean('surveyCompleted') || extractBoolean('surveyData', 'surveyCompleted'),
                 created: extractTimestamp('created') || extractTimestamp('tripData', 'created'),
                 
@@ -267,6 +271,7 @@ class FirebaseService {
             if (fields.actor?.stringValue) entry.actor = fields.actor.stringValue;
             if (fields.eventId?.stringValue) entry.eventId = fields.eventId.stringValue;
             if (fields.originTimezone?.stringValue) entry.originTimezone = fields.originTimezone.stringValue;
+            else if (fields.originTimeZone?.stringValue) entry.originTimezone = fields.originTimeZone.stringValue;
             if (fields.destinationCode?.stringValue) entry.destinationCode = fields.destinationCode.stringValue;
             if (fields.arrivalTimeZone?.stringValue) entry.arrivalTimeZone = fields.arrivalTimeZone.stringValue;
             if (fields.travelDirection?.stringValue) entry.travelDirection = fields.travelDirection.stringValue;

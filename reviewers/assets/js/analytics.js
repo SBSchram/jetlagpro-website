@@ -20,6 +20,12 @@ function tripUsesCrampedPointSet(trip) {
     return trip.useCrampedPoints === true;
 }
 
+/** Origin IANA id from a flat trip (Firestore used both originTimezone and originTimeZone). */
+function originTzFromSurvey(survey) {
+    if (!survey) return null;
+    return survey.originTimezone || survey.originTimeZone || null;
+}
+
 /** Meridian label for journey slot 1–12 (must match iOS HoraryPoint pointMap). */
 function slotToMeridianName(slotId, useCramped) {
     const shared = {
@@ -270,7 +276,11 @@ function convertFirestoreDocument(document) {
             completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
             completionMethod: extractValue('completionMethod') || extractValue('tripData', 'completionMethod'),
             arrivalTimeZone: extractValue('arrivalTimeZone') || extractValue('tripData', 'arrivalTimeZone') || extractValue('arrivalTimeZone'),
-            originTimezone: extractValue('originTimezone') || extractValue('tripData', 'originTimezone') || extractValue('originTimezone'),
+            originTimezone:
+                extractValue('originTimezone') ||
+                extractValue('originTimeZone') ||
+                extractValue('tripData', 'originTimezone') ||
+                extractValue('tripData', 'originTimeZone'),
             useCrampedPoints: extractValue('useCrampedPoints'),
             surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
             created: extractValue('created') || extractValue('tripData', 'created'),
@@ -600,17 +610,18 @@ function renderRecentSubmissions() {
             if (survey.timezonesCount === 0) {
                 // Test trip - just show destination without confusing labels
                 routeDisplay = survey.destinationCode || 'N/A';
-            } else if (isDateBasedLegacy || (!survey.originTimezone && !survey.arrivalTimeZone)) {
+            } else if (isDateBasedLegacy || (!originTzFromSurvey(survey) && !survey.arrivalTimeZone)) {
                 // Legacy: trip predates timezone feature OR missing timezone fields
                 routeDisplay = `${survey.destinationCode || 'N/A'} (Legacy)`;
-            } else if (survey.originTimezone && survey.arrivalTimeZone) {
+            } else if (originTzFromSurvey(survey) && survey.arrivalTimeZone) {
                 // Modern trip with timezone data
-                const originCity = survey.originTimezone.split('/').pop().replace(/_/g, ' ');
+                const ot = originTzFromSurvey(survey);
+                const originCity = ot.split('/').pop().replace(/_/g, ' ');
                 const arrivalCity = survey.arrivalTimeZone.split('/').pop().replace(/_/g, ' ');
                 const destCode = survey.destinationCode || 'N/A';
                 
                 // Show arrival only if origin=arrival (test trip indicator)
-                if (survey.originTimezone === survey.arrivalTimeZone) {
+                if (ot === survey.arrivalTimeZone) {
                     routeDisplay = `${originCity} → ${destCode} → ${arrivalCity}`;
                 } else {
                     routeDisplay = `${originCity} → ${destCode}`;
@@ -973,7 +984,7 @@ function renderDoseResponseDataTable(surveys) {
         }
         
         // Origin and destination
-        let origin = survey.originTimezone || survey.originCode || 'N/A';
+        let origin = originTzFromSurvey(survey) || survey.originCode || 'N/A';
         // Format origin: use only part after "/" and replace "_" with spaces
         if (origin !== 'N/A' && origin.includes('/')) {
             origin = origin.split('/').pop(); // Get part after last "/"

@@ -120,6 +120,11 @@ def load_trips(trips_path: str) -> List[Dict]:
     return trips
 
 
+def get_origin_timezone(trip: Dict):
+    """Canonical origin IANA id; Firestore documents used both spellings."""
+    return trip.get('originTimezone') or trip.get('originTimeZone')
+
+
 def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     """
     Filter trips for analysis.
@@ -163,7 +168,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         # Rule 5: Survey fallback (same timezone but survey completion) - valid
         # Invalid: Same timezone without survey fallback = test data
         arrival_tz = trip.get('arrivalTimeZone')
-        origin_tz = trip.get('originTimezone')
+        origin_tz = get_origin_timezone(trip)
         timezones_count = trip.get('timezonesCount', 0)
         completion_method = trip.get('completionMethod', '')
         
@@ -435,7 +440,7 @@ def calculate_validation_breakdown(all_trips: List[Dict], valid_trips: List[Dict
             continue
             
         arrival_tz = trip.get('arrivalTimeZone')
-        origin_tz = trip.get('originTimezone')
+        origin_tz = get_origin_timezone(trip)
         completion_method = trip.get('completionMethod', '')
         
         if arrival_tz and origin_tz:
@@ -745,7 +750,7 @@ def format_trip_record(trip: Dict, airport_mapping: Dict[str, str]) -> Dict:
         device_id = parts[0] if parts else 'N/A'
     
     # Origin
-    origin = trip.get('originTimezone') or trip.get('originCode') or 'N/A'
+    origin = get_origin_timezone(trip) or trip.get('originCode') or 'N/A'
     if origin != 'N/A' and '/' in origin:
         origin = origin.split('/')[-1].replace('_', ' ')
     elif origin != 'N/A':
@@ -881,14 +886,14 @@ def generate_report(all_trips: List[Dict], valid_trips: List[Dict], point_usage:
     
     lines.append("LEGACY TRIPS (Included, flagged separately)")
     lines.append("  • Trip startDate before October 24, 2025")
-    lines.append("  • Missing arrivalTimeZone or originTimezone fields")
+    lines.append("  • Missing arrivalTimeZone or origin timezone (originTimezone / originTimeZone) fields")
     lines.append("")
     lines.append("  Rationale: Data collected before timezone tracking was implemented.")
     lines.append("")
     
     lines.append("VERIFIED TRIPS (Primary cohort)")
-    lines.append("  • TZ Verified: arrivalTimeZone ≠ originTimezone AND timezonesCount > 0")
-    lines.append("  • Survey Verified: arrivalTimeZone = originTimezone AND survey completion")
+    lines.append("  • TZ Verified: arrivalTimeZone ≠ origin timezone AND timezonesCount > 0")
+    lines.append("  • Survey Verified: arrivalTimeZone = origin timezone AND survey completion")
     lines.append("")
     lines.append("  Rationale: Cross-timezone travel with complete metadata, or")
     lines.append("  survey-validated trip data.")
