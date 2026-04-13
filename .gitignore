@@ -72,7 +72,8 @@ _work/
 *.work/
 
 # Internal documentation (not for website / do not deploy)
-docs/
+docs/*
+!docs/firestore-security-testing.md
 demo/*.md
 scripts/*.md
 assets/images/README.md

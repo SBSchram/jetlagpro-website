@@ -453,50 +453,81 @@ exports.auditLoggerDelete = onDocumentDeleted("tripCompletions/{tripId}", async 
 });
 
 /**
- * HMAC Validator - Validates signatures on trip creation
- * Triggers on document creation
+ * Reject forged trip documents: rules cannot verify HMAC, so we delete invalid
+ * creates immediately (5-part ids with wrong signature, malformed id, etc.).
+ * Legacy 4-part ids are no longer allowed on create (see firestore.rules).
  */
+async function enforceHmacOnTripCreate(snapshot, tripId, collectionId, eventId, data) {
+  const validation = validateTripIdSignature(tripId);
+
+  if (validation.valid) {
+    logger.info(`✅ HMAC signature valid for trip ${tripId}`, {
+      tripId,
+      collection: collectionId,
+      reason: validation.reason,
+    });
+    return;
+  }
+
+  logger.warn(`⚠️ Invalid trip id / HMAC — removing ${collectionId}/${tripId}`, {
+    tripId,
+    reason: validation.reason,
+  });
+
+  await writeAuditEntry({
+    operation: "HMAC_VALIDATION_FAILED",
+    collection: collectionId,
+    documentId: tripId,
+    timestamp: FieldValue.serverTimestamp(),
+    source: resolveSource("CREATE", data),
+    reason: validation.reason,
+    eventId: eventId,
+  });
+
+  try {
+    await snapshot.ref.delete();
+    logger.warn(`🗑️ Deleted invalid trip document ${tripId} from ${collectionId}`);
+  } catch (err) {
+    logger.error(`❌ Failed to delete invalid trip ${tripId}: ${err.message}`);
+  }
+}
+
+/** Production trip completions */
 exports.hmacValidator = onDocumentCreated("tripCompletions/{tripId}", async (event) => {
   const snapshot = event.data;
   const tripId = event.params.tripId;
-  
+
   if (!snapshot) {
     logger.warn("No data associated with the event");
     return;
   }
-  
-  const data = snapshot.data();
-  
-  // Validate HMAC signature
-  const validation = validateTripIdSignature(tripId);
-  
-  if (!validation.valid) {
-    logger.warn(`⚠️ Invalid HMAC signature detected for trip ${tripId}`, {
+
+  await enforceHmacOnTripCreate(
+      snapshot,
       tripId,
-      reason: validation.reason,
-    });
-    
-    // Log to audit trail
-    await writeAuditEntry({
-      operation: "HMAC_VALIDATION_FAILED",
-      collection: "tripCompletions",
-      documentId: tripId,
-      timestamp: FieldValue.serverTimestamp(),
-      source: resolveSource("CREATE", data),
-      reason: validation.reason,
-      eventId: event.id,
-    });
-    
-    // Optional: Auto-flag or delete invalid trips
-    // Uncomment to enable auto-deletion:
-    // await snapshot.ref.delete();
-    // logger.warn(`🗑️ Deleted trip with invalid signature: ${tripId}`);
-  } else {
-    logger.info(`✅ HMAC signature valid for trip ${tripId}`, {
-      tripId,
-      reason: validation.reason,
-    });
+      "tripCompletions",
+      event.id,
+      snapshot.data(),
+  );
+});
+
+/** Dev bucket — same HMAC enforcement (app uses signed ids; blocks casual forgery) */
+exports.hmacValidatorDev = onDocumentCreated("tripCompletionsDev/{tripId}", async (event) => {
+  const snapshot = event.data;
+  const tripId = event.params.tripId;
+
+  if (!snapshot) {
+    logger.warn("No data associated with the event");
+    return;
   }
+
+  await enforceHmacOnTripCreate(
+      snapshot,
+      tripId,
+      "tripCompletionsDev",
+      event.id,
+      snapshot.data(),
+  );
 });
 
 // metadataValidator removed - HMAC signature provides sufficient security
@@ -519,7 +550,13 @@ exports.realtimeTripNotification = onDocumentCreated({
   }
   
   const data = snapshot.data();
-  
+
+  const idCheck = validateTripIdSignature(tripId);
+  if (!idCheck.valid) {
+    logger.info(`Skipping new-trip email — invalid trip id (${idCheck.reason}): ${tripId}`);
+    return;
+  }
+
   try {
     logger.info(`📧 Sending real-time notification for new trip: ${tripId}`);
     const originTimezone = data.originTimezone || data.originTimeZone || "Unknown";
