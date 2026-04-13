@@ -4,9 +4,14 @@
   "description": "JetLagPro website and research paper export",
   "private": true,
   "scripts": {
-    "export-paper": "node scripts/export-research-paper.js"
+    "export-paper": "node scripts/export-research-paper.js",
+    "test:firestore-rules": "firebase emulators:exec --only firestore \"node scripts/firestore-rules-security-test.cjs\""
   },
   "dependencies": {
     "playwright": "^1.49.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.0",
+    "firebase": "^12.12.0"
   }
 }

@@ -18,6 +18,21 @@ Use this checklist after deploying **`firestore.rules`** and **Cloud Functions**
    firebase deploy --only firestore:rules --dry-run
    ```
 
+## Automated rules checks (emulator)
+
+From `jetlagpro-website` root:
+
+```bash
+npm install
+npm run test:firestore-rules
+```
+
+Run `npm install` after cloning or when `package.json` changes. Do not paste `# …` on the same line as `npm install`; some shells pass `#` to npm and you get `EINVALIDTAGNAME` / invalid package `"#"`.
+
+This runs `scripts/firestore-rules-security-test.cjs` inside the **Firestore emulator** with your checked-in `firestore.rules`. It covers **Test C2** (4-part id denied), invalid id shape, audit log deny, mobile vs survey update paths, post-survey mobile block, and client delete deny. It does **not** replace **Test A/B** (real app + survey pages) or **Test C1** (invalid HMAC → Cloud Function), which need a device/browser or staging scripts.
+
+The script sets Firestore client logging to **silent** so expected `PERMISSION_DENIED` checks do not flood the terminal. You may still see **`lsof` warnings** about a Time Machine SMB volume when the emulator starts; those are harmless.
+
 ## What you are validating
 
 | Layer | Behavior |
