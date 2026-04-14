@@ -17,7 +17,7 @@ service cloud.firestore {
       ];
     }
 
-    // survey.html updateDoc (incl. fallback that may add tripId / surveyCode / created).
+    // survey.html initial submit (incl. fallback that may add tripId / surveyCode / created).
     function surveySubmissionKeys() {
       return [
         'surveyCompleted', 'surveySubmittedAt',
@@ -28,11 +28,27 @@ service cloud.firestore {
       ];
     }
 
-    // Survey PATCH must not retarget another trip: if tripId is written, it must match the document id.
-    function surveyPatchShapeOk(tid) {
+    // Post-completion survey edits: survey answers only (no trip metadata rewrites).
+    function surveyEditKeys() {
+      return [
+        'surveyCompleted', 'surveySubmittedAt',
+        'userComment', 'ageRange',
+        'generalAnticipated', 'sleepPost', 'fatiguePost', 'concentrationPost',
+        'irritabilityPost', 'motivationPost', 'giPost'
+      ];
+    }
+
+    // Initial survey submit: if tripId is written, it must match the document id.
+    function surveySubmitShapeOk(tid) {
       let affected = request.resource.data.diff(resource.data).affectedKeys();
       return affected.hasOnly(surveySubmissionKeys())
         && (!affected.hasAny(['tripId']) || request.resource.data.tripId == tid);
+    }
+
+    // Post-completion survey edits: only answer fields.
+    function surveyEditShapeOk() {
+      let affected = request.resource.data.diff(resource.data).affectedKeys();
+      return affected.hasOnly(surveyEditKeys());
     }
 
     // One mobile full write while survey open; after that only survey fields (submit or edit answers).
@@ -42,8 +58,8 @@ service cloud.firestore {
       return (surveyNotDone && affected.hasOnly(mobileTripWriteKeys()))
         || (surveyNotDone
             && request.resource.data.surveyCompleted == true
-            && surveyPatchShapeOk(tid))
-        || (resource.data.surveyCompleted == true && surveyPatchShapeOk(tid));
+            && surveySubmitShapeOk(tid))
+        || (resource.data.surveyCompleted == true && surveyEditShapeOk());
     }
 
     // New docs: HMAC-signed 5-part id (AppState / HMACGenerator). Legacy reads unchanged.
