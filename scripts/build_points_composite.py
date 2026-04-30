@@ -64,6 +64,12 @@ def open_standardized_image(point_name: str) -> Image.Image:
 
 
 def main() -> None:
+    if not SRC_DIR.exists():
+        raise FileNotFoundError(f"Required source directory not found: {SRC_DIR}")
+
+    print(f"Using source images from: {SRC_DIR}")
+    print(f"Writing composite to: {OUT_PATH}")
+
     canvas = Image.new("RGB", (CANVAS_W, CANVAS_H), "white")
     draw = ImageDraw.Draw(canvas)
     label_px = int(round(LABEL_PT * OUTPUT_DPI / 72))
