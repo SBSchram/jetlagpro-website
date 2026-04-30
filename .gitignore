@@ -66,6 +66,7 @@ create_*.py
 
 # Temporary work directories
 _temp/
+_temp_docx/
 _scratch/
 _drafts/
 _work/
