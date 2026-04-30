@@ -3,7 +3,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-ROOT = Path(r"c:\Users\Steve\Documents\GitHub\jetlagpro-website")
+ROOT = Path(__file__).resolve().parents[1]
 SRC_DIR = ROOT / "assets" / "For Submission"
 OUT_PATH = ROOT / "assets" / "For Submission" / "PointsComposite_600dpi.png"
 
