@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC_DIR = ROOT / "assets" / "For Submission"
-OUT_PATH = ROOT / "assets" / "For Submission" / "PointsComposite_600dpi.png"
+OUT_PATH = ROOT / "assets" / "images" / "PointsComposite.png"
 
 # Exact order requested from the existing table layout.
 ORDER = [
