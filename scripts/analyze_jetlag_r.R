@@ -62,9 +62,15 @@ if (!("start_date" %in% names(df))) df$start_date <- NA_character_
 df <- df %>%
   filter(!is.na(jetlag_score)) %>%
   mutate(
-    adherence_cat = cut(stimulated_points,
-                        breaks = c(-Inf, 2, 5, 8, 12),
-                        labels = c("0-2", "3-5", "6-8", "9-12")),
+    # Primary adherence bands (matches website charts / app policy: 0–1 excluded from strata)
+    adherence_cat = case_when(
+      is.na(stimulated_points) ~ NA_character_,
+      stimulated_points <= 1 ~ "0-1",
+      stimulated_points <= 4 ~ "2-4",
+      stimulated_points <= 7 ~ "5-7",
+      TRUE ~ "8-12"
+    ),
+    adherence_cat = factor(adherence_cat, levels = c("2-4", "5-7", "8-12", "0-1")),
     direction = factor(tolower(trimws(direction)), levels = c("west", "east")),
     tz_band = cut(time_zones,
                   breaks = c(0, 2, 5, 8, Inf),
@@ -81,8 +87,10 @@ if ("trip_id" %in% names(df)) {
   df$device_id[missing_device] <- parsed_device[missing_device]
 }
 
-# Drop rows with missing key covariates (time_zones or direction)
+# Drop rows with missing key covariates; primary regression: ≥2 stimulated points (excludes 0–1 non-use)
 df <- df %>% filter(!is.na(time_zones) & !is.na(direction) & !is.na(adherence_cat))
+df <- df %>% filter(!is.na(stimulated_points), stimulated_points >= 2)
+df$adherence_cat <- droplevels(df$adherence_cat)
 n <- nrow(df)
 message("Analysis sample: n = ", n, " trips")
 
@@ -213,7 +221,7 @@ if (!is.null(ord_model)) {
 }
 
 # ---- effect size: high vs minimal adherence ----
-df_high_min <- df %>% filter(adherence_cat %in% c("0-2", "9-12"))
+df_high_min <- df %>% filter(adherence_cat %in% c("2-4", "8-12"))
 if (nrow(df_high_min) >= 10) {
   d <- cohens_d(jetlag_score ~ adherence_cat, data = df_high_min)
   message("\n---- Cohen's d (9–12 vs 0–2 points) ----")

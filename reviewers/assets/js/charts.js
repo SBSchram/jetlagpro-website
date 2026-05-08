@@ -35,12 +35,12 @@ function renderDoseResponseAnalysisChart(surveys) {
         }
         const ctx = chartElement.getContext('2d');
     
-    // Group surveys by app usage levels
+    // Primary dose–response lines: trips with ≥2 points stimulated (0–1 are non-use / survey-not-offered in app policy).
+    const eligible = surveys.filter(s => (s.pointsCompleted ?? 0) >= 2);
     const usageGroups = {
-        '0-2 points': surveys.filter(s => s.pointsCompleted >= 0 && s.pointsCompleted <= 2),
-        '3-5 points': surveys.filter(s => s.pointsCompleted >= 3 && s.pointsCompleted <= 5),
-        '6-8 points': surveys.filter(s => s.pointsCompleted >= 6 && s.pointsCompleted <= 8),
-        '9-12 points': surveys.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
+        '2-4 points (minimal)': eligible.filter(s => s.pointsCompleted >= 2 && s.pointsCompleted <= 4),
+        '5-7 points (good)': eligible.filter(s => s.pointsCompleted >= 5 && s.pointsCompleted <= 7),
+        '8-12 points (exceptional)': eligible.filter(s => s.pointsCompleted >= 8 && s.pointsCompleted <= 12)
     };
     
     // Time zone ranges (X-axis) - starting at 2 time zones, ending at 12+ for all flights with 12 or more timezone crossings
@@ -65,10 +65,9 @@ function renderDoseResponseAnalysisChart(surveys) {
     // Calculate aggregate severity for each usage group and time zone
     const datasets = [];
     const colors = [
-        { border: '#dc2626', background: 'rgba(220, 38, 38, 0.1)' }, // Red - minimal usage
-        { border: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }, // Orange - low usage
-        { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' }, // Blue - moderate usage
-        { border: '#16a34a', background: 'rgba(22, 163, 74, 0.1)' }  // Green - high usage
+        { border: '#dc2626', background: 'rgba(220, 38, 38, 0.1)' }, // Red — minimal meaningful use
+        { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' }, // Blue — good adherence
+        { border: '#16a34a', background: 'rgba(22, 163, 74, 0.1)' }   // Green — exceptional
     ];
     
     Object.entries(usageGroups).forEach(([groupName, groupSurveys], index) => {
@@ -169,7 +168,7 @@ function renderDoseResponseAnalysisChart(surveys) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Dose-Response Analysis: App Usage vs Jet Lag Severity by Time Zones (±1 SE) - Including Baseline',
+                    text: 'Dose-Response (≥2 points stimulated): Adherence vs Severity by Time Zones (±1 SE) — Waterhouse baseline',
                     font: {
                         size: 16,
                         weight: 'bold'

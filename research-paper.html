@@ -514,7 +514,7 @@
         
         <p><strong>Methods:</strong> In a prospective, app-based observational cohort, long-haul travelers used JetLagPro to receive timed prompts for a 12-point acupressure protocol aligned with the destination time zone. After travel, participants completed a jet lag survey based on the core domains of the Liverpool Jet Lag Questionnaire. We compared composite symptom scores across adherence levels and time zones crossed. </p>
         
-        <p><strong>Results:</strong> <i>PLACEHOLDER TEXT: Among [N] eligible trips (median [X] time zones; interquartile range, [Y–Z]), higher stimulation was significantly associated with lower composite jet lag severity (p &lt; 0.001 for trend). Compared with minimal stimulation (0–2 points), high stimulation (9–12 points) was associated with a [Δ]-point lower composite score (95% confidence interval, [a–b]) and an effect size of approximately d ≈ [0.4–0.6]. Similar patterns were observed for eastward and westward travel and within the 6–8 and ≥9 time-zone bands.</i></p>
+        <p><strong>Results:</strong> <i>PLACEHOLDER TEXT: Among [N] eligible trips (median [X] time zones; interquartile range, [Y–Z]), higher stimulation was significantly associated with lower composite jet lag severity (p &lt; 0.001 for trend). Compared with minimal meaningful stimulation (2–4 points), exceptional stimulation (8–12 points) was associated with a [Δ]-point lower composite score (95% confidence interval, [a–b]) and an effect size of approximately d ≈ [0.4–0.6]. Similar patterns were observed for eastward and westward travel and within the 6–8 and ≥9 time-zone bands.</i></p>
 
         <p><strong>Conclusions:</strong> <i>PLACEHOLDER TEXT: In real-world long-haul travel, higher adherence to the timed acupressure protocol was consistently associated with meaningfully lower jet lag symptom scores and attenuated symptom escalation with increasing time zones crossed. While causal inference is limited by the non-randomized, self-selected design, the graded dose–response and robustness across sensitivity analyses support timed somatosensory stimulation as a promising, low-risk non-photic cue for jet lag management.</i></p>
         
@@ -784,7 +784,7 @@
 		<p>This study did not include a randomized true control because the practical constraints of anonymous volunteer participation precluded randomization or a no-app sham condition. We therefore used a within-subject design in which each participant served as their own control. Participants voluntarily completed surveys that included two elements: (1) anticipated symptom severity (based on prior travel experience) and (2) actual post-travel symptom severity reported after the journey. The anticipated-versus-actual comparison was exploratory and subject to recall and expectation bias; the primary analytical strategy relied on between-adherence comparisons and an external baseline (Waterhouse et al.).</p>
 
 <h4>Baseline Data for Time Zones Crossed</h4>
-        <p>Our analysis compared survey results with baseline severity data from Waterhouse et al.’s 2007 comprehensive quantitative assessment of jet lag severity stratified by time zones.<sup>1</sup> In that study, non-interventional severity fell into the following ranges on a 1–5 severity scale.</p>
+        <p>Our analysis compared survey results with an external reference curve derived from Waterhouse et al.’s 2007 comprehensive quantitative assessment of jet lag severity stratified by time zones crossed.<sup>1</sup> In that study, non-interventional severity fell into the following ranges on a 1–5 severity scale (mapped to our composite outcome scale for visualization).</p>
 
         <ul style="margin-left: 40px; padding-left: 20px;">
             <li>1-2 time zones: 1.8 </li>
@@ -797,16 +797,15 @@
         
 <h4>Stimulation Level Groupings ("adherence level")</h4>
 
-        <p>Participants were grouped by the number of acupressure points marked as stimulated by the user in the app during travel:</p>
+        <p>For dose–response analyses, trips were grouped by the number of acupressure points the user marked as stimulated during travel. Trips with 0 or 1 point are treated as non-use (the app does not require a post-trip survey for those rows); primary adherence strata begin at 2 points.</p>
         <ul style="margin-left: 40px; padding-left: 20px;">
-            <li>0-2 points (no intervention)</li>
-            <li>3-5 points (low stimulation)</li>
-            <li>6-8 points (moderate stimulation)</li>
-            <li>9-12 points (high stimulation)</li>
+            <li>2–4 points (minimal meaningful stimulation)</li>
+            <li>5–7 points (good adherence)</li>
+            <li>8–12 points (exceptional adherence)</li>
         </ul>
         <br>
 
-        <p>For each stimulation group, we analyzed post-travel symptom severity across time-zone categories to assess how stimulation level affected the expected symptom increase with greater time-zone crossing. This grouping provided sufficient sample sizes for statistical analysis while maintaining meaningful intervention categories.</p>
+        <p>For each stimulation group, we analyzed post-travel symptom severity across time-zone categories to assess how stimulation level related to the severity increase expected with more time zones crossed (reference: Waterhouse et al., above). This grouping preserves three interpretable adherence bands aligned with the live reviewer dashboard.</p>
 
 <h4>Time Zone Offset and Travel Direction</h4>
 		<p>The app recorded the time difference (offset), in hours, between origin and destination. A positive offset meant the body had to advance its rhythm (eastward), whereas a negative offset meant delay (westward). Eastward adjustment typically felt more difficult than westward adjustment. For example, Los Angeles to Sydney had a +19-hour offset, so the app classified it as eastward even though the flight traveled west geographically. For trips over 12 hours, the body could adapt by the shorter route around the clock, but the analysis used the direct arrival offset.</p>
@@ -817,7 +816,7 @@
 
 	<p>We summarized trip characteristics across adherence groups using medians and interquartile ranges for continuous variables, and proportions for categorical variables.</p>
 
-	<p>Because individual travelers may contribute multiple trips, the primary analysis included all validated trips and used linear regression with cluster-robust standard errors (clustered by traveler/device identifier) to account for within-person correlation. The primary model estimated the association between adherence category and post-travel composite jet-lag severity, with minimal adherence (0–2 points) as the reference group, adjusting for time zones crossed (continuous) and travel direction. Adherence was also modeled as a continuous predictor (number of points completed) to evaluate dose–response.</p>
+	<p>Because individual travelers may contribute multiple trips, the primary analysis included validated trips with at least two stimulated points and used linear regression with cluster-robust standard errors (clustered by traveler/device identifier) to account for within-person correlation. The primary model estimated the association between adherence category and post-travel composite jet-lag severity, with minimal meaningful adherence (2–4 points) as the reference group, adjusting for time zones crossed (continuous) and travel direction. Adherence was also modeled as a continuous predictor (number of points completed among trips with ≥2 points) to evaluate dose–response.</p>
 
 	<p>To evaluate potential dose-response effects, the number of stimulated points was modeled both as an ordinal variable and as a continuous predictor. Prespecified subgroup analyses stratified trips by travel direction and time-zone band (1–2, 3–5, 6–8, and ≥9 zones) to examine whether associations differed across travel patterns.</p>
 
@@ -864,7 +863,7 @@
 				</div>
 			</div>
 			<p style="margin-top: 15px; font-size: 14px; color: #666;">
-				<strong>Chart Legend:</strong> Red (0-2 points) = minimal usage, Orange (3-5 points) = low usage, Blue (6-8 points) = moderate usage, Green (9-12 points) = high usage. Error bars show ±1 standard error.
+				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error.
 			</p>
 		</div>
 		
@@ -1103,12 +1102,11 @@
                 // Create chart canvas
                 container.innerHTML = '<canvas id="liveResearchChart" width="800" height="400"></canvas>';
                 
-                // Group surveys by app usage levels
+                const eligible = surveyData.filter(s => (s.pointsCompleted ?? 0) >= 2);
                 const usageGroups = {
-                    '0-2 points': surveyData.filter(s => s.pointsCompleted >= 0 && s.pointsCompleted <= 2),
-                    '3-5 points': surveyData.filter(s => s.pointsCompleted >= 3 && s.pointsCompleted <= 5),
-                    '6-8 points': surveyData.filter(s => s.pointsCompleted >= 6 && s.pointsCompleted <= 8),
-                    '9-12 points': surveyData.filter(s => s.pointsCompleted >= 9 && s.pointsCompleted <= 12)
+                    '2-4 points (minimal)': eligible.filter(s => s.pointsCompleted >= 2 && s.pointsCompleted <= 4),
+                    '5-7 points (good)': eligible.filter(s => s.pointsCompleted >= 5 && s.pointsCompleted <= 7),
+                    '8-12 points (exceptional)': eligible.filter(s => s.pointsCompleted >= 8 && s.pointsCompleted <= 12)
                 };
                 
                 // Time zone ranges (X-axis) - matches analytics dashboard
@@ -1134,7 +1132,6 @@
                 const datasets = [];
                 const colors = [
                     { border: '#dc2626', background: 'rgba(220, 38, 38, 0.1)' },
-                    { border: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' },
                     { border: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' },
                     { border: '#16a34a', background: 'rgba(22, 163, 74, 0.1)' }
                 ];
@@ -1231,7 +1228,7 @@
                         plugins: {
                             title: {
                                 display: true,
-                                text: `Live Dose-Response Analysis: App Usage vs Jet Lag Severity (n=${surveyData.length} completed surveys)`,
+                                text: `Live Dose-Response (lines require ≥2 points; ${eligible.length} of ${surveyData.length} records)`,
                                 font: {
                                     size: 14,
                                     weight: 'bold'
