@@ -44,12 +44,12 @@ install.packages(c("tidyverse", "sandwich", "lmtest", "MASS", "effectsize", "bro
 
 ## What the R script does
 
-- **Cleaning:** Drops rows missing composite score or key covariates; builds adherence categories (0–2, 3–5, 6–8, 9–12) and time-zone bands.
-- **Primary model:** Linear regression of `jetlag_score` on adherence category + `time_zones` + `direction`, including all validated trips and using cluster-robust (HC1) standard errors by `device_id` when available.
+- **Cleaning:** Drops rows missing composite score or key covariates; keeps trips with `stimulated_points` ≥ 2 for the primary model; builds adherence categories (2–4, 5–7, 8–12) and time-zone bands.
+- **Primary model:** Linear regression of `jetlag_score` on adherence category + `time_zones` + `direction`, using cluster-robust (HC1) standard errors by `device_id` when available.
 - **Dose–response:** Same outcome with `stimulated_points` as continuous predictor.
 - **Subgroups:** Same model stratified by east vs west (when n ≥ 10 per group).
 - **Sensitivity:** Ordinal logistic regression for composite score (when feasible), plus a first-trip-per-device subset analysis.
-- **Effect size:** Cohen’s d for high (9–12) vs minimal (0–2) adherence.
+- **Effect size:** Cohen’s d for high (8–12) vs minimal meaningful (2–4) adherence.
 - **Secondary outcomes:** Optional symptom domains with Benjamini–Hochberg FDR at 5%.
 - **Outputs:** Regression table (gt), forest plot of adherence effects, and website-style chart (mean severity by time-zone band and adherence). Plots are saved in `figures/` as `forest_plot_adherence.png` and `severity_by_tz_adherence.png` (the script creates `figures/` if it doesn’t exist).
 

@@ -23,8 +23,8 @@ STATISTICAL METHODS:
   1-5 scale. Only non-null values are included in the average.
 - Standard Error of the Mean (SEM): Used for error bars to show precision of
   mean estimates. Calculated as SD / sqrt(n).
-- Grouping: Trips are grouped by intervention level (points stimulated) and
-  time zones crossed.
+- Grouping: Trips are grouped by intervention level (2–4, 5–7, 8–12 points for
+  dose-response; 0–1 counted separately) and time zones crossed.
 
 DATA FILTERING:
 The following exclusions remove test or developer data:
@@ -320,22 +320,18 @@ def categorize_time_zones(tz_diff: int) -> str:
 
 def categorize_stimulation_dose_response(points: int) -> str:
     """
-    Categorize stimulation level for dose-response analysis.
-    
-    Matches charts.js line 40-43:
-    - '0-2 points': points >= 0 && points <= 2
-    - '3-5 points': points >= 3 && points <= 5
-    - '6-8 points': points >= 6 && points <= 8
-    - '9-12 points': points >= 9 && points <= 12
+    Categorize stimulation level for reporting (matches reviewers/charts.js).
+
+    - '0-1': non-use (excluded from primary dose-response lines on the dashboard)
+    - '2-4', '5-7', '8-12': primary adherence bands
     """
-    if points <= 2:
-        return "0-2"
-    elif points <= 5:
-        return "3-5"
-    elif points <= 8:
-        return "6-8"
-    else:
-        return "9-12"
+    if points <= 1:
+        return "0-1"
+    if points <= 4:
+        return "2-4"
+    if points <= 7:
+        return "5-7"
+    return "8-12"
 
 
 def get_baseline_severity(timezones: int) -> float:
@@ -524,8 +520,8 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     proportionally greater reduction in jet lag symptom severity?
     
     METHODOLOGY:
-    - Groups trips by intervention level: 0-2 points (minimal), 3-5 (low),
-      6-8 (moderate), 9-12 (high stimulation)
+    - Groups trips by intervention level: 2-4 (minimal meaningful), 5-7 (good),
+      8-12 (exceptional). Trips with 0-1 points are excluded from these strata.
     - Groups by time zones crossed: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+
       (individual time zones allow fine-grained analysis)
     - Calculates mean aggregate severity for each group
@@ -533,31 +529,30 @@ def dose_response_analysis(trips: List[Dict]) -> Dict:
     
     TECHNICAL:
     Matches charts.js renderDoseResponseAnalysisChart():
-    - Groups by stimulation level (0-2, 3-5, 6-8, 9-12 points)
+    - Groups by stimulation level (2-4, 5-7, 8-12 points; ≥2 points only)
     - Groups by individual time zones (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12+)
     - Calculates aggregate severity for each group
     
     Returns:
         Dict: Nested dictionary with severity statistics for each group
     """
-    # Group by stimulation level (matches charts.js line 39-44)
+    # Group by stimulation level (matches charts.js dose-response lines)
     usage_groups = {
-        '0-2 points': [],
-        '3-5 points': [],
-        '6-8 points': [],
-        '9-12 points': []
+        '2-4 points': [],
+        '5-7 points': [],
+        '8-12 points': []
     }
     
     for trip in trips:
         points = trip.get('pointsCompleted', 0)
-        if points <= 2:
-            usage_groups['0-2 points'].append(trip)
-        elif points <= 5:
-            usage_groups['3-5 points'].append(trip)
-        elif points <= 8:
-            usage_groups['6-8 points'].append(trip)
+        if points < 2:
+            continue
+        if points <= 4:
+            usage_groups['2-4 points'].append(trip)
+        elif points <= 7:
+            usage_groups['5-7 points'].append(trip)
         else:
-            usage_groups['9-12 points'].append(trip)
+            usage_groups['8-12 points'].append(trip)
     
     # Time zone ranges (matches charts.js line 47)
     time_zone_ranges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, '12+']

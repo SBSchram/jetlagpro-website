@@ -933,11 +933,12 @@ function calculateActualSeverity(survey) {
 
 // Helper function to get color for points column
 function getPointsColor(points) {
-    if (points >= 0 && points <= 2) return '#dc2626'; // Red
-    if (points >= 3 && points <= 5) return '#f59e0b'; // Orange
-    if (points >= 6 && points <= 8) return '#3b82f6'; // Blue
-    if (points >= 9 && points <= 12) return '#16a34a'; // Green
-    return '#666'; // Default gray
+    const p = points ?? 0;
+    if (p <= 1) return '#9ca3af'; // Gray — 0–1 points (non-use; not in primary adherence strata)
+    if (p >= 2 && p <= 4) return '#dc2626'; // Red — minimal
+    if (p >= 5 && p <= 7) return '#3b82f6'; // Blue — good
+    if (p >= 8 && p <= 12) return '#16a34a'; // Green — exceptional
+    return '#666';
 }
 
 // Render dose-response data table
