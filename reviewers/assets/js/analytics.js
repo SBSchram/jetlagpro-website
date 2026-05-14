@@ -752,9 +752,7 @@ function renderTripStats() {
     const confirmedTripsText = `${validWithSurveys.length} with surveys (${validWithSurveysPercent}%)<br>${validWithoutSurveys.length} without surveys (${validWithoutSurveysPercent}%)`;
     
     // Compute verified/legacy/test summary for the top line (research trips only)
-    const tzVerifiedCount = (breakdown.real_travel || 0);
-    const fallbackVerifiedCount = (breakdown.survey_fallback || 0);
-    const verifiedCount = (tzVerifiedCount + fallbackVerifiedCount);
+    const verifiedCount = (breakdown.real_travel || 0);
     const legacyCount = (breakdown.legacy || 0);
     const testCount = (validationStats.invalid || 0);
     const developerCount = developerTrips.length;
@@ -767,7 +765,7 @@ function renderTripStats() {
     const totalTrips = allData.length;
 
     let html = '<table class="stats-table">';
-    html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified${(tzVerifiedCount||fallbackVerifiedCount)?` (TZ ${tzVerifiedCount}, Survey ${fallbackVerifiedCount})`:''}<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
+    html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
@@ -775,11 +773,11 @@ function renderTripStats() {
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
     html += '</table>';
     html += '<div style="margin-top: 10px; font-size: 0.85em; color: #6b7280; line-height: 1.6; text-align: center;">';
-    html += '<div>Verified: Confirmed travel where the departure and arrival timezone differ or validated by survey metadata.</div>';
-    html += '<div>Legacy: Early data lacking time zone fields but included when a user survey data is present.</div>';
+    html += '<div>Verified: Confirmed real travel where the departure and arrival timezone differ</div>';
+    html += '<div>Legacy: Early data lacking time zone fields but included when user survey data is present</div>';
     html += '<div>Test: Any trip where timezonesCount is 0 (checked first) OR arrival=origin timezone</div>';
     html += '<div>Developer: Any trip from a developer device</div>';
-    html += '<div>Confirmed: Early data (no TZ fields) or travel where Destination and Arrival timezones differ</div>';
+    html += '<div>Confirmed: Valid research trips (Verified + Legacy)</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
     

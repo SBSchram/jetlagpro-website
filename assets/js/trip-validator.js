@@ -279,18 +279,8 @@ class TripValidator {
             return details;
         }
         
-        // Rule 5: Survey fallback
-        if (trip.arrivalTimeZone === originTz && 
-            trip.completionMethod && 
-            trip.completionMethod.includes('_survey')) {
-            details.isValid = true;
-            details.reason = 'Survey fallback (offline trip data)';
-            details.rule = 'survey_fallback';
-            return details;
-        }
-        
         // Invalid: Test data
-        details.reason = 'Test data (same timezone, no survey fallback)';
+        details.reason = 'Test data (same timezone)';
         details.rule = 'test_data';
         return details;
     }
@@ -344,7 +334,6 @@ class TripValidator {
         const breakdown = {
             legacy: 0,
             real_travel: 0,
-            survey_fallback: 0,
             test_data: 0
         };
         
