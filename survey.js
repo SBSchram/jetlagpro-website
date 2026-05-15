@@ -999,7 +999,6 @@ async function exportSurveyData() {
                 
                 // Individual survey responses (only fields actually asked)
                 userComment: surveyData.userComment || '',
-                ageRange: surveyData.ageRange || '',
                 
                 // Rating responses (only fields actually asked - 1-5 scale)
                 generalAnticipated: surveyData.generalAnticipated || 1,
@@ -1158,7 +1157,7 @@ function resetSurvey() {
     console.log('🔄 Resetting survey...');
     
     // Clear all form data
-    const forms = ['baselineForm', 'postForm', 'contextForm', 'demographicsForm'];
+    const forms = ['baselineForm', 'postForm', 'contextForm'];
     forms.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {
@@ -1434,7 +1433,7 @@ function prefillSurveyWithSurveyData(surveyData) {
     console.log('🔍 Full surveyData object:', surveyData);
     
     // Pre-fill demographic fields
-    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
+    const demographicFields = ['gender', 'travelExperience'];
     demographicFields.forEach(field => {
         if (surveyData[field]) {
             const element = document.querySelector(`select[name="${field}"]`);
@@ -1511,7 +1510,7 @@ function prefillSurveyWithTripData(tripData) {
     
     
     // Pre-fill demographic fields
-    const demographicFields = ['ageRange', 'gender', 'travelExperience'];
+    const demographicFields = ['gender', 'travelExperience'];
     demographicFields.forEach(field => {
         if (tripData[field]) {
             const element = document.querySelector(`select[name="${field}"]`);
