@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260522b';
+const DEPLOY_VERSION = '20260523';
 
 class ComponentLoader {
   constructor() {
@@ -83,7 +83,7 @@ class ComponentLoader {
     if (target) {
       target.innerHTML = `
         <div style="padding: 20px; text-align: center; color: #666; font-style: italic;">
-          Failed to load ${componentName}. <a href="javascript:location.reload()" style="color: #0066FF;">Refresh page</a>
+          Failed to load ${componentName}. <a href="javascript:location.reload()" style="color: #2563eb;">Refresh page</a>
         </div>
       `;
     }
