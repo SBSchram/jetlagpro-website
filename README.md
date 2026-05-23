@@ -64,7 +64,6 @@ Value: yourusername.github.io
 
 ### Website
 - `index.html` - Main landing page
-- `survey.html` - Post-trip survey
 - `research-paper.html` - Scientific documentation
 - `styles.css` - CSS styles
 - `CNAME` - Custom domain configuration

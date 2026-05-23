@@ -50,9 +50,7 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
 3. In **Firebase Console → Firestore → `tripCompletionsDev`**:
    - Document id must be **5 segments** separated by `-`, last segment **8 lowercase hex** (HMAC suffix).
    - Document must **not** disappear within seconds (that would indicate HMAC delete firing on a **valid** id — investigate secret / id generation mismatch).
-4. **Survey (dev):** Open **`survey-dev.html`** (served from the same site / local static server as configured). It sets `window.JETLAG_TRIP_COLLECTION = 'tripCompletionsDev'`.
-   - Use the **same `tripId` and survey code** as the app link would provide.
-   - Submit the survey.
+4. **Survey (dev):** Complete the **in-app survey** (`SurveyView`) for that trip from the History tab (or survey reminder).
 5. In Firestore, confirm the same document now has **`surveyCompleted: true`** and survey fields (ratings, `surveySubmittedAt`, etc.).
 
 **Pass:** Trip doc created and stable; survey update succeeds; no unexpected `PERMISSION_DENIED` in browser console or app logs.
@@ -66,7 +64,7 @@ Only if policy allows writing a real **`tripCompletions`** doc.
 3. Confirm in **`tripCompletions`**:
    - Same **5-part id** shape as Test A.
    - Doc persists (not deleted by `hmacValidator`).
-4. Complete survey via **`survey.html`** (production collection).
+4. Complete the **in-app survey** for that trip (production build).
 
 **Pass:** Same as Test A, on `tripCompletions`.
 
@@ -104,7 +102,7 @@ In **Firebase Console → Functions → Logs** (or Cloud Logging), filter for:
 - Functions: `functions/index.js` — `enforceHmacOnTripCreate`, `hmacValidator`, `hmacValidatorDev`, `validateTripIdSignature`
 - iOS writer: `JetLagPro/Services/FirebaseService.swift` — `writeTripCompletionToFirebase`
 - iOS id: `JetLagPro/Core/Models/AppState.swift` — `makeTripId`; `JetLagPro/Services/HMACGenerator.swift`
-- Survey: `survey.js` — `exportSurveyData`, `jetlagTripCollection()`; `survey-dev.html` vs `survey.html`
+- Survey: `JetLagPro/Services/FirebaseService.swift` — `submitSurveyResponse`; `JetLagPro/Core/Views/SurveyView.swift`
 
 ## Done criteria
 

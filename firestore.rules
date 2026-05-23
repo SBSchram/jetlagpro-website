@@ -17,7 +17,7 @@ service cloud.firestore {
       ];
     }
 
-    // survey.html initial submit (incl. fallback that may add tripId / surveyCode / created).
+    // In-app survey PATCH (iOS SurveyView / FirebaseService.submitSurveyResponse; legacy web survey removed).
     function surveySubmissionKeys() {
       return [
         'surveyCompleted', 'surveySubmittedAt',
