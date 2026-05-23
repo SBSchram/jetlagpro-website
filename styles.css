@@ -1,3 +1,11 @@
+/* JetLagPro brand — matches iOS AccentColor (#0066FF) / AppChrome */
+:root {
+    --jlp-accent: #0066FF;
+    --jlp-accent-hover: #0055D9;
+    --jlp-accent-88: rgba(0, 102, 255, 0.88);
+    --jlp-brand-gradient: linear-gradient(135deg, var(--jlp-accent) 0%, var(--jlp-accent-88) 100%);
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -11,8 +19,8 @@ body {
     color: #333;
     background-color: #ffffff;
     background-image: 
-        radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.02) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.02) 0%, transparent 50%);
+        radial-gradient(circle at 25% 25%, rgba(0, 102, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(0, 102, 255, 0.02) 0%, transparent 50%);
     background-attachment: fixed;
 }
 
@@ -48,7 +56,7 @@ body {
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #2563eb;
+    color: var(--jlp-accent);
 }
 
 .nav-links {
@@ -65,7 +73,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: #2563eb;
+    color: var(--jlp-accent);
 }
 
 /* Google Translate Widget */
@@ -90,7 +98,7 @@ body {
 
 .translate-widget .goog-te-gadget-simple:hover {
     background-color: #e9ecef !important;
-    border-color: #2563eb !important;
+    border-color: var(--jlp-accent) !important;
 }
 
 .translate-widget .goog-te-gadget-simple .goog-te-menu-value span {
@@ -113,7 +121,7 @@ body {
 /* Notification Setup Section */
 .notification-section {
     padding: 60px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
 }
 
@@ -147,7 +155,7 @@ body {
 }
 
 .notification-buttons .btn-primary {
-    background: #2563eb;
+    background: var(--jlp-accent);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -158,7 +166,7 @@ body {
 }
 
 .notification-buttons .btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--jlp-accent-hover);
     transform: translateY(-2px);
 }
 
@@ -203,7 +211,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 120px 0 80px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
     min-height: 100vh;
     display: flex;
@@ -302,14 +310,14 @@ body {
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: var(--jlp-accent);
     color: white;
-    border-color: #2563eb;
+    border-color: var(--jlp-accent);
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
+    background: var(--jlp-accent-hover);
+    border-color: var(--jlp-accent-hover);
     transform: translateY(-2px);
 }
 
@@ -321,7 +329,7 @@ body {
 
 .btn-secondary:hover {
     background: white;
-    color: #2563eb;
+    color: var(--jlp-accent);
     transform: translateY(-2px);
 }
 
@@ -546,7 +554,7 @@ body {
 .step-number {
     width: 60px;
     height: 60px;
-    background: #2563eb;
+    background: var(--jlp-accent);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -585,7 +593,7 @@ body {
     right: 0;
     bottom: 0;
     background-image: 
-        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.03) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
     pointer-events: none;
@@ -684,7 +692,7 @@ body {
 }
 
 .references-list a:hover {
-    color: #1d4ed8;
+    color: var(--jlp-accent-hover);
     text-decoration: underline;
 }
 
@@ -717,7 +725,7 @@ body {
     text-align: center;
     margin: 2rem 0 3rem;
     padding: 2rem;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
     border-radius: 12px;
 }
 
@@ -745,7 +753,7 @@ body {
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.1);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -758,7 +766,7 @@ body {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8, #1e40af);
+    background: linear-gradient(90deg, #3b82f6, var(--jlp-accent-hover), #1e40af);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -766,7 +774,7 @@ body {
 .science-block:hover {
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
-    border-color: rgba(59, 130, 246, 0.2);
+    border-color: rgba(0, 102, 255, 0.2);
 }
 
 .science-block:hover::before {
@@ -782,7 +790,7 @@ body {
 
 .block-icon {
     font-size: 1.5rem;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, var(--jlp-accent-hover) 100%);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -866,12 +874,12 @@ body {
 
 .jetlagpro-solution {
     background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-    border-left-color: #2563eb;
+    border-left-color: var(--jlp-accent);
     border-width: 4px;
 }
 
 .jetlagpro-solution h4 {
-    color: #1d4ed8;
+    color: var(--jlp-accent-hover);
 }
 
 .meridian-clock-featured {
@@ -963,7 +971,7 @@ body {
 }
 
 .ref-item a:hover {
-    color: #1d4ed8;
+    color: var(--jlp-accent-hover);
     text-decoration: underline;
 }
 
@@ -1027,7 +1035,7 @@ body {
 
 /* New pages styling */
 .hero-simple {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
     padding: 8rem 0 4rem; /* Added extra top padding for fixed header */
     text-align: center;
@@ -1100,7 +1108,7 @@ body {
 }
 
 .step-number {
-    background: #764ba2;
+    background: var(--jlp-accent);
     color: white;
     width: 3rem;
     height: 3rem;
@@ -1358,7 +1366,7 @@ body {
 }
 
 .cta-button-large:hover {
-    background: #2563eb;
+    background: var(--jlp-accent);
 }
 
 /* Swipe Navigation Styles */
@@ -1438,7 +1446,7 @@ body.swiping * {
     
     /* Add subtle visual feedback for active sections */
     section:target {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
+        background: linear-gradient(135deg, rgba(0, 102, 255, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
     }
 }
 
@@ -1491,7 +1499,7 @@ body.swiping * {
     border-radius: 8px;
     font-size: 0.9rem;
     color: #374151;
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid var(--jlp-accent);
 }
 
 /* Features Section */
@@ -1510,10 +1518,10 @@ body.swiping * {
     right: 0;
     bottom: 0;
     background-image: 
-        linear-gradient(45deg, rgba(59, 130, 246, 0.02) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(59, 130, 246, 0.02) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.02) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(59, 130, 246, 0.02) 75%);
+        linear-gradient(45deg, rgba(0, 102, 255, 0.02) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0, 102, 255, 0.02) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 102, 255, 0.02) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 102, 255, 0.02) 75%);
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     pointer-events: none;
@@ -1531,7 +1539,7 @@ body.swiping * {
     text-align: center;
     padding: 2rem;
     border-radius: 16px;
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -1585,14 +1593,14 @@ body.swiping * {
     background: #fff;
     border-radius: 14px;
     padding: 1.35rem 1.35rem 1.15rem;
-    border: 1px solid rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(0, 102, 255, 0.12);
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .testimonial-quote {
     margin: 0;
     padding: 0 0 0 0.85rem;
-    border-left: 3px solid #2563eb;
+    border-left: 3px solid var(--jlp-accent);
 }
 
 .testimonial-quote p {
@@ -1663,7 +1671,7 @@ body.swiping * {
 }
 
 .localization-note {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
     padding: 2.5rem;
     border-radius: 12px;
@@ -1686,7 +1694,7 @@ body.swiping * {
 /* Download Section */
 .download {
     padding: 20px 0 80px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
     text-align: center;
 }
@@ -1864,7 +1872,7 @@ body.swiping * {
 }
 
 .footer-section a:hover {
-    color: #2563eb;
+    color: var(--jlp-accent);
 }
 
 .footer-bottom {
@@ -2275,7 +2283,7 @@ body.swiping * {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -2355,7 +2363,7 @@ body.swiping * {
 .privacy-subsection {
     margin: 1.5rem 0;
     padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
     border-radius: 12px;
     border-left: 3px solid #3b82f6;
 }
@@ -2591,7 +2599,7 @@ body.swiping * {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--jlp-brand-gradient);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -2865,7 +2873,7 @@ body.swiping * {
     
     .nav-links a:hover {
         background-color: #f0f9ff;
-        color: #2563eb;
+        color: var(--jlp-accent);
         transform: translateY(-2px);
     }
     
@@ -3105,7 +3113,7 @@ body.swiping * {
 }
 
 .modal-indicator.active {
-    background: #2563eb;
+    background: var(--jlp-accent);
 }
 
 .modal-body ol {
