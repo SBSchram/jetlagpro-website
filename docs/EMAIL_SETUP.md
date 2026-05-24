@@ -45,7 +45,23 @@ Allow 5–15 minutes after DNS changes propagate.
 
 ---
 
-## Step 5 — Send *as* info@ from Gmail (optional)
+## Step 5 — SPF must allow Gmail (required for “Send mail as” info@)
+
+If you send **as** `info@jetlagpro.com` through Gmail (`smtp.gmail.com`), Cloudflare’s default SPF is **not enough**. It only authorizes Cloudflare MX, not Google.
+
+**Cloudflare** → **jetlagpro.com** → **DNS** → edit the **TXT** record for `@` (SPF) to:
+
+```text
+v=spf1 include:_spf.mx.cloudflare.net include:_spf.google.com ~all
+```
+
+Wait 15–60 minutes, then test **info@** → an external address (e.g. ProtonMail), then **info@** → `steve@handyworks.com` (check **Spam**).
+
+Without `include:_spf.google.com`, receivers with strict DMARC (e.g. handyworks.com `p=quarantine`) may **drop or spam-filter** mail from info@ with no bounce.
+
+---
+
+## Step 6 — Send *as* info@ from Gmail (optional)
 
 Cloudflare Email Routing is **receive-only**. To reply as `info@jetlagpro.com` from Gmail:
 
@@ -86,4 +102,5 @@ Cloudflare Email Routing is **receive-only**. To reply as `info@jetlagpro.com` f
 | Still bouncing to info@ | Old Namecheap MX still in Cloudflare DNS? Forwarding still enabled at Namecheap? |
 | Mail in spam | Mark as not spam; add filter for `@jetlagpro.com` forwards |
 | Send-as fails | App password, port 587, DMARC `p=none`, verify info@ in Gmail settings |
-| **To `steve@handyworks.com` fails** | HandyWorks uses separate Namecheap forwarding — see `handyworks-website/docs/EMAIL_SETUP.md` |
+| **To `steve@handyworks.com` fails** | Add `include:_spf.google.com` to jetlagpro SPF (above); HandyWorks DMARC is strict — check Spam |
+| **ProtonMail → steve@ works, info@ → steve@ does not** | Almost always missing `_spf.google.com` on jetlagpro.com |
