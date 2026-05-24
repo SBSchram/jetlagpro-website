@@ -59,6 +59,8 @@ Wait 15–60 minutes, then test **info@** → an external address (e.g. ProtonMa
 
 Without `include:_spf.google.com`, receivers with strict DMARC (e.g. handyworks.com `p=quarantine`) may **drop or spam-filter** mail from info@ with no bounce.
 
+**Free Gmail send-as limit:** `Return-Path` stays `@gmail.com`, so `dmarc=fail` for `header.from=jetlagpro.com` is normal. Receivers with **`p=quarantine`** (handyworks) may drop mail; free fix on handyworks: set DMARC `p=none` — see `handyworks-website/docs/EMAIL_SETUP.md` §4.
+
 ---
 
 ## Step 6 — Send *as* info@ from Gmail (optional)
