@@ -86,3 +86,4 @@ Cloudflare Email Routing is **receive-only**. To reply as `info@jetlagpro.com` f
 | Still bouncing to info@ | Old Namecheap MX still in Cloudflare DNS? Forwarding still enabled at Namecheap? |
 | Mail in spam | Mark as not spam; add filter for `@jetlagpro.com` forwards |
 | Send-as fails | App password, port 587, DMARC `p=none`, verify info@ in Gmail settings |
+| **To `steve@handyworks.com` fails** | HandyWorks uses separate Namecheap forwarding — see `handyworks-website/docs/EMAIL_SETUP.md` |
