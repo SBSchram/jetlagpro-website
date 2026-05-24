@@ -504,7 +504,13 @@
         <h1>Jet Lag Pro: A Mobile Platform for Evaluating Chronoacupuncture (Time-Aligned Acupressure) as a Tool for Jet Lag Management</h1>
         
         <p style="text-align: center; margin-bottom: 2px;"><strong>Steven Schram PhD, DC, LAc</strong></p>
-        <p style="text-align: center; margin-bottom: 30px;">© 2026 Steven Schram. All rights reserved.</p>
+        <p style="text-align: center; margin-bottom: 16px;">© 2026 Steven Schram. All rights reserved.</p>
+        <p style="text-align: center; margin-bottom: 30px;">
+            <a href="https://osf.io/jm4w7" target="_blank" rel="noopener"
+               style="display: inline-block; background: #1a7abf; color: #fff; font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 4px; text-decoration: none; letter-spacing: 0.02em;">
+                Pre-registered · OSF osf.io/jm4w7
+            </a>
+        </p>
         
         <h2>Abstract</h2>
 
@@ -723,7 +729,7 @@
 <h4>Intervention protocol</h4>
 	<p>The mobile application provides travelers with timing and instructions to stimulate specific points based on the destination time. Point selection follows the strategic substitutions described in Table 1. (The user can opt for the traditional points via a setting in the app.) </p>
 	
-	<p>Ideally beginning at the airport (or any time thereafter), travelers select their destination. The app immediately identifies the first active point matching the destination’s local time, then schedules a full 24-hour sequence of prompts in two-hour increments. This process is illustrated below.</p>
+	<p>Ideally beginning at the airport (or any time thereafter), travelers select their destination. The app immediately identifies the first active point matching the destination’s local time, then schedules a full 24-hour sequence of prompts in two-hour increments. This process is illustrated below. (The 24-hour schedule represents the guided stimulation period; participants are typically still at their destination when the guided period ends.)</p>
 	
 	<div class="methods-screenshots" id="methodsScreenshots">
             <figure class="methods-single-figure">
@@ -742,9 +748,9 @@
             </div>
         </div>
 
-		<p>After the trip ends, the app logs trip data to Firebase, including the arrival time zone to validate actual travel. One critical data element stored at trip end is the time-zone difference between origin and destination, calculated using IANA time-zone identifiers. The application automatically accounts for Daylight Saving Time when calculating offsets through the device’s native time-zone libraries. However, trips that begin or end during DST transitions may show a ±1-hour variance in reported time-zone counts, depending on when offsets are captured. Only trips lasting more than 2 hours are saved to the database; shorter sessions are treated as test use and excluded from all data collection.</p>
+		<p>After the guided session ends (when point 12 is completed, the user stops early, or ~24 hours elapse), the app logs session data to Firebase. One critical data element is the time-zone difference between origin and destination, calculated using IANA time-zone identifiers. The application automatically accounts for Daylight Saving Time when calculating offsets through the device’s native time-zone libraries. However, trips that begin or end during DST transitions may show a ±1-hour variance in reported time-zone counts, depending on when offsets are captured. Only sessions lasting more than 2 hours and with a credible timezone signal at session end are saved to the database; ambiguous or short sessions are intentionally excluded from the research dataset.</p>
 
-		<p>A survey reminder notification is scheduled at trip start or end, targeting 2 days after the journey concludes, to prompt the traveler to complete the website survey. The 2-day interval was chosen to minimize recall bias. The survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1–5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
+		<p>A survey reminder notification is scheduled at trip start or end, targeting 2 days after the guided session ends, to prompt the traveler to complete the in-app survey. The 2-day interval was chosen to minimize recall bias. The survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1–5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
 
 <h4>Outcomes</h4>
 		<p>The post-travel survey is a streamlined, single post-travel assessment based on the Liverpool Jet Lag Questionnaire’s core symptom domains, using 1–5 severity ranges adapted for real-world mobile use. It retains the LJLQ’s core validated domains—sleep quality/disturbance, daytime fatigue, concentration difficulties, irritability/motivation, and gastrointestinal function—while omitting less central items (e.g., detailed appetite or bowel-frequency changes) to minimize participant burden.</p>

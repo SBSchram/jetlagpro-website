@@ -131,8 +131,8 @@ async function main() {
   await testEnv.cleanup()
 
   console.log('All automated Firestore rules checks passed.')
-  console.log('\nManual (not run here): Test A — iOS dev trip + survey-dev.html')
-  console.log('Manual (not run here): Test B — production trip + survey.html')
+  console.log('\nManual (not run here): Test A — iOS dev trip + in-app SurveyView')
+  console.log('Manual (not run here): Test B — production trip + in-app SurveyView')
   console.log('Manual / staging: Test C1 — invalid HMAC → Cloud Function delete')
 }
 
