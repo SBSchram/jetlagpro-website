@@ -49,7 +49,6 @@ Pushes to `main` deploy to GitHub Pages. Custom domain: **jetlagpro.com** (`CNAM
 | [llms.txt](llms.txt) | Agent index |
 | [CHANGELOG.md](CHANGELOG.md) | Site version history |
 | [DATA-INTEGRITY-IMPLEMENTATION.md](DATA-INTEGRITY-IMPLEMENTATION.md) | Security architecture |
-| [docs/EMAIL_SETUP.md](docs/EMAIL_SETUP.md) | info@jetlagpro.com setup |
 
 ## Contact
 
