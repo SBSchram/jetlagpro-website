@@ -207,8 +207,8 @@ class NotificationManager {
       try {
         await this.registration.showNotification(data.title, {
           body: data.body,
-          icon: './assets/images/app-icon.png',
-          badge: './assets/images/app-icon.png',
+          icon: './assets/images/Wheel.png',
+          badge: './assets/images/Wheel.png',
           tag: data.tag,
           requireInteraction: true,
           actions: [

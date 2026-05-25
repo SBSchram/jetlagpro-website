@@ -45,6 +45,19 @@ body {
     padding-right: 20px;
 }
 
+.logo .logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-image {
+    display: block;
+    height: 44px;
+    width: auto;
+    max-width: 140px;
+}
+
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 700;

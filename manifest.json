@@ -13,20 +13,20 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "assets/images/app-icon.png",
-      "sizes": "180x180",
+      "src": "assets/images/Wheel.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/images/app-icon.png",
+      "src": "assets/images/Wheel.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/images/app-icon.png",
-      "sizes": "512x512",
+      "src": "assets/images/Wheel.png",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     }
@@ -53,7 +53,7 @@
       "url": "./travel-tips.html",
       "icons": [
         {
-          "src": "assets/images/app-icon.png",
+          "src": "assets/images/Wheel.png",
           "sizes": "192x192"
         }
       ]
