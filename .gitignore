@@ -76,6 +76,8 @@ _work/
 docs/*
 !docs/firestore-security-testing.md
 !docs/EMAIL_SETUP.md
+!docs/PRODUCT.md
+!docs/AGENTS.md
 demo/*.md
 scripts/*.md
 assets/images/README.md
