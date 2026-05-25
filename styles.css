@@ -902,7 +902,7 @@ body {
 }
 
 .meridian-clock-image {
-    max-width: 400px;
+    max-width: 600px;
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -2708,7 +2708,8 @@ body.swiping * {
 }
 
 .organ-clock-image {
-    max-width: 100%;
+    max-width: 600px;
+    width: 100%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
