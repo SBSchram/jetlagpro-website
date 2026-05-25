@@ -7,6 +7,7 @@
     <meta name="description" content="Beat jet lag in 2-3 days with chronoacupuncture. Free app sends reminders every 2 hours based on ancient Chinese medicine. Works during flight and after arrival. Try interactive demo.">
     <meta name="keywords" content="jet lag cure, jet lag remedy, chronoacupuncture, acupressure jet lag, natural jet lag solution, jet lag app, travel fatigue relief, circadian rhythm reset, traditional Chinese medicine, horary points">
     <link rel="canonical" href="https://jetlagpro.com/">
+    <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
     
     <!-- Open Graph for social sharing -->
     <meta property="og:title" content="Beat Jet Lag Naturally - Free Chronoacupuncture App">
@@ -30,13 +31,27 @@
       "name": "JetLagPro",
       "description": "Chronoacupuncture app for natural jet lag relief using traditional Chinese medicine",
       "url": "https://jetlagpro.com",
-      "operatingSystem": ["iOS", "Android PWA"],
+      "operatingSystem": ["iOS", "watchOS"],
       "applicationCategory": "HealthApplication",
+      "softwareVersion": "1.1",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "description": "Free during observational research phase"
       },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Android",
+          "value": "Native app in development (React Native parity); not released"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Research pre-registration",
+          "value": "https://osf.io/jm4w7"
+        }
+      ],
       "creator": {
         "@type": "Person",
         "name": "Dr. Steven Schram",
@@ -45,7 +60,7 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260523120000">
+    <link rel="stylesheet" href="styles.css?v=20260525140000">
     <script src="load-common-head.js?v=20251211130934"></script>
 </head>
 <body>
@@ -355,11 +370,47 @@
             </div>
         </section>
 
+        <section id="product-facts" class="product-facts" aria-labelledby="product-facts-heading">
+            <div class="container">
+                <h2 id="product-facts-heading" class="section-title">At a glance</h2>
+                <dl class="facts-grid">
+                    <div class="facts-item">
+                        <dt>App</dt>
+                        <dd>Native iOS 18.2+ and Apple Watch — timed acupressure for jet lag</dd>
+                    </div>
+                    <div class="facts-item">
+                        <dt>Price</dt>
+                        <dd>Free during the research study</dd>
+                    </div>
+                    <div class="facts-item">
+                        <dt>Research</dt>
+                        <dd>Observational cohort; <a href="https://osf.io/jm4w7" rel="noopener">pre-registered on OSF</a>; in-app survey only</dd>
+                    </div>
+                    <div class="facts-item">
+                        <dt>Distribution</dt>
+                        <dd>App Store submitted May 2026 — link posted here when approved; <a href="#download">TestFlight beta</a> available now</dd>
+                    </div>
+                    <div class="facts-item">
+                        <dt>Privacy</dt>
+                        <dd>Anonymous optional research uploads — <a href="privacy.html">privacy policy</a></dd>
+                    </div>
+                    <div class="facts-item">
+                        <dt>For agents &amp; developers</dt>
+                        <dd><a href="llms.txt">llms.txt</a> · <a href="docs/PRODUCT.md">Product facts</a></dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
         <!-- Beta Testing Section -->
         <section id="download" class="download">
             <div class="container">
                 <div class="download-content">
-                    <h2>Get JetLagPro in 2 Steps</h2>
+                    <h2>Get JetLagPro</h2>
+                    <p class="download-lead">Native iPhone and Apple Watch app. App Store listing submitted May 2026 — we will add the public store link here as soon as Apple approves it.</p>
+                    
+                    <h3 class="download-subhead">Install now via TestFlight (beta)</h3>
+                    <p class="download-note">Use TestFlight until the App Store link above is live.</p>
                     
                     <div class="beta-steps">
                         <div class="beta-step">
@@ -367,7 +418,7 @@
                             <div class="step-logo">
                                 <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
                             </div>
-                            <p>Apple requires TestFlight for all beta apps.</p>
+                            <p>Apple’s beta installer — required before Step 2.</p>
                             <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
                         </div>
                         

@@ -6,6 +6,8 @@ Allow: /demo/
 Allow: /science.html
 Allow: /travel-tips.html
 Allow: /research-paper.html
+Allow: /llms.txt
+Allow: /docs/
 
 # Sitemap location
 Sitemap: https://jetlagpro.com/sitemap.xml

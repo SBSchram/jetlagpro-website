@@ -1,92 +1,56 @@
 # JetLagPro Website
 
-This is the official website for JetLagPro, hosted on GitHub Pages.
+Official website for [JetLagPro](https://jetlagpro.com), hosted on GitHub Pages at **jetlagpro.com**.
 
 ## About
 
-JetLagPro is an iOS app that uses traditional Chinese acupressure techniques to help travelers overcome jet lag naturally. This website serves as the landing page, research documentation, and data collection platform.
+JetLagPro is a native **iOS + watchOS** app that uses timed acupressure (chronoacupuncture) to help travelers adjust to new time zones. This repository is the **marketing and research site** — not the app source code.
 
-### Key Features
-- **Research Platform:** Clinical trial data collection via web surveys
-- **Data Integrity:** Immutable audit logging with independent verification
-- **Security:** HMAC-signed trip IDs prevent data fabrication
-- **Transparency:** Public audit logs and verification tools
+### What this site provides
 
-## Local Development
+- Landing page, science content, and interactive demo
+- Live [research paper](https://jetlagpro.com/research-paper.html) with Firestore-backed results
+- Privacy, terms, and data-integrity documentation
+- Download instructions (App Store when approved; TestFlight beta fallback)
 
-To run this website locally:
+### Research & data
 
-1. Clone the repository
-2. Start the development server:
-   ```bash
-   ./dev-server.sh
-   ```
-   Or use a simple HTTP server:
-   ```bash
-   python -m http.server 8000
-   # or
-   npx serve .
-   ```
-3. Open `http://localhost:8000` in your browser
+- **In-app survey only** (no public web survey)
+- Anonymous Firebase uploads with HMAC trip IDs and GCS audit logging
+- Pre-registered at OSF: https://osf.io/jm4w7
 
-**Editing:** Edit HTML files directly (no conversion needed). Changes appear on refresh.
+### For AI agents
+
+- **`llms.txt`** — short machine-readable product summary
+- **`docs/PRODUCT.md`** — verifiable facts (platforms, pricing, research, URLs)
+- **`docs/AGENTS.md`** — reading order for agents
+
+## Local development
+
+```bash
+python -m http.server 8000
+# or
+npx serve .
+```
+
+Open `http://localhost:8000`. Edit HTML/CSS/JS directly.
 
 ## Deployment
 
-This website is automatically deployed to GitHub Pages when changes are pushed to the `main` branch.
+Pushes to `main` deploy to GitHub Pages. Custom domain: **jetlagpro.com** (`CNAME`).
 
-### Custom Domain Setup
-
-The website uses the custom domain `jetlagpro.com`. To configure:
-
-1. In your GitHub repository settings, go to "Pages"
-2. Under "Custom domain", enter `jetlagpro.com`
-3. Save the settings
-4. Update your DNS settings with your domain provider to point to GitHub Pages
-
-### DNS Configuration
-
-Add these records to your domain's DNS settings:
-
-```
-Type: CNAME
-Name: @
-Value: yourusername.github.io
-```
+**Cache busting:** Bump `?v=` on CSS/JS/image links when deploying asset changes.
 
 ## Documentation
 
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and major changes
-- **[DATA-INTEGRITY-IMPLEMENTATION.md](DATA-INTEGRITY-IMPLEMENTATION.md)** - Data security architecture
-- **[Research Paper](https://jetlagpro.com/research-paper.html)** - Scientific background and methodology
-
-## File Structure
-
-### Website
-- `index.html` - Main landing page
-- `research-paper.html` - Scientific documentation
-- `styles.css` - CSS styles
-- `CNAME` - Custom domain configuration
-
-### Backend
-- `functions/` - Firebase Cloud Functions (audit logging, validation)
-- `firestore.rules` - Firebase Security Rules
-- `scripts/` - Verification and analysis tools
-
-### Documentation
-- `CHANGELOG.md` - Version history
-- `DATA-INTEGRITY-IMPLEMENTATION.md` - Security architecture
-- `README.md` - This file
-
-## Contributing
-
-To make changes to the website:
-
-1. Make your changes locally
-2. Test the changes
-3. Commit and push to the main branch
-4. GitHub Pages will automatically deploy the changes
+| Doc | Purpose |
+|-----|---------|
+| [docs/PRODUCT.md](docs/PRODUCT.md) | Canonical product facts |
+| [llms.txt](llms.txt) | Agent index |
+| [CHANGELOG.md](CHANGELOG.md) | Site version history |
+| [DATA-INTEGRITY-IMPLEMENTATION.md](DATA-INTEGRITY-IMPLEMENTATION.md) | Security architecture |
+| [docs/EMAIL_SETUP.md](docs/EMAIL_SETUP.md) | info@jetlagpro.com setup |
 
 ## Contact
 
-For questions about the website, contact the development team. 
+info@jetlagpro.com

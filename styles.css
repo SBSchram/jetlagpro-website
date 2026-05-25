@@ -1683,6 +1683,59 @@ body.swiping * {
     line-height: 1.6;
 }
 
+/* Product facts (homepage — human + agent aligned) */
+.product-facts {
+    padding: 60px 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem 2rem;
+    margin: 0;
+}
+
+.facts-item {
+    margin: 0;
+}
+
+.facts-item dt {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.facts-item dd {
+    margin: 0;
+    color: #475569;
+    line-height: 1.5;
+    font-size: 1rem;
+}
+
+.facts-item a {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.download-lead {
+    max-width: 640px;
+    margin: 0 auto 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+.download-subhead {
+    font-size: 1.35rem;
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+}
+
 /* Download Section */
 .download {
     padding: 20px 0 80px 0;

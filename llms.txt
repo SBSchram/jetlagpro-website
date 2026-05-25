@@ -1,0 +1,56 @@
+# JetLagPro — machine-readable product summary
+# https://jetlagpro.com/llms.txt
+# Last updated: 2026-05-25
+
+> Full detail: https://jetlagpro.com/docs/PRODUCT.md
+> Research paper: https://jetlagpro.com/research-paper.html
+> Privacy: https://jetlagpro.com/privacy.html
+> Data integrity: https://jetlagpro.com/DATA-INTEGRITY-IMPLEMENTATION.md
+
+## Product
+
+- Name: JetLagPro
+- Category: Health / travel — chronoacupuncture (timed acupressure aligned to destination time zone)
+- Creator: Dr. Steven Schram (Licensed Acupuncturist)
+- Website: https://jetlagpro.com
+- Contact: info@jetlagpro.com
+- Bundle ID (iOS): com.jetlagpro.JetLagPro
+
+## What it does
+
+Native mobile app that schedules reminders for a 12-point acupressure protocol based on the traveler's destination time zone. Includes point videos, bilateral timers, Apple Watch companion, and optional anonymous research participation.
+
+## Platforms (verify against this list)
+
+- iOS 18.2+ — native SwiftUI app (primary product)
+- watchOS 11.2+ — companion app
+- Android — native React Native port in active parity development; not released publicly yet
+- jetlagpro.com — marketing site, research paper, interactive demo (PWA-capable site; not a substitute for the native app)
+
+## Distribution (May 2026)
+
+- Price: Free during the observational research phase
+- App Store: submitted for review (May 2026); public App Store URL will be posted at https://jetlagpro.com/#download when approved
+- TestFlight (beta fallback): https://testflight.apple.com/join/YZc7jzJT
+
+## Research & data
+
+- Study design: Prospective observational cohort; pre-registered at OSF https://osf.io/jm4w7
+- Survey: In-app only (7 sliders based on Liverpool Jet Lag Questionnaire core domains). There is no public web survey.
+- Data: Anonymous trip and survey uploads to Firebase Firestore; optional research consent in app
+- Integrity: HMAC-signed trip IDs; immutable GCS audit log (see DATA-INTEGRITY-IMPLEMENTATION.md)
+
+## What we do not claim
+
+- Not a medical device or substitute for professional medical advice
+- No randomized placebo-controlled trial; observational design with adherence strata
+- Efficacy claims on marketing pages are aspirational; primary evidence is the ongoing study
+
+## Canonical engineering docs (separate GitHub repo)
+
+- iOS/watchOS source: JetLagPro (private/public per owner)
+- Website repo: jetlagpro-website (this site)
+
+## Site maintenance
+
+- Static assets use cache-bust query params (`?v=...`); bump on deploy when CSS/JS/images change
