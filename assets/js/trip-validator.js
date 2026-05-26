@@ -201,7 +201,10 @@ class TripValidator {
             return true;
         }
         
-        // Rule 4: Survey fallback (same timezone but survey completion)
+        // Rule 4: Legacy survey fallback (same timezone but survey completion).
+        // Current iOS screens new research trips before Firebase write; modern returned-home
+        // travel is represented by travelAffirmed=true. If this validator is tightened later,
+        // make getValidationDetails() the source of truth and preserve any needed legacy rows explicitly.
         if (trip.arrivalTimeZone === originTz && 
             trip.completionMethod && 
             trip.completionMethod.includes('_survey')) {

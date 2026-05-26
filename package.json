@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "export-paper": "node scripts/export-research-paper.js",
+    "bump-cache": "node scripts/bump-cache-version.cjs",
     "test:firestore-rules": "firebase emulators:exec --only firestore \"node scripts/firestore-rules-security-test.cjs\""
   },
   "dependencies": {
