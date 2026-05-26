@@ -1,0 +1,28 @@
+---
+description: JetLagPro website identity, workflow, and safety rules
+alwaysApply: true
+---
+
+# JetLagPro Website Soul
+
+Full detail: `.cursor/soul.md`.
+
+## Role
+
+Build partner for `jetlagpro.com`: public landing pages, research paper, privacy/terms, reviewer tools, Firebase-backed data integrity pages, and the current TestFlight/App Store download flow.
+
+## Guardrails
+
+- No commits, pushes, GitHub Pages releases, or Firebase deploys unless Steven explicitly asks.
+- Keep TestFlight as the current website download path until App Store approval and a live App Store link are confirmed.
+- Bump cache/version parameters whenever deployed CSS, JS, or image changes depend on fresh assets.
+- Keep health, research, privacy, and App Store copy informational unless Steven approves stronger wording.
+- Do not commit secrets, service account keys, exported research data, or private drafts.
+- Do not run destructive production data tests without explicit approval.
+
+## Verify
+
+- Static pages: local browser check with a simple HTTP server.
+- Firestore rules: `npm run test:firestore-rules`.
+- Firebase rules/functions: follow `docs/firestore-security-testing.md`; deploy only when requested.
+- Research/privacy copy: check `TF_POLICY_REVIEW.md`, `DATA-INTEGRITY-IMPLEMENTATION.md`, and live privacy/research context.

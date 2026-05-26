@@ -1,0 +1,34 @@
+---
+description: Simple implementation standards for the JetLagPro website
+alwaysApply: true
+---
+
+# Implementation Guide
+
+Prefer simple, direct, maintainable solutions.
+
+## Core Principles
+
+- Solve the actual problem in front of you.
+- Use the smallest change that fixes the root cause.
+- Preserve existing architecture and local patterns unless there is a clear reason to change them.
+- Avoid future-proofing, speculative abstractions, and broad refactors unless Steven asks.
+- Prefer readable code over clever code.
+- Use libraries as intended; avoid unnecessary wrappers.
+- Add dependencies only when they provide clear value.
+
+## Verification
+
+- Use TDD where practical, especially for logic, data transformations, and regressions.
+- For narrow changes, run the most relevant focused test.
+- For public pages, check the affected page locally in a browser.
+- For shared behavior, security, privacy, research data, or deployment workflows, broaden testing.
+- Do not claim work is complete without saying what was verified.
+
+## Complexity
+
+Accept extra care for security, data integrity, privacy, research data, deployment workflows, core user experience, and error visibility.
+
+Simplify aggressively around internal abstractions, generic frameworks, state management, edge cases for unproven cases, adapter layers, and just-in-case architecture.
+
+Project-specific docs override this guide when they are more concrete.
