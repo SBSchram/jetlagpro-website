@@ -2890,7 +2890,13 @@ body.swiping * {
 }
 
 .modal-overlay.is-visible {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay[hidden] {
+    display: none !important;
 }
 
 .modal-content {
@@ -2900,15 +2906,49 @@ body.swiping * {
     padding: 24px;
     max-width: 420px;
     width: 100%;
-    margin: 40px auto;
+    margin: 0 auto;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
     box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.4);
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: #1e293b;
 }
 
-.modal-content:hover {
-    transform: scale(1.02);
-    box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.5);
+.testflight-modal .modal-body h3 {
+    margin-top: 0;
+    color: #1e293b;
+}
+
+.testflight-modal-warning {
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0 0 1rem;
+}
+
+.testflight-modal-warning strong {
+    color: #b91c1c;
+}
+
+.testflight-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.testflight-modal .testflight-modal-cancel {
+    color: #475569;
+    border-color: #cbd5e1;
+    background: #fff;
+    width: 100%;
+}
+
+.testflight-modal .testflight-modal-cancel:hover {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #94a3b8;
+    transform: none;
 }
 
 .modal-body h3 {
@@ -3062,22 +3102,21 @@ body.modal-open {
 
 @media (max-width: 480px) {
     .modal-overlay {
-        padding: 10px;
+        padding: 12px;
         align-items: center;
     }
     
     .modal-content {
-        padding: 16px;
-        margin: 0 auto;
-        max-height: 95vh;
+        padding: 16px 16px 14px;
+        max-height: calc(100vh - 24px);
     }
     
-    .modal-body p {
-        font-size: 0.95rem;
-        margin-bottom: 12px;
-        margin-top: 8px;
-        font-weight: 600;
-        color: #dc2626;
+    .testflight-modal .modal-body h3 {
+        font-size: 1.2rem;
+    }
+
+    .testflight-modal-warning {
+        font-size: 0.9rem;
     }
     
     .modal-image-wrapper {

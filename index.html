@@ -61,8 +61,8 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260527111554">
-    <script src="load-common-head.js?v=20260527111554"></script>
+    <link rel="stylesheet" href="styles.css?v=20260527112251">
+    <script src="load-common-head.js?v=20260527112251"></script>
 </head>
 <body>
     <div id="main-header"></div>
@@ -75,7 +75,7 @@
           console.log('🔍 PWA: Current URL:', window.location.href);
           console.log('🔍 PWA: Manifest URL:', document.querySelector('link[rel="manifest"]')?.href);
           
-          navigator.serviceWorker.register('./sw.js?v=20260527111554')
+          navigator.serviceWorker.register('./sw.js?v=20260527112251')
             .then(registration => {
               console.log('✅ PWA: Service Worker registered successfully');
               console.log('📱 JetLagPro PWA ready for offline use');
@@ -256,13 +256,13 @@
     </script>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260527111554"></script>
+    <script src="js/components.js?v=20260527112251"></script>
     
     <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js?v=20260527111554"></script>
+    <script src="js/translate.js?v=20260527112251"></script>
     
     <!-- Notification Manager -->
-    <script src="notifications.js?v=20260527111554"></script>
+    <script src="notifications.js?v=20260527112251"></script>
 
     <main>
         <section class="hero-simple hero-simple--compact">
@@ -319,19 +319,19 @@
 
         <section id="top" class="how-it-works">
             <div class="container">
-                <img src="assets/images/welcome.png?v=20260527111554" alt="JetLagPro welcome screen" class="section-header-image">
+                <img src="assets/images/welcome.png?v=20260527112251" alt="JetLagPro welcome screen" class="section-header-image">
                 <div class="steps-container">
                     <div class="step">
                         <h3>Destination</h3>
-                        <img src="assets/images/destination.png?v=20260527111554" alt="Choose your destination in JetLagPro" class="step-image">
+                        <img src="assets/images/destination.png?v=20260527112251" alt="Choose your destination in JetLagPro" class="step-image">
                     </div>
                     <div class="step">
                         <h3>Guide</h3>
-                        <img src="assets/images/instructions.png?v=20260527111554" alt="Guide to your destination points" class="step-image">
+                        <img src="assets/images/instructions.png?v=20260527112251" alt="Guide to your destination points" class="step-image">
                     </div>
                     <div class="step">
                         <h3>Stimulate</h3>
-                        <img src="assets/images/guide.png?v=20260527111554" alt="Stimulate the current point" class="step-image">
+                        <img src="assets/images/guide.png?v=20260527112251" alt="Stimulate the current point" class="step-image">
                     </div>
                 </div>
             </div>
@@ -426,22 +426,9 @@
                         <div class="beta-step">
                             <h3>Step 2: Install JetLagPro</h3>
                             <div class="step-logo">
-                                <img src="assets/images/Wheel.png?v=20260527111554" alt="JetLagPro" style="width: 64px; height: 64px; object-fit: contain;">
+                                <img src="assets/images/Wheel.png?v=20260527112251" alt="JetLagPro" style="width: 64px; height: 64px; object-fit: contain;">
                             </div>
                             <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
-                        </div>
-                    </div>
-                    
-                    <div id="testflightModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription">
-                        <div class="modal-content" id="testflightModalContent">
-                            <div class="modal-body">
-                                <h3 id="testflightModalTitle" style="font-size: 1.5em;">Quick heads-up</h3>
-                                <div class="modal-visual" style="margin-top: 8px;">
-                                    <img src="assets/images/TestFlightRedeem.png" alt="TestFlight redeem code screen" style="width: 200px; border-radius: 8px; opacity: 0.9;">
-                                </div>
-                                <p id="testflightModalDescription" style="text-align: center; margin: 10px 0 0 0;"><strong style="color: #ef4444;">When you see “Ready to Test,” don’t tap Redeem.</strong> Come back here and tap Get JetLagPro.</p>
-                                <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight" style="cursor: pointer; margin-top: 15px;">Go to App Store</button>
-                            </div>
                         </div>
                     </div>
                     
@@ -453,6 +440,23 @@
 
 
     <div id="main-footer"></div>
+
+    <div id="testflightModal" class="modal-overlay testflight-modal" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription" hidden>
+        <div class="modal-content" id="testflightModalContent">
+            <button type="button" class="modal-close" id="closeTestFlightModal" aria-label="Close">&times;</button>
+            <div class="modal-body">
+                <h3 id="testflightModalTitle">Quick heads-up</h3>
+                <p id="testflightModalDescription" class="testflight-modal-warning">When you see <strong>Ready to Test</strong> in TestFlight, <strong>don’t tap Redeem</strong>. Come back here and tap <strong>Get JetLagPro</strong> (Step 2).</p>
+                <div class="modal-visual">
+                    <img src="assets/images/TestFlightRedeem.png" alt="TestFlight screen showing Ready to Test — do not tap Redeem" width="200" height="auto">
+                </div>
+                <div class="testflight-modal-actions">
+                    <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Go to App Store</button>
+                    <button type="button" class="btn btn-secondary testflight-modal-cancel" id="cancelTestFlightModal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
@@ -552,48 +556,52 @@
 
         // Clean two-step process - no auto-copy needed
         
-        // TestFlight modal - Simple trap warning
+        // TestFlight modal - warn users not to tap Redeem
         (function () {
             const testFlightButton = document.getElementById('openTestFlightModal');
             const modal = document.getElementById('testflightModal');
             const continueButton = document.getElementById('continueToTestFlight');
+            const closeButton = document.getElementById('closeTestFlightModal');
+            const cancelButton = document.getElementById('cancelTestFlightModal');
             const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
 
             if (!testFlightButton || !modal || !continueButton) {
                 return;
             }
 
-            // Open modal - show trap warning
             const openModal = (event) => {
                 if (event) {
                     event.preventDefault();
                 }
+                modal.hidden = false;
                 modal.classList.add('is-visible');
                 document.body.classList.add('modal-open');
-                continueButton.focus({ preventScroll: true });
+                if (closeButton) {
+                    closeButton.focus({ preventScroll: true });
+                }
             };
 
-            // Close modal
             const closeModal = () => {
                 modal.classList.remove('is-visible');
+                modal.hidden = true;
                 document.body.classList.remove('modal-open');
+                continueButton.disabled = false;
+                continueButton.textContent = 'Go to App Store';
             };
 
-            // Navigate to App Store - close modal and go
             const goToAppStore = () => {
                 if (continueButton.disabled) return;
                 continueButton.disabled = true;
                 continueButton.textContent = 'Opening...';
-                
                 closeModal();
                 window.location.href = TESTFLIGHT_URL;
             };
 
-            // Event listeners
             testFlightButton.addEventListener('click', openModal);
             continueButton.addEventListener('click', goToAppStore);
+            if (closeButton) closeButton.addEventListener('click', closeModal);
+            if (cancelButton) cancelButton.addEventListener('click', closeModal);
 
-            // Close on overlay click
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     closeModal();
@@ -601,7 +609,6 @@
                 }
             });
 
-            // Escape key closes modal
             document.addEventListener('keydown', (e) => {
                 if (modal.classList.contains('is-visible') && e.key === 'Escape') {
                     closeModal();
