@@ -2333,6 +2333,16 @@ body.swiping * {
     }
 } 
 
+/* Legal / policy content pages */
+.content-section {
+    padding: 3rem 0 4rem;
+    background: #f1f5f9;
+}
+
+.privacy-page .container {
+    max-width: 880px;
+}
+
 /* Privacy Policy Page Styles */
 .privacy-content {
     max-width: 800px;
@@ -2378,7 +2388,24 @@ body.swiping * {
     font-size: 1rem;
     color: #64748b;
     margin: 0;
+    padding: 0 2rem 1.5rem;
     font-weight: 500;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.privacy-content .privacy-disclaimer {
+    margin: 1.5rem 2rem 0;
+}
+
+.privacy-section a {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.privacy-section a:hover {
+    text-decoration: underline;
 }
 
 .privacy-section {
