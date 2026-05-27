@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260527113039';
+const DEPLOY_VERSION = '20260527114358';
 
 class ComponentLoader {
   constructor() {
@@ -137,15 +137,25 @@ window.loadHeader = () => window.componentLoader.loadComponent('header', 'main-h
 window.loadFooter = () => window.componentLoader.loadComponent('footer', 'main-footer');
 
 // Global Mobile Menu Functionality
-window.toggleMobileMenu = function() {
+function setMobileNavOpen(isOpen) {
     const navDrawer = document.getElementById('navLinks');
     const menuToggle = document.querySelector('.mobile-menu-toggle');
-    
-    if (navDrawer && menuToggle) {
-        const isOpen = navDrawer.classList.toggle('active');
-        menuToggle.classList.toggle('active');
-        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+    if (!navDrawer || !menuToggle) {
+        return;
     }
+
+    navDrawer.classList.toggle('active', isOpen);
+    menuToggle.classList.toggle('active', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    navDrawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    document.body.classList.toggle('nav-open', isOpen);
+}
+
+window.toggleMobileMenu = function() {
+    const navDrawer = document.getElementById('navLinks');
+    setMobileNavOpen(!navDrawer?.classList.contains('active'));
 };
 
 // Initialize mobile menu event listeners when header is loaded
@@ -154,28 +164,18 @@ document.addEventListener('headerLoaded', () => {
     const navLinks = document.getElementById('navLinks');
     if (navLinks) {
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                const navDrawer = document.getElementById('navLinks');
-                const menuToggle = document.querySelector('.mobile-menu-toggle');
-                
-                if (navDrawer && menuToggle) {
-                    navDrawer.classList.remove('active');
-                    menuToggle.classList.remove('active');
-                    menuToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
+            link.addEventListener('click', () => setMobileNavOpen(false));
+        });
+
+        navLinks.querySelectorAll('[data-nav-close]').forEach(el => {
+            el.addEventListener('click', () => setMobileNavOpen(false));
         });
     }
-    
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-        const navLinks = document.getElementById('navLinks');
-        const menuToggle = document.querySelector('.mobile-menu-toggle');
-        
-        if (navLinks && menuToggle && !e.target.closest('.nav-container')) {
-            navLinks.classList.remove('active');
-            menuToggle.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
+
+    document.addEventListener('keydown', (e) => {
+        const navDrawer = document.getElementById('navLinks');
+        if (e.key === 'Escape' && navDrawer?.classList.contains('active')) {
+            setMobileNavOpen(false);
         }
     });
 });

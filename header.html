@@ -3,25 +3,28 @@
     <div class="nav-container">
       <div class="logo">
         <a href="/" class="logo-link">
-          <img src="/assets/images/Wheel.png?v=20260527113039" alt="JetLagPro" class="logo-image" width="120" height="44">
+          <img src="/assets/images/Wheel.png?v=20260527114358" alt="JetLagPro" class="logo-image" width="120" height="44">
         </a>
       </div>
-      <button type="button" class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" onclick="toggleMobileMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button type="button" class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawerPanel" onclick="toggleMobileMenu()">
+        <span class="mobile-menu-bar"></span>
+        <span class="mobile-menu-bar"></span>
+        <span class="mobile-menu-bar"></span>
       </button>
-      <div class="nav-drawer" id="navLinks">
-        <div class="nav-links">
-          <a href="/">Home</a>
-          <a href="/science.html">The Science</a>
-          <a href="/travel-tips.html">Travel Tips</a>
-          <a href="/blog.html">Blog</a>
-          <a href="/research-paper.html">Research</a>
-        </div>
-        <div class="nav-end">
-          <a href="/#download" class="btn btn-primary nav-cta">Get the App</a>
-          <div id="google_translate_element" class="translate-widget"></div>
+      <div class="nav-drawer" id="navLinks" aria-hidden="true">
+        <div class="nav-drawer-backdrop" data-nav-close aria-hidden="true"></div>
+        <div class="nav-drawer-panel" id="navDrawerPanel">
+          <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/science.html">The Science</a>
+            <a href="/travel-tips.html">Travel Tips</a>
+            <a href="/blog.html">Blog</a>
+            <a href="/research-paper.html">Research</a>
+          </div>
+          <div class="nav-end">
+            <a href="/#download" class="btn btn-primary nav-cta">Get the App</a>
+            <div id="google_translate_element" class="translate-widget translate-widget--desktop"></div>
+          </div>
         </div>
       </div>
     </div>
