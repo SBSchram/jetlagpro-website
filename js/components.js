@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260527114358';
+const DEPLOY_VERSION = '20260527123349';
 
 class ComponentLoader {
   constructor() {
@@ -160,6 +160,9 @@ window.toggleMobileMenu = function() {
 
 // Initialize mobile menu event listeners when header is loaded
 document.addEventListener('headerLoaded', () => {
+    // Always start from a closed state after header injection/bfcache restore.
+    setMobileNavOpen(false);
+
     // Close mobile menu when clicking on a link
     const navLinks = document.getElementById('navLinks');
     if (navLinks) {
@@ -178,4 +181,9 @@ document.addEventListener('headerLoaded', () => {
             setMobileNavOpen(false);
         }
     });
+});
+
+// Safari/iOS back-forward cache can restore stale open state.
+window.addEventListener('pageshow', () => {
+    setMobileNavOpen(false);
 });
