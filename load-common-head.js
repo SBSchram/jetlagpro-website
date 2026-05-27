@@ -3,7 +3,7 @@ async function loadCommonHead() {
     try {
         // Use absolute path so it works from both root and reviewers/ subdirectory
         // Add a version query parameter for simple cache busting on deploy
-        const response = await fetch('/head-template.html?v=20260527023006');
+        const response = await fetch('/head-template.html?v=20260527023525');
         const headContent = await response.text();
         
         // Insert the common head elements into the document head
