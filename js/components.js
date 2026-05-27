@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260527112251';
+const DEPLOY_VERSION = '20260527113039';
 
 class ComponentLoader {
   constructor() {
@@ -138,12 +138,13 @@ window.loadFooter = () => window.componentLoader.loadComponent('footer', 'main-f
 
 // Global Mobile Menu Functionality
 window.toggleMobileMenu = function() {
-    const navLinks = document.getElementById('navLinks');
+    const navDrawer = document.getElementById('navLinks');
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     
-    if (navLinks && menuToggle) {
-        navLinks.classList.toggle('active');
+    if (navDrawer && menuToggle) {
+        const isOpen = navDrawer.classList.toggle('active');
         menuToggle.classList.toggle('active');
+        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     }
 };
 
@@ -154,12 +155,13 @@ document.addEventListener('headerLoaded', () => {
     if (navLinks) {
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                const navLinks = document.getElementById('navLinks');
+                const navDrawer = document.getElementById('navLinks');
                 const menuToggle = document.querySelector('.mobile-menu-toggle');
                 
-                if (navLinks && menuToggle) {
-                    navLinks.classList.remove('active');
+                if (navDrawer && menuToggle) {
+                    navDrawer.classList.remove('active');
                     menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
                 }
             });
         });
@@ -173,6 +175,7 @@ document.addEventListener('headerLoaded', () => {
         if (navLinks && menuToggle && !e.target.closest('.nav-container')) {
             navLinks.classList.remove('active');
             menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
         }
     });
 });
