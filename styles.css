@@ -81,6 +81,20 @@ body {
     color: #2563eb;
 }
 
+/* Header CTA */
+.nav-cta.btn {
+    padding: 10px 16px;
+    border-radius: 999px;
+    line-height: 1;
+    font-weight: 700;
+    box-shadow: none;
+    transform: none;
+}
+
+.nav-cta.btn:hover {
+    transform: none;
+}
+
 /* Google Translate Widget */
 .translate-widget {
     margin-left: 1rem;
