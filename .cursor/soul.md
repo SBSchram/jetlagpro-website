@@ -12,6 +12,8 @@ This file defines project-specific agent judgment for the JetLagPro public websi
 | Website identity, risks, and workflow | `.cursor/soul.md` |
 | Always-on website summary | `.cursor/rules/soul.mdc` |
 | Implementation style | `.cursor/rules/Implementation-Guide.mdc` |
+| SEO audits, meta tags, content/keyword work | `.cursor/skills/seo-and-search/SKILL.md` |
+| Site audit reports (dated) | `SEO_SITE_AUDIT_*.md` in repo root |
 | Project overview and file map | `README.md` |
 | Website/backend history | `CHANGELOG.md` |
 | Data integrity architecture | `DATA-INTEGRITY-IMPLEMENTATION.md` |
@@ -107,4 +109,4 @@ Bad:
 
 ---
 
-*Last updated: May 26, 2026*
+*Last updated: May 30, 2026*
