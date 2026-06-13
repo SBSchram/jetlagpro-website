@@ -27,11 +27,12 @@ STATISTICAL METHODS:
   dose-response; 0–1 counted separately) and time zones crossed.
 
 DATA FILTERING:
-The following exclusions remove test or developer data:
+The following exclusions remove test, developer, or non-study data:
 - Developer test sessions
 - Test trips: Same origin/destination timezone
 - Incomplete surveys: Missing symptom data
 - Invalid HMAC signatures
+- Pre-consent beta (Phase A): survey complete but researchConsentGranted is not true
 
 POINT SET (CRAMPED VS STANDARD):
 The app added a "cramped seating" point set as the default on 2026-02-04. Logging of
@@ -134,6 +135,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     - Test trips: timezonesCount=0 or same timezone without survey
     - Incomplete surveys: Missing symptom severity data
     - Invalid HMAC: Signature mismatch (if signature present)
+    - Pre-consent beta: surveyCompleted without researchConsentGranted
     
     TIMEZONE VALIDATION RULES:
     1. timezonesCount=0: Test trip
@@ -213,6 +215,10 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         # Skip if survey not completed
         # Match live dashboard logic: survey.surveyCompleted === true
         if not trip.get('surveyCompleted', False):
+            continue
+
+        # Study analysis: Share-gated research consent (excludes Phase A pre-consent beta)
+        if trip.get('researchConsentGranted') is not True:
             continue
         
         # Skip if missing trip ID (data integrity issue)

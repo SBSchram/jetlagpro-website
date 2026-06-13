@@ -6,7 +6,7 @@
     <title>JetLagPro Data Analysis</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="JetLagPro Research Data Analysis">
-    <script src="../load-common-head.js?v=20260527123349"></script>
+    <script src="../load-common-head.js?v=20260613223756"></script>
     
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,13 +16,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
     <!-- External CSS and JavaScript files -->
-    <link rel="stylesheet" href="assets/css/reviewers.css?v=20260527123349">
-    <link rel="stylesheet" href="assets/css/analytics.css?v=20260527123349">
-    <script src="../assets/js/firebase-service.js?v=20260527123349"></script>
-    <script src="../assets/js/trip-validator.js?v=20260527123349"></script>
-    <script src="assets/js/analytics.js?v=20260527123349"></script>
-    <script src="assets/js/charts.js?v=20260527123349"></script>
-    <script src="assets/js/copy-code.js?v=20260527123349"></script>
+    <link rel="stylesheet" href="assets/css/reviewers.css?v=20260613223756">
+    <link rel="stylesheet" href="assets/css/analytics.css?v=20260613223756">
+    <script src="../assets/js/firebase-service.js?v=20260613223756"></script>
+    <script src="../assets/js/trip-validator.js?v=20260613223756"></script>
+    <script src="assets/js/analytics.js?v=20260613223756"></script>
+    <script src="assets/js/charts.js?v=20260613223756"></script>
+    <script src="assets/js/copy-code.js?v=20260613223756"></script>
     
     <script>
         // Inline JavaScript removed - now using external files:
@@ -75,7 +75,7 @@
 <body>
     <div class="container">
         <!-- Common Reviewer Navigation (loaded dynamically) -->
-        <script src="load-nav.js?v=20260527123349"></script>
+        <script src="load-nav.js?v=20260613223756"></script>
 
         <!-- Analysis Page Sub-Menu -->
         <nav class="analysis-subnav">
@@ -105,6 +105,9 @@
         </div>
 
         <!-- Point set (cramped vs horary) for analysis -->
+        <div class="info-box" style="max-width: 800px; margin: 0 auto 24px auto; padding: 12px 16px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; font-size: 0.9rem; color: #78350f;">
+            <strong>Study analysis dataset</strong>: Dose–response, trip stats (study row), and point usage include only trips with Share-gated research consent (<code>researchConsentGranted</code>). Pre-consent beta surveys appear under Trip Submissions but are excluded per protocol.
+        </div>
         <div class="info-box" style="max-width: 800px; margin: 0 auto 24px auto; padding: 12px 16px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; font-size: 0.9rem;">
             <strong>Point usage (all meridians)</strong>: Slots 1–3 and 5–6 and 9–10 are the same in both sets. Slots 4, 7, 8, 11, and 12 are split into two rows each: <strong>cramped</strong> (SP-10, BL-2, KI-27, GB-20, LIV-8) vs <strong>original horary</strong> (SP-3, BL-66, KI-10, GB-41, LIV-1). Firebase <code>useCrampedPoints</code>: <strong>true</strong> = cramped; <strong>false</strong> = original (e.g. non-cramped seating). <strong>Missing</strong> = legacy trips (only original points) → counted under horary rows only.
         </div>

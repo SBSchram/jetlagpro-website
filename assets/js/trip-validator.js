@@ -370,12 +370,21 @@ class TripValidator {
     }
     
     /**
+     * True when the user tapped Share after the IRB consent disclosure (post–Phase A).
+     * Legacy pre-consent beta rows omit this field or set it false.
+     */
+    static hasStudyConsent(trip) {
+        return trip.researchConsentGranted === true;
+    }
+
+    /**
      * Filters trips for research analysis - excludes test data, developer sessions,
      * and trips with invalid HMAC signatures
      * 
      * @param {Array} trips - Array of trip objects
      * @param {Object} options - Filtering options
      * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
+     * @param {boolean} options.requireStudyConsent - Only include Share-gated research consent (default: false)
      * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
      * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: TripValidator.DEVELOPER_DEVICE_IDS)
      * @returns {Array} - Filtered array of trips for analysis
@@ -383,6 +392,7 @@ class TripValidator {
     static filterForAnalysis(trips, options = {}) {
         const {
             requireSurvey = false,
+            requireStudyConsent = false,
             excludeDeveloper = true,
             developerDeviceIds = TripValidator.DEVELOPER_DEVICE_IDS
         } = options;
@@ -410,6 +420,11 @@ class TripValidator {
         // 4. Optionally require completed surveys
         if (requireSurvey) {
             filtered = filtered.filter(trip => trip.surveyCompleted === true);
+        }
+
+        // 5. Optionally require Share-gated research consent (excludes Phase A pre-consent beta)
+        if (requireStudyConsent) {
+            filtered = filtered.filter(trip => this.hasStudyConsent(trip));
         }
         
         return filtered;

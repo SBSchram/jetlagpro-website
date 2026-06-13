@@ -122,6 +122,7 @@ class FirebaseService {
                     extractString('tripData', 'originTimezone') ||
                     extractString('tripData', 'originTimeZone'),
                 surveyCompleted: extractBoolean('surveyCompleted') || extractBoolean('surveyData', 'surveyCompleted'),
+                researchConsentGranted: extractBoolean('researchConsentGranted'),
                 created: extractTimestamp('created') || extractTimestamp('tripData', 'created'),
                 
                 // Extract individual point completion status

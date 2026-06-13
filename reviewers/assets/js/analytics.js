@@ -109,6 +109,16 @@ function getCurrentData() {
     return data.filter(trip => !isDeveloperTrip(trip));
 }
 
+/** Study analysis dataset: valid production trips with Share-gated consent (excludes Phase A pre-consent beta). */
+function getStudyEligibleTrips(options = {}) {
+    const { requireSurvey = false } = options;
+    return TripValidator.filterForAnalysis(getCurrentData(), {
+        requireSurvey,
+        requireStudyConsent: true,
+        excludeDeveloper: true
+    });
+}
+
 // Initialize function (no Firebase SDK needed)
 async function initializeDashboard() {
     try {
@@ -283,6 +293,7 @@ function convertFirestoreDocument(document) {
                 extractValue('tripData', 'originTimeZone'),
             useCrampedPoints: extractValue('useCrampedPoints'),
             surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
+            researchConsentGranted: extractValue('researchConsentGranted'),
             created: extractValue('created') || extractValue('tripData', 'created'),
             
             // Extract individual point completion status
@@ -653,7 +664,8 @@ function renderRecentSubmissions() {
     // Trips With Surveys (real trips with completed surveys)
     if (validWithSurveys.length > 0) {
         html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
-        html += `<h3 style="margin-bottom: 10px; color: #16a34a;">With Surveys (${validWithSurveys.length})</h3>`;
+        html += `<h3 style="margin-bottom: 6px; color: #16a34a;">With Surveys (${validWithSurveys.length})</h3>`;
+        html += '<p style="font-size: 0.85rem; color: #92400e; margin: 0 0 12px 0; font-style: italic;">Pre-consent beta; excluded from study analysis per protocol</p>';
         html += renderTripTable(validWithSurveys, false);
         html += '</div>';
     }
@@ -724,6 +736,8 @@ function renderTripStats() {
     validTrips = validTrips.concat(postLandingFromResearch);
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
+    const studyEligibleSurveys = getStudyEligibleTrips({ requireSurvey: true });
+    const preConsentSurveyCount = validWithSurveys.length - studyEligibleSurveys.length;
     
     // Calculate travel direction for valid trips
     const directions = {};
@@ -768,6 +782,7 @@ function renderTripStats() {
     html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
+    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} consented survey${studyEligibleSurveys.length === 1 ? '' : 's'}${preConsentSurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentSurveyCount} pre-consent beta excluded</span>` : ''}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
@@ -778,6 +793,7 @@ function renderTripStats() {
     html += '<div>Test: Any trip where timezonesCount is 0 (checked first) OR arrival=origin timezone</div>';
     html += '<div>Developer: Any trip from a developer device</div>';
     html += '<div>Confirmed: Valid research trips (Verified + Legacy)</div>';
+    html += '<div>Study analysis: Share-gated research consent required; pre-consent beta surveys excluded</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
     
@@ -790,25 +806,14 @@ function renderAdvancedAnalytics() {
     const container = document.getElementById('advancedAnalytics');
     if (!container) return;
     
-    const allData = getCurrentData();
-    
-    if (!allData || allData.length === 0) {
-        container.innerHTML = '<div class="error">No survey data available for advanced analytics</div>';
-        return;
-    }
-    
-    // Get validation statistics (based on all data, including test trips)
-    const validationStats = getValidationStats(allData);
-    
-    // Filter to only valid trips for analysis (exclude test data). Include post-landing trips with surveys.
-    const validData = allData.filter(trip => TripValidator.isValidTrip(trip));
-    const postLandingWithSurvey = allData.filter(t => isPostLandingTrip(t) && t.surveyCompleted === true);
-    
-    // Filter to only include completed surveys for this specific analysis (valid + post-landing)
-    const completedSurveys = [...validData.filter(survey => survey.surveyCompleted === true), ...postLandingWithSurvey];
+    const completedSurveys = getStudyEligibleTrips({ requireSurvey: true });
     
     if (completedSurveys.length === 0) {
-        container.innerHTML = '<div class="error">No completed surveys available for advanced analytics</div>';
+        const headingElement = document.getElementById('doseResponseHeading');
+        if (headingElement) {
+            headingElement.innerHTML = 'Dose-Response Analysis (0)';
+        }
+        container.innerHTML = '<div class="error">No study-eligible surveys yet. Pre-consent beta records are listed under Trip Submissions but excluded from analysis per protocol.</div>';
         return;
     }
     
@@ -1115,18 +1120,14 @@ function renderPointStimulationAnalysis() {
     const container = document.getElementById('pointMappingTable');
     if (!container) return;
     
-    const allData = getCurrentData();
-    
-    if (!allData || allData.length === 0) {
-        container.innerHTML = '<div class="error">No survey data available</div>';
-        return;
-    }
-
-    // Filter to only valid trips (exclude test data)
-    const data = allData.filter(trip => TripValidator.isValidTrip(trip));
+    const data = getStudyEligibleTrips();
     
     if (data.length === 0) {
-        container.innerHTML = '<div class="error">No valid trip data available for analysis</div>';
+        const headingElement = document.getElementById('pointMappingHeading');
+        if (headingElement) {
+            headingElement.innerHTML = 'Point Usage (0 study-eligible trips)';
+        }
+        container.innerHTML = '<div class="error">No study-eligible trips for point usage analysis. Pre-consent beta records are excluded per protocol.</div>';
         return;
     }
 

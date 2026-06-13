@@ -6,8 +6,8 @@
     <title>Chronoacupuncture Research Paper - JetLagPro</title>
     <meta name="description" content="Pre-registered observational study of chronoacupuncture for jet lag: methods, mobile platform, data integrity, and transparency for reviewers and participants.">
     <link rel="canonical" href="https://jetlagpro.com/research-paper.html">
-    <script src="load-common-head.js?v=20260527123349"></script>
-    <link rel="stylesheet" href="styles.css?v=20260527123349">
+    <script src="load-common-head.js?v=20260613223756"></script>
+    <link rel="stylesheet" href="styles.css?v=20260613223756">
     <!-- Chart.js for live data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -636,7 +636,7 @@
 		
         
 		<div style="text-align: center; margin: 30px auto; max-width: 800px;">
-            <img src="assets/images/Wheel.png?v=20260527123349" alt="Chinese Organ Clock — 24-hour meridian wheel" style="max-width: 50%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <img src="assets/images/Wheel.png?v=20260613223756" alt="Chinese Organ Clock — 24-hour meridian wheel" style="max-width: 50%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 2:</strong> Chinese Organ Clock Visualization</p>
         </div>
 
@@ -866,7 +866,7 @@
 				</div>
 			</div>
 			<p style="margin-top: 15px; font-size: 14px; color: #666;">
-				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error.
+				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error. Only Share-gated, IRB-consented trips enter the study dataset; pre-consent beta surveys are excluded.
 			</p>
 		</div>
 		
@@ -971,7 +971,7 @@
 
     <div id="main-footer"></div>
     <script>
-      fetch('footer.html?v=20260527123349')
+      fetch('footer.html?v=20260613223756')
         .then(r => r.text())
         .then(html => { document.getElementById('main-footer').innerHTML = html; });
     </script>
@@ -1029,6 +1029,7 @@
                     pointsCompleted: extractValue('pointsCompleted') || extractValue('tripData', 'pointsCompleted'),
                     completionDate: extractValue('completionDate') || extractValue('tripData', 'completionDate'),
                     surveyCompleted: extractValue('surveyCompleted') || extractValue('surveyData', 'surveyCompleted'),
+                    researchConsentGranted: extractValue('researchConsentGranted'),
                     timestamp: extractValue('completionDate') || extractValue('created') || extractValue('tripData', 'completionDate'),
                     
                     // Post-travel symptoms
@@ -1078,10 +1079,11 @@
                 const allData = researchData;
                 
                 // Filter using centralized validation logic (DRY)
-                // Excludes: test trips, invalid HMAC signatures, developer sessions
-                // Includes: only completed surveys
+                // Excludes: test trips, invalid HMAC signatures, developer sessions, pre-consent beta
+                // Includes: only completed surveys with Share-gated research consent
                 const surveyData = TripValidator.filterForAnalysis(allData, {
                     requireSurvey: true,
+                    requireStudyConsent: true,
                     excludeDeveloper: true
                 });
                 
@@ -1098,7 +1100,7 @@
                 if (surveyData.length === 0) {
                     const dataPointEl = document.getElementById('dataPointCount');
                     if (dataPointEl) dataPointEl.textContent = '0';
-                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No completed surveys available yet.</p><p>Data will appear here as participants complete their surveys.</p></div>';
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No study-eligible surveys yet.</p><p>Pre-consent beta data are excluded from this chart per protocol. Enrollment resumes after IRB approval.</p></div>';
                     return;
                 }
                 
@@ -1613,9 +1615,9 @@
     </script>
 
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260527123349"></script>
+    <script src="js/components.js?v=20260613223756"></script>
     
     <!-- Google Translate (Centralized) -->
-    <script src="js/translate.js?v=20260527123349"></script>
+    <script src="js/translate.js?v=20260613223756"></script>
 </body>
 </html>
