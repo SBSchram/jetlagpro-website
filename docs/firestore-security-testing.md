@@ -2,6 +2,19 @@
 
 Use this checklist after deploying **`firestore.rules`** and **Cloud Functions** (`hmacValidator`, `hmacValidatorDev`, `realtimeTripNotification` changes). Another agent or engineer can run it without a full “real” flight.
 
+## IRB enrollment pause (production — live 2026-06-12)
+
+Solutions IRB submission: **new production research trip uploads are blocked** until approval.
+
+| Collection | Client `create` | Client `update` | Notes |
+|------------|-----------------|-----------------|--------|
+| **`tripCompletions`** | **Denied** | Allowed per `tripCompletionUpdateAllowed` | Prod / TestFlight Share writes fail (403) |
+| **`tripCompletionsDev`** | Allowed (signed id) | Allowed | Simulator + listed dev devices — use for flow testing |
+
+**Restore after IRB:** change prod block back to `allow create: if signedTripIdCreate(tripId);` in `firestore.rules`, run `npm run test:firestore-rules`, then `firebase deploy --only firestore:rules`.
+
+**Deploy record (2026-06-12):** `firebase deploy --only firestore:rules` → project **`jetlagpro-research`** — rules compiled and released successfully. Full transcript: `JetLagProject/Documentation/RESEARCH_RECORDING_POLICY.md` → *Enrollment pause*.
+
 ## Preconditions
 
 1. **Repos:** `jetlagpro-website` (rules + functions), `JetLagPro` (iOS), React Native app repo if applicable (kept in parity with iOS).
@@ -37,7 +50,8 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
 
 | Layer | Behavior |
 |--------|------------|
-| **Rules** | New docs only with **5-part signed** `tripId`; **mobile** updates only allowed field sets; **survey** updates only survey field sets; no client deletes. |
+| **Rules (prod)** | **New `tripCompletions` docs blocked** (IRB pause, 2026-06-12); updates on existing docs still allowed |
+| **Rules (dev)** | New docs only with **5-part signed** `tripId`; **mobile** / **survey** update field sets; no client deletes |
 | **Functions** | On **create**, invalid HMAC / malformed 5-part id → document **deleted** + audit `HMAC_VALIDATION_FAILED`; **prod** new-trip email skipped for invalid ids. |
 | **Clients** | iOS (and RN if mirrored) one **full trip PATCH** at completion; **survey** page uses `updateDoc` with survey fields only (plus optional fallback keys). |
 
@@ -57,7 +71,9 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
 
 ## Test B — Production bucket (optional, smaller blast radius)
 
-Only if policy allows writing a real **`tripCompletions`** doc.
+**While IRB enrollment is paused (2026-06-12+):** prod **`create` is denied** — expect **Permission denied** if a production build attempts Share. Skip this test until rules are restored after approval.
+
+Only if policy allows writing a real **`tripCompletions`** doc **and** prod create is re-enabled.
 
 1. Use a **production** app build (not dev bucket).
 2. Complete one trip **or** use the smallest path that performs **`logTripCompletion` / writeTripCompletionToFirebase** once.
