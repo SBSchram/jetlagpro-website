@@ -1,0 +1,9 @@
+---
+alwaysApply: true
+description: "Claude-mem context from past sessions (auto-updated)"
+---
+
+## Memory Context from Past Sessions
+
+*No context yet. After you finish a session with the claude-mem worker running, this file should be updated automatically.*
+
