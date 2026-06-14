@@ -8,7 +8,8 @@ This file defines project-specific agent judgment for the JetLagPro public websi
 
 | Need | Use |
 |------|-----|
-| Global Steven working style | Cursor Settings > Rules > User Rules |
+| Global Steven working style | Cursor Settings > Rules > User Rules; template in `.cursor/steven-global-user-rules.md` |
+| Voice and formatting (all 5 repos) | `.cursor/rules/global-communication.mdc` |
 | Website identity, risks, and workflow | `.cursor/soul.md` |
 | Always-on website summary | `.cursor/rules/soul.mdc` |
 | Implementation style | `.cursor/rules/Implementation-Guide.mdc` |
