@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260613223756';
+const DEPLOY_VERSION = '20260619174707';
 
 class ComponentLoader {
   constructor() {
@@ -15,6 +15,7 @@ class ComponentLoader {
       // Check if already cached
       if (this.cache.has(componentName)) {
         this.injectComponent(targetId, this.cache.get(componentName));
+        this.dispatchComponentLoaded(componentName);
         return;
       }
 
@@ -22,6 +23,7 @@ class ComponentLoader {
       if (this.loadPromises.has(componentName)) {
         const html = await this.loadPromises.get(componentName);
         this.injectComponent(targetId, html);
+        this.dispatchComponentLoaded(componentName);
         return;
       }
 
@@ -137,6 +139,33 @@ window.loadHeader = () => window.componentLoader.loadComponent('header', 'main-h
 window.loadFooter = () => window.componentLoader.loadComponent('footer', 'main-footer');
 
 // Global Mobile Menu Functionality
+const MOBILE_NAV_MQ = window.matchMedia('(max-width: 768px)');
+
+/**
+ * Mobile drawer must not live inside `.header` — `backdrop-filter` there traps
+ * `position: fixed` to the header bar height. Portal to `body` on small screens;
+ * restore inside `.nav-container` for desktop grid layout (`display: contents`).
+ */
+function syncNavDrawerPlacement() {
+    const drawer = document.getElementById('navLinks');
+    const container = document.querySelector('.nav-container');
+    if (!drawer || !container) {
+        return;
+    }
+
+    if (MOBILE_NAV_MQ.matches) {
+        if (drawer.parentElement !== document.body) {
+            document.body.appendChild(drawer);
+        }
+        return;
+    }
+
+    const toggle = container.querySelector('.mobile-menu-toggle');
+    if (toggle && drawer.parentElement !== container) {
+        toggle.insertAdjacentElement('afterend', drawer);
+    }
+}
+
 function setMobileNavOpen(isOpen) {
     const navDrawer = document.getElementById('navLinks');
     const menuToggle = document.querySelector('.mobile-menu-toggle');
@@ -154,14 +183,31 @@ function setMobileNavOpen(isOpen) {
 }
 
 window.toggleMobileMenu = function() {
+    syncNavDrawerPlacement();
     const navDrawer = document.getElementById('navLinks');
     setMobileNavOpen(!navDrawer?.classList.contains('active'));
 };
 
 // Initialize mobile menu event listeners when header is loaded
 document.addEventListener('headerLoaded', () => {
+    syncNavDrawerPlacement();
+
     // Always start from a closed state after header injection/bfcache restore.
     setMobileNavOpen(false);
+
+    if (!window.__navDrawerPlacementBound) {
+        window.__navDrawerPlacementBound = true;
+        window.addEventListener('resize', () => {
+            setMobileNavOpen(false);
+            syncNavDrawerPlacement();
+        });
+        if (typeof MOBILE_NAV_MQ.addEventListener === 'function') {
+            MOBILE_NAV_MQ.addEventListener('change', () => {
+                setMobileNavOpen(false);
+                syncNavDrawerPlacement();
+            });
+        }
+    }
 
     // Close mobile menu when clicking on a link
     const navLinks = document.getElementById('navLinks');
@@ -185,5 +231,6 @@ document.addEventListener('headerLoaded', () => {
 
 // Safari/iOS back-forward cache can restore stale open state.
 window.addEventListener('pageshow', () => {
+    syncNavDrawerPlacement();
     setMobileNavOpen(false);
 });

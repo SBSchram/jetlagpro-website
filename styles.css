@@ -2015,6 +2015,8 @@ body.swiping * {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .mobile-menu-bar {
@@ -2048,6 +2050,10 @@ body.nav-open {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+
     .nav-container {
         display: flex;
         justify-content: space-between;
@@ -2063,7 +2069,8 @@ body.nav-open {
     .nav-drawer {
         position: fixed;
         inset: 0;
-        z-index: 1100;
+        /* Below .header (1000) so the hamburger stays tappable when open */
+        z-index: 999;
         pointer-events: none;
         visibility: hidden;
     }
