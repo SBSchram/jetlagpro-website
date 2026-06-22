@@ -68,12 +68,10 @@ service cloud.firestore {
         && tid.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$');
     }
 
-    // IRB enrollment paused (2026-06): block new production trip documents.
-    // Restore `allow create: if signedTripIdCreate(tripId);` after IRB approval.
-    // tripCompletionsDev unchanged — simulator / listed dev devices keep flow testing.
+    // IRB approved (2026-06): production trip creates allowed with signed 5-part id.
     match /tripCompletions/{tripId} {
       allow read: if true;
-      allow create: if false;
+      allow create: if signedTripIdCreate(tripId);
       allow update: if tripCompletionUpdateAllowed(tripId);
       allow delete: if false;
     }

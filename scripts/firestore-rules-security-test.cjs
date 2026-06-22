@@ -118,9 +118,9 @@ async function main() {
   await assertFails(deleteDoc(dev(VALID_TRIP_ID)))
   console.log('  ok\n')
 
-  console.log('[Rules] tripCompletions (prod) new create blocked (IRB enrollment paused)')
+  console.log('[Rules] tripCompletions (prod) valid 5-part create')
   const prodId = 'A1B2C3D4-ZZZZ-999999-8888-fedcba98'
-  await assertFails(
+  await assertSucceeds(
     setDoc(doc(db, 'tripCompletions', prodId), {
       tripId: prodId,
       surveyCompleted: false,

@@ -2,18 +2,26 @@
 
 Use this checklist after deploying **`firestore.rules`** and **Cloud Functions** (`hmacValidator`, `hmacValidatorDev`, `realtimeTripNotification` changes). Another agent or engineer can run it without a full “real” flight.
 
-## IRB enrollment pause (production — live 2026-06-12)
+## IRB enrollment (production)
 
-Solutions IRB submission: **new production research trip uploads are blocked** until approval.
+Solutions IRB **approved (2026-06)**. Production research trip uploads use signed 5-part ids.
 
 | Collection | Client `create` | Client `update` | Notes |
 |------------|-----------------|-----------------|--------|
-| **`tripCompletions`** | **Denied** | Allowed per `tripCompletionUpdateAllowed` | Prod / TestFlight Share writes fail (403) |
+| **`tripCompletions`** | Allowed (signed id) | Allowed per `tripCompletionUpdateAllowed` | Prod / TestFlight Share writes succeed |
 | **`tripCompletionsDev`** | Allowed (signed id) | Allowed | Simulator + listed dev devices — use for flow testing |
 
-**Restore after IRB:** change prod block back to `allow create: if signedTripIdCreate(tripId);` in `firestore.rules`, run `npm run test:firestore-rules`, then `firebase deploy --only firestore:rules`.
+**Rules:** prod `create` uses `signedTripIdCreate(tripId)` in `firestore.rules`.
 
-**Deploy record (2026-06-12):** `firebase deploy --only firestore:rules` → project **`jetlagpro-research`** — rules compiled and released successfully. Full transcript: `JetLagProject/Documentation/RESEARCH_RECORDING_POLICY.md` → *Enrollment pause*.
+**Deploy record (2026-06-12):** pause deployed (`allow create: if false`). **Lift record (2026-06-19):** prod create restored after IRB approval.
+
+### Verification status (2026-06-19)
+
+| Layer | Verified? |
+|-------|-----------|
+| Rules emulator (`npm run test:firestore-rules`) | Yes — prod valid create succeeds |
+| Live rules deploy | Yes — `jetlagpro-research` |
+| End-to-end prod trip + Share | **No** — no qualifying test path; defer **Test B** until first real participant or a dev device on prod bucket |
 
 ## Preconditions
 
@@ -50,7 +58,7 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
 
 | Layer | Behavior |
 |--------|------------|
-| **Rules (prod)** | **New `tripCompletions` docs blocked** (IRB pause, 2026-06-12); updates on existing docs still allowed |
+| **Rules (prod)** | New docs with **5-part signed** `tripId`; updates per `tripCompletionUpdateAllowed` |
 | **Rules (dev)** | New docs only with **5-part signed** `tripId`; **mobile** / **survey** update field sets; no client deletes |
 | **Functions** | On **create**, invalid HMAC / malformed 5-part id → document **deleted** + audit `HMAC_VALIDATION_FAILED`; **prod** new-trip email skipped for invalid ids. |
 | **Clients** | iOS (and RN if mirrored) one **full trip PATCH** at completion; **survey** page uses `updateDoc` with survey fields only (plus optional fallback keys). |
@@ -71,9 +79,9 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
 
 ## Test B — Production bucket (optional, smaller blast radius)
 
-**While IRB enrollment is paused (2026-06-12+):** prod **`create` is denied** — expect **Permission denied** if a production build attempts Share. Skip this test until rules are restored after approval.
+Use a **production** app build (not dev bucket) when policy allows writing a real **`tripCompletions`** doc.
 
-Only if policy allows writing a real **`tripCompletions`** doc **and** prod create is re-enabled.
+**Status (2026-06-19):** Not run — no qualifying test path available. Rules layer verified via emulator only. First participant Share is the practical smoke test.
 
 1. Use a **production** app build (not dev bucket).
 2. Complete one trip **or** use the smallest path that performs **`logTripCompletion` / writeTripCompletionToFirebase** once.
