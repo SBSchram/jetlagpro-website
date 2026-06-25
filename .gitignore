@@ -35,6 +35,20 @@ analyze_jetlag_data.py
 # Workspace and IDE files
 *.code-workspace
 
+# Cursor: track soul, rules, skills, and scratchpad.md only (cross-machine sync)
+.cursor/scratchpad-*.md
+.cursor/scratchpad-backup.md
+.cursor/scratchpad-archive.md
+.cursor/scratchpad-new.md
+.cursor/scratchpad-backoffice.md
+.cursor/*-temp.txt
+.cursor/*-analysis.md
+.cursor/*-plan.md
+.cursor/*-evolution*.md
+.cursor/*-flow-analysis.md
+.cursor/*-redesign*.md
+.cursor/WEEKLY_REVIEW_REPORT.md
+
 # HandyWorks files (now in handyworks-website repository)
 data/external/
 

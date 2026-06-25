@@ -1479,6 +1479,9 @@
         // Refresh research data function (proper implementation)
         async function refreshResearchData() {
             try {
+                if (typeof TripValidator !== 'undefined') {
+                    await TripValidator.refreshDeveloperDeviceIds();
+                }
                 if (researchChart) {
                     researchChart.destroy();
                 }
@@ -1577,6 +1580,9 @@
             // Kick off data load and chart rendering with a timeout guard
             const loadPromise = (async function() {
                 try {
+                    if (typeof TripValidator !== 'undefined') {
+                        await TripValidator.refreshDeveloperDeviceIds();
+                    }
                     const serviceAvailable = initializeFirebaseService();
                     if (serviceAvailable) {
                         console.log('🚀 Loading research data with Firebase service...');

@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "suffixes": {
+      "arrayValue": {
+        "values": [
+          {"stringValue": "2330B376"},
+          {"stringValue": "7482966F"},
+          {"stringValue": "5E001B36"},
+          {"stringValue": "23DB54B0"},
+          {"stringValue": "1CDD41FC"},
+          {"stringValue": "618EB080"}
+        ]
+      }
+    },
+    "updatedAt": {
+      "stringValue": "2026-06-25T00:00:00Z"
+    }
+  }
+}

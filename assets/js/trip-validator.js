@@ -14,10 +14,70 @@ class TripValidator {
     // Same key is embedded in iOS and React Native apps
     static HMAC_SECRET = '7f3a9d8b2c4e1f6a5d8b3c9e7f2a4d6b8c1e3f5a7d9b2c4e6f8a1d3b5c7e9f2a';
     
-    // Developer device IDs - single source of truth
-    // These are device IDs from developer test devices and simulators
-    // Used to filter out test data from research analysis
-    static DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC', '35181B4C'];
+    // Developer device IDs — loaded from Firestore `_system/developerDeviceIds` (public read).
+    // Bundled fallback when offline; update Firestore to add dev phones without app rebuild.
+    static FALLBACK_DEVELOPER_DEVICE_IDS = ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC', '618EB080'];
+    static _remoteDeveloperDeviceIds = null;
+    static _refreshPromise = null;
+
+    static get DEVELOPER_DEVICE_IDS() {
+        return TripValidator._remoteDeveloperDeviceIds ?? TripValidator.FALLBACK_DEVELOPER_DEVICE_IDS;
+    }
+
+    static _parseSuffixesFromFirestoreDoc(doc) {
+        const suffixField = doc?.fields?.suffixes;
+        if (!suffixField) return [];
+
+        const values = suffixField.arrayValue?.values;
+        if (values && values.length) {
+            const fromArray = values
+                .map(v => (v.stringValue || '').trim().toUpperCase())
+                .filter(s => /^[A-F0-9]{8}$/.test(s));
+            if (fromArray.length) return fromArray;
+        }
+
+        if (typeof suffixField.stringValue === 'string') {
+            return suffixField.stringValue
+                .split(/[\s,;]+/)
+                .map(s => s.trim().toUpperCase())
+                .filter(s => /^[A-F0-9]{8}$/.test(s));
+        }
+
+        return [];
+    }
+
+    static async refreshDeveloperDeviceIds() {
+        if (TripValidator._refreshPromise) {
+            return TripValidator._refreshPromise;
+        }
+        TripValidator._refreshPromise = TripValidator._doRefreshDeveloperDeviceIds();
+        try {
+            return await TripValidator._refreshPromise;
+        } finally {
+            TripValidator._refreshPromise = null;
+        }
+    }
+
+    static async _doRefreshDeveloperDeviceIds() {
+        try {
+            const url = 'https://firestore.googleapis.com/v1/projects/jetlagpro-research/databases/(default)/documents/_system/developerDeviceIds';
+            const res = await fetch(url);
+            if (!res.ok) {
+                console.warn(`[TripValidator] developerDeviceIds fetch HTTP ${res.status}`);
+                return false;
+            }
+            const json = await res.json();
+            const suffixes = TripValidator._parseSuffixesFromFirestoreDoc(json);
+            if (suffixes.length > 0) {
+                TripValidator._remoteDeveloperDeviceIds = suffixes;
+                console.log(`[TripValidator] Loaded ${suffixes.length} developer device suffixes from Firestore`);
+                return true;
+            }
+        } catch (e) {
+            console.warn('[TripValidator] developerDeviceIds fetch failed:', e);
+        }
+        return false;
+    }
 
     /** Canonical origin IANA id (Firestore used both originTimezone and originTimeZone). */
     static getOriginTimezone(trip) {

@@ -12,6 +12,7 @@ This file defines project-specific agent judgment for the JetLagPro public websi
 | Voice and formatting (all 5 repos) | `.cursor/rules/global-communication.mdc` |
 | Website identity, risks, and workflow | `.cursor/soul.md` |
 | Always-on website summary | `.cursor/rules/soul.mdc` |
+| Active work, checklists, and progress | `.cursor/scratchpad.md` |
 | Implementation style | `.cursor/rules/Implementation-Guide.mdc` |
 | SEO audits, meta tags, content/keyword work | `.cursor/skills/seo-and-search/SKILL.md` |
 | Site audit reports (dated) | `SEO_SITE_AUDIT_*.md` in repo root |

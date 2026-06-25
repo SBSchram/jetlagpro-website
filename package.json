@@ -6,6 +6,7 @@
   "scripts": {
     "export-paper": "node scripts/export-research-paper.js",
     "bump-cache": "node scripts/bump-cache-version.cjs",
+    "seed:dev-device-ids": "node scripts/seed-developer-device-ids.cjs",
     "test:firestore-rules": "firebase emulators:exec --only firestore \"node scripts/firestore-rules-security-test.cjs\""
   },
   "dependencies": {

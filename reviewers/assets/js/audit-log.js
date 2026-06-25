@@ -23,6 +23,10 @@ async function refreshAuditLog() {
     if (tbody) {
         tbody.innerHTML = '<tr><td colspan="9" class="loading">Refreshing audit log...</td></tr>';
     }
+
+    if (typeof TripValidator !== 'undefined') {
+        await TripValidator.refreshDeveloperDeviceIds();
+    }
     
     await loadAuditLog();
     
@@ -35,6 +39,9 @@ async function refreshAuditLog() {
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔍 Initializing Audit Log Viewer...');
+    if (typeof TripValidator !== 'undefined') {
+        await TripValidator.refreshDeveloperDeviceIds();
+    }
     await loadAuditLog();
 });
 
@@ -583,15 +590,17 @@ function mapSource(rawSource) {
     }
 }
 
-// Developer device IDs - use single source of truth from TripValidator
-// Note: trip-validator.js must be loaded before this file
-const DEVELOPER_PREFIXES = typeof TripValidator !== 'undefined' 
-    ? TripValidator.DEVELOPER_DEVICE_IDS 
-    : ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC']; // Fallback if TripValidator not available
+// Developer device IDs - TripValidator (Firestore-backed with offline fallback)
+function getDeveloperPrefixes() {
+    if (typeof TripValidator !== 'undefined') {
+        return TripValidator.DEVELOPER_DEVICE_IDS;
+    }
+    return ['2330B376', '7482966F', '5E001B36', '23DB54B0', '1CDD41FC', '618EB080'];
+}
 
 function classifyEntry(entry) {
     const tripId = entry.tripId || entry.documentId || '';
-    if (DEVELOPER_PREFIXES.some(prefix => tripId.startsWith(prefix))) {
+    if (getDeveloperPrefixes().some(prefix => tripId.startsWith(prefix))) {
         return 'Dev';
     }
 
