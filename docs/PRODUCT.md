@@ -1,6 +1,6 @@
 # JetLagPro — Product facts (for humans and AI agents)
 
-**Last updated:** 2026-05-25  
+**Last updated:** 2026-06-28  
 **Canonical URL:** https://jetlagpro.com/docs/PRODUCT.md  
 **Short index:** https://jetlagpro.com/llms.txt
 
@@ -26,9 +26,9 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 
 | Platform | Status | Notes |
 |----------|--------|--------|
-| **iOS** | Shipping / App Store review (May 2026) | Source of truth for product behavior |
+| **iOS** | App Store **approved** (June 2026) — manual public release pending | Source of truth for product and research behavior; TestFlight until store link is live |
 | **watchOS** | Bundled with iOS app | Notifications and point UI mirror phone |
-| **Android** | In development (React Native) | Parity maintained with iOS before public release at monetization phase; **not** released as website PWA |
+| **Android** | **Google Play 1.0.3** (June 2026) | Product travel guide only — no research consent, symptom survey, or `jetlagpro-research` uploads |
 | **Web (jetlagpro.com)** | Live | Marketing + research; optional PWA for **site** offline pages; demo at `/demo/` |
 
 **Deprecated:** Public **web survey** for research data — replaced by **native in-app survey** (`SurveyView` in iOS app). Do not document or link to a web survey flow.
@@ -40,8 +40,9 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 | Item | Detail |
 |------|--------|
 | Research phase price | **Free** |
-| App Store | Submitted for review **May 2026** — store URL added to homepage `#download` when approved |
-| TestFlight (beta) | https://testflight.apple.com/join/YZc7jzJT — valid fallback until App Store link is live |
+| App Store | **Approved** June 2026 — public URL on homepage `#download` when released |
+| TestFlight (beta) | https://testflight.apple.com/join/YZc7jzJT — valid until App Store link is live |
+| Google Play (Android) | https://play.google.com/store/apps/details?id=com.jetlagpro.android — product guide only; introductory free period |
 | Future monetization | Planned after research publication (freemium IAP); not active during research phase |
 
 ---

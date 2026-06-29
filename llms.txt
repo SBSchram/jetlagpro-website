@@ -24,7 +24,7 @@ Native mobile app that schedules reminders for a 12-point acupressure protocol b
 
 - iOS 18.2+ — native SwiftUI app (primary product)
 - watchOS 11.2+ — companion app
-- Android — native React Native port in active parity development; not released publicly yet
+- Android — **Google Play 1.0.3** (June 2026); product travel guide only; no research consent or symptom survey
 - jetlagpro.com — marketing site, research paper, interactive demo (PWA-capable site; not a substitute for the native app)
 
 ## Distribution (May 2026)
