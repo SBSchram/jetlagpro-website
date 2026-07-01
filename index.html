@@ -8,6 +8,21 @@
     <meta name="keywords" content="chronoacupuncture, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, timed acupressure">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
+    <!-- Research QR (?source=flyer) and #download go straight to the App Store -->
+    <script>
+    (function () {
+        var appStore = 'https://apps.apple.com/us/app/jetlagpro/id6748569048';
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('source') === 'flyer' || window.location.hash === '#download') {
+            window.location.replace(appStore);
+        }
+        window.addEventListener('hashchange', function () {
+            if (window.location.hash === '#download') {
+                window.location.replace(appStore);
+            }
+        });
+    })();
+    </script>
     
     <!-- Open Graph for social sharing -->
     <meta property="og:title" content="JetLagPro — Chronoacupuncture App for Jet Lag">
@@ -271,7 +286,7 @@
                 <h1>Timed Acupressure for Travel Across Time Zones</h1>
                 <p class="hero-subtitle">Free timed acupressure app with reminders every two hours on destination time. The <a href="demo/">interactive demo</a> previews the guide (no push notifications); the phone apps include timed reminders.</p>
                 <div class="hero-buttons">
-                    <a href="#download" class="btn btn-primary">Get the App</a>
+                    <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="btn btn-primary" rel="noopener">Get the App</a>
                     <a href="demo/" class="btn btn-secondary">Try Interactive Demo</a>
                 </div>
             </div>
@@ -416,7 +431,6 @@
                     <div class="download-single">
                         <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="btn btn-primary btn-large" rel="noopener">Download on the App Store</a>
                     </div>
-                    <p class="download-note">Beta builds: <a href="https://testflight.apple.com/join/YZc7jzJT" rel="noopener">TestFlight</a> (optional).</p>
 
                     <h3 class="download-subhead">Android</h3>
                     <p class="download-note">Travel guide app — instructional parity with iPhone; no research consent or symptom survey on Android.</p>
@@ -442,45 +456,6 @@
 
 
     <script>
-        // Auto-scroll to download section if coming from flyer
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('source') === 'flyer') {
-            // Function to perform scroll
-            const scrollToDownload = () => {
-                const downloadSection = document.getElementById('download');
-                if (downloadSection) {
-                    const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
-                    const targetPosition = downloadSection.offsetTop - headerHeight - 20;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            };
-            
-            // Wait for both page load AND header to be loaded
-            let pageLoaded = false;
-            let headerLoaded = false;
-            
-            const checkAndScroll = () => {
-                if (pageLoaded && headerLoaded) {
-                    // Add small delay to ensure layout is complete
-                    setTimeout(scrollToDownload, 100);
-                }
-            };
-            
-            window.addEventListener('load', () => {
-                pageLoaded = true;
-                checkAndScroll();
-            });
-            
-            document.addEventListener('headerLoaded', () => {
-                headerLoaded = true;
-                checkAndScroll();
-            });
-        }
-
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
