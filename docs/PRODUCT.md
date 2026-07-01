@@ -1,6 +1,6 @@
 # JetLagPro — Product facts (for humans and AI agents)
 
-**Last updated:** 2026-06-28  
+**Last updated:** 2026-06-29  
 **Canonical URL:** https://jetlagpro.com/docs/PRODUCT.md  
 **Short index:** https://jetlagpro.com/llms.txt
 
@@ -18,7 +18,7 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 | Website | https://jetlagpro.com — landing page, science content, live research paper, interactive demo |
 | Contact | info@jetlagpro.com |
 | iOS bundle ID | `com.jetlagpro.JetLagPro` |
-| Minimum OS | iOS 18.2+, watchOS 11.2+ (see App Store listing when live) |
+| Minimum OS | iOS 18.2+, watchOS 11.2+ ([App Store listing](https://apps.apple.com/us/app/jetlagpro/id6748569048)) |
 
 ---
 
@@ -26,7 +26,7 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 
 | Platform | Status | Notes |
 |----------|--------|--------|
-| **iOS** | App Store **approved** (June 2026) — manual public release pending | Source of truth for product and research behavior; TestFlight until store link is live |
+| **iOS** | **App Store 1.1** (June 2026) | Source of truth for product and research behavior |
 | **watchOS** | Bundled with iOS app | Notifications and point UI mirror phone |
 | **Android** | **Google Play 1.0.3** (June 2026) | Product travel guide only — no research consent, symptom survey, or `jetlagpro-research` uploads |
 | **Web (jetlagpro.com)** | Live | Marketing + research; optional PWA for **site** offline pages; demo at `/demo/` |
@@ -40,8 +40,8 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 | Item | Detail |
 |------|--------|
 | Research phase price | **Free** |
-| App Store | **Approved** June 2026 — public URL on homepage `#download` when released |
-| TestFlight (beta) | https://testflight.apple.com/join/YZc7jzJT — valid until App Store link is live |
+| App Store (iOS 1.1) | https://apps.apple.com/us/app/jetlagpro/id6748569048 |
+| TestFlight (beta) | https://testflight.apple.com/join/YZc7jzJT — optional pre-release builds |
 | Google Play (Android) | https://play.google.com/store/apps/details?id=com.jetlagpro.android — product guide only; introductory free period |
 | Future monetization | Planned after research publication (freemium IAP); not active during research phase |
 

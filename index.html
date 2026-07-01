@@ -35,6 +35,7 @@
       "operatingSystem": ["iOS", "watchOS", "Android"],
       "applicationCategory": "HealthApplication",
       "softwareVersion": "1.1",
+      "downloadUrl": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -389,7 +390,7 @@
                     </div>
                     <div class="facts-item">
                         <dt>Distribution</dt>
-                        <dd>App Store <strong>approved</strong> June 2026 — public link here when released; <a href="#download">TestFlight</a> until then · <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" rel="noopener">Android on Google Play</a></dd>
+                        <dd><a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" rel="noopener">iOS 1.1 on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" rel="noopener">Android on Google Play</a></dd>
                     </div>
                     <div class="facts-item">
                         <dt>Privacy</dt>
@@ -403,39 +404,24 @@
             </div>
         </section>
 
-        <!-- Beta Testing Section -->
+        <!-- Download Section -->
         <section id="download" class="download">
             <div class="container">
                 <div class="download-content">
                     <h2>Get JetLagPro</h2>
                     <p class="download-lead">Native apps for iPhone, Apple Watch, and Android. Timed acupressure reminders aligned to destination time. Free during our introductory launch period.</p>
                     
+                    <h3 class="download-subhead">iPhone and Apple Watch</h3>
+                    <p class="download-note">Research cohort on iPhone — optional anonymous data sharing after qualifying trips. Apple Watch companion included.</p>
+                    <div class="download-single">
+                        <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="btn btn-primary btn-large" rel="noopener">Download on the App Store</a>
+                    </div>
+                    <p class="download-note">Beta builds: <a href="https://testflight.apple.com/join/YZc7jzJT" rel="noopener">TestFlight</a> (optional).</p>
+
                     <h3 class="download-subhead">Android</h3>
                     <p class="download-note">Travel guide app — instructional parity with iPhone; no research consent or symptom survey on Android.</p>
                     <div class="download-single">
                         <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="btn btn-primary btn-large" rel="noopener">Get on Google Play</a>
-                    </div>
-
-                    <h3 class="download-subhead">iPhone and Apple Watch</h3>
-                    <p class="download-note">App Store approved June 2026 — we will add the public store link here when released. Use TestFlight until then.</p>
-                    
-                    <div class="beta-steps">
-                        <div class="beta-step">
-                            <h3>Step 1: Install TestFlight</h3>
-                            <div class="step-logo">
-                                <img src="https://developer.apple.com/assets/elements/icons/testflight/testflight-96x96_2x.png" alt="TestFlight" style="width: 64px; height: 64px;">
-                            </div>
-                            <p>Apple’s beta installer — required before Step 2.</p>
-                            <button type="button" class="btn btn-primary" id="openTestFlightModal">Get TestFlight</button>
-                        </div>
-                        
-                        <div class="beta-step">
-                            <h3>Step 2: Install JetLagPro</h3>
-                            <div class="step-logo">
-                                <img src="assets/images/Wheel.png?v=20260624021546" alt="JetLagPro" style="width: 64px; height: 64px; object-fit: contain;">
-                            </div>
-                            <a href="https://testflight.apple.com/join/YZc7jzJT" class="btn btn-primary">Get JetLagPro</a>
-                        </div>
                     </div>
                     
                 </div>
@@ -446,23 +432,6 @@
 
 
     <div id="main-footer"></div>
-
-    <div id="testflightModal" class="modal-overlay testflight-modal" role="dialog" aria-modal="true" aria-labelledby="testflightModalTitle" aria-describedby="testflightModalDescription" hidden>
-        <div class="modal-content" id="testflightModalContent">
-            <button type="button" class="modal-close" id="closeTestFlightModal" aria-label="Close">&times;</button>
-            <div class="modal-body">
-                <h3 id="testflightModalTitle">Quick heads-up</h3>
-                <p id="testflightModalDescription" class="testflight-modal-warning">When you see <strong>Ready to Test</strong> in TestFlight, <strong>don’t tap Redeem</strong>. Come back here and tap <strong>Get JetLagPro</strong> (Step 2).</p>
-                <div class="modal-visual">
-                    <img src="assets/images/TestFlightRedeem.png" alt="TestFlight screen showing Ready to Test — do not tap Redeem" width="200" height="auto">
-                </div>
-                <div class="testflight-modal-actions">
-                    <button type="button" class="btn btn-primary modal-primary" id="continueToTestFlight">Go to App Store</button>
-                    <button type="button" class="btn btn-secondary testflight-modal-cancel" id="cancelTestFlightModal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
@@ -528,69 +497,6 @@
                 }
             });
         });
-
-        // Clean two-step process - no auto-copy needed
-        
-        // TestFlight modal - warn users not to tap Redeem
-        (function () {
-            const testFlightButton = document.getElementById('openTestFlightModal');
-            const modal = document.getElementById('testflightModal');
-            const continueButton = document.getElementById('continueToTestFlight');
-            const closeButton = document.getElementById('closeTestFlightModal');
-            const cancelButton = document.getElementById('cancelTestFlightModal');
-            const TESTFLIGHT_URL = 'https://apps.apple.com/us/app/testflight/id899247664';
-
-            if (!testFlightButton || !modal || !continueButton) {
-                return;
-            }
-
-            const openModal = (event) => {
-                if (event) {
-                    event.preventDefault();
-                }
-                modal.hidden = false;
-                modal.classList.add('is-visible');
-                document.body.classList.add('modal-open');
-                if (closeButton) {
-                    closeButton.focus({ preventScroll: true });
-                }
-            };
-
-            const closeModal = () => {
-                modal.classList.remove('is-visible');
-                modal.hidden = true;
-                document.body.classList.remove('modal-open');
-                continueButton.disabled = false;
-                continueButton.textContent = 'Go to App Store';
-            };
-
-            const goToAppStore = () => {
-                if (continueButton.disabled) return;
-                continueButton.disabled = true;
-                continueButton.textContent = 'Opening...';
-                closeModal();
-                window.location.href = TESTFLIGHT_URL;
-            };
-
-            testFlightButton.addEventListener('click', openModal);
-            continueButton.addEventListener('click', goToAppStore);
-            if (closeButton) closeButton.addEventListener('click', closeModal);
-            if (cancelButton) cancelButton.addEventListener('click', closeModal);
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeModal();
-                    testFlightButton.focus({ preventScroll: true });
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (modal.classList.contains('is-visible') && e.key === 'Escape') {
-                    closeModal();
-                    testFlightButton.focus({ preventScroll: true });
-                }
-            });
-        })();
 
     </script>
 </body>

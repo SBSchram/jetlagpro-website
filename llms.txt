@@ -1,6 +1,6 @@
 # JetLagPro — machine-readable product summary
 # https://jetlagpro.com/llms.txt
-# Last updated: 2026-05-25
+# Last updated: 2026-06-29
 
 > Full detail: https://jetlagpro.com/docs/PRODUCT.md
 > Research paper: https://jetlagpro.com/research-paper.html
@@ -27,11 +27,12 @@ Native mobile app that schedules reminders for a 12-point acupressure protocol b
 - Android — **Google Play 1.0.3** (June 2026); product travel guide only; no research consent or symptom survey
 - jetlagpro.com — marketing site, research paper, interactive demo (PWA-capable site; not a substitute for the native app)
 
-## Distribution (May 2026)
+## Distribution (June 2026)
 
 - Price: Free during the observational research phase
-- App Store: submitted for review (May 2026); public App Store URL will be posted at https://jetlagpro.com/#download when approved
-- TestFlight (beta fallback): https://testflight.apple.com/join/YZc7jzJT
+- App Store (iOS 1.1): https://apps.apple.com/us/app/jetlagpro/id6748569048
+- Google Play (Android 1.0.3): https://play.google.com/store/apps/details?id=com.jetlagpro.android
+- TestFlight (beta, optional): https://testflight.apple.com/join/YZc7jzJT
 
 ## Research & data
 

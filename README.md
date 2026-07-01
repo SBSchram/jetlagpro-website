@@ -11,7 +11,7 @@ JetLagPro is a native **iOS + watchOS** app that uses timed acupressure (chronoa
 - Landing page, science content, and interactive demo
 - Live [research paper](https://jetlagpro.com/research-paper.html) with Firestore-backed results
 - Privacy, terms, and data-integrity documentation
-- Download instructions (App Store when approved; TestFlight beta fallback)
+- Download links: [App Store (iOS 1.1)](https://apps.apple.com/us/app/jetlagpro/id6748569048) and [Google Play (Android)](https://play.google.com/store/apps/details?id=com.jetlagpro.android); optional [TestFlight beta](https://testflight.apple.com/join/YZc7jzJT)
 
 ### Research & data
 
