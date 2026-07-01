@@ -41,9 +41,22 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 |------|--------|
 | Research phase price | **Free** |
 | App Store (iOS 1.1) | https://apps.apple.com/us/app/jetlagpro/id6748569048 |
+| Google Play (Android) | https://play.google.com/store/apps/details?id=com.jetlagpro.android — product guide only |
 | TestFlight (beta) | https://testflight.apple.com/join/YZc7jzJT — optional pre-release builds |
-| Google Play (Android) | https://play.google.com/store/apps/details?id=com.jetlagpro.android — product guide only; introductory free period |
 | Future monetization | Planned after research publication (freemium IAP); not active during research phase |
+
+### Research recruitment URLs (redirect to App Store)
+
+Printed materials keep legacy URLs; the site redirects without reprinting QR codes.
+
+| URL | Redirect |
+|-----|----------|
+| `https://jetlagpro.com/?source=flyer` | App Store (flyer QR) |
+| `https://jetlagpro.com/#download` | App Store |
+| `https://jetlagpro.com/call-for-research.html` | App Store |
+| `https://jetlagpro.com/` | Full homepage (App Store + Play buttons in `#download`) |
+
+`api/version.json`: `ios.version` **1.1**, `minimum_version` **1.0.0** (no force update for 1.0 installs).
 
 ---
 
@@ -102,4 +115,5 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 
 ## Changelog for this document
 
+- **2026-06-29:** Public research launch — App Store 1.1, recruitment redirects, version.json 1.1
 - **2026-05-25:** Created for AI-agent readability; removed legacy web-survey references; clarified iOS primary / Android RN roadmap.
