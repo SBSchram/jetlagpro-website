@@ -21,36 +21,42 @@
         
         .header {
             text-align: center;
-            margin-bottom: 0.3in;
+            margin-bottom: 0.25in;
         }
         
         .headline {
-            font-size: 54px;
+            font-size: 50px;
             font-weight: bold;
             color: #2563EB;
-            margin-bottom: 0.2in;
+            margin: 0 0 0.15in 0;
+            line-height: 1.1;
         }
         
         .subhead {
-            font-size: 28px;
+            font-size: 26px;
             color: #374151;
+            margin: 0;
         }
         
         .wheel-section {
             text-align: center;
-            margin: 0.25in 0;
+            margin: 0.2in 0;
         }
         
         .wheel-image {
-            max-width: 4in;
-            max-height: 4in;
+            max-width: 3.75in;
+            max-height: 3.75in;
         }
         
         .body-text {
-            margin: 0.25in 0;
-            font-size: 22px;
-            line-height: 1.5;
+            margin: 0.2in 0;
+            font-size: 21px;
+            line-height: 1.45;
             color: #374151;
+        }
+        
+        .body-text p {
+            margin: 0 0 0.18in 0;
         }
         
         .highlight {
@@ -58,9 +64,32 @@
             color: #2563EB;
         }
         
+        .benefits {
+            margin: 0.2in 0 0.25in 0;
+            padding: 0;
+            list-style: none;
+            font-size: 20px;
+            line-height: 1.4;
+            color: #374151;
+        }
+        
+        .benefits li {
+            margin: 0.08in 0;
+            padding-left: 0.35in;
+            position: relative;
+        }
+        
+        .benefits li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2563EB;
+            font-weight: bold;
+        }
+        
         .footer {
             text-align: center;
-            margin-top: 0.25in;
+            margin-top: 0.15in;
         }
         
         .qr-section {
@@ -71,57 +100,51 @@
             width: 1.75in;
             height: 1.75in;
             border: 3px solid #2563EB;
-            margin: 0 auto 0.2in auto;
+            margin: 0 auto 0.15in auto;
         }
         
         .qr-text {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #2563EB;
+            margin-bottom: 0.1in;
         }
         
-        .credits {
-            text-align: center;
-            margin-top: 0.3in;
-        }
-        
-        .doctor-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #374151;
-        }
-        
-        .beta-offer {
-            font-size: 16px;
+        .qr-subtext {
+            font-size: 17px;
             color: #6B7280;
-            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1 class="headline">Beat Jet Lag with Ancient Wisdom</h1>
-        <p class="subhead">12 pressure points, 2 minutes each</p>
+        <p class="subhead">12 pressure points, 1 minute each · Free on the App Store</p>
     </div>
     
     <div class="wheel-section">
-        <img src="assets/images/Wheel.png?v=20260624021546" alt="JetLagPro Color Wheel" class="wheel-image" />
+        <img src="assets/images/AppIconNew1024.png" alt="JetLagPro organ clock" class="wheel-image" />
     </div>
     
     <div class="body-text">
-        <p>Tired of having jet lag after a long flight? Do what acupuncturists do to beat Jet Lag naturally. <span class="highlight">Dr. Steven Schram has created the perfect app so you can apply the Ancient Wisdom to your next journey.</span></p>
-        
-        <p>Scan the QR code below to join our research group. After your journey, complete our survey to qualify for <span class="highlight">free lifetime access!</span> Limited to the first 1,000 participants.</p>
+        <p>Long flights can leave you wiped out for days. Acupuncturists have used timed pressure points for decades to help the body adjust to a new time zone. <span class="highlight">Dr. Steven Schram built JetLagPro</span> so you can follow that same rhythm on your next trip.</p>
     </div>
+
+    <ul class="benefits">
+        <li>Reminders aligned to your destination time</li>
+        <li>Short videos show exactly where to press</li>
+        <li>Works on iPhone and Apple Watch</li>
+        <li>Free. No account required.</li>
+    </ul>
     
     <div class="footer">
         <div class="qr-section">
             <div class="qr-code">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://jetlagpro.com/?source=flyer" alt="QR Code for JetLagPro" style="width: 100%; height: 100%;" />
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://apps.apple.com/us/app/jetlagpro/id6748569048" alt="QR Code for JetLagPro on the App Store" style="width: 100%; height: 100%;" />
             </div>
-            <div class="qr-text">Scan to join research group</div>
+            <div class="qr-text">Scan to download free</div>
+            <div class="qr-subtext">iPhone · iPad · Apple Watch</div>
         </div>
-        
     </div>
 </body>
 </html>

@@ -57,6 +57,7 @@ body {
     height: 44px;
     width: auto;
     max-width: 140px;
+    border-radius: 10px;
 }
 
 .logo h1 {
