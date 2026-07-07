@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Flyer — Option B</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @page { size: 8.5in 11in; margin: 0.3in; }
+
+        :root {
+            --blue: #2563EB;
+            --blue-soft: #EFF6FF;
+            --ink: #1F2937;
+            --muted: #6B7280;
+            --gold: #CA8A04;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            padding: 0.3in;
+            background: white;
+            width: 8.5in;
+            height: 11in;
+            color: var(--ink);
+        }
+
+        .card {
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+        }
+
+        .top-band {
+            background: linear-gradient(135deg, var(--blue-soft) 0%, #FFFFFF 100%);
+            padding: 0.28in 0.35in 0.22in;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 0.18in;
+            margin-bottom: 0.14in;
+        }
+
+        .brand-icon {
+            width: 0.72in;
+            height: 0.72in;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-name {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--blue);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .gift-line {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.35;
+        }
+
+        .gift-sub {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0.08in 0 0;
+        }
+
+        .main {
+            flex: 1;
+            padding: 0.3in 0.35in;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .split {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.3in;
+        }
+
+        .wheel-wrap { flex: 1; text-align: center; }
+
+        .wheel-image {
+            width: 3.2in;
+            height: 3.2in;
+            border-radius: 18px;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.1);
+        }
+
+        .qr-panel {
+            flex: 0 0 2.35in;
+            text-align: center;
+            background: var(--blue-soft);
+            border-radius: 16px;
+            padding: 0.22in 0.18in;
+        }
+
+        .qr-code {
+            width: 1.75in;
+            height: 1.75in;
+            margin: 0 auto 0.14in;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            padding: 0.06in;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .qr-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--blue);
+            margin: 0 0 0.06in;
+        }
+
+        .qr-hint {
+            font-size: 14px;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.35;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 17px;
+            color: var(--muted);
+            margin: 0.28in 0 0;
+            padding-top: 0.2in;
+            border-top: 1px dashed #D1D5DB;
+        }
+
+        .footer-note strong {
+            color: var(--ink);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="top-band">
+            <div class="brand-row">
+                <img src="assets/images/AppIconNew1024.png" alt="" class="brand-icon" aria-hidden="true" />
+                <p class="brand-name">JetLagPro</p>
+            </div>
+            <p class="gift-line">A free travel tool for your next long flight</p>
+            <p class="gift-sub">Timed acupressure on destination time · Videos for every point</p>
+        </div>
+
+        <div class="main">
+            <div class="split">
+                <div class="wheel-wrap">
+                    <img src="assets/images/AppIconNew1024.png" alt="JetLagPro organ clock" class="wheel-image" />
+                </div>
+                <div class="qr-panel">
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://apps.apple.com/us/app/jetlagpro/id6748569048" alt="QR Code for JetLagPro on the App Store" />
+                    </div>
+                    <p class="qr-text">Scan to download</p>
+                    <p class="qr-hint">Use your phone camera.<br>Free on the App Store.</p>
+                </div>
+            </div>
+            <p class="footer-note"><strong>12 points · 1 minute each</strong> · iPhone, iPad &amp; Apple Watch · No account needed</p>
+        </div>
+    </div>
+</body>
+</html>
