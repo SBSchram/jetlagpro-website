@@ -119,13 +119,6 @@
     const sign = diff >= 0 ? '+' : '−';
     $('home-offset').textContent =
       `${sign}${hours}h${mins ? ` ${mins}m` : ''} at destination`;
-
-    const clockPhrase = diff >= 0
-      ? `${abs} hour${abs === 1 ? '' : 's'} behind destination time`
-      : `${abs} hour${abs === 1 ? '' : 's'} ahead of destination time`;
-    $('home-trip-insight').textContent =
-      `Your body clock is ${clockPhrase}. ` +
-      'The full schedule runs 24 hours on destination time. On a short flight you may only complete a few steps before landing.';
   }
 
   function init() {
