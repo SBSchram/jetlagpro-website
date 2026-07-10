@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260709220000';
+const DEPLOY_VERSION = '20260709233000';
 
 class ComponentLoader {
   constructor() {

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JetLagPro | Chronoacupuncture App for Jet Lag (Free Research Phase)</title>
-    <meta name="description" content="Timed acupressure apps for travel with reminders on destination time. Try the interactive demo (preview only) or get JetLagPro for iPhone or Android.">
+    <title>JetLagPro | Timed Acupressure App for Jet Lag</title>
+    <meta name="description" content="Pick your destination, get reminders every two hours on destination time, and follow 12 timed acupressure points. Free for iPhone and Android. Try the demo first.">
     <meta name="keywords" content="chronoacupuncture, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, timed acupressure">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
@@ -39,7 +39,7 @@
       "@context": "https://schema.org",
       "@type": "MobileApplication",
       "name": "JetLagPro",
-      "description": "Chronoacupuncture app with timed acupressure reminders aligned to destination time zone; free during observational research phase",
+      "description": "Timed acupressure travel app with reminders every two hours on destination time; free introductory launch on iPhone and Android",
       "url": "https://jetlagpro.com",
       "image": "https://jetlagpro.com/assets/images/AppIconNew1024.png",
       "operatingSystem": ["iOS", "watchOS", "Android"],
@@ -50,7 +50,7 @@
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
-        "description": "Free during observational research phase"
+        "description": "Free during introductory launch period"
       },
       "additionalProperty": [
         {
@@ -72,7 +72,7 @@
       "keywords": "jet lag, chronoacupuncture, acupressure, traditional Chinese medicine, travel health"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260709220000">
+    <link rel="stylesheet" href="styles.css?v=20260709233000">
     <script src="load-common-head.js?v=20260624021546"></script>
 </head>
 <body>
@@ -267,7 +267,7 @@
     </script>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260709220000"></script>
+    <script src="js/components.js?v=20260709233000"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>
@@ -278,8 +278,39 @@
     <main>
         <section class="hero-simple hero-simple--compact">
             <div class="container">
-                <h1>Timed Acupressure for Travel Across Time Zones</h1>
-                <p class="hero-subtitle">Free timed acupressure app with reminders every two hours on destination time. The <a href="demo/">interactive demo</a> previews the guide (no push notifications); the phone apps include timed reminders.</p>
+                <h1>Your trip. Destination time. Timed reminders.</h1>
+                <p class="hero-subtitle">Pick your route below. JetLagPro schedules 12 acupressure points on <strong>destination time</strong> and reminds you every two hours—about one minute per point.</p>
+
+                <div class="home-trip-form">
+                    <div class="home-trip-field">
+                        <label for="home-origin">Leaving from</label>
+                        <select id="home-origin" aria-label="Origin airport"></select>
+                    </div>
+                    <div class="home-trip-arrow" aria-hidden="true">→</div>
+                    <div class="home-trip-field">
+                        <label for="home-destination">Destination</label>
+                        <select id="home-destination" aria-label="Destination airport"></select>
+                    </div>
+                </div>
+
+                <div class="home-trip-clocks">
+                    <div class="home-trip-clock">
+                        <div class="home-trip-clock-label">Body now</div>
+                        <div class="home-trip-clock-time" id="home-body-time">—</div>
+                        <div class="home-trip-clock-city" id="home-body-city">—</div>
+                    </div>
+                    <div class="home-trip-offset" id="home-offset">—</div>
+                    <div class="home-trip-clock">
+                        <div class="home-trip-clock-label">Destination now</div>
+                        <div class="home-trip-clock-time" id="home-dest-time">—</div>
+                        <div class="home-trip-clock-city" id="home-dest-city">—</div>
+                    </div>
+                </div>
+
+                <p class="home-trip-insight" id="home-trip-insight">Select airports to compare clocks.</p>
+
+                <p class="hero-credibility">Based on chronoacupuncture scheduling used in traditional Chinese medicine.</p>
+
                 <div class="hero-buttons">
                     <a href="#download" class="btn btn-primary">Get the app</a>
                     <a href="demo/" class="btn btn-secondary">Try interactive demo</a>
@@ -388,23 +419,19 @@
                 <dl class="facts-grid">
                     <div class="facts-item">
                         <dt>App</dt>
-                        <dd>Native iOS 18.2+ and Apple Watch (research cohort); Android travel guide on <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" rel="noopener">Google Play</a></dd>
+                        <dd>Native apps for iPhone, Apple Watch, and Android</dd>
                     </div>
                     <div class="facts-item">
                         <dt>Price</dt>
-                        <dd>Free during the research study</dd>
-                    </div>
-                    <div class="facts-item">
-                        <dt>Research</dt>
-                        <dd>Observational cohort (iPhone app); <a href="research-paper.html">research page</a> · <a href="https://osf.io/jm4w7" rel="noopener">OSF pre-registration</a> · optional in-app consent &amp; survey</dd>
+                        <dd>Free during our introductory launch period</dd>
                     </div>
                     <div class="facts-item">
                         <dt>Distribution</dt>
-                        <dd><a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" rel="noopener">iOS 1.1 on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" rel="noopener">Android on Google Play</a></dd>
+                        <dd><a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" rel="noopener">iOS on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" rel="noopener">Android on Google Play</a></dd>
                     </div>
                     <div class="facts-item">
                         <dt>Privacy</dt>
-                        <dd>Anonymous optional research uploads — <a href="privacy.html">privacy policy</a></dd>
+                        <dd><a href="privacy.html">iPhone privacy</a> · <a href="privacy-android.html">Android privacy</a></dd>
                     </div>
                     <div class="facts-item">
                         <dt>For agents &amp; developers</dt>
@@ -472,6 +499,8 @@
         <div class="indicator" data-section="download"></div>
     </div>
 
+
+    <script src="js/home-trip-strip.js?v=20260709233000"></script>
 
     <script>
         function scrollToDownloadSection(smooth) {
