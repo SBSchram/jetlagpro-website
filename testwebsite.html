@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro — Prototype (test)</title>
+    <meta name="description" content="Design prototype for a future JetLagPro website. Not the live homepage.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://jetlagpro.com/testwebsite.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/testwebsite.css?v=20260709230000">
+</head>
+<body>
+<div class="proto-root">
+
+    <div class="proto-banner">
+        Design prototype only — <a href="/">live site is at jetlagpro.com</a> ·
+        <a href="testwebsite.html">refresh prototype</a>
+    </div>
+
+    <header class="proto-header">
+        <div class="proto-header-inner">
+            <a class="proto-logo" href="testwebsite.html">
+                <img src="assets/images/AppIconNew1024.png" alt="" width="36" height="36">
+                <span>JetLagPro</span>
+            </a>
+            <nav class="proto-nav" aria-label="Prototype">
+                <a href="#proto-try" data-proto-scroll="proto-try">Try</a>
+                <a href="#proto-learn" data-proto-scroll="proto-learn">Learn</a>
+                <a href="#proto-research" data-proto-scroll="proto-research">Research</a>
+                <a href="#proto-download" data-proto-scroll="proto-download">Get the app</a>
+            </nav>
+            <a class="proto-btn proto-btn-primary" href="#proto-download" data-proto-scroll="proto-download">Get the app</a>
+        </div>
+    </header>
+
+    <!-- Persona entry -->
+    <section class="proto-personas proto-container" aria-label="Choose your path">
+        <div class="proto-persona-grid">
+            <button type="button" class="proto-persona-card is-active" data-persona="traveler">
+                <strong>I'm traveling soon</strong>
+                <span>See my body clock vs destination</span>
+            </button>
+            <button type="button" class="proto-persona-card" data-persona="curious">
+                <strong>I want to understand it</strong>
+                <span>Science and organ clock</span>
+            </button>
+            <button type="button" class="proto-persona-card" data-persona="clinician">
+                <strong>I'm a clinician</strong>
+                <span>TCM schedule and points</span>
+            </button>
+            <button type="button" class="proto-persona-card" data-persona="reviewer">
+                <strong>I'm reviewing the study</strong>
+                <span>Live stats and full paper</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Hero + trip strip -->
+    <section id="proto-trip" class="proto-hero">
+        <div class="proto-container">
+            <h1>Your body clock vs. your destination</h1>
+            <p class="proto-section-lead" style="margin-bottom: 1.5rem;">
+                Pick a route. See the time gap. JetLagPro schedules 12 horary points on <strong>destination time</strong>.
+            </p>
+
+            <div class="proto-trip-form">
+                <div class="proto-field">
+                    <label for="proto-origin">Leaving from</label>
+                    <select id="proto-origin" aria-label="Origin airport"></select>
+                </div>
+                <div class="proto-trip-arrow" aria-hidden="true">→</div>
+                <div class="proto-field">
+                    <label for="proto-destination">Destination</label>
+                    <select id="proto-destination" aria-label="Destination airport"></select>
+                </div>
+            </div>
+
+            <div class="proto-clock-panel">
+                <div class="proto-clock-block">
+                    <div class="proto-clock-label">Body now</div>
+                    <div class="proto-clock-time" id="proto-body-time">—</div>
+                    <div class="proto-clock-city" id="proto-body-city">—</div>
+                </div>
+                <div class="proto-clock-gap" id="proto-offset">—</div>
+                <div class="proto-clock-block">
+                    <div class="proto-clock-label">Destination now</div>
+                    <div class="proto-clock-time" id="proto-dest-time">—</div>
+                    <div class="proto-clock-city" id="proto-dest-city">—</div>
+                </div>
+            </div>
+
+            <p class="proto-insight" id="proto-insight">Select airports to compare clocks.</p>
+
+            <div class="proto-hero-actions">
+                <a class="proto-btn proto-btn-primary" href="#proto-try" data-proto-scroll="proto-try">Try one point now</a>
+                <a class="proto-btn proto-btn-secondary" href="demo/">Full interactive demo</a>
+                <a class="proto-btn proto-btn-ghost" href="#proto-download" data-proto-scroll="proto-download">Get the app</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="proto-section">
+        <div class="proto-container">
+            <h2 class="proto-section-title">Your first travel day (destination time)</h2>
+            <p class="proto-section-lead">Tap a window to see why that meridian matters. The app reminds you every two hours.</p>
+            <div class="proto-timeline-wrap">
+                <div class="proto-timeline" id="proto-timeline"></div>
+            </div>
+            <div class="proto-timeline-detail" id="proto-timeline-detail">
+                Timeline updates when you pick airports above.
+            </div>
+        </div>
+    </section>
+
+    <!-- Micro try -->
+    <section id="proto-try" class="proto-section" style="background: #fff;">
+        <div class="proto-container">
+            <h2 class="proto-section-title">Try it in 30 seconds</h2>
+            <p class="proto-section-lead">A taste of the in-app guide. Full demo adds all 12 points and tabs.</p>
+            <div class="proto-try-grid">
+                <div class="proto-try-card">
+                    <h3 class="proto-try-point-name" id="proto-try-point">Sample point</h3>
+                    <p class="proto-try-meridian" id="proto-try-meridian">—</p>
+                    <p class="proto-try-instructions">
+                        Use your fingers to press firmly on each side for about 30 seconds, as shown in the app videos.
+                        This prototype timer is for practice only.
+                    </p>
+                    <div class="proto-timer-ring" id="proto-timer">30</div>
+                    <button type="button" class="proto-btn proto-btn-primary" id="proto-timer-start" style="width: 100%;">
+                        Start 30-second practice
+                    </button>
+                    <p class="proto-insight proto-hidden" id="proto-try-done" style="margin-top: 1rem; color: var(--proto-success);">
+                        Nice. A full trip uses 12 points over about 24 hours with reminders.
+                        <a href="demo/">Open full demo</a> or <a href="#proto-download" data-proto-scroll="proto-download">get the app</a>.
+                    </p>
+                </div>
+                <div class="proto-try-card">
+                    <h3 class="proto-try-point-name">What the app adds</h3>
+                    <ul style="margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; color: var(--proto-muted);">
+                        <li style="margin-bottom: 0.5rem;">Push reminders when the active point changes</li>
+                        <li style="margin-bottom: 0.5rem;">Short videos for each point (both sides)</li>
+                        <li style="margin-bottom: 0.5rem;">Destination airport schedule on local time</li>
+                        <li style="margin-bottom: 0.5rem;">Trip history and optional cloud backup (Android)</li>
+                        <li>Apple Watch companion (iPhone)</li>
+                    </ul>
+                    <a class="proto-btn proto-btn-secondary" href="demo/" style="margin-top: 1rem; width: 100%;">Launch full demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learn exhibits -->
+    <section id="proto-learn" class="proto-section">
+        <div class="proto-container">
+            <h2 class="proto-section-title">Learn</h2>
+            <p class="proto-section-lead">Exhibits link to existing site content. In a full rebuild, these would be interactive on-page.</p>
+
+            <div class="proto-exhibit-grid">
+                <article class="proto-exhibit">
+                    <h3>Body clock vs. destination</h3>
+                    <p>Why jet lag happens and how timed stimulation fits with light, meals, and sleep.</p>
+                    <a href="science.html">Read The Science →</a>
+                </article>
+                <article class="proto-exhibit">
+                    <h3>Chinese Organ Clock</h3>
+                    <p>Twelve two-hour windows, each tied to a meridian. JetLagPro follows destination time.</p>
+                    <a href="chinese-organ-clock.html">Organ clock page →</a>
+                </article>
+                <article class="proto-exhibit">
+                    <h3>The 12 horary points</h3>
+                    <p>One key point per active meridian window; cramped-seat alternatives in the app.</p>
+                    <a href="horary-points.html">Point reference →</a>
+                </article>
+                <article class="proto-exhibit">
+                    <h3>Travel tips</h3>
+                    <p>Light, caffeine, melatonin timing, and habits alongside acupressure.</p>
+                    <a href="travel-tips.html">Travel tips →</a>
+                </article>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h3 class="proto-section-title" style="font-size: 1.25rem; text-align: left; margin-bottom: 0.75rem;">Mini organ clock (destination time)</h3>
+                <p style="color: var(--proto-muted); font-size: 0.9375rem; margin-bottom: 0.5rem;">Tap a slice. Active window highlighted for your selected destination.</p>
+                <div class="proto-organ-dial" id="proto-organ-dial"></div>
+                <p class="proto-timeline-detail" id="proto-organ-detail" style="margin-top: 1rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research -->
+    <section id="proto-research" class="proto-section" style="background: #fff;">
+        <div class="proto-container">
+            <h2 class="proto-section-title">Research (live)</h2>
+            <p class="proto-section-lead">
+                Observational cohort on <strong>iPhone</strong> only. Android is a travel guide without research enrollment.
+            </p>
+            <div class="proto-stats-grid">
+                <div class="proto-stat">
+                    <div class="proto-stat-value" id="proto-stat-trips">…</div>
+                    <div class="proto-stat-label">Trips in database</div>
+                </div>
+                <div class="proto-stat">
+                    <div class="proto-stat-value" id="proto-stat-surveys">…</div>
+                    <div class="proto-stat-label">Surveys completed</div>
+                </div>
+                <div class="proto-stat">
+                    <div class="proto-stat-value" id="proto-stat-consent">…</div>
+                    <div class="proto-stat-label">Shared for research</div>
+                </div>
+            </div>
+            <p class="proto-insight">Counts from production Firestore (read-only). May lag a few minutes.</p>
+            <div class="proto-research-links">
+                <a class="proto-btn proto-btn-secondary" href="research-paper.html">Full research paper + chart</a>
+                <a class="proto-btn proto-btn-ghost" href="https://osf.io/jm4w7" rel="noopener">OSF pre-registration</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download -->
+    <section id="proto-download" class="proto-section">
+        <div class="proto-container">
+            <h2 class="proto-section-title">Get JetLagPro</h2>
+            <p class="proto-section-lead">Free during our introductory launch period. Pick your platform.</p>
+            <div class="proto-download-grid">
+                <article class="proto-download-card">
+                    <h3>iPhone &amp; Apple Watch</h3>
+                    <ul>
+                        <li>12 timed points on destination time</li>
+                        <li>Reminders every two hours</li>
+                        <li>Apple Watch companion</li>
+                    </ul>
+                    <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="proto-store-badge" rel="noopener">
+                        <img src="assets/images/badge-app-store.svg" width="156" height="46" alt="Download on the App Store">
+                    </a>
+                    <p class="proto-card-note">Optional research on iPhone. <a href="research-paper.html">Learn more</a></p>
+                </article>
+                <article class="proto-download-card">
+                    <h3>Android</h3>
+                    <ul>
+                        <li>12 timed points on destination time</li>
+                        <li>Reminders every two hours</li>
+                        <li>Trip history on your device</li>
+                    </ul>
+                    <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="proto-store-badge" rel="noopener">
+                        <img src="assets/images/badge-google-play.svg" width="156" height="46" alt="Get it on Google Play">
+                    </a>
+                    <p class="proto-card-note">Travel guide only. <a href="privacy-android.html">Android privacy</a></p>
+                </article>
+            </div>
+            <details class="proto-details">
+                <summary>What&rsquo;s the difference between iPhone and Android?</summary>
+                <p><strong>iPhone:</strong> Same travel guide, plus optional enrollment in our observational research study (consent and post-travel survey in the app).</p>
+                <p style="margin-top: 0.5rem;"><strong>Android:</strong> Same timed acupressure guide and reminders. No research consent or symptom survey.</p>
+            </details>
+        </div>
+    </section>
+
+    <footer class="proto-footer">
+        <div class="proto-container">
+            <p>
+                Prototype · <a href="/">Back to live site</a> ·
+                <a href="privacy.html">Privacy</a> ·
+                <a href="terms.html">Terms</a> ·
+                <a href="mailto:info@jetlagpro.com">info@jetlagpro.com</a>
+            </p>
+            <p style="margin-top: 0.5rem;">&copy; JetLagPro. Informational only; not medical advice.</p>
+        </div>
+    </footer>
+
+</div>
+<script src="js/testwebsite.js?v=20260709230000"></script>
+</body>
+</html>
