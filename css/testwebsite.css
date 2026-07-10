@@ -299,6 +299,46 @@
   color: var(--proto-muted);
 }
 
+.proto-credibility {
+  text-align: center;
+  max-width: 36rem;
+  margin: 0.75rem auto 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--proto-text);
+  opacity: 0.9;
+}
+
+.proto-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 0;
+}
+
+.proto-facts-item {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: var(--proto-surface);
+  border: 1px solid var(--proto-border);
+  border-radius: 12px;
+}
+
+.proto-facts-item dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--proto-muted);
+  margin-bottom: 0.25rem;
+}
+
+.proto-facts-item dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
 /* Timeline */
 .proto-timeline-wrap {
   overflow-x: auto;
