@@ -1786,25 +1786,171 @@ body.swiping * {
 }
 
 .download-lead {
-    max-width: 640px;
-    margin: 0 auto 1.5rem;
-    font-size: 1.05rem;
+    max-width: 36rem;
+    margin: 0 auto 2rem;
+    font-size: 1.125rem;
     line-height: 1.6;
-    opacity: 0.95;
-}
-
-.download-subhead {
-    font-size: 1.35rem;
-    margin: 0 0 0.5rem;
-    font-weight: 600;
+    color: #475569;
 }
 
 /* Download Section */
 .download {
-    padding: 20px 0 80px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    padding: 4rem 0 5rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    color: #0f172a;
     text-align: center;
+    border-top: 1px solid #e2e8f0;
+}
+
+.download-content h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #0f172a;
+}
+
+.download-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 52rem;
+    margin: 0 auto 1.5rem;
+    text-align: left;
+}
+
+.download-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    min-height: 100%;
+}
+
+.download-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: #0f172a;
+}
+
+.download-card-features {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    flex: 1;
+}
+
+.download-card-features li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.download-card-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #2563eb;
+}
+
+.store-badge-link {
+    display: inline-block;
+    line-height: 0;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.store-badge-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.store-badge-link:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.download-card-note {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #64748b;
+    margin: 0;
+}
+
+.download-card-note a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.download-card-note a:hover {
+    text-decoration: underline;
+}
+
+.download-details {
+    max-width: 36rem;
+    margin: 0 auto;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 0.75rem 1rem;
+}
+
+.download-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #2563eb;
+    list-style: none;
+}
+
+.download-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.download-details summary::after {
+    content: '+';
+    float: right;
+    font-weight: 700;
+}
+
+.download-details[open] summary::after {
+    content: '−';
+}
+
+.download-details-body {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.download-details-body p {
+    margin: 0 0 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.download-details-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Legacy download classes (unused on homepage; kept for older pages if any) */
+.download-subhead {
+    font-size: 1.35rem;
+    margin: 0 0 0.5rem;
+    font-weight: 600;
 }
 
 .download-single {
@@ -1818,17 +1964,6 @@ body.swiping * {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.download-logo {
-    margin-bottom: 20px;
-}
-
-.btn-large {
-    font-size: 1.2em;
-    padding: 15px 30px;
-    margin: 20px 0;
-    display: inline-block;
-}
-
 .download-note {
     font-size: 0.9em;
     opacity: 0.9;
@@ -1836,16 +1971,9 @@ body.swiping * {
     font-style: italic;
 }
 
-.download-content h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
 .download-content p {
     font-size: 1.125rem;
     margin-bottom: 2rem;
-    opacity: 0.9;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -2343,6 +2471,25 @@ body.nav-open {
     }
     
     /* Download */
+    .download-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .download-card {
+        padding: 1.25rem;
+    }
+
+    .download-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .download-lead {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
     .download-buttons {
         flex-direction: column;
         align-items: center;
@@ -2904,12 +3051,6 @@ body.nav-open {
     
     .beta-step p {
         font-size: 0.95rem;
-        margin-bottom: 16px;
-    }
-    
-    /* Make download section header more compact on mobile */
-    .download-content h2 {
-        font-size: 1.5rem;
         margin-bottom: 16px;
     }
 }
