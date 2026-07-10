@@ -45,7 +45,7 @@
       "operatingSystem": ["iOS", "watchOS", "Android"],
       "applicationCategory": "HealthApplication",
       "softwareVersion": "1.1",
-      "downloadUrl": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
+      "downloadUrl": "https://jetlagpro.com/#download",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -267,7 +267,7 @@
     </script>
     
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260624021546"></script>
+    <script src="js/components.js?v=20260709210000"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>
@@ -281,7 +281,8 @@
                 <h1>Timed Acupressure for Travel Across Time Zones</h1>
                 <p class="hero-subtitle">Free timed acupressure app with reminders every two hours on destination time. The <a href="demo/">interactive demo</a> previews the guide (no push notifications); the phone apps include timed reminders.</p>
                 <div class="hero-buttons">
-                    <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="btn btn-primary" rel="noopener">Get the App</a>
+                    <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="btn btn-primary" rel="noopener">iPhone &amp; Apple Watch</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="btn btn-primary" rel="noopener">Android</a>
                     <a href="demo/" class="btn btn-secondary">Try Interactive Demo</a>
                 </div>
             </div>
@@ -451,23 +452,46 @@
 
 
     <script>
-        // Smooth scrolling for anchor links
+        function scrollToDownloadSection(smooth) {
+            const target = document.getElementById('download');
+            if (!target) {
+                return;
+            }
+            const header = document.querySelector('.header');
+            const headerHeight = header ? header.offsetHeight : 0;
+            window.scrollTo({
+                top: target.offsetTop - headerHeight - 20,
+                behavior: smooth ? 'smooth' : 'auto',
+            });
+        }
+
+        // Smooth scrolling for in-page anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                if (href === '#download') {
+                    scrollToDownloadSection(true);
+                    return;
+                }
+                const target = document.querySelector(href);
                 if (target) {
                     const headerHeight = document.querySelector('.header').offsetHeight;
                     const targetPosition = target.offsetTop - headerHeight - 20;
-                    
                     window.scrollTo({
                         top: targetPosition,
-                        behavior: 'smooth'
+                        behavior: 'smooth',
                     });
                 }
             });
         });
 
+        // Land on /#download from nav or other pages — scroll past fixed header
+        if (window.location.hash === '#download') {
+            window.addEventListener('load', function () {
+                scrollToDownloadSection(false);
+            });
+        }
     </script>
 </body>
     <!-- Trigger new deployment -->
