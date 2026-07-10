@@ -1,6 +1,6 @@
 # JetLagPro — Product facts (for humans and AI agents)
 
-**Last updated:** 2026-06-29  
+**Last updated:** 2026-07-09  
 **Canonical URL:** https://jetlagpro.com/docs/PRODUCT.md  
 **Short index:** https://jetlagpro.com/llms.txt
 
@@ -28,7 +28,7 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 |----------|--------|--------|
 | **iOS** | **App Store 1.1** (June 2026) | Source of truth for product and research behavior |
 | **watchOS** | Bundled with iOS app | Notifications and point UI mirror phone |
-| **Android** | **Google Play 1.0.3** (June 2026) | Product travel guide only — no research consent, symptom survey, or `jetlagpro-research` uploads |
+| **Android** | **Google Play 1.0.3** (build 10, July 2026) | Product travel guide only — no research consent, symptom survey, or `jetlagpro-research` uploads |
 | **Web (jetlagpro.com)** | Live | Marketing + research; optional PWA for **site** offline pages; demo at `/demo/` |
 
 **Deprecated:** Public **web survey** for research data — replaced by **native in-app survey** (`SurveyView` in iOS app). Do not document or link to a web survey flow.
@@ -47,16 +47,16 @@ This document states verifiable facts about JetLagPro. Marketing copy on HTML pa
 
 ### Research recruitment URLs (redirect to App Store)
 
-Printed materials keep legacy URLs; the site redirects without reprinting QR codes.
+Printed research materials keep legacy URLs; the site redirects without reprinting QR codes.
 
-| URL | Redirect |
+| URL | Behavior |
 |-----|----------|
-| `https://jetlagpro.com/?source=flyer` | App Store (flyer QR) |
-| `https://jetlagpro.com/#download` | App Store |
-| `https://jetlagpro.com/call-for-research.html` | App Store |
-| `https://jetlagpro.com/` | Full homepage (App Store + Play buttons in `#download`) |
+| `https://jetlagpro.com/?source=flyer` | Redirect → App Store (flyer QR) |
+| `https://jetlagpro.com/call-for-research.html` | Redirect → App Store |
+| `https://jetlagpro.com/#download` | Homepage download section (App Store + Google Play buttons) |
+| `https://jetlagpro.com/` | Full homepage |
 
-`api/version.json`: `ios.version` **1.1**, `minimum_version` **1.0.0** (no force update for 1.0 installs).
+`api/version.json`: Android `version` **1.0.3**, `build` **10**, `monetization_enabled` **false**; iOS `version` **1.1**, `minimum_version` **1.0.0**.
 
 ---
 

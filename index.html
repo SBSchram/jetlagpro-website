@@ -8,19 +8,14 @@
     <meta name="keywords" content="chronoacupuncture, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, timed acupressure">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
-    <!-- Research QR (?source=flyer) and #download go straight to the App Store -->
+    <!-- Research flyer QR (?source=flyer) goes to the App Store; #download scrolls to both stores -->
     <script>
     (function () {
         var appStore = 'https://apps.apple.com/us/app/jetlagpro/id6748569048';
         var params = new URLSearchParams(window.location.search);
-        if (params.get('source') === 'flyer' || window.location.hash === '#download') {
+        if (params.get('source') === 'flyer') {
             window.location.replace(appStore);
         }
-        window.addEventListener('hashchange', function () {
-            if (window.location.hash === '#download') {
-                window.location.replace(appStore);
-            }
-        });
     })();
     </script>
     
@@ -61,7 +56,7 @@
         {
           "@type": "PropertyValue",
           "name": "Android",
-          "value": "Google Play 1.0.3 — product travel guide; no research enrollment"
+          "value": "Google Play 1.0.3 — https://play.google.com/store/apps/details?id=com.jetlagpro.android"
         },
         {
           "@type": "PropertyValue",
