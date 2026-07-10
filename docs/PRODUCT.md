@@ -53,7 +53,7 @@ Printed research materials keep legacy URLs; the site redirects without reprinti
 |-----|----------|
 | `https://jetlagpro.com/?source=flyer` | Redirect → App Store (flyer QR) |
 | `https://jetlagpro.com/call-for-research.html` | Redirect → App Store |
-| `https://jetlagpro.com/#download` | Homepage download section (App Store + Google Play buttons) |
+| `https://jetlagpro.com/#download` | Homepage download section — side-by-side iPhone and Android cards with store badges |
 | `https://jetlagpro.com/` | Full homepage |
 
 `api/version.json`: Android `version` **1.0.3**, `build` **10**, `monetization_enabled` **false**; iOS `version` **1.1**, `minimum_version` **1.0.0**.
