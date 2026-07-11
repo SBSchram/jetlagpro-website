@@ -10,7 +10,7 @@
 ## Product
 
 - Name: JetLagPro
-- Category: Health / travel — chronoacupuncture (timed acupressure aligned to destination time zone)
+- Category: Health / travel — timed acupressure aligned to destination time zone (research literature may use "chronoacupuncture")
 - Creator: Dr. Steven Schram (Licensed Acupuncturist)
 - Website: https://jetlagpro.com
 - Contact: info@jetlagpro.com
