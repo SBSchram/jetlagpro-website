@@ -76,14 +76,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const formattedTime = formatTime(point.timeDescription);
 
-            // Use point images instead of long text descriptions.
-            // Image filenames follow the pattern assets/images/{imageName}.jpg (e.g., LU-8.jpg).
-            const imageSrc = `assets/images/${point.imageName}.jpg`;
+            // Prefer .jpg; a few points use alternate stills in assets/images.
+            const imageFallbacks = {
+                'LI-1': 'LI-1g.png',
+                'PC-8': 'PC-8g.jpg',
+            };
+            const imageFile = imageFallbacks[point.imageName] || `${point.imageName}.jpg`;
+            const imageSrc = `assets/images/${imageFile}`;
 
             pointCard.innerHTML = `
                 <div class="point-image-wrapper">
-                    <img src="${imageSrc}" alt="${point.name} point image" class="point-image" loading="lazy">
+                    <img src="${imageSrc}" alt="${point.name} acupressure point" class="point-image" loading="lazy">
                 </div>
+                <div class="point-name">${point.name}</div>
                 <div class="point-time">${formattedTime}</div>
             `;
 
