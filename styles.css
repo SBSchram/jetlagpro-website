@@ -1503,7 +1503,7 @@ body {
     margin: 2rem auto;
 }
 
-.cta-section {
+.ultimate-strategy .cta-section {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -3023,22 +3023,38 @@ body.nav-open {
 }
 
 .cta-section {
-    background: #f8f9fa;
-    padding: 30px;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
     margin-top: 40px;
     text-align: center;
-    border-left: 4px solid #3498db;
 }
 
 .cta-section h3 {
-    color: #2c3e50;
+    color: white;
     margin-bottom: 15px;
 }
 
 .cta-section p {
     margin-bottom: 20px;
-    color: #666;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.cta-section .btn {
+    margin: 0.5rem;
+}
+
+.cta-section .btn-secondary {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-section .btn-secondary:hover {
+    background: white;
+    color: #667eea;
+    border-color: white;
 }
 
 @media (max-width: 768px) {
