@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetLagPro Flyer DL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        @page { size: 8.5in 11in; margin: 0.35in; }
+
+        :root {
+            --blue: #2563EB;
+            --ink: #1F2937;
+            --muted: #6B7280;
+            --gold: #B45309;
+            --panel: #F8FAFC;
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            margin: 0;
+            padding: 0.35in;
+            background: white;
+            width: 8.5in;
+            min-height: 11in;
+            height: 11in;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 0.28in;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin: 0 0 0.12in 0;
+        }
+
+        .headline {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--blue);
+            margin: 0 0 0.08in 0;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .subhead {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--muted);
+            margin: 0.14in 0 0;
+        }
+
+        .wheel-section {
+            text-align: center;
+            margin: 0.2in 0 0.12in;
+        }
+
+        .wheel-image {
+            width: 3.1in;
+            height: 3.1in;
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+        }
+
+        .body-text {
+            font-size: 20px;
+            line-height: 1.5;
+            margin: 0 auto 0.2in;
+            max-width: 6.5in;
+            text-align: center;
+        }
+
+        .body-text p {
+            margin: 0 0 0.14in 0;
+        }
+
+        .body-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefits {
+            margin: 0 auto 0.12in;
+            padding: 0.18in 0.28in;
+            list-style: none;
+            background: var(--panel);
+            border-radius: 12px;
+            font-size: 17px;
+            line-height: 1.45;
+            width: fit-content;
+            text-align: left;
+        }
+
+        .benefits li {
+            margin: 0.09in 0;
+            padding-left: 0.38in;
+            position: relative;
+        }
+
+        .benefits li::before {
+            content: "◷";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 0.1in;
+        }
+
+        .qr-section {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 1.0in;
+            height: 1.0in;
+            border: 2px solid var(--blue);
+            margin: 0 auto 0.1in auto;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .qr-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 0.06in;
+        }
+
+        .qr-subtext {
+            font-size: 14px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p class="eyebrow">A note from Dr. Schram</p>
+        <h1 class="headline">Beat jet lag before it beats you.</h1>
+    </div>
+
+    <div class="body-text">
+        <p>I created JetLagPro, a free timed acupressure app because so many of you travel and have told me of your jet lag.</p>
+        <p>Acupuncturists have used timed acupressure for decades to help the body adjust to a new time zone. JetLagPro brings that same approach to your phone with timed reminders and short videos showing exactly what points to press.</p>
+    </div>
+
+    <div class="wheel-section">
+        <img src="assets/images/AppIconNew1024.png" alt="JetLagPro organ clock" class="wheel-image" />
+        <p class="subhead">Twelve points · one minute each</p>
+    </div>
+
+    <ul class="benefits">
+        <li>Reminders are aligned to your destination time</li>
+        <li>Short videos and drawings show exactly what to do</li>
+        <li>Works on iPhone, iPad and Apple Watch</li>
+    </ul>
+
+    <div class="footer">
+        <div class="qr-section">
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://apps.apple.com/us/app/jetlagpro/id6748569048" alt="QR Code for JetLagPro on the App Store" />
+            </div>
+            <div class="qr-text">Scan to download</div>
+        </div>
+    </div>
+</body>
+</html>

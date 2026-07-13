@@ -19,6 +19,27 @@ body {
     height: 100dvh; /* Dynamic viewport height for mobile */
 }
 
+.demo-deprecation-banner {
+    position: relative;
+    z-index: 10000;
+    background: #fef3c7;
+    border-bottom: 1px solid #f59e0b;
+    color: #78350f;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+
+.demo-deprecation-banner a {
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+.demo-deprecation-banner p {
+    margin: 0;
+}
+
 /* Container */
 .container {
     max-width: 1200px;

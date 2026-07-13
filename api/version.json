@@ -6,19 +6,20 @@
     "minimum_version_reason": null,
     "testflight_url": "https://testflight.apple.com/join/YZc7jzJT",
     "app_store_url": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
-    "play_store_url": null,
+    "play_store_url": "https://play.google.com/store/apps/details?id=com.jetlagpro.android",
     "release_notes": "Improved point reminder notifications on iPhone and Apple Watch. Clearer research consent formatting. Research consent updated to current IRB-approved text.",
     "last_updated": "2026-06-29"
   },
   "android": {
     "version": "1.0.3",
-    "build": "9",
+    "build": "10",
     "minimum_version": "1.0.0",
     "minimum_version_reason": null,
     "testflight_url": null,
     "app_store_url": null,
     "play_store_url": "https://play.google.com/store/apps/details?id=com.jetlagpro.android",
-    "release_notes": "Google Play release",
-    "last_updated": "2026-06-29"
+    "monetization_enabled": false,
+    "release_notes": "Production release on Google Play. Point reminders, trip history chart, Android 15 compatibility, and cleaner Info tab. Free during our introductory launch period.",
+    "last_updated": "2026-07-09"
   }
 }
