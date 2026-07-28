@@ -2699,11 +2699,22 @@ body.nav-open {
     }
 
     .home-trip-clocks {
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 0.35rem;
-        padding: 0.75rem 0.5rem;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "offset offset"
+            "body dest";
+        gap: 0.75rem 0.5rem;
+        padding: 0.85rem 0.65rem;
         margin: 0 auto;
         max-width: 100%;
+    }
+
+    .home-trip-clocks > .home-trip-clock:first-of-type {
+        grid-area: body;
+    }
+
+    .home-trip-clocks > .home-trip-clock:last-of-type {
+        grid-area: dest;
     }
 
     .home-trip-clock-label {
@@ -2712,7 +2723,7 @@ body.nav-open {
     }
 
     .home-trip-clock-time {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
         line-height: 1.15;
     }
 
@@ -2724,15 +2735,18 @@ body.nav-open {
     }
 
     .home-trip-offset {
-        justify-self: center;
+        grid-area: offset;
+        justify-self: stretch;
         align-self: center;
-        font-size: 0.75rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        line-height: 1.2;
-        padding: 0.45rem 0.4rem;
-        max-width: 4.75rem;
-        white-space: normal;
-        border-radius: 10px;
+        line-height: 1.15;
+        padding: 0.7rem 0.75rem;
+        max-width: none;
+        width: 100%;
+        white-space: nowrap;
+        border-radius: 12px;
+        box-sizing: border-box;
     }
 
     .download-buttons {

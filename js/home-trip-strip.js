@@ -99,13 +99,13 @@
     });
 
     origin.value = 'JFK';
-    dest.value = 'LHR';
+    dest.value = 'NRT';
   }
 
   function update() {
     const now = new Date();
     const origin = findAirport($('home-origin')?.value || 'JFK');
-    const dest = findAirport($('home-destination')?.value || 'LHR');
+    const dest = findAirport($('home-destination')?.value || 'NRT');
 
     $('home-body-time').textContent = formatInZone(now, origin.tz);
     $('home-dest-time').textContent = formatInZone(now, dest.tz);
@@ -120,9 +120,7 @@
     const mins = Math.round((abs - hours) * 60);
     const sign = diff >= 0 ? '+' : '−';
     const offsetCore = `${sign}${hours}h${mins ? ` ${mins}m` : ''}`;
-    $('home-offset').textContent = narrow
-      ? offsetCore
-      : `${offsetCore} at destination`;
+    $('home-offset').textContent = `${offsetCore} at destination`;
   }
 
   function init() {
