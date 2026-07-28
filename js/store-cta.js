@@ -12,6 +12,11 @@
     return /Android/i.test(ua) && !/iPad|iPhone|iPod/.test(ua);
   }
 
+  // Mark ASAP so CSS can hide App Store cards before paint finishes
+  if (isAndroidClient()) {
+    document.documentElement.classList.add('platform-android');
+  }
+
   function playUrl(source) {
     const url = new URL(PLAY_STORE_URL);
     if (source) {
@@ -45,17 +50,22 @@
     }
 
     if (isAndroidClient()) {
+      document.documentElement.classList.add('platform-android');
       document.body.classList.add('platform-android');
       androidCard.classList.add('download-card--primary');
       iosCard.classList.remove('download-card--primary');
+      iosCard.hidden = true;
+      iosCard.setAttribute('aria-hidden', 'true');
       if (androidCard !== grid.firstElementChild) {
-        grid.insertBefore(androidCard, iosCard);
+        grid.insertBefore(androidCard, grid.firstElementChild);
       }
       const playLink = androidCard.querySelector('a.store-badge-link');
       if (playLink) {
         playLink.href = playUrl('download');
       }
     } else {
+      iosCard.hidden = false;
+      iosCard.removeAttribute('aria-hidden');
       iosCard.classList.add('download-card--primary');
       androidCard.classList.remove('download-card--primary');
     }

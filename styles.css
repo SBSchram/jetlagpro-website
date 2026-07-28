@@ -1941,6 +1941,22 @@ body.platform-android .download-card:not(.download-card--primary) {
     opacity: 0.92;
 }
 
+html.platform-android [data-store="ios"],
+body.platform-android [data-store="ios"] {
+    display: none !important;
+}
+
+html.platform-android .download-grid,
+body.platform-android .download-grid {
+    grid-template-columns: 1fr;
+    max-width: 26rem;
+}
+
+html.platform-android .cta-store-row a[href*="apps.apple.com"],
+body.platform-android .cta-store-row a[href*="apps.apple.com"] {
+    display: none !important;
+}
+
 .play-store-sticky-cta {
     position: fixed;
     bottom: 20px;

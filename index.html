@@ -8,13 +8,18 @@
     <meta name="keywords" content="timed acupressure, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, chronoacupuncture">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
-    <!-- Research flyer QR (?source=flyer) → App Store only. Product #download: both stores; Android UA prioritizes Play. -->
+    <!-- Research flyer QR (?source=flyer) → App Store only. Product #download: both stores; Android UA shows Play only. -->
     <script>
     (function () {
         var appStore = 'https://apps.apple.com/us/app/jetlagpro/id6748569048';
         var params = new URLSearchParams(window.location.search);
         if (params.get('source') === 'flyer') {
             window.location.replace(appStore);
+            return;
+        }
+        var ua = navigator.userAgent || '';
+        if (/Android/i.test(ua) && !/iPad|iPhone|iPod/.test(ua)) {
+            document.documentElement.classList.add('platform-android');
         }
     })();
     </script>
@@ -72,7 +77,7 @@
       "keywords": "jet lag, timed acupressure, acupressure, traditional Chinese medicine, travel health, chronoacupuncture"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260728071500">
+    <link rel="stylesheet" href="styles.css?v=20260728072000">
     <script src="load-common-head.js?v=20260624021546"></script>
 </head>
 <body>
@@ -109,10 +114,10 @@
     </script>
 
     <!-- Store CTAs (Android → Google Play primary) -->
-    <script src="js/store-cta.js?v=20260728070100"></script>
+    <script src="js/store-cta.js?v=20260728072000"></script>
 
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260728070100"></script>
+    <script src="js/components.js?v=20260728072000"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>
