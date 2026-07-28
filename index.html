@@ -8,7 +8,7 @@
     <meta name="keywords" content="timed acupressure, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, chronoacupuncture">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
-    <!-- Research flyer QR (?source=flyer) goes to the App Store; #download scrolls to both stores -->
+    <!-- Research flyer QR (?source=flyer) → App Store only. Product #download: both stores; Android UA prioritizes Play. -->
     <script>
     (function () {
         var appStore = 'https://apps.apple.com/us/app/jetlagpro/id6748569048';
@@ -72,7 +72,7 @@
       "keywords": "jet lag, timed acupressure, acupressure, traditional Chinese medicine, travel health, chronoacupuncture"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260709233000">
+    <link rel="stylesheet" href="styles.css?v=20260728070100">
     <script src="load-common-head.js?v=20260624021546"></script>
 </head>
 <body>
@@ -101,179 +101,21 @@
             });
         });
 
-        // Listen for installation prompt
-        let deferredPrompt;
+        // Prefer Google Play over site PWA install for Android product installs
         window.addEventListener('beforeinstallprompt', (e) => {
-          console.log('📱 PWA: Install prompt available');
-          e.preventDefault(); // Prevent automatic prompt
-          deferredPrompt = e;
-          
-          // Show custom install button for Android users
-          showInstallButton();
-        });
-
-        function showInstallButton() {
-          // Check if this is likely Android (not iOS)
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-          
-          if (isAndroid && !isIOS) {
-            console.log('📱 PWA: Showing install button for Android user');
-            
-            // Create install button
-            const installButton = document.createElement('button');
-            installButton.id = 'pwa-install-btn';
-            installButton.innerHTML = '📱 Install JetLagPro App';
-            installButton.style.cssText = `
-              position: fixed;
-              bottom: 20px;
-              right: 20px;
-              background: #2563eb;
-              color: white;
-              border: none;
-              padding: 12px 20px;
-              border-radius: 25px;
-              font-weight: 600;
-              font-size: 14px;
-              box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-              cursor: pointer;
-              z-index: 1000;
-              transition: all 0.3s ease;
-            `;
-            
-            // Add hover effect
-            installButton.addEventListener('mouseenter', () => {
-              installButton.style.transform = 'scale(1.05)';
-              installButton.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.4)';
-            });
-            
-            installButton.addEventListener('mouseleave', () => {
-              installButton.style.transform = 'scale(1)';
-              installButton.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
-            });
-            
-            // Install button click handler
-            installButton.addEventListener('click', async () => {
-              if (deferredPrompt) {
-                console.log('🚀 PWA: Triggering install prompt');
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`🎯 PWA: User choice: ${outcome}`);
-                
-                if (outcome === 'accepted') {
-                  console.log('✅ PWA: User accepted the install');
-                } else {
-                  console.log('❌ PWA: User dismissed the install');
-                }
-                
-                deferredPrompt = null;
-                installButton.remove();
-              }
-            });
-            
-            // Add button to page
-            document.body.appendChild(installButton);
-          }
-        }
-
-        // Handle successful installation
-        window.addEventListener('appinstalled', (evt) => {
-          console.log('🎉 PWA: JetLagPro installed successfully');
-          
-          // Remove install button if it exists
-          const installButton = document.getElementById('pwa-install-btn');
-          if (installButton) {
-            installButton.remove();
-          }
+          e.preventDefault();
         });
       }
     </script>
-    
-    <!-- Notification Setup Logic -->
-    <script>
-      let notificationManager = null;
-      
-      // Initialize notification features when page loads
-      document.addEventListener('DOMContentLoaded', async () => {
-        // Check if this is likely Android and supports PWA notifications
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        const isChrome = /Chrome/i.test(navigator.userAgent);
-        const supportsPWA = 'serviceWorker' in navigator && 'PushManager' in window;
-        
-        if (isAndroid && isChrome && supportsPWA) {
-          console.log('📱 Android PWA detected - showing notification setup');
-          
-          // Show notification setup section
-          const notificationSection = document.getElementById('notification-setup');
-          if (notificationSection) {
-            notificationSection.style.display = 'block';
-          }
-          
-          // Initialize notification manager
-          notificationManager = new NotificationManager();
-          
-          // Setup event listeners
-          setupNotificationEventListeners();
-        }
-      });
-      
-      function setupNotificationEventListeners() {
-        const enableBtn = document.getElementById('enable-notifications');
-        const testBtn = document.getElementById('test-notification');
-        const statusDiv = document.getElementById('notification-status');
-        
-        if (enableBtn) {
-          enableBtn.addEventListener('click', async () => {
-            try {
-              enableBtn.disabled = true;
-              enableBtn.textContent = 'Requesting Permission...';
-              statusDiv.textContent = 'Requesting notification permission...';
-              
-              const granted = await notificationManager.requestPermission();
-              
-              if (granted) {
-                statusDiv.textContent = '✅ Notifications enabled! You will receive reminders every 2 hours during your trips.';
-                enableBtn.style.display = 'none';
-                testBtn.style.display = 'inline-block';
-                
-                // Initialize push subscription
-                await notificationManager.initializePushSubscription();
-              } else {
-                statusDiv.textContent = '❌ Notification permission denied. You can enable it later in your browser settings.';
-                enableBtn.disabled = false;
-                enableBtn.textContent = 'Enable Notifications';
-              }
-            } catch (error) {
-              console.error('Notification setup error:', error);
-              statusDiv.textContent = '⚠️ There was an issue setting up notifications. Please try again.';
-              enableBtn.disabled = false;
-              enableBtn.textContent = 'Enable Notifications';
-            }
-          });
-        }
-        
-        if (testBtn) {
-          testBtn.addEventListener('click', async () => {
-            try {
-              await notificationManager.testNotification();
-              statusDiv.textContent = '🔔 Test notification sent! Check your notifications.';
-            } catch (error) {
-              console.error('Test notification error:', error);
-              statusDiv.textContent = '⚠️ Could not send test notification.';
-            }
-          });
-        }
-      }
-    </script>
-    
+
+    <!-- Store CTAs (Android → Google Play primary) -->
+    <script src="js/store-cta.js?v=20260728070100"></script>
+
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260710071600"></script>
+    <script src="js/components.js?v=20260728070100"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>
-    
-    <!-- Notification Manager -->
-    <script src="notifications.js?v=20260624021546"></script>
 
     <main>
         <section class="hero-simple hero-simple--compact">
@@ -305,21 +147,6 @@
                         <div class="home-trip-clock-time" id="home-dest-time">—</div>
                         <div class="home-trip-clock-city" id="home-dest-city">—</div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Notification Setup (Android PWA) -->
-        <section id="notification-setup" class="notification-section" style="display: none;">
-            <div class="container">
-                <div class="notification-card">
-                    <h3>📱 Enable Jet Lag Reminders</h3>
-                    <p>Get automatic notifications every 2 hours to stay on schedule with your acupressure points.</p>
-                    <div class="notification-buttons">
-                        <button id="enable-notifications" class="btn-primary">Enable Notifications</button>
-                        <button id="test-notification" class="btn-secondary" style="display: none;">Test Notification</button>
-                    </div>
-                    <div id="notification-status" class="notification-status"></div>
                 </div>
             </div>
         </section>
@@ -411,7 +238,7 @@
                     <h2>Get JetLagPro</h2>
 
                     <div class="download-grid">
-                        <article class="download-card">
+                        <article class="download-card download-card--primary" data-store="ios">
                             <h3 class="download-card-title">iPhone &amp; Apple Watch</h3>
                             <ul class="download-card-features">
                                 <li>12 timed points on destination time</li>
@@ -423,7 +250,7 @@
                             </a>
                         </article>
 
-                        <article class="download-card">
+                        <article class="download-card" data-store="android">
                             <h3 class="download-card-title">Android</h3>
                             <ul class="download-card-features">
                                 <li>12 timed points on destination time</li>

@@ -1,7 +1,7 @@
 // Centralized Component Loader
 // Eliminates duplicate header/footer loading code across all pages
 // Bump DEPLOY_VERSION on each deploy so footer/header cache bust
-const DEPLOY_VERSION = '20260711174000';
+const DEPLOY_VERSION = '20260728070100';
 
 class ComponentLoader {
   constructor() {
@@ -234,3 +234,20 @@ window.addEventListener('pageshow', () => {
     syncNavDrawerPlacement();
     setMobileNavOpen(false);
 });
+
+// Load platform store CTAs on every page that uses components.js
+(function ensureStoreCtaScript() {
+  if (window.JetLagProStoreCta) {
+    return;
+  }
+  if (document.querySelector('script[src*="store-cta.js"]')) {
+    return;
+  }
+  const path = window.location.pathname || '';
+  const basePath = (path.includes('/blog/') || path.includes('/demo/') || path.includes('/reviewers/'))
+    ? '../'
+    : '';
+  const script = document.createElement('script');
+  script.src = `${basePath}js/store-cta.js?v=${DEPLOY_VERSION}`;
+  document.head.appendChild(script);
+})();

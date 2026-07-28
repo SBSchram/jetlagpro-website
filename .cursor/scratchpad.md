@@ -3099,3 +3099,10 @@ The archive contains:
 
 **Last Updated:** 2025-11-27
 
+
+## Android demand CTAs (2026-07-28)
+
+**Status:** Implemented locally, not committed/pushed yet.
+**Goal:** Android browsers convert to Google Play, not site PWA.
+**Done:** `js/store-cta.js`; homepage sticky Play CTA; download card reorder; removed PWA install/notification prompt path; blog dual store buttons; demo banner dual store links; research flyer/call-for-research remain App Store only.
+**Verify after deploy:** Android phone → jetlagpro.com → sticky + nav → Play; `/?source=flyer` still App Store.
