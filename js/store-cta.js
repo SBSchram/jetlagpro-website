@@ -33,7 +33,6 @@
     document.querySelectorAll('a.nav-cta').forEach((link) => {
       link.href = playUrl('nav');
       link.setAttribute('rel', 'noopener');
-      link.textContent = 'Get on Google Play';
     });
   }
 
@@ -101,7 +100,7 @@
     playCta.id = 'play-store-sticky-cta';
     playCta.href = playUrl('sticky');
     playCta.rel = 'noopener';
-    playCta.textContent = 'Get it on Google Play';
+    playCta.textContent = 'Get the App';
     playCta.className = 'play-store-sticky-cta';
     document.body.appendChild(playCta);
   }
