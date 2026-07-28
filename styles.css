@@ -1659,7 +1659,7 @@ body.swiping * {
 
 /* Features Section */
 .features {
-    padding: 80px 0;
+    padding: 48px 0 24px;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     position: relative;
     overflow: hidden;
@@ -1685,14 +1685,14 @@ body.swiping * {
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .feature-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     text-align: center;
-    padding: 2rem;
+    padding: 1.25rem 1.5rem;
     border-radius: 16px;
     border: 1px solid rgba(59, 130, 246, 0.1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -1706,7 +1706,7 @@ body.swiping * {
 .feature-card h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     color: #1f2937;
 }
 
@@ -1895,7 +1895,7 @@ body.swiping * {
 
 /* Download Section */
 .download {
-    padding: 4rem 0 5rem;
+    padding: 1.5rem 0 5rem;
     background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
     color: #0f172a;
     text-align: center;
@@ -2615,13 +2615,22 @@ body.nav-open {
     }
     
     /* Features */
+    .features {
+        padding: 32px 0 12px;
+    }
+
     .features-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 0.75rem;
+        margin-top: 1rem;
     }
     
     .feature-card {
-        padding: 1.5rem;
+        padding: 1rem 1.125rem;
+    }
+
+    .download {
+        padding-top: 1rem;
     }
     
     /* Localization */
