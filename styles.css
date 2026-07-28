@@ -2672,33 +2672,32 @@ body.nav-open {
     }
 
     .home-trip-demo {
-        padding: 0.5rem 0 0.75rem;
+        padding: 0.75rem 0 1rem;
     }
 
-    .home-trip-form {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin: 0 auto 0.5rem;
-        max-width: 100%;
-        text-align: center;
+    .home-trip-demo .section-title {
+        font-size: 1.35rem;
+        margin-bottom: 0.35rem;
+        padding: 0 0.5rem;
     }
 
-    .home-trip-arrow {
-        display: none;
+    .home-trip-route {
+        font-size: 0.95rem;
+        margin-bottom: 0.65rem;
     }
 
-    .home-trip-field label {
-        font-size: 0.7rem;
-        margin-bottom: 0.2rem;
-        text-align: center;
+    .how-it-works {
+        padding: 2rem 0;
     }
 
-    .home-trip-field select {
-        font-size: 0.875rem;
-        padding: 0.5rem 0.6rem;
-        text-align: center;
-        text-align-last: center;
+    .how-it-works .section-title {
+        font-size: 1.35rem;
+    }
+
+    .how-it-works .section-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
     }
 
     .home-trip-clocks {
@@ -2924,6 +2923,7 @@ body.nav-open {
 .home-trip-demo {
     padding: 3rem 0 2.5rem;
     background: #f8fafc;
+    text-align: center;
 }
 
 .home-trip-demo .section-title {
@@ -2933,6 +2933,20 @@ body.nav-open {
 .home-trip-demo .section-subtitle {
     max-width: 36rem;
     margin: 0 auto 1.5rem;
+}
+
+.home-trip-route {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 1rem;
+}
+
+.how-it-works .section-title {
+    margin-bottom: 0.5rem;
+}
+
+.how-it-works .section-subtitle {
+    margin-bottom: 1.5rem;
 }
 
 .legal-document {
