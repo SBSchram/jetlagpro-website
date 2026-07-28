@@ -72,7 +72,7 @@
       "keywords": "jet lag, timed acupressure, acupressure, traditional Chinese medicine, travel health, chronoacupuncture"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260728070100">
+    <link rel="stylesheet" href="styles.css?v=20260728071500">
     <script src="load-common-head.js?v=20260624021546"></script>
 </head>
 <body>
@@ -118,10 +118,81 @@
     <script src="js/translate.js?v=20260624021546"></script>
 
     <main>
+        <!-- Reason first: short pitch, then why, then install, then interactive demo -->
         <section class="hero-simple hero-simple--compact">
             <div class="container">
-                <h1>Timed Acupressure for Travel Across Time Zones</h1>
-                <p class="hero-subtitle">Shifts your body clock toward destination time. The app reminds you every two hours which point to press.</p>
+                <h1>Feel less wrecked after long flights</h1>
+                <p class="hero-subtitle">JetLagPro is a timed acupressure guide on destination time. Reminders every two hours tell you which point to press.</p>
+                <p class="hero-cta-row">
+                    <a href="#download" class="btn btn-primary">Get the App</a>
+                    <a href="#features" class="btn btn-secondary">Why it helps</a>
+                </p>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">Why Use JetLagPro?</h2>
+                <p class="section-subtitle">Acupuncturists have used timed acupressure for jet lag for decades. This app puts that schedule on your phone.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🕐</div>
+                        <h3>Do What Acupuncturists Do</h3>
+                        <p>Acupuncturists know how to reduce the effects of jet lag. Use the same techniques they've relied on for decades.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📍</div>
+                        <h3>Made Simple for Everyone</h3>
+                        <p>Clear videos and diagrams show you exactly where and how to press. Just follow the simple instructions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⏰</div>
+                        <h3>Stay On Track</h3>
+                        <p>The app keeps you on track with timed reminders at exactly the right times based on your destination.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="download">
+            <div class="container">
+                <div class="download-content">
+                    <h2>Get JetLagPro</h2>
+
+                    <div class="download-grid">
+                        <article class="download-card download-card--primary" data-store="ios">
+                            <h3 class="download-card-title">iPhone &amp; Apple Watch</h3>
+                            <ul class="download-card-features">
+                                <li>12 timed points on destination time</li>
+                                <li>Reminders every two hours</li>
+                                <li>Apple Watch companion</li>
+                            </ul>
+                            <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="store-badge-link" rel="noopener">
+                                <img src="assets/images/badge-app-store.svg" width="156" height="46" alt="Download on the App Store">
+                            </a>
+                        </article>
+
+                        <article class="download-card" data-store="android">
+                            <h3 class="download-card-title">Android</h3>
+                            <ul class="download-card-features">
+                                <li>12 timed points on destination time</li>
+                                <li>Reminders every two hours</li>
+                                <li>Trip history on your device</li>
+                            </ul>
+                            <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="store-badge-link" rel="noopener">
+                                <img src="assets/images/badge-google-play.svg" width="156" height="46" alt="Get it on Google Play">
+                            </a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="see-it" class="home-trip-demo">
+            <div class="container">
+                <h2 class="section-title">See the time shift</h2>
+                <p class="section-subtitle">Pick a route. Watch how far your body clock is from destination time. That gap is what the schedule works against.</p>
 
                 <div class="home-trip-form">
                     <div class="home-trip-field">
@@ -147,32 +218,6 @@
                         <div class="home-trip-clock-time" id="home-dest-time">—</div>
                         <div class="home-trip-clock-city" id="home-dest-city">—</div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="section-title">Why Use JetLagPro?</h2>
-                <p class="section-subtitle">For many decades acupuncturists have used acupressure techniques to reduce jet lag. While never a secret, it was largely unused outside of the acupuncture community. This app makes this technique accessible for everyone.</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🕐</div>
-                        <h3>Do What Acupuncturists Do</h3>
-                        <p>Acupuncturists know how to reduce the effects of jet lag. Use the same techniques they've relied on for decades.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📍</div>
-                        <h3>Made Simple for Everyone</h3>
-                        <p>Clear videos and diagrams show you exactly where and how to press. Just follow the simple instructions.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⏰</div>
-                        <h3>Stay On Track</h3>
-                        <p>The app keeps you on track with timed reminders at exactly the right times based on your destination.</p>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -231,41 +276,6 @@
             </div>
         </section>
 
-        <!-- Download Section -->
-        <section id="download" class="download">
-            <div class="container">
-                <div class="download-content">
-                    <h2>Get JetLagPro</h2>
-
-                    <div class="download-grid">
-                        <article class="download-card download-card--primary" data-store="ios">
-                            <h3 class="download-card-title">iPhone &amp; Apple Watch</h3>
-                            <ul class="download-card-features">
-                                <li>12 timed points on destination time</li>
-                                <li>Reminders every two hours</li>
-                                <li>Apple Watch companion</li>
-                            </ul>
-                            <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="store-badge-link" rel="noopener">
-                                <img src="assets/images/badge-app-store.svg" width="156" height="46" alt="Download on the App Store">
-                            </a>
-                        </article>
-
-                        <article class="download-card" data-store="android">
-                            <h3 class="download-card-title">Android</h3>
-                            <ul class="download-card-features">
-                                <li>12 timed points on destination time</li>
-                                <li>Reminders every two hours</li>
-                                <li>Trip history on your device</li>
-                            </ul>
-                            <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="store-badge-link" rel="noopener">
-                                <img src="assets/images/badge-google-play.svg" width="156" height="46" alt="Get it on Google Play">
-                            </a>
-                        </article>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
 
@@ -273,13 +283,14 @@
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
-        <div class="indicator active" data-section="top"></div>
-         <div class="indicator" data-section="features"></div>
+        <div class="indicator active" data-section="features"></div>
         <div class="indicator" data-section="download"></div>
+        <div class="indicator" data-section="see-it"></div>
+        <div class="indicator" data-section="top"></div>
     </div>
 
 
-    <script src="js/home-trip-strip.js?v=20260710030900"></script>
+    <script src="js/home-trip-strip.js?v=20260728071500"></script>
 
     <script>
         function scrollToDownloadSection(smooth) {

@@ -2811,8 +2811,30 @@ body.nav-open {
 }
 
 .hero-simple--compact .hero-subtitle {
-    margin-bottom: 0;
+    margin-bottom: 1.25rem;
     font-size: 1.05rem;
+}
+
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin: 0;
+}
+
+.home-trip-demo {
+    padding: 3rem 0 2.5rem;
+    background: #f8fafc;
+}
+
+.home-trip-demo .section-title {
+    margin-bottom: 0.5rem;
+}
+
+.home-trip-demo .section-subtitle {
+    max-width: 36rem;
+    margin: 0 auto 1.5rem;
 }
 
 .legal-document {
