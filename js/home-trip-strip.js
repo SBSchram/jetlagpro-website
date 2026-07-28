@@ -108,17 +108,21 @@
     const dest = findAirport($('home-destination')?.value || 'LHR');
 
     $('home-body-time').textContent = formatInZone(now, origin.tz);
-    $('home-body-city').textContent = origin.label;
     $('home-dest-time').textContent = formatInZone(now, dest.tz);
-    $('home-dest-city').textContent = dest.label;
+
+    const narrow = window.matchMedia('(max-width: 768px)').matches;
+    $('home-body-city').textContent = narrow ? origin.code : origin.label;
+    $('home-dest-city').textContent = narrow ? dest.code : dest.label;
 
     const diff = offsetHoursBetweenZones(now, origin.tz, dest.tz);
     const abs = Math.abs(diff);
     const hours = Math.floor(abs);
     const mins = Math.round((abs - hours) * 60);
     const sign = diff >= 0 ? '+' : '−';
-    $('home-offset').textContent =
-      `${sign}${hours}h${mins ? ` ${mins}m` : ''} at destination`;
+    const offsetCore = `${sign}${hours}h${mins ? ` ${mins}m` : ''}`;
+    $('home-offset').textContent = narrow
+      ? offsetCore
+      : `${offsetCore} at destination`;
   }
 
   function init() {

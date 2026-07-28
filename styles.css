@@ -2671,20 +2671,68 @@ body.nav-open {
         margin-bottom: 1.5rem;
     }
 
+    .home-trip-demo {
+        padding: 1.25rem 0 1.5rem;
+    }
+
     .home-trip-form {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 0.4rem;
+        margin: 0.5rem auto 0.75rem;
+        max-width: 100%;
     }
 
     .home-trip-arrow {
-        display: none;
+        display: block;
+        padding-bottom: 0.45rem;
+        font-size: 1rem;
+    }
+
+    .home-trip-field label {
+        font-size: 0.7rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .home-trip-field select {
+        font-size: 0.8125rem;
+        padding: 0.45rem 0.35rem;
     }
 
     .home-trip-clocks {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 0.35rem;
+        padding: 0.75rem 0.5rem;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .home-trip-clock-label {
+        font-size: 0.65rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .home-trip-clock-time {
+        font-size: 1.2rem;
+        line-height: 1.15;
+    }
+
+    .home-trip-clock-city {
+        font-size: 0.7rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .home-trip-offset {
         justify-self: center;
+        align-self: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+        padding: 0.45rem 0.4rem;
+        max-width: 4.75rem;
+        white-space: normal;
+        border-radius: 10px;
     }
 
     .download-buttons {
