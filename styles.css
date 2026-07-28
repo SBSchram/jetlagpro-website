@@ -2681,6 +2681,7 @@ body.nav-open {
         gap: 0.5rem;
         margin: 0 auto 0.5rem;
         max-width: 100%;
+        text-align: center;
     }
 
     .home-trip-arrow {
@@ -2690,11 +2691,14 @@ body.nav-open {
     .home-trip-field label {
         font-size: 0.7rem;
         margin-bottom: 0.2rem;
+        text-align: center;
     }
 
     .home-trip-field select {
         font-size: 0.875rem;
         padding: 0.5rem 0.6rem;
+        text-align: center;
+        text-align-last: center;
     }
 
     .home-trip-clocks {
