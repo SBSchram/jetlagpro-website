@@ -1659,7 +1659,7 @@ body.swiping * {
 
 /* Features Section */
 .features {
-    padding: 48px 0 24px;
+    padding: 80px 0;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     position: relative;
     overflow: hidden;
@@ -1685,14 +1685,14 @@ body.swiping * {
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 2rem;
+    margin-top: 3rem;
 }
 
 .feature-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     text-align: center;
-    padding: 1.25rem 1.5rem;
+    padding: 2rem;
     border-radius: 16px;
     border: 1px solid rgba(59, 130, 246, 0.1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -1706,7 +1706,7 @@ body.swiping * {
 .feature-card h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     color: #1f2937;
 }
 
@@ -1895,7 +1895,7 @@ body.swiping * {
 
 /* Download Section */
 .download {
-    padding: 1.5rem 0 5rem;
+    padding: 4rem 0 5rem;
     background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
     color: #0f172a;
     text-align: center;
@@ -2614,7 +2614,7 @@ body.nav-open {
         padding: 0.5rem;
     }
     
-    /* Features */
+    /* Features — compact on mobile only */
     .features {
         padding: 32px 0 12px;
     }
@@ -2627,6 +2627,14 @@ body.nav-open {
     
     .feature-card {
         padding: 1rem 1.125rem;
+    }
+
+    .feature-icon {
+        display: none;
+    }
+
+    .feature-card h3 {
+        margin-bottom: 0.5rem;
     }
 
     .download {
