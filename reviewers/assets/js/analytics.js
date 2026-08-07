@@ -112,7 +112,7 @@ function getCurrentData() {
     return data.filter(trip => !isDeveloperTrip(trip));
 }
 
-/** Study analysis dataset: valid production trips with Share-gated consent (excludes Phase A pre-consent beta). */
+/** Study analysis: Share-gated consent, plus earlier pre-consent trips from travelers who later Shared. */
 function getStudyEligibleTrips(options = {}) {
     const { requireSurvey = false } = options;
     return TripValidator.filterForAnalysis(getCurrentData(), {
@@ -667,20 +667,52 @@ function renderRecentSubmissions() {
         return tableHtml;
     };
     
-    // Show all three categories: trips with surveys, trips without surveys, and test trips
+    // Show categories: study surveys, pre-consent-only surveys, without surveys, test
     html += '<div style="text-align: center; margin-bottom: 20px;">';
+
+    const consentedDeviceKeys = TripValidator.devicesWithStudyConsent(validWithSurveys);
+    const studyWithSurveys = validWithSurveys.filter(
+        trip =>
+            TripValidator.hasStudyConsent(trip) ||
+            TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
+    );
+    const preConsentOnlySurveys = validWithSurveys.filter(
+        trip =>
+            !TripValidator.hasStudyConsent(trip) &&
+            !TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
+    );
+    const promotedCount = studyWithSurveys.filter(
+        trip => TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
+    ).length;
     
-    // Trips With Surveys (real trips with completed surveys)
+    // With Surveys: study (consented + promoted) separated from remaining pre-consent beta
     if (validWithSurveys.length > 0) {
-        html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
-        html += `<h3 style="margin-bottom: 6px; color: #16a34a;">With Surveys (${validWithSurveys.length})</h3>`;
-        html += '<p style="font-size: 0.85rem; color: #92400e; margin: 0 0 12px 0; font-style: italic;">Pre-consent beta; excluded from study analysis per protocol</p>';
-        html += renderTripTable(validWithSurveys, false);
+        html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px; vertical-align: top; text-align: left;">';
+        html += `<h3 style="margin-bottom: 6px; color: #16a34a; text-align: center;">With Surveys (${validWithSurveys.length})</h3>`;
+
+        if (studyWithSurveys.length > 0) {
+            html += `<h4 style="margin: 12px 0 6px 0; color: #166534; font-size: 0.95rem;">Study / consented (${studyWithSurveys.length})</h4>`;
+            if (promotedCount > 0) {
+                html += `<p style="font-size: 0.8rem; color: #166534; margin: 0 0 8px 0; font-style: italic;">Includes ${promotedCount} earlier pre-consent survey${promotedCount === 1 ? '' : 's'} from travelers who later Shared</p>`;
+            }
+            html += renderTripTable(studyWithSurveys, false);
+        }
+
+        if (studyWithSurveys.length > 0 && preConsentOnlySurveys.length > 0) {
+            html += '<hr style="border: none; border-top: 2px solid #d1d5db; margin: 20px 0;">';
+        }
+
+        if (preConsentOnlySurveys.length > 0) {
+            html += `<h4 style="margin: 12px 0 6px 0; color: #92400e; font-size: 0.95rem;">Pre-consent beta only (${preConsentOnlySurveys.length})</h4>`;
+            html += '<p style="font-size: 0.8rem; color: #92400e; margin: 0 0 8px 0; font-style: italic;">No Share on this traveler yet; excluded from study analysis</p>';
+            html += renderTripTable(preConsentOnlySurveys, false);
+        }
+
         html += '</div>';
     }
     
     // Trips Without Surveys (real trips missing surveys)
-    html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
+    html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px; vertical-align: top;">';
     html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Without Surveys (${validNotCompleted.length})</h3>`;
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
@@ -691,7 +723,7 @@ function renderRecentSubmissions() {
     const developerTrips = testData.filter(trip => isDeveloperTrip(trip));
     
     if (testData.length > 0) {
-        html += '<div style="display: inline-block;">';
+        html += '<div style="display: inline-block; vertical-align: top;">';
         
         // Build heading with Test (black) and Developer (gray with strikeout)
         let headingParts = [];
@@ -746,7 +778,15 @@ function renderTripStats() {
     const validWithSurveys = validTrips.filter(trip => trip.surveyCompleted === true);
     const validWithoutSurveys = validTrips.filter(trip => trip.surveyCompleted !== true);
     const studyEligibleSurveys = getStudyEligibleTrips({ requireSurvey: true });
-    const preConsentSurveyCount = validWithSurveys.length - studyEligibleSurveys.length;
+    const consentedDeviceKeysForStats = TripValidator.devicesWithStudyConsent(validWithSurveys);
+    const preConsentOnlySurveyCount = validWithSurveys.filter(
+        trip =>
+            !TripValidator.hasStudyConsent(trip) &&
+            !TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeysForStats),
+    ).length;
+    const promotedIntoStudyCount = studyEligibleSurveys.filter(
+        trip => TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeysForStats),
+    ).length;
     
     // Calculate travel direction for valid trips
     const directions = {};
@@ -791,7 +831,7 @@ function renderTripStats() {
     html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
-    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} consented survey${studyEligibleSurveys.length === 1 ? '' : 's'}${preConsentSurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentSurveyCount} pre-consent beta excluded</span>` : ''}</td></tr>`;
+    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} survey${studyEligibleSurveys.length === 1 ? '' : 's'} in analysis${promotedIntoStudyCount > 0 ? `<br><span style="color: #166534;">${promotedIntoStudyCount} earlier pre-consent promoted (traveler later Shared)</span>` : ''}${preConsentOnlySurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentOnlySurveyCount} pre-consent beta still excluded</span>` : ''}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
@@ -802,7 +842,7 @@ function renderTripStats() {
     html += '<div>Test: Any trip where timezonesCount is 0 (checked first) OR arrival=origin timezone</div>';
     html += '<div>Developer: Any trip from a developer device</div>';
     html += '<div>Confirmed: Valid research trips (Verified + Legacy)</div>';
-    html += '<div>Study analysis: Share-gated research consent required; pre-consent beta surveys excluded</div>';
+    html += '<div>Study analysis: Share-gated consent, plus earlier pre-consent trips from the same traveler after they Shared; remaining pre-consent-only travelers stay excluded</div>';
     html += '<div>Authenticated: Trip IDs with valid device HMAC-SHA256 signatures</div>';
     html += '</div>';
     

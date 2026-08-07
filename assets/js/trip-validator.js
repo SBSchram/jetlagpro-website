@@ -437,6 +437,33 @@ class TripValidator {
         return trip.researchConsentGranted === true;
     }
 
+    /** Traveler/device key from tripId prefix (same as Trip Submissions Device column). */
+    static travelerKey(trip) {
+        return (trip.tripId || '').split(/[-_]/)[0] || '';
+    }
+
+    /** Devices that have at least one Share-gated consented trip. */
+    static devicesWithStudyConsent(trips) {
+        const keys = new Set();
+        for (const trip of trips) {
+            if (this.hasStudyConsent(trip)) {
+                const key = this.travelerKey(trip);
+                if (key) keys.add(key);
+            }
+        }
+        return keys;
+    }
+
+    /**
+     * Pre-consent row eligible for study analysis because the same traveler later Shared.
+     * Does not rewrite Firebase; analysis-only promotion.
+     */
+    static isPromotedPreConsentTrip(trip, consentedDeviceKeys) {
+        if (this.hasStudyConsent(trip)) return false;
+        const key = this.travelerKey(trip);
+        return Boolean(key && consentedDeviceKeys && consentedDeviceKeys.has(key));
+    }
+
     /**
      * Filters trips for research analysis - excludes test data, developer sessions,
      * and trips with invalid HMAC signatures
@@ -444,7 +471,8 @@ class TripValidator {
      * @param {Array} trips - Array of trip objects
      * @param {Object} options - Filtering options
      * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
-     * @param {boolean} options.requireStudyConsent - Only include Share-gated research consent (default: false)
+     * @param {boolean} options.requireStudyConsent - Only include Share-gated research consent, plus
+     *   earlier pre-consent trips from the same traveler after that traveler Shared (default: false)
      * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
      * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: TripValidator.DEVELOPER_DEVICE_IDS)
      * @returns {Array} - Filtered array of trips for analysis
@@ -482,9 +510,12 @@ class TripValidator {
             filtered = filtered.filter(trip => trip.surveyCompleted === true);
         }
 
-        // 5. Optionally require Share-gated research consent (excludes Phase A pre-consent beta)
+        // 5. Share-gated consent, or earlier pre-consent rows from a traveler who later Shared
         if (requireStudyConsent) {
-            filtered = filtered.filter(trip => this.hasStudyConsent(trip));
+            const consentedKeys = this.devicesWithStudyConsent(filtered);
+            filtered = filtered.filter(trip =>
+                this.hasStudyConsent(trip) || this.isPromotedPreConsentTrip(trip, consentedKeys)
+            );
         }
         
         return filtered;
