@@ -99,6 +99,7 @@ async function main() {
     updateDoc(dev(VALID_TRIP_ID), {
       surveyCompleted: true,
       surveySubmittedAt: Timestamp.now(),
+      surveyStatus: 2,
       sleepPost: 3,
       fatiguePost: 2,
     }),
