@@ -875,7 +875,7 @@
 				</div>
 			</div>
 			<p style="margin-top: 15px; font-size: 14px; color: #666;">
-				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error. Only Share-gated, IRB-consented trips enter the study dataset; pre-consent beta surveys are excluded.
+				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error. Study dataset: Share-gated consented trips, plus earlier pre-consent surveys from travelers who later Shared; pre-consent-only travelers remain excluded.
 			</p>
 		</div>
 		
@@ -1088,8 +1088,8 @@
                 const allData = researchData;
                 
                 // Filter using centralized validation logic (DRY)
-                // Excludes: test trips, invalid HMAC signatures, developer sessions, pre-consent beta
-                // Includes: only completed surveys with Share-gated research consent
+                // Excludes: test trips, invalid HMAC, developer sessions, pre-consent-only travelers
+                // Includes: Share-gated consent + earlier pre-consent from travelers who later Shared
                 const surveyData = TripValidator.filterForAnalysis(allData, {
                     requireSurvey: true,
                     requireStudyConsent: true,

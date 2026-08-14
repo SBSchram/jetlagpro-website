@@ -73,7 +73,7 @@ The script sets Firestore client logging to **silent** so expected `PERMISSION_D
    - Document id must be **5 segments** separated by `-`, last segment **8 lowercase hex** (HMAC suffix).
    - Document must **not** disappear within seconds (that would indicate HMAC delete firing on a **valid** id — investigate secret / id generation mismatch).
 4. **Survey (dev):** Complete the **in-app survey** (`SurveyView`) for that trip from the History tab (or survey reminder).
-5. In Firestore, confirm the same document now has **`surveyCompleted: true`** and survey fields (ratings, `surveySubmittedAt`, etc.).
+5. In Firestore, confirm the same document now has **`surveyCompleted: true`**, **`surveyStatus: 2`**, and survey fields (ratings, `surveySubmittedAt`, etc.).
 
 **Pass:** Trip doc created and stable; survey update succeeds; no unexpected `PERMISSION_DENIED` in browser console or app logs.
 

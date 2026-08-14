@@ -711,7 +711,7 @@ function renderRecentSubmissions() {
     }
     
     // Trips Without Surveys (real trips missing surveys)
-    html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px;">';
+    html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px; vertical-align: top;">';
     html += `<h3 style="margin-bottom: 10px; color: #1f2937;">Without Surveys (${validNotCompleted.length})</h3>`;
     html += renderTripTable(validNotCompleted, false);
     html += '</div>';
@@ -722,7 +722,7 @@ function renderRecentSubmissions() {
     const developerTrips = testData.filter(trip => isDeveloperTrip(trip));
     
     if (testData.length > 0) {
-        html += '<div style="display: inline-block;">';
+        html += '<div style="display: inline-block; vertical-align: top;">';
         
         // Build heading with Test (black) and Developer (gray with strikeout)
         let headingParts = [];
