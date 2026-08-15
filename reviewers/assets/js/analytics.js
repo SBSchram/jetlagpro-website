@@ -681,19 +681,14 @@ function renderRecentSubmissions() {
             !TripValidator.hasStudyConsent(trip) &&
             !TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
     );
-    const promotedCount = studyWithSurveys.filter(
-        trip => TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
-    ).length;
-    const sharedOnTripCount = studyWithSurveys.length - promotedCount;
     
-    // With Surveys: study (consented + promoted) separated from remaining pre-consent beta
+    // With Surveys: study set only (Share on that trip, plus earlier trips after the traveler Shared)
     if (validWithSurveys.length > 0) {
         html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px; vertical-align: top; text-align: left;">';
-        html += `<h3 style="margin-bottom: 6px; color: #16a34a; text-align: center;">With Surveys (${validWithSurveys.length})</h3>`;
 
         if (studyWithSurveys.length > 0) {
-            html += `<h4 style="margin: 12px 0 6px 0; color: #166534; font-size: 0.95rem;">Study (${studyWithSurveys.length})</h4>`;
-            html += `<p style="font-size: 0.8rem; color: #166534; margin: 0 0 8px 0; font-style: italic;">${sharedOnTripCount} Shared on that trip${promotedCount > 0 ? ` · ${promotedCount} earlier trip${promotedCount === 1 ? '' : 's'} after they Shared` : ''}</p>`;
+            html += `<h3 style="margin-bottom: 6px; color: #16a34a; text-align: center;">With Surveys (${studyWithSurveys.length})</h3>`;
+            html += '<p style="font-size: 0.8rem; color: #166534; margin: 0 0 8px 0; font-style: italic; text-align: center;">Includes prior trips included via current consent</p>';
             html += renderTripTable(studyWithSurveys, false);
         }
 
@@ -786,7 +781,6 @@ function renderTripStats() {
     const promotedIntoStudyCount = studyEligibleSurveys.filter(
         trip => TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeysForStats),
     ).length;
-    const sharedOnTripSurveyCount = studyEligibleSurveys.length - promotedIntoStudyCount;
     
     // Calculate travel direction for valid trips
     const directions = {};
@@ -831,7 +825,7 @@ function renderTripStats() {
     html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
-    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} survey${studyEligibleSurveys.length === 1 ? '' : 's'} in analysis<br>${sharedOnTripSurveyCount} Shared on that trip${promotedIntoStudyCount > 0 ? `<br><span style="color: #166534;">${promotedIntoStudyCount} earlier trip${promotedIntoStudyCount === 1 ? '' : 's'} after they Shared</span>` : ''}${preConsentOnlySurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentOnlySurveyCount} pre-consent beta still excluded</span>` : ''}</td></tr>`;
+    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} survey${studyEligibleSurveys.length === 1 ? '' : 's'} in analysis${promotedIntoStudyCount > 0 ? '<br><span style="color: #166534;">Includes prior trips included via current consent</span>' : ''}${preConsentOnlySurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentOnlySurveyCount} pre-consent beta still excluded</span>` : ''}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
