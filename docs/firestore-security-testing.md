@@ -119,6 +119,7 @@ In **Firebase Console → Functions → Logs** (or Cloud Logging), filter for:
 | **Permission denied** on second mobile write | If `surveyCompleted` is already **true**, full mobile payload is **intentionally** blocked. |
 | **Doc vanishes** after create | `hmacValidator` delete: id fails **`validateTripIdSignature`** (wrong secret, wrong base string, case mismatch on signature). Align iOS/Functions `HMAC_SECRET` and base-trip-id algorithm. |
 | **RN fails, iOS passes** | RN payload has **extra field names** not in `mobileTripWriteKeys` — add fields to rules or align RN with iOS. |
+| **iOS full trip PATCH 403 after create** | Update touched a field not in `mobileTripWriteKeys`. Current iOS extras that must stay listed: `surveyStatus`, `researchConsentGranted`, `point1Timezone`–`point12Timezone`. |
 
 ## Reference files
 

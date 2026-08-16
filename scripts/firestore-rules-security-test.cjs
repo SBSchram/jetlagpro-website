@@ -83,13 +83,16 @@ async function main() {
   await assertFails(setDoc(doc(db, 'auditLog', 'probe'), { x: 1 }))
   console.log('  ok\n')
 
-  console.log('[Rules] mobile keys update while survey open')
+  console.log('[Rules] mobile keys update while survey open (includes iOS extra fields)')
   await assertSucceeds(
     updateDoc(dev(VALID_TRIP_ID), {
       destinationCode: 'IST',
       timezonesCount: 5,
       travelDirection: 'east',
       surveyCompleted: false,
+      surveyStatus: 0,
+      researchConsentGranted: true,
+      point1Timezone: 'Europe/Istanbul',
     }),
   )
   console.log('  ok\n')

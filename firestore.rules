@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Single iOS write at trip completion: FirebaseService.writeTripCompletionToFirebase (PATCH = create-or-merge).
-    // RN should use the same field set. Not incremental per-point updates.
+    // Create does not field-check; this list gates a later full PATCH while survey is still open.
     function mobileTripWriteKeys() {
       return [
         'tripId', 'destinationCode', 'timezonesCount', 'travelDirection',
@@ -13,7 +13,12 @@ service cloud.firestore {
         'point7Completed', 'point8Completed', 'point9Completed',
         'point10Completed', 'point11Completed', 'point12Completed',
         'surveyCompleted', 'arrivalTimeZone', 'originTimezone', 'originTimeZone',
-        'useCrampedPoints', 'surveyCode', 'deviceId'
+        'useCrampedPoints', 'surveyCode', 'deviceId',
+        'surveyStatus', 'researchConsentGranted',
+        'point1Timezone', 'point2Timezone', 'point3Timezone',
+        'point4Timezone', 'point5Timezone', 'point6Timezone',
+        'point7Timezone', 'point8Timezone', 'point9Timezone',
+        'point10Timezone', 'point11Timezone', 'point12Timezone'
       ];
     }
 

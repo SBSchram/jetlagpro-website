@@ -1,5 +1,11 @@
 # JetLagPro Website - Active Project Tracking
 
+## Latest Executor Checkpoint (2026-08-16): iOS trip-update allowlist
+
+- `firestore.rules` `mobileTripWriteKeys()` now includes iOS extras that create already accepted: `surveyStatus`, `researchConsentGranted`, `point1Timezone`–`point12Timezone`.
+- Rules tests cover a survey-open update that sets those fields.
+- Deployed to `jetlagpro-research` (Steven, 2026-08-16). Git commit follows.
+
 ## Background and Motivation
 
 **CURRENT TASK:** JetLagPro Git Branch Sync – Safely Update Local `main` with Remote Changes (Planner Mode)
