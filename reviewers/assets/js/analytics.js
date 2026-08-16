@@ -681,20 +681,14 @@ function renderRecentSubmissions() {
             !TripValidator.hasStudyConsent(trip) &&
             !TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
     );
-    const promotedCount = studyWithSurveys.filter(
-        trip => TripValidator.isPromotedPreConsentTrip(trip, consentedDeviceKeys),
-    ).length;
     
-    // With Surveys: study (consented + promoted) separated from remaining pre-consent beta
+    // With Surveys: study set only (Share on that trip, plus earlier trips after the traveler Shared)
     if (validWithSurveys.length > 0) {
         html += '<div style="display: inline-block; margin-bottom: 30px; margin-right: 20px; vertical-align: top; text-align: left;">';
-        html += `<h3 style="margin-bottom: 6px; color: #16a34a; text-align: center;">With Surveys (${validWithSurveys.length})</h3>`;
 
         if (studyWithSurveys.length > 0) {
-            html += `<h4 style="margin: 12px 0 6px 0; color: #166534; font-size: 0.95rem;">Study / consented (${studyWithSurveys.length})</h4>`;
-            if (promotedCount > 0) {
-                html += `<p style="font-size: 0.8rem; color: #166534; margin: 0 0 8px 0; font-style: italic;">Includes ${promotedCount} earlier pre-consent survey${promotedCount === 1 ? '' : 's'} from travelers who later Shared</p>`;
-            }
+            html += `<h3 style="margin-bottom: 6px; color: #16a34a; text-align: center;">With Surveys (${studyWithSurveys.length})</h3>`;
+            html += '<p style="font-size: 0.8rem; color: #166534; margin: 0 0 8px 0; font-style: italic; text-align: center;">Includes prior trips included via current consent</p>';
             html += renderTripTable(studyWithSurveys, false);
         }
 
@@ -831,7 +825,7 @@ function renderTripStats() {
     html += `<tr><th>${totalTrips} Trips</th><td>${verifiedCount} Verified<br>${legacyCount} Legacy<br>${testCount} Test${developerCount > 0 ? `<br>${developerCount} Developer` : ''}</td></tr>`;
     // Confirmed Trips summary in a single row
     html += `<tr><th>${validationStats.valid} Confirmed Trips</th><td>${confirmedTripsText}</td></tr>`;
-    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} survey${studyEligibleSurveys.length === 1 ? '' : 's'} in analysis${promotedIntoStudyCount > 0 ? `<br><span style="color: #166534;">${promotedIntoStudyCount} earlier pre-consent promoted (traveler later Shared)</span>` : ''}${preConsentOnlySurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentOnlySurveyCount} pre-consent beta still excluded</span>` : ''}</td></tr>`;
+    html += `<tr><th>Study Analysis</th><td>${studyEligibleSurveys.length} survey${studyEligibleSurveys.length === 1 ? '' : 's'} in analysis${promotedIntoStudyCount > 0 ? '<br><span style="color: #166534;">Includes prior trips included via current consent</span>' : ''}${preConsentOnlySurveyCount > 0 ? `<br><span style="color: #92400e;">${preConsentOnlySurveyCount} pre-consent beta still excluded</span>` : ''}</td></tr>`;
     html += `<tr><th>Travel Direction</th><td>${travelDirectionText || 'N/A'}</td></tr>`;
     // Removed separate Data Type row; merged into the top summary line
     html += `<tr><th>Cryptographic Status</th><td>${hmacStatusText}</td></tr>`;
@@ -884,7 +878,7 @@ function renderAdvancedAnalytics() {
     
     // Dose-Response Data Table - all surveys used in the chart
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
-    html += '<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Raw Data</h3>';
+    html += `<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Raw Data (${completedSurveys.length})</h3>`;
     html += renderDoseResponseDataTable(completedSurveys);
     html += '</div>';
     

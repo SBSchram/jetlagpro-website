@@ -471,8 +471,8 @@ class TripValidator {
      * @param {Array} trips - Array of trip objects
      * @param {Object} options - Filtering options
      * @param {boolean} options.requireSurvey - Only include trips with completed surveys (default: false)
-     * @param {boolean} options.requireStudyConsent - Only include Share-gated research consent, plus
-     *   earlier pre-consent trips from the same traveler after that traveler Shared (default: false)
+     * @param {boolean} options.requireStudyConsent - Share-gated consent, plus earlier pre-consent
+     *   trips from the same traveler after that traveler Shared (default: false)
      * @param {boolean} options.excludeDeveloper - Exclude developer test sessions (default: true)
      * @param {Array<string>} options.developerDeviceIds - Developer device IDs to exclude (default: TripValidator.DEVELOPER_DEVICE_IDS)
      * @returns {Array} - Filtered array of trips for analysis
