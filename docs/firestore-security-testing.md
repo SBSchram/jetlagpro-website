@@ -8,10 +8,10 @@ Solutions IRB **approved (2026-06)**. Production research trip uploads use signe
 
 | Collection | Client `create` | Client `update` | Notes |
 |------------|-----------------|-----------------|--------|
-| **`tripCompletions`** | Allowed (signed id) | Allowed per `tripCompletionUpdateAllowed` | Prod / TestFlight Share writes succeed |
-| **`tripCompletionsDev`** | Allowed (signed id) | Allowed | Simulator + listed dev devices — use for flow testing |
+| **tripCompletions** | Allowed (signed id **and** `mobileTripWriteKeys` only) | Allowed per `tripCompletionUpdateAllowed` | Prod / TestFlight Share writes succeed |
+| **`tripCompletionsDev`** | Same as prod (`tripCompletionCreateAllowed`) | Allowed | Simulator + listed dev devices — use for flow testing |
 
-**Rules:** prod `create` uses `signedTripIdCreate(tripId)` in `firestore.rules`.
+**Rules:** prod `create` uses `tripCompletionCreateAllowed` (signed id + `mobileTripWriteKeys`) in `firestore.rules`. Adding a field to the iOS trip PATCH requires that name in `mobileTripWriteKeys` **and a rules deploy** before the app ships.
 
 **Deploy record (2026-06-12):** pause deployed (`allow create: if false`). **Lift record (2026-06-19):** prod create restored after IRB approval.
 
@@ -50,7 +50,7 @@ npm run test:firestore-rules
 
 Run `npm install` after cloning or when `package.json` changes. Do not paste `# …` on the same line as `npm install`; some shells pass `#` to npm and you get `EINVALIDTAGNAME` / invalid package `"#"`.
 
-This runs `scripts/firestore-rules-security-test.cjs` inside the **Firestore emulator** with your checked-in `firestore.rules`. It covers **Test C2** (4-part id denied), invalid id shape, audit log deny, mobile vs survey update paths, post-survey mobile block, and client delete deny. It does **not** replace **Test A/B** (real app + survey pages) or **Test C1** (invalid HMAC → Cloud Function), which need a device/browser or staging scripts.
+This runs `scripts/check_ios_firestore_write_keys.cjs` (compares sibling `JetLagProject` writer keys to the allowlists when that repo is present) then `scripts/firestore-rules-security-test.cjs` inside the **Firestore emulator** with your checked-in `firestore.rules`. It covers **Test C2** (4-part id denied), invalid id shape, create/update keys outside `mobileTripWriteKeys`, audit log deny, mobile vs survey update paths, post-survey mobile block, and client delete deny. It does **not** replace **Test A/B** (real app + survey pages) or **Test C1** (invalid HMAC → Cloud Function), which need a device/browser or staging scripts.
 
 The script sets Firestore client logging to **silent** so expected `PERMISSION_DENIED` checks do not flood the terminal. You may still see **`lsof` warnings** about a Time Machine SMB volume when the emulator starts; those are harmless.
 
@@ -114,16 +114,16 @@ In **Firebase Console → Functions → Logs** (or Cloud Logging), filter for:
 
 | Symptom | Likely cause |
 |---------|----------------|
-| **Permission denied** on first trip write | Rules: `tripId` not matching `signedTripIdCreate` (format / case / segment length). Compare id to `AppState.makeTripId` + `HMACGenerator`. |
+| **Permission denied** on first trip write | Trip id fails `signedTripIdCreate` (format / case / segment length), **or** a field is not in `mobileTripWriteKeys`. Compare id to `AppState.makeTripId` + `HMACGenerator`; compare payload to `FirebaseService.writeTripCompletionToFirebase`. |
 | **Permission denied** on survey submit | Update touched a field **not** in `surveySubmissionKeys`, or `tripId` in payload **≠** document id. |
 | **Permission denied** on second mobile write | If `surveyCompleted` is already **true**, full mobile payload is **intentionally** blocked. |
 | **Doc vanishes** after create | `hmacValidator` delete: id fails **`validateTripIdSignature`** (wrong secret, wrong base string, case mismatch on signature). Align iOS/Functions `HMAC_SECRET` and base-trip-id algorithm. |
 | **RN fails, iOS passes** | RN payload has **extra field names** not in `mobileTripWriteKeys` — add fields to rules or align RN with iOS. |
-| **iOS full trip PATCH 403 after create** | Update touched a field not in `mobileTripWriteKeys`. Current iOS extras that must stay listed: `surveyStatus`, `researchConsentGranted`, `point1Timezone`–`point12Timezone`. |
+| **iOS full trip PATCH 403 after create** | Field not in `mobileTripWriteKeys`. Create uses that same list now; extras fail on first Share. Add the field to the allowlist, deploy rules, then ship the app. |
 
 ## Reference files
 
-- Rules: `firestore.rules` — `mobileTripWriteKeys`, `surveySubmissionKeys`, `signedTripIdCreate`, `tripCompletionUpdateAllowed`
+- Rules: `firestore.rules` — `mobileTripWriteKeys`, `surveySubmissionKeys`, `tripCompletionCreateAllowed`, `tripCompletionUpdateAllowed`
 - Functions: `functions/index.js` — `enforceHmacOnTripCreate`, `hmacValidator`, `hmacValidatorDev`, `validateTripIdSignature`
 - iOS writer: `JetLagPro/Services/FirebaseService.swift` — `writeTripCompletionToFirebase`
 - iOS id: `JetLagPro/Core/Models/AppState.swift` — `makeTripId`; `JetLagPro/Services/HMACGenerator.swift`

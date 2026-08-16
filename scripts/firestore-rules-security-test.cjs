@@ -71,6 +71,28 @@ async function main() {
   )
   console.log('  ok\n')
 
+  console.log('[Rules] create with field outside mobileTripWriteKeys → expect fail')
+  await assertFails(
+    setDoc(dev('2330B376-ISTE-250411-9999-deadbeef'), {
+      tripId: '2330B376-ISTE-250411-9999-deadbeef',
+      surveyCompleted: false,
+      notInAllowlist: true,
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] create with iOS extras (surveyStatus, consent, point timezone)')
+  await assertSucceeds(
+    setDoc(dev('2330B376-ISTE-250411-8888-cafecafe'), {
+      tripId: '2330B376-ISTE-250411-8888-cafecafe',
+      surveyCompleted: false,
+      surveyStatus: 0,
+      researchConsentGranted: true,
+      point1Timezone: 'Europe/Istanbul',
+    }),
+  )
+  console.log('  ok\n')
+
   console.log('[Rules] tripId field ≠ document id → expect fail')
   await assertFails(
     setDoc(dev('2330B376-ISTE-250411-1234-aaaaaaaa'), {

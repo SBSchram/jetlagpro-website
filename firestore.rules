@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Single iOS write at trip completion: FirebaseService.writeTripCompletionToFirebase (PATCH = create-or-merge).
-    // Create does not field-check; this list gates a later full PATCH while survey is still open.
+    // Same key list for create and survey-open update. Extra iOS fields must be added here first, then deployed.
     function mobileTripWriteKeys() {
       return [
         'tripId', 'destinationCode', 'timezonesCount', 'travelDirection',
@@ -73,17 +73,22 @@ service cloud.firestore {
         && tid.matches('^[A-F0-9]{8}-[A-Z]{4}-[0-9]{6}-[0-9]{4}-[a-f0-9]{8}$');
     }
 
+    function tripCompletionCreateAllowed(tid) {
+      return signedTripIdCreate(tid)
+        && request.resource.data.keys().hasOnly(mobileTripWriteKeys());
+    }
+
     // IRB approved (2026-06): production trip creates allowed with signed 5-part id.
     match /tripCompletions/{tripId} {
       allow read: if true;
-      allow create: if signedTripIdCreate(tripId);
+      allow create: if tripCompletionCreateAllowed(tripId);
       allow update: if tripCompletionUpdateAllowed(tripId);
       allow delete: if false;
     }
 
     match /tripCompletionsDev/{tripId} {
       allow read: if true;
-      allow create: if signedTripIdCreate(tripId);
+      allow create: if tripCompletionCreateAllowed(tripId);
       allow update: if tripCompletionUpdateAllowed(tripId);
       allow delete: if false;
     }

@@ -1,5 +1,11 @@
 # JetLagPro Website - Active Project Tracking
 
+## Latest Executor Checkpoint (2026-08-16): trip write keys on create
+
+- `tripCompletionCreateAllowed` requires signed id **and** `mobileTripWriteKeys` (same list as survey-open update). Extra iOS fields 403 on first Share.
+- `npm run test:firestore-rules` compares sibling `JetLagProject` `FirebaseService.swift` keys to the allowlists.
+- Needs a **second** production deploy after the extras allowlist deploy.
+
 ## Latest Executor Checkpoint (2026-08-16): iOS trip-update allowlist
 
 - `firestore.rules` `mobileTripWriteKeys()` now includes iOS extras that create already accepted: `surveyStatus`, `researchConsentGranted`, `point1Timezone`–`point12Timezone`.
