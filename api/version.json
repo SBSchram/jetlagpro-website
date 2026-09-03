@@ -1,14 +1,14 @@
 {
   "ios": {
-    "version": "1.2.3",
+    "version": "1.2.5",
     "build": "1",
     "minimum_version": "1.0.0",
     "minimum_version_reason": null,
     "testflight_url": "https://testflight.apple.com/join/YZc7jzJT",
     "app_store_url": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
     "play_store_url": "https://play.google.com/store/apps/details?id=com.jetlagpro.android",
-    "release_notes": "More reliable survey send when a trip was saved on the phone but not yet on research servers. Clearer messages if a survey cannot be sent.",
-    "last_updated": "2026-08-14"
+    "release_notes": "Accent-insensitive airport search (Zurich, Cancun, Sao Paulo). Clearer survey path when a trip is on your phone but not yet on research servers (Share or update). More reliable research upload and survey error messages.",
+    "last_updated": "2026-08-19"
   },
   "android": {
     "version": "1.0.3",
