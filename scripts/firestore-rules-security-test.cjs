@@ -154,37 +154,73 @@ async function main() {
   )
   console.log('  ok\n')
 
-  const usageId = '11111111-2222-3333-4444-555555555555'
-  console.log('[Rules] iosUsageEvents valid create')
+  const usageId = 'A1B2C3D4-260908-120000'
+  console.log('[Rules] iosUsageEvents valid session create')
   await assertSucceeds(
     setDoc(doc(db, 'iosUsageEvents', usageId), {
-      eventId: usageId,
-      eventName: 'app_open',
-      installId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      sessionId: usageId,
+      deviceId: 'A1B2C3D4',
       platform: 'ios',
-      appVersion: '1.2.5',
-      createdAt: '2026-09-08T12:00:00Z',
+      appVersion: '1.2.7',
+      openedAt: '2026-09-08T12:00:00Z',
+      lastEventName: 'app_open',
+      events: [{ eventName: 'app_open', at: '2026-09-08T12:00:00Z' }],
     }),
   )
   console.log('  ok\n')
 
-  console.log('[Rules] iosUsageEvents unknown eventName → expect fail')
+  console.log('[Rules] iosUsageEvents bad session id shape → expect fail')
   await assertFails(
-    setDoc(doc(db, 'iosUsageEvents', '66666666-7777-8888-9999-aaaaaaaaaaaa'), {
-      eventId: '66666666-7777-8888-9999-aaaaaaaaaaaa',
-      eventName: 'evil_event',
-      installId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+    setDoc(doc(db, 'iosUsageEvents', 'not-a-session-id'), {
+      sessionId: 'not-a-session-id',
+      deviceId: 'A1B2C3D4',
       platform: 'ios',
-      appVersion: '1.2.5',
-      createdAt: '2026-09-08T12:00:00Z',
+      appVersion: '1.2.7',
+      openedAt: '2026-09-08T12:00:00Z',
+      lastEventName: 'app_open',
+      events: [{ eventName: 'app_open', at: '2026-09-08T12:00:00Z' }],
     }),
   )
   console.log('  ok\n')
 
-  console.log('[Rules] iosUsageEvents client update → expect fail')
-  await assertFails(
-    updateDoc(doc(db, 'iosUsageEvents', usageId), { appVersion: '9.9.9' }),
+  console.log('[Rules] iosUsageEvents append update')
+  await assertSucceeds(
+    updateDoc(doc(db, 'iosUsageEvents', usageId), {
+      lastEventName: 'destination_picked',
+      destinationCode: 'JFK',
+      events: [
+        { eventName: 'app_open', at: '2026-09-08T12:00:00Z' },
+        { eventName: 'destination_picked', at: '2026-09-08T12:01:00Z', destinationCode: 'JFK' },
+      ],
+    }),
   )
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents shrink events → expect fail')
+  await assertFails(
+    updateDoc(doc(db, 'iosUsageEvents', usageId), {
+      events: [{ eventName: 'app_open', at: '2026-09-08T12:00:00Z' }],
+      lastEventName: 'app_open',
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents change deviceId → expect fail')
+  await assertFails(
+    updateDoc(doc(db, 'iosUsageEvents', usageId), {
+      deviceId: 'FFFFFFFF',
+      events: [
+        { eventName: 'app_open', at: '2026-09-08T12:00:00Z' },
+        { eventName: 'destination_picked', at: '2026-09-08T12:01:00Z', destinationCode: 'JFK' },
+        { eventName: 'guide_ended', at: '2026-09-08T12:02:00Z' },
+      ],
+      lastEventName: 'guide_ended',
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents client delete → expect fail')
+  await assertFails(deleteDoc(doc(db, 'iosUsageEvents', usageId)))
   console.log('  ok\n')
 
   await testEnv.cleanup()

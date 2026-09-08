@@ -3019,6 +3019,10 @@ body.nav-open {
     margin-bottom: 0;
 }
 
+.legal-section p.legal-aside {
+    margin-top: 1rem;
+}
+
 .legal-section ul {
     margin: 0.2rem 0 0;
     padding-left: 1.125rem;

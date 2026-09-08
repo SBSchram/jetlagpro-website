@@ -108,35 +108,63 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Product usage funnel (iOS) — separate from research tripCompletions. Create-only; no client reads.
-    // App: ProductUsageAnalytics.swift. Deploy these rules before shipping a build that writes here.
-    function iosUsageEventKeys() {
+    // Product usage sessions (iOS) — one doc per app process open; append mid-session.
+    // Doc id: {device8}-{YYMMDD}-{HHMMSS} (same 8-char research device suffix as trip ids).
+    // App: ProductUsageAnalytics.swift. Deploy before shipping builds that write sessions.
+    function iosUsageSessionKeys() {
       return [
-        'eventId', 'eventName', 'installId', 'platform', 'appVersion', 'createdAt',
+        'sessionId', 'deviceId', 'platform', 'appVersion', 'openedAt', 'events', 'lastEventName',
         'destinationCode', 'originCode', 'outcome', 'pointsBucket', 'durationBucket',
-        'completionMethod'
+        'completionMethod', 'researchDecision'
       ];
     }
 
-    function iosUsageEventCreateOk(eid) {
-      return request.resource.data.keys().hasOnly(iosUsageEventKeys())
-        && request.resource.data.keys().hasAll([
-          'eventId', 'eventName', 'installId', 'platform', 'appVersion', 'createdAt'
-        ])
-        && request.resource.data.eventId == eid
-        && request.resource.data.platform == 'ios'
-        && request.resource.data.eventName in [
-          'app_open', 'destination_picked', 'guide_ended', 'research_share', 'research_not_now'
-        ]
-        && request.resource.data.installId is string
-        && request.resource.data.installId.size() > 0
-        && request.resource.data.appVersion is string
-        && request.resource.data.createdAt is string;
+    function iosUsageSessionIdOk(sid, deviceId) {
+      return sid is string
+        && deviceId is string
+        && deviceId.matches('^[A-F0-9]{8}$')
+        && sid.matches('^[A-F0-9]{8}-[0-9]{6}-[0-9]{6}$')
+        && sid.matches(deviceId + '-[0-9]{6}-[0-9]{6}');
     }
 
-    match /iosUsageEvents/{eventId} {
-      allow create: if iosUsageEventCreateOk(eventId);
-      allow read, update, delete: if false;
+    function iosUsageSessionCreateOk(sid) {
+      return request.resource.data.keys().hasOnly(iosUsageSessionKeys())
+        && request.resource.data.keys().hasAll([
+          'sessionId', 'deviceId', 'platform', 'appVersion', 'openedAt', 'events', 'lastEventName'
+        ])
+        && request.resource.data.sessionId == sid
+        && iosUsageSessionIdOk(request.resource.data.sessionId, request.resource.data.deviceId)
+        && request.resource.data.platform == 'ios'
+        && request.resource.data.appVersion is string
+        && request.resource.data.openedAt is string
+        && request.resource.data.lastEventName is string
+        && request.resource.data.events is list
+        && request.resource.data.events.size() >= 1;
+    }
+
+    function iosUsageSessionUpdateOk(sid) {
+      return request.resource.data.keys().hasOnly(iosUsageSessionKeys())
+        && request.resource.data.keys().hasAll([
+          'sessionId', 'deviceId', 'platform', 'appVersion', 'openedAt', 'events', 'lastEventName'
+        ])
+        && resource.data.sessionId == sid
+        && request.resource.data.sessionId == resource.data.sessionId
+        && request.resource.data.deviceId == resource.data.deviceId
+        && request.resource.data.openedAt == resource.data.openedAt
+        && request.resource.data.platform == resource.data.platform
+        && request.resource.data.platform == 'ios'
+        && iosUsageSessionIdOk(request.resource.data.sessionId, request.resource.data.deviceId)
+        && request.resource.data.events is list
+        && resource.data.events is list
+        && request.resource.data.events.size() >= resource.data.events.size()
+        && request.resource.data.lastEventName is string
+        && request.resource.data.appVersion is string;
+    }
+
+    match /iosUsageEvents/{sessionId} {
+      allow create: if iosUsageSessionCreateOk(sessionId);
+      allow update: if iosUsageSessionUpdateOk(sessionId);
+      allow read, delete: if false;
     }
   }
 }
