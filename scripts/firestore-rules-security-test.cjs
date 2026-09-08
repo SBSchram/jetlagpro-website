@@ -71,6 +71,28 @@ async function main() {
   )
   console.log('  ok\n')
 
+  console.log('[Rules] create with field outside mobileTripWriteKeys → expect fail')
+  await assertFails(
+    setDoc(dev('2330B376-ISTE-250411-9999-deadbeef'), {
+      tripId: '2330B376-ISTE-250411-9999-deadbeef',
+      surveyCompleted: false,
+      notInAllowlist: true,
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] create with iOS extras (surveyStatus, consent, point timezone)')
+  await assertSucceeds(
+    setDoc(dev('2330B376-ISTE-250411-8888-cafecafe'), {
+      tripId: '2330B376-ISTE-250411-8888-cafecafe',
+      surveyCompleted: false,
+      surveyStatus: 0,
+      researchConsentGranted: true,
+      point1Timezone: 'Europe/Istanbul',
+    }),
+  )
+  console.log('  ok\n')
+
   console.log('[Rules] tripId field ≠ document id → expect fail')
   await assertFails(
     setDoc(dev('2330B376-ISTE-250411-1234-aaaaaaaa'), {
@@ -83,13 +105,16 @@ async function main() {
   await assertFails(setDoc(doc(db, 'auditLog', 'probe'), { x: 1 }))
   console.log('  ok\n')
 
-  console.log('[Rules] mobile keys update while survey open')
+  console.log('[Rules] mobile keys update while survey open (includes iOS extra fields)')
   await assertSucceeds(
     updateDoc(dev(VALID_TRIP_ID), {
       destinationCode: 'IST',
       timezonesCount: 5,
       travelDirection: 'east',
       surveyCompleted: false,
+      surveyStatus: 0,
+      researchConsentGranted: true,
+      point1Timezone: 'Europe/Istanbul',
     }),
   )
   console.log('  ok\n')
@@ -99,6 +124,7 @@ async function main() {
     updateDoc(dev(VALID_TRIP_ID), {
       surveyCompleted: true,
       surveySubmittedAt: Timestamp.now(),
+      surveyStatus: 2,
       sleepPost: 3,
       fatiguePost: 2,
     }),

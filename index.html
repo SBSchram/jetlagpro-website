@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4PTS16JF06"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4PTS16JF06');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JetLagPro | Timed Acupressure App for Jet Lag</title>
@@ -8,13 +17,18 @@
     <meta name="keywords" content="timed acupressure, acupressure jet lag, jet lag app, horary points, circadian rhythm, travel health, traditional Chinese medicine, chronoacupuncture">
     <link rel="canonical" href="https://jetlagpro.com/">
     <link rel="alternate" type="text/plain" href="https://jetlagpro.com/llms.txt" title="JetLagPro product summary for AI agents">
-    <!-- Research flyer QR (?source=flyer) goes to the App Store; #download scrolls to both stores -->
+    <!-- Research flyer QR (?source=flyer) → App Store only. Product #download: both stores; Android UA shows Play only. -->
     <script>
     (function () {
         var appStore = 'https://apps.apple.com/us/app/jetlagpro/id6748569048';
         var params = new URLSearchParams(window.location.search);
         if (params.get('source') === 'flyer') {
             window.location.replace(appStore);
+            return;
+        }
+        var ua = navigator.userAgent || '';
+        if (/Android/i.test(ua) && !/iPad|iPhone|iPod/.test(ua)) {
+            document.documentElement.classList.add('platform-android');
         }
     })();
     </script>
@@ -72,7 +86,7 @@
       "keywords": "jet lag, timed acupressure, acupressure, traditional Chinese medicine, travel health, chronoacupuncture"
     }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260709233000">
+    <link rel="stylesheet" href="styles.css?v=20260729065500">
     <script src="load-common-head.js?v=20260624021546"></script>
 </head>
 <body>
@@ -101,226 +115,27 @@
             });
         });
 
-        // Listen for installation prompt
-        let deferredPrompt;
+        // Prefer Google Play over site PWA install for Android product installs
         window.addEventListener('beforeinstallprompt', (e) => {
-          console.log('📱 PWA: Install prompt available');
-          e.preventDefault(); // Prevent automatic prompt
-          deferredPrompt = e;
-          
-          // Show custom install button for Android users
-          showInstallButton();
-        });
-
-        function showInstallButton() {
-          // Check if this is likely Android (not iOS)
-          const isAndroid = /Android/i.test(navigator.userAgent);
-          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-          
-          if (isAndroid && !isIOS) {
-            console.log('📱 PWA: Showing install button for Android user');
-            
-            // Create install button
-            const installButton = document.createElement('button');
-            installButton.id = 'pwa-install-btn';
-            installButton.innerHTML = '📱 Install JetLagPro App';
-            installButton.style.cssText = `
-              position: fixed;
-              bottom: 20px;
-              right: 20px;
-              background: #2563eb;
-              color: white;
-              border: none;
-              padding: 12px 20px;
-              border-radius: 25px;
-              font-weight: 600;
-              font-size: 14px;
-              box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-              cursor: pointer;
-              z-index: 1000;
-              transition: all 0.3s ease;
-            `;
-            
-            // Add hover effect
-            installButton.addEventListener('mouseenter', () => {
-              installButton.style.transform = 'scale(1.05)';
-              installButton.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.4)';
-            });
-            
-            installButton.addEventListener('mouseleave', () => {
-              installButton.style.transform = 'scale(1)';
-              installButton.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
-            });
-            
-            // Install button click handler
-            installButton.addEventListener('click', async () => {
-              if (deferredPrompt) {
-                console.log('🚀 PWA: Triggering install prompt');
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`🎯 PWA: User choice: ${outcome}`);
-                
-                if (outcome === 'accepted') {
-                  console.log('✅ PWA: User accepted the install');
-                } else {
-                  console.log('❌ PWA: User dismissed the install');
-                }
-                
-                deferredPrompt = null;
-                installButton.remove();
-              }
-            });
-            
-            // Add button to page
-            document.body.appendChild(installButton);
-          }
-        }
-
-        // Handle successful installation
-        window.addEventListener('appinstalled', (evt) => {
-          console.log('🎉 PWA: JetLagPro installed successfully');
-          
-          // Remove install button if it exists
-          const installButton = document.getElementById('pwa-install-btn');
-          if (installButton) {
-            installButton.remove();
-          }
+          e.preventDefault();
         });
       }
     </script>
-    
-    <!-- Notification Setup Logic -->
-    <script>
-      let notificationManager = null;
-      
-      // Initialize notification features when page loads
-      document.addEventListener('DOMContentLoaded', async () => {
-        // Check if this is likely Android and supports PWA notifications
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        const isChrome = /Chrome/i.test(navigator.userAgent);
-        const supportsPWA = 'serviceWorker' in navigator && 'PushManager' in window;
-        
-        if (isAndroid && isChrome && supportsPWA) {
-          console.log('📱 Android PWA detected - showing notification setup');
-          
-          // Show notification setup section
-          const notificationSection = document.getElementById('notification-setup');
-          if (notificationSection) {
-            notificationSection.style.display = 'block';
-          }
-          
-          // Initialize notification manager
-          notificationManager = new NotificationManager();
-          
-          // Setup event listeners
-          setupNotificationEventListeners();
-        }
-      });
-      
-      function setupNotificationEventListeners() {
-        const enableBtn = document.getElementById('enable-notifications');
-        const testBtn = document.getElementById('test-notification');
-        const statusDiv = document.getElementById('notification-status');
-        
-        if (enableBtn) {
-          enableBtn.addEventListener('click', async () => {
-            try {
-              enableBtn.disabled = true;
-              enableBtn.textContent = 'Requesting Permission...';
-              statusDiv.textContent = 'Requesting notification permission...';
-              
-              const granted = await notificationManager.requestPermission();
-              
-              if (granted) {
-                statusDiv.textContent = '✅ Notifications enabled! You will receive reminders every 2 hours during your trips.';
-                enableBtn.style.display = 'none';
-                testBtn.style.display = 'inline-block';
-                
-                // Initialize push subscription
-                await notificationManager.initializePushSubscription();
-              } else {
-                statusDiv.textContent = '❌ Notification permission denied. You can enable it later in your browser settings.';
-                enableBtn.disabled = false;
-                enableBtn.textContent = 'Enable Notifications';
-              }
-            } catch (error) {
-              console.error('Notification setup error:', error);
-              statusDiv.textContent = '⚠️ There was an issue setting up notifications. Please try again.';
-              enableBtn.disabled = false;
-              enableBtn.textContent = 'Enable Notifications';
-            }
-          });
-        }
-        
-        if (testBtn) {
-          testBtn.addEventListener('click', async () => {
-            try {
-              await notificationManager.testNotification();
-              statusDiv.textContent = '🔔 Test notification sent! Check your notifications.';
-            } catch (error) {
-              console.error('Test notification error:', error);
-              statusDiv.textContent = '⚠️ Could not send test notification.';
-            }
-          });
-        }
-      }
-    </script>
-    
+
+    <!-- Store CTAs (Android → Google Play primary) -->
+    <script src="js/store-cta.js?v=20260728072500"></script>
+
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260710071600"></script>
+    <script src="js/components.js?v=20260728072500"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>
-    
-    <!-- Notification Manager -->
-    <script src="notifications.js?v=20260624021546"></script>
 
     <main>
         <section class="hero-simple hero-simple--compact">
             <div class="container">
                 <h1>Timed Acupressure for Travel Across Time Zones</h1>
                 <p class="hero-subtitle">Shifts your body clock toward destination time. The app reminds you every two hours which point to press.</p>
-
-                <div class="home-trip-form">
-                    <div class="home-trip-field">
-                        <label for="home-origin">Leaving from</label>
-                        <select id="home-origin" aria-label="Origin airport"></select>
-                    </div>
-                    <div class="home-trip-arrow" aria-hidden="true">→</div>
-                    <div class="home-trip-field">
-                        <label for="home-destination">Destination</label>
-                        <select id="home-destination" aria-label="Destination airport"></select>
-                    </div>
-                </div>
-
-                <div class="home-trip-clocks">
-                    <div class="home-trip-clock">
-                        <div class="home-trip-clock-label">Body now</div>
-                        <div class="home-trip-clock-time" id="home-body-time">—</div>
-                        <div class="home-trip-clock-city" id="home-body-city">—</div>
-                    </div>
-                    <div class="home-trip-offset" id="home-offset">—</div>
-                    <div class="home-trip-clock">
-                        <div class="home-trip-clock-label">Destination now</div>
-                        <div class="home-trip-clock-time" id="home-dest-time">—</div>
-                        <div class="home-trip-clock-city" id="home-dest-city">—</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Notification Setup (Android PWA) -->
-        <section id="notification-setup" class="notification-section" style="display: none;">
-            <div class="container">
-                <div class="notification-card">
-                    <h3>📱 Enable Jet Lag Reminders</h3>
-                    <p>Get automatic notifications every 2 hours to stay on schedule with your acupressure points.</p>
-                    <div class="notification-buttons">
-                        <button id="enable-notifications" class="btn-primary">Enable Notifications</button>
-                        <button id="test-notification" class="btn-secondary" style="display: none;">Test Notification</button>
-                    </div>
-                    <div id="notification-status" class="notification-status"></div>
-                </div>
             </div>
         </section>
 
@@ -328,7 +143,7 @@
             <div class="container">
                 <h2 class="section-title">Why Use JetLagPro?</h2>
                 <p class="section-subtitle">For many decades acupuncturists have used acupressure techniques to reduce jet lag. While never a secret, it was largely unused outside of the acupuncture community. This app makes this technique accessible for everyone.</p>
-                
+
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-icon">🕐</div>
@@ -345,13 +160,70 @@
                         <h3>Stay On Track</h3>
                         <p>The app keeps you on track with timed reminders at exactly the right times based on your destination.</p>
                     </div>
+                </div>
+            </div>
+        </section>
 
+        <section id="download" class="download">
+            <div class="container">
+                <div class="download-content">
+                    <h2>Get JetLagPro</h2>
+                    <p class="download-credit">Developed by Dr. Steven Schram, licensed acupuncturist.</p>
+
+                    <div class="download-grid">
+                        <article class="download-card download-card--primary" data-store="ios">
+                            <h3 class="download-card-title">iPhone &amp; Apple Watch</h3>
+                            <ul class="download-card-features">
+                                <li>12 timed points on destination time</li>
+                                <li>Reminders every two hours</li>
+                                <li>Apple Watch companion</li>
+                            </ul>
+                            <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="store-badge-link" rel="noopener">
+                                <img src="assets/images/badge-app-store.svg" width="156" height="46" alt="Download on the App Store">
+                            </a>
+                        </article>
+
+                        <article class="download-card" data-store="android">
+                            <h3 class="download-card-title">Android</h3>
+                            <ul class="download-card-features">
+                                <li>12 timed points on destination time</li>
+                                <li>Reminders every two hours</li>
+                                <li>Trip history on your device</li>
+                            </ul>
+                            <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="store-badge-link" rel="noopener">
+                                <img src="assets/images/badge-google-play.svg" width="156" height="46" alt="Get it on Google Play">
+                            </a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="see-it" class="home-trip-demo">
+            <div class="container">
+                <h2 class="section-title">Here’s an example of the time shift involved</h2>
+                <p class="section-subtitle home-trip-explain">Say you’re flying New York to Tokyo. When you land, local clocks say one time. Your body still thinks it’s New York. That gap is…</p>
+
+                <div class="home-trip-clocks">
+                    <div class="home-trip-offset" id="home-offset">about 11 hours</div>
+                    <div class="home-trip-clock">
+                        <div class="home-trip-clock-label">Body now</div>
+                        <div class="home-trip-clock-time" id="home-body-time">—</div>
+                        <div class="home-trip-clock-city" id="home-body-city">New York (JFK)</div>
+                    </div>
+                    <div class="home-trip-clock">
+                        <div class="home-trip-clock-label">Destination now</div>
+                        <div class="home-trip-clock-time" id="home-dest-time">—</div>
+                        <div class="home-trip-clock-city" id="home-dest-city">Tokyo (NRT)</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="top" class="how-it-works">
             <div class="container">
+                <h2 class="section-title">How the app works</h2>
+                <p class="section-subtitle">Choose your destination, follow the timed guide, and stimulate each point when it is active.</p>
                 <img src="assets/images/welcome.png?v=20260624021546" alt="JetLagPro welcome screen" class="section-header-image">
                 <div class="steps-container">
                     <div class="step">
@@ -401,41 +273,9 @@
                         </blockquote>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Download Section -->
-        <section id="download" class="download">
-            <div class="container">
-                <div class="download-content">
-                    <h2>Get JetLagPro</h2>
-
-                    <div class="download-grid">
-                        <article class="download-card">
-                            <h3 class="download-card-title">iPhone &amp; Apple Watch</h3>
-                            <ul class="download-card-features">
-                                <li>12 timed points on destination time</li>
-                                <li>Reminders every two hours</li>
-                                <li>Apple Watch companion</li>
-                            </ul>
-                            <a href="https://apps.apple.com/us/app/jetlagpro/id6748569048" class="store-badge-link" rel="noopener">
-                                <img src="assets/images/badge-app-store.svg" width="156" height="46" alt="Download on the App Store">
-                            </a>
-                        </article>
-
-                        <article class="download-card">
-                            <h3 class="download-card-title">Android</h3>
-                            <ul class="download-card-features">
-                                <li>12 timed points on destination time</li>
-                                <li>Reminders every two hours</li>
-                                <li>Trip history on your device</li>
-                            </ul>
-                            <a href="https://play.google.com/store/apps/details?id=com.jetlagpro.android" class="store-badge-link" rel="noopener">
-                                <img src="assets/images/badge-google-play.svg" width="156" height="46" alt="Get it on Google Play">
-                            </a>
-                        </article>
-                    </div>
-                </div>
+                <p class="testimonials-cta">
+                    <a href="#download" class="btn btn-primary">Get the App</a>
+                </p>
             </div>
         </section>
 
@@ -446,13 +286,14 @@
 
     <!-- Swipe Navigation Indicators -->
     <div class="swipe-indicators" id="swipeIndicators">
-        <div class="indicator active" data-section="top"></div>
-         <div class="indicator" data-section="features"></div>
+        <div class="indicator active" data-section="features"></div>
         <div class="indicator" data-section="download"></div>
+        <div class="indicator" data-section="see-it"></div>
+        <div class="indicator" data-section="top"></div>
     </div>
 
 
-    <script src="js/home-trip-strip.js?v=20260710030900"></script>
+    <script src="js/home-trip-strip.js?v=20260729022000"></script>
 
     <script>
         function scrollToDownloadSection(smooth) {

@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4PTS16JF06"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4PTS16JF06');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronoacupuncture Research Paper - JetLagPro</title>
     <meta name="description" content="Pre-registered observational study of chronoacupuncture for jet lag: methods, mobile platform, data integrity, and transparency for reviewers and participants.">
     <link rel="canonical" href="https://jetlagpro.com/research-paper.html">
     <script src="load-common-head.js?v=20260624021546"></script>
-    <link rel="stylesheet" href="styles.css?v=20260624021546">
+    <link rel="stylesheet" href="styles.css?v=20260728070100">
     <!-- Chart.js for live data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -622,7 +631,7 @@
 				<text x="238" y="293" text-anchor="middle" font-size="7" fill="#555">Destination phase</text>
 				<line x1="272" y1="290" x2="289" y2="290" stroke="#555" stroke-width="1.2" stroke-dasharray="4 3"/>
 			</svg>
-			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 1.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After eastward travel across time zones, endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle (solid vs dashed curves). The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time (blue bands). These repeated somatosensory cues may function as non-photic zeitgebers that facilitate circadian realignment.</p>
+			<p style="margin: 10px auto 0 auto; text-align: center; font-style: italic; color: #666;"><strong>Figure 1.</strong> Conceptual model of chronoacupuncture as a circadian timing cue during transmeridian travel. After eastward travel across time zones (illustrated for a +6 h eastward example), endogenous circadian phase remains aligned with the origin time zone, producing temporary misalignment with the destination light–dark cycle (solid vs dashed curves). The protocol schedules acupressure stimulation during meridian activity windows shifted to destination local time (blue bands). These repeated somatosensory cues may function as non-photic zeitgebers that facilitate circadian realignment.</p>
 		</div>
 
 		<h4>Practical Point Substitutions</h4>
@@ -630,7 +639,7 @@
 
 		<p>This pragmatic modification aligns with broader TCM channel theory, which posits that stimulation anywhere along a meridian during its horary window can influence that channel and its associated organ system.</p>
 
-		<p>Although timed acupressure has long been advocated by practitioners for jet lag, it has not been quantitatively evaluated in large cohorts of real-world travelers. This prospective observational cohort study was designed to evaluate whether a time-aligned acupressure protocol shows signals of efficacy in real-world travel conditions. The study is intended as hypothesis-generating, with the goal of informing future randomized trials. We examined whether adherence to the meridian-aligned, time-specific stimulation schedule was associated with reduced jet-lag symptom severity compared with minimal use and historical baseline data.</p>
+		<p>Although timed acupressure has long been advocated by practitioners for jet lag, it has not been quantitatively evaluated in large cohorts of real-world travelers. This prospective observational cohort study was designed to evaluate whether a time-aligned acupressure protocol shows signals of efficacy in real-world travel conditions. The study is intended as hypothesis-generating, with the goal of informing future randomized trials. We examined whether adherence to the meridian-aligned, time-specific stimulation schedule was associated with reduced jet-lag symptom severity compared with minimal use, with Waterhouse et al. as an external reference curve.</p>
 
 		<p>The present study evaluates whether adherence to a timed acupressure protocol aligned with destination-time meridian windows is associated with reduced jet-lag symptom severity among long-distance travelers. We hypothesized that greater adherence to scheduled stimulation windows would correlate with lower post-travel jet-lag severity, consistent with a dose-response relationship expected for circadian entrainment cues.</p>
 		
@@ -745,9 +754,9 @@
             </div>
         </div>
 
-		<p>After the guided session ends (when point 12 is completed, the user stops early, or ~24 hours elapse), the app logs session data to Firebase. One critical data element is the time-zone difference between origin and destination, calculated using IANA time-zone identifiers. The application automatically accounts for Daylight Saving Time when calculating offsets through the device’s native time-zone libraries. However, trips that begin or end during DST transitions may show a ±1-hour variance in reported time-zone counts, depending on when offsets are captured. Only sessions lasting more than 2 hours and with a credible timezone signal at session end are saved to the database; ambiguous or short sessions are intentionally excluded from the research dataset.</p>
+		<p>After the guided session ends (when point 12 is completed, the user stops early, or ~24 hours elapse), the app logs session data to Firebase. One critical data element is the time-zone difference between origin and destination, calculated using IANA time-zone identifiers. The application automatically accounts for Daylight Saving Time when calculating offsets through the device’s native time-zone libraries. However, trips that begin or end during DST transitions may show a ±1-hour variance in reported time-zone counts, depending on when offsets are captured. Only sessions lasting more than 2 hours, with at least 2 points marked, and with a credible timezone signal at session end are saved to the database; ambiguous or short sessions are intentionally excluded from the research dataset.</p>
 
-		<p>A survey reminder notification is scheduled at trip start or end, targeting 2 days after the guided session ends, to prompt the traveler to complete the in-app survey. The 2-day interval was chosen to minimize recall bias. The survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1–5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
+		<p>After Share, a survey reminder is scheduled for 2 PM local on the calendar day reached about 2 days after the guided session ends (about 1 day after a 24-hour timeout). The interval was chosen to minimize recall bias. The survey is a streamlined assessment based on the Liverpool Jet Lag Questionnaire's core symptom domains (listed below), using 1–5 severity ranges adapted for real-world mobile use as a single post-travel evaluation.</p>
 
 <h4>Outcomes</h4>
 		<p>The post-travel survey is a streamlined, single post-travel assessment based on the Liverpool Jet Lag Questionnaire’s core symptom domains, using 1–5 severity ranges adapted for real-world mobile use. It retains the LJLQ’s core validated domains—sleep quality/disturbance, daytime fatigue, concentration difficulties, irritability/motivation, and gastrointestinal function—while omitting less central items (e.g., detailed appetite or bowel-frequency changes) to minimize participant burden.</p>
@@ -827,7 +836,7 @@
 
 	<p>For secondary outcomes, including individual symptom domains and anticipated-versus-observed symptom differences, we controlled the false discovery rate at 5% using the Benjamini-Hochberg procedure. All statistical tests were two-sided with α = 0.05. Effect sizes (e.g., Cohen’s d) were reported alongside regression estimates to facilitate clinical interpretation.</p>
 
-	<p>Sample size and power. Assuming a medium effect size (Cohen’s d ≈ 0.5) for differences in composite severity between high- and minimal-adherence groups within a given time-zone stratum, a two-sided α of 0.05 and 80% power require approximately 128 participants per group. To allow for multiple adherence categories and covariate adjustment, we targeted at least 300–400 complete trips per major subgroup (e.g., high versus minimal adherence within the 6–8 and ≥9 time-zone bands).</p>
+	<p>Sample size and power. Assuming a medium effect size (Cohen’s d ≈ 0.5) for differences in composite severity between high- and minimal-adherence groups within a given time-zone stratum, a two-sided α of 0.05 and 80% power require approximately 64 participants per group (~128 total). To allow for multiple adherence categories and covariate adjustment, we targeted at least 300–400 complete trips per major subgroup (e.g., high versus minimal adherence within the 6–8 and ≥9 time-zone bands).</p>
 
 	<p>Analyses were conducted in R. The analysis script and an export pipeline used to produce the trip-level CSV from Firestore are available on the project website (jetlagpro.com) for independent reproduction; the same pipeline was used to generate regression tables, effect sizes, and the severity-by-time-zone-and-adherence chart.</p>
 
@@ -866,7 +875,7 @@
 				</div>
 			</div>
 			<p style="margin-top: 15px; font-size: 14px; color: #666;">
-				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error. Only Share-gated, IRB-consented trips enter the study dataset; pre-consent beta surveys are excluded.
+				<strong>Chart Legend:</strong> Red (2–4 points) = minimal meaningful stimulation, Blue (5–7 points) = good adherence, Green (8–12 points) = exceptional adherence. Trips with 0–1 points are excluded from these lines (non-use). The dashed gray line is the Waterhouse-derived reference curve. Error bars show ±1 standard error. Study dataset: Share-gated consented trips, plus earlier pre-consent surveys from travelers who later Shared; pre-consent-only travelers remain excluded.
 			</p>
 		</div>
 		
@@ -875,7 +884,7 @@
 		<h2>Preliminary Discussion</h2>
 		<p>The proposed mechanism involves afferent pathways from somatosensory stimulation potentially influencing circadian physiology through neurohumoral pathways previously described in acupuncture research. We did not measure circadian phase or related biomarkers; proposed mechanisms remain speculative.</p>
 		
-		<p>This paper presents a prospective observational cohort study of chronoacupuncture for jet lag in <span id="surveyCountDiscussion">[loading...]</span> long-distance travelers. Participants used the JetLagPro mobile app to self-administer acupressure at points aligned with destination time zones and completed a post-travel jet lag assessment.</p>
+		<p>This paper reports interim data from an ongoing prospective observational cohort study of chronoacupuncture for jet lag (<span id="surveyCountDiscussion">[loading...]</span> eligible survey responses / trips). Participants used the JetLagPro mobile app to self-administer acupressure at points aligned with destination time zones and completed a post-travel jet lag assessment.</p>
      
 <h4>Confounding variables</h4>
 
@@ -936,7 +945,7 @@
             <li>Panda, S. (2022). Foundations of circadian medicine. PLoS Biology, 20(3), e3001567. <a href="https://doi.org/10.1371/journal.pbio.3001567" target="_blank">https://doi.org/10.1371/journal.pbio.3001567</a><br>
             <em>Comprehensive essay outlining how circadian medicine can exploit mechanisms of circadian physiology and clock-disease interactions for clinical diagnosis, treatment, and prevention, establishing a framework for timing-based medical interventions.</em></li>
             
-            <li>Honma, S., & Honma, K.I. (2019). The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker. Biology, 8(1), 13. <a href="https://doi.org/10.3390/biology8010013" target="_blank">https://doi.org/10.3390/biology8010013</a><br>
+            <li>Hastings, M. H., Maywood, E. S., & Brancaccio, M. (2019). The mammalian circadian timing system and the suprachiasmatic nucleus as its pacemaker. Biology, 8(1), 13. <a href="https://doi.org/10.3390/biology8010013" target="_blank">https://doi.org/10.3390/biology8010013</a><br>
             <em>Comprehensive review of the suprachiasmatic nucleus as the central circadian pacemaker, covering molecular clockwork, neuronal networks, and intercellular communication mechanisms that generate and maintain mammalian circadian rhythms.</em></li>
             
             <li>Paschos, G.K., & FitzGerald, G.A. (2010). Circadian clocks and vascular function. Circulation Research, 106(5), 833-841. <a href="https://doi.org/10.1161/CIRCRESAHA.109.211706" target="_blank">https://doi.org/10.1161/CIRCRESAHA.109.211706</a><br>
@@ -957,7 +966,7 @@
             <li>Amaro, J. (2001). Time Travel: Contemporary Applications for Jet Lag from Ancient Principles. Acupuncture Today, October 2001. <a href="https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles" target="_blank">https://acupuncturetoday.com/article/27861-time-travel-contemporary-applications-for-jet-lag-from-ancient-principles</a><br>
             <em>Practical guide detailing the systematic application of horary points from Traditional Chinese Medicine for jet lag treatment, providing specific protocols for stimulating meridian points based on destination time zones during flight.</em></li>
   
-			<li>Huangdi Neijing (Yellow Emperor's Inner Canon). [Classical text, no online link available]<br>
+			<li>Huangdi Neijing (Yellow Emperor's Inner Canon), Lingshu, Wei Qi Xing. Chinese Text Project. <a href="https://ctext.org/huangdi-neijing/wei-qi-xing" target="_blank">https://ctext.org/huangdi-neijing/wei-qi-xing</a><br>
             <em>Foundational ancient Chinese medical text establishing the theoretical basis for the Chinese Organ Clock, horary point theory, and the circulation of qi through twelve meridians over 24-hour cycles in Traditional Chinese Medicine.</em></li>
             
             <li>Wu, J., & Zhao, Z. (2024). Acupuncture in circadian rhythm sleep–wake disorders and its potential neurochemical mechanisms. Frontiers in Neuroscience, 18, 1346635. <a href="https://doi.org/10.3389/fnins.2024.1346635" target="_blank">https://doi.org/10.3389/fnins.2024.1346635</a><br>
@@ -1079,8 +1088,8 @@
                 const allData = researchData;
                 
                 // Filter using centralized validation logic (DRY)
-                // Excludes: test trips, invalid HMAC signatures, developer sessions, pre-consent beta
-                // Includes: only completed surveys with Share-gated research consent
+                // Excludes: test trips, invalid HMAC, developer sessions, pre-consent-only travelers
+                // Includes: Share-gated consent + earlier pre-consent from travelers who later Shared
                 const surveyData = TripValidator.filterForAnalysis(allData, {
                     requireSurvey: true,
                     requireStudyConsent: true,
@@ -1100,7 +1109,7 @@
                 if (surveyData.length === 0) {
                     const dataPointEl = document.getElementById('dataPointCount');
                     if (dataPointEl) dataPointEl.textContent = '0';
-                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No study-eligible surveys yet.</p><p>Pre-consent beta data are excluded from this chart per protocol. Enrollment resumes after IRB approval.</p></div>';
+                    container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;"><p>No study-eligible surveys yet.</p></div>';
                     return;
                 }
                 
@@ -1621,7 +1630,7 @@
     </script>
 
     <!-- Centralized Components (Header/Footer) -->
-    <script src="js/components.js?v=20260709233000"></script>
+    <script src="js/components.js?v=20260728070100"></script>
     
     <!-- Google Translate (Centralized) -->
     <script src="js/translate.js?v=20260624021546"></script>

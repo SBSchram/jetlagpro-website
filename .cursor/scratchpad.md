@@ -1,5 +1,17 @@
 # JetLagPro Website - Active Project Tracking
 
+## Latest Executor Checkpoint (2026-08-16): trip write keys on create
+
+- `tripCompletionCreateAllowed` requires signed id **and** `mobileTripWriteKeys` (same list as survey-open update). Extra iOS fields 403 on first Share.
+- `npm run test:firestore-rules` compares sibling `JetLagProject` `FirebaseService.swift` keys to the allowlists.
+- Needs a **second** production deploy after the extras allowlist deploy.
+
+## Latest Executor Checkpoint (2026-08-16): iOS trip-update allowlist
+
+- `firestore.rules` `mobileTripWriteKeys()` now includes iOS extras that create already accepted: `surveyStatus`, `researchConsentGranted`, `point1Timezone`–`point12Timezone`.
+- Rules tests cover a survey-open update that sets those fields.
+- Deployed to `jetlagpro-research` (Steven, 2026-08-16). Git commit follows.
+
 ## Background and Motivation
 
 **CURRENT TASK:** JetLagPro Git Branch Sync – Safely Update Local `main` with Remote Changes (Planner Mode)
@@ -3099,3 +3111,10 @@ The archive contains:
 
 **Last Updated:** 2025-11-27
 
+
+## Android demand CTAs (2026-07-28)
+
+**Status:** Implemented locally, not committed/pushed yet.
+**Goal:** Android browsers convert to Google Play, not site PWA.
+**Done:** `js/store-cta.js`; homepage sticky Play CTA; download card reorder; removed PWA install/notification prompt path; blog dual store buttons; demo banner dual store links; research flyer/call-for-research remain App Store only.
+**Verify after deploy:** Android phone → jetlagpro.com → sticky + nav → Play; `/?source=flyer` still App Store.

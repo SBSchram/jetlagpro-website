@@ -32,7 +32,8 @@ The following exclusions remove test, developer, or non-study data:
 - Test trips: Same origin/destination timezone
 - Incomplete surveys: Missing symptom data
 - Invalid HMAC signatures
-- Pre-consent beta (Phase A): survey complete but researchConsentGranted is not true
+- Pre-consent-only travelers. If the same traveler later Shared, their earlier
+  pre-consent surveys are included (matches the live dashboard).
 
 POINT SET (CRAMPED VS STANDARD):
 The app added a "cramped seating" point set as the default on 2026-02-04. Logging of
@@ -126,6 +127,14 @@ def get_origin_timezone(trip: Dict):
     return trip.get('originTimezone') or trip.get('originTimeZone')
 
 
+def traveler_key(trip: Dict) -> str:
+    """Device prefix from tripId (same as TripValidator.travelerKey)."""
+    trip_id = trip.get('tripId') or ''
+    if not isinstance(trip_id, str) or not trip_id:
+        return ''
+    return re.split(r'[-_]', trip_id)[0]
+
+
 def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     """
     Filter trips for analysis.
@@ -135,7 +144,8 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     - Test trips: timezonesCount=0 or same timezone without survey
     - Incomplete surveys: Missing symptom severity data
     - Invalid HMAC: Signature mismatch (if signature present)
-    - Pre-consent beta: surveyCompleted without researchConsentGranted
+    - Pre-consent-only travelers (no Share on any trip). Earlier pre-consent
+      surveys from a traveler who later Shared are kept.
     
     TIMEZONE VALIDATION RULES:
     1. timezonesCount=0: Test trip
@@ -145,7 +155,7 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
     
     Returns list of valid trips.
     """
-    valid_trips = []
+    candidates = []
     
     # Developer device IDs to exclude (test sessions)
     # Matches TripValidator.DEVELOPER_DEVICE_IDS in assets/js/trip-validator.js
@@ -216,21 +226,32 @@ def filter_valid_trips(trips: List[Dict]) -> List[Dict]:
         # Match live dashboard logic: survey.surveyCompleted === true
         if not trip.get('surveyCompleted', False):
             continue
-
-        # Study analysis: Share-gated research consent (excludes Phase A pre-consent beta)
-        if trip.get('researchConsentGranted') is not True:
-            continue
         
         # Skip if missing trip ID (data integrity issue)
         if not trip_id:
             continue
         
         # Must have points completed count
-        # Note: Field is 'pointsCompleted' in Firestore, not 'pointsCompleted'
         if trip.get('pointsCompleted') is None:
             continue
         
-        valid_trips.append(trip)
+        candidates.append(trip)
+
+    consented_keys = set()
+    for trip in candidates:
+        if trip.get('researchConsentGranted') is True:
+            key = traveler_key(trip)
+            if key:
+                consented_keys.add(key)
+
+    valid_trips = []
+    for trip in candidates:
+        if trip.get('researchConsentGranted') is True:
+            valid_trips.append(trip)
+        else:
+            key = traveler_key(trip)
+            if key and key in consented_keys:
+                valid_trips.append(trip)
     
     print(f"  Filtered to {len(valid_trips)} valid trips for analysis")
     print(f"  Excluded: {len(trips) - len(valid_trips)} test/invalid trips")

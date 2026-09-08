@@ -540,6 +540,13 @@
             "timezone": "America/Vancouver"
         },
         {
+            "code": "YUL",
+            "name": "Montréal-Trudeau International Airport",
+            "city": "Montreal",
+            "country": "Canada",
+            "timezone": "America/Toronto"
+        },
+        {
             "code": "AMS",
             "name": "Amsterdam Airport Schiphol",
             "city": "Amsterdam",

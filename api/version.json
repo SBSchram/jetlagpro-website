@@ -1,14 +1,14 @@
 {
   "ios": {
-    "version": "1.1",
+    "version": "1.2.6",
     "build": "1",
     "minimum_version": "1.0.0",
     "minimum_version_reason": null,
     "testflight_url": "https://testflight.apple.com/join/YZc7jzJT",
     "app_store_url": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
     "play_store_url": "https://play.google.com/store/apps/details?id=com.jetlagpro.android",
-    "release_notes": "Improved point reminder notifications on iPhone and Apple Watch. Clearer research consent formatting. Research consent updated to current IRB-approved text.",
-    "last_updated": "2026-06-29"
+    "release_notes": "Destinations stay usable after Not now, with a later reminder to Share a prior trip. Accent-insensitive airport search (Zurich, Cancun, Sao Paulo). Clearer survey path when a trip is on your phone but not yet on research servers (Share or update).",
+    "last_updated": "2026-09-04"
   },
   "android": {
     "version": "1.0.3",

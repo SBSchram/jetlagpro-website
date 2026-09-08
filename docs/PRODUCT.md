@@ -1,6 +1,6 @@
 # JetLagPro — Product facts (for humans and AI agents)
 
-**Last updated:** 2026-07-09  
+**Last updated:** 2026-07-28  
 **Canonical URL:** https://jetlagpro.com/docs/PRODUCT.md  
 **Short index:** https://jetlagpro.com/llms.txt
 
@@ -53,10 +53,12 @@ Printed research materials keep legacy URLs; the site redirects without reprinti
 |-----|----------|
 | `https://jetlagpro.com/?source=flyer` | Redirect → App Store (flyer QR) |
 | `https://jetlagpro.com/call-for-research.html` | Redirect → App Store |
-| `https://jetlagpro.com/#download` | Homepage download section — side-by-side iPhone and Android cards with store badges |
+| `https://jetlagpro.com/#download` | Homepage download section — iPhone and Android store badges; on Android browsers, Google Play is primary (card order + sticky CTA). Research flyer URLs stay App Store only. |
 | `https://jetlagpro.com/` | Full homepage |
 
 `api/version.json`: Android `version` **1.0.3**, `build` **10**, `monetization_enabled` **false**; iOS `version` **1.1**, `minimum_version` **1.0.0**.
+
+**Product CTA note (July 2026):** Site PWA “Install app” / browser-notification prompts are not the Android product path. Android visitors are steered to Google Play. The legacy `/demo/` preview remains secondary.
 
 ---
 
@@ -115,5 +117,6 @@ Printed research materials keep legacy URLs; the site redirects without reprinti
 
 ## Changelog for this document
 
+- **2026-07-28:** Android product CTAs: Google Play primary on Android browsers; research redirects remain App Store only; demo is secondary.
 - **2026-06-29:** Public research launch — App Store 1.1, recruitment redirects, version.json 1.1
 - **2026-05-25:** Created for AI-agent readability; removed legacy web-survey references; clarified iOS primary / Android RN roadmap.

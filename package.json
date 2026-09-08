@@ -7,7 +7,7 @@
     "export-paper": "node scripts/export-research-paper.js",
     "bump-cache": "node scripts/bump-cache-version.cjs",
     "seed:dev-device-ids": "node scripts/seed-developer-device-ids.cjs",
-    "test:firestore-rules": "firebase emulators:exec --only firestore \"node scripts/firestore-rules-security-test.cjs\""
+    "test:firestore-rules": "node scripts/check_ios_firestore_write_keys.cjs && firebase emulators:exec --only firestore \"node scripts/firestore-rules-security-test.cjs\""
   },
   "dependencies": {
     "playwright": "^1.49.0"
