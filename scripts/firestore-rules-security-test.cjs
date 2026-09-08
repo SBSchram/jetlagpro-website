@@ -128,6 +128,39 @@ async function main() {
   )
   console.log('  ok\n')
 
+  const usageId = '11111111-2222-3333-4444-555555555555'
+  console.log('[Rules] iosUsageEvents valid create')
+  await assertSucceeds(
+    setDoc(doc(db, 'iosUsageEvents', usageId), {
+      eventId: usageId,
+      eventName: 'app_open',
+      installId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      platform: 'ios',
+      appVersion: '1.2.5',
+      createdAt: '2026-09-08T12:00:00Z',
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents unknown eventName → expect fail')
+  await assertFails(
+    setDoc(doc(db, 'iosUsageEvents', '66666666-7777-8888-9999-aaaaaaaaaaaa'), {
+      eventId: '66666666-7777-8888-9999-aaaaaaaaaaaa',
+      eventName: 'evil_event',
+      installId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      platform: 'ios',
+      appVersion: '1.2.5',
+      createdAt: '2026-09-08T12:00:00Z',
+    }),
+  )
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents client update → expect fail')
+  await assertFails(
+    updateDoc(doc(db, 'iosUsageEvents', usageId), { appVersion: '9.9.9' }),
+  )
+  console.log('  ok\n')
+
   await testEnv.cleanup()
 
   console.log('All automated Firestore rules checks passed.')

@@ -97,5 +97,36 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+
+    // Product usage funnel (iOS) — separate from research tripCompletions. Create-only; no client reads.
+    // App: ProductUsageAnalytics.swift. Deploy these rules before shipping a build that writes here.
+    function iosUsageEventKeys() {
+      return [
+        'eventId', 'eventName', 'installId', 'platform', 'appVersion', 'createdAt',
+        'destinationCode', 'originCode', 'outcome', 'pointsBucket', 'durationBucket',
+        'completionMethod'
+      ];
+    }
+
+    function iosUsageEventCreateOk(eid) {
+      return request.resource.data.keys().hasOnly(iosUsageEventKeys())
+        && request.resource.data.keys().hasAll([
+          'eventId', 'eventName', 'installId', 'platform', 'appVersion', 'createdAt'
+        ])
+        && request.resource.data.eventId == eid
+        && request.resource.data.platform == 'ios'
+        && request.resource.data.eventName in [
+          'app_open', 'destination_picked', 'guide_ended', 'research_share', 'research_not_now'
+        ]
+        && request.resource.data.installId is string
+        && request.resource.data.installId.size() > 0
+        && request.resource.data.appVersion is string
+        && request.resource.data.createdAt is string;
+    }
+
+    match /iosUsageEvents/{eventId} {
+      allow create: if iosUsageEventCreateOk(eventId);
+      allow read, update, delete: if false;
+    }
   }
 }
