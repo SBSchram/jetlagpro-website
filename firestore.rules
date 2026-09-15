@@ -115,7 +115,7 @@ service cloud.firestore {
       return [
         'sessionId', 'deviceId', 'platform', 'appVersion', 'openedAt', 'events', 'lastEventName',
         'destinationCode', 'originCode', 'outcome', 'pointsBucket', 'durationBucket',
-        'completionMethod', 'researchDecision'
+        'completionMethod', 'researchDecision', 'consentContext'
       ];
     }
 

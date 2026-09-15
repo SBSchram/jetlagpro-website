@@ -186,11 +186,15 @@ async function main() {
   console.log('[Rules] iosUsageEvents append update')
   await assertSucceeds(
     updateDoc(doc(db, 'iosUsageEvents', usageId), {
-      lastEventName: 'destination_picked',
+      lastEventName: 'consent_shown',
       destinationCode: 'JFK',
+      consentContext: 'post_trip',
+      pointsBucket: '2-5',
       events: [
         { eventName: 'app_open', at: '2026-09-08T12:00:00Z' },
         { eventName: 'destination_picked', at: '2026-09-08T12:01:00Z', destinationCode: 'JFK' },
+        { eventName: 'points_marked', at: '2026-09-08T12:02:00Z', pointsBucket: '1' },
+        { eventName: 'consent_shown', at: '2026-09-08T12:03:00Z', consentContext: 'post_trip' },
       ],
     }),
   )
@@ -212,7 +216,9 @@ async function main() {
       events: [
         { eventName: 'app_open', at: '2026-09-08T12:00:00Z' },
         { eventName: 'destination_picked', at: '2026-09-08T12:01:00Z', destinationCode: 'JFK' },
-        { eventName: 'guide_ended', at: '2026-09-08T12:02:00Z' },
+        { eventName: 'points_marked', at: '2026-09-08T12:02:00Z', pointsBucket: '1' },
+        { eventName: 'consent_shown', at: '2026-09-08T12:03:00Z', consentContext: 'post_trip' },
+        { eventName: 'guide_ended', at: '2026-09-08T12:04:00Z' },
       ],
       lastEventName: 'guide_ended',
     }),
