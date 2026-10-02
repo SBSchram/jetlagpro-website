@@ -17,7 +17,7 @@ JetLagPro is a native **iOS + watchOS** app that uses timed acupressure (chronoa
 
 - **In-app survey only** (no public web survey)
 - Anonymous Firebase uploads with HMAC trip IDs and GCS audit logging
-- Pre-registered at OSF: https://osf.io/jm4w7
+- Pre-registered at OSF: https://osf.io/c3zye
 
 ### For AI agents
 

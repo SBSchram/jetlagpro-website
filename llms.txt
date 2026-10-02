@@ -38,7 +38,7 @@ Native mobile app that schedules reminders for a 12-point acupressure protocol b
 
 ## Research & data
 
-- Study design: Prospective observational cohort; pre-registered at OSF https://osf.io/jm4w7
+- Study design: Prospective observational cohort; pre-registered at OSF https://osf.io/c3zye
 - Survey: In-app only (7 sliders based on Liverpool Jet Lag Questionnaire core domains). There is no public web survey.
 - Data: Anonymous trip and survey uploads to Firebase Firestore; optional research consent in app
 - Integrity: HMAC-signed trip IDs; immutable GCS audit log (see DATA-INTEGRITY-IMPLEMENTATION.md)

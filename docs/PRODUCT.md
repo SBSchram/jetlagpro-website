@@ -67,7 +67,7 @@ Printed research materials keep legacy URLs; the site redirects without reprinti
 | Item | Detail |
 |------|--------|
 | Design | Prospective observational cohort |
-| Pre-registration | OSF https://osf.io/jm4w7 |
+| Pre-registration | OSF https://osf.io/c3zye |
 | Outcome instrument | Streamlined post-travel survey based on **Liverpool Jet Lag Questionnaire** core domains (7 in-app sliders + optional comment) |
 | Survey delivery | **In-app only** — fires ~1–2 days after trip end; no Safari handoff |
 | Consent | In-app research consent card; uploads optional until granted |
@@ -104,7 +104,7 @@ Printed research materials keep legacy URLs; the site redirects without reprinti
 | Terms | https://jetlagpro.com/terms.html |
 | Data integrity doc | https://jetlagpro.com/DATA-INTEGRITY-IMPLEMENTATION.md |
 | Interactive demo | https://jetlagpro.com/demo/ |
-| OSF registration | https://osf.io/jm4w7 |
+| OSF registration | https://osf.io/c3zye |
 
 ---
 
