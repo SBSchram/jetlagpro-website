@@ -2,6 +2,11 @@
 // Reuses the same data source as the demo to ensure consistency
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Cards are pre-rendered in horary-points.html so crawlers see them; only build when the grid is empty.
+    const prerendered = document.querySelector('.points-grid .point-card');
+    if (prerendered) {
+        return;
+    }
     try {
         // Load points data from the same source as demo
         const response = await fetch('data/points.json');
