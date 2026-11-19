@@ -186,15 +186,18 @@ async function loadCharts() {
   }
 
   let androidSummary = null
-  try {
-    if (!android.auth().currentUser) {
-      await android.auth().signInAnonymously()
-    }
-    const snap = await android.firestore().collectionGroup('trips').get()
-    androidSummary = summarizeAndroid(snap.docs)
-  } catch (error) {
+  const androidUser = android.auth().currentUser
+  if (!androidUser || androidUser.email !== READER_EMAIL || !androidUser.emailVerified) {
     androidError.hidden = false
-    androidError.textContent = 'Android records did not load. ' + (error && error.message ? error.message : '')
+    androidError.textContent = 'Android records need their own sign-in email. Open that link on this computer, then tap Refresh.'
+  } else {
+    try {
+      const snap = await android.firestore().collectionGroup('trips').get()
+      androidSummary = summarizeAndroid(snap.docs)
+    } catch (error) {
+      androidError.hidden = false
+      androidError.textContent = 'Android records did not load. ' + (error && error.message ? error.message : '')
+    }
   }
 
   if (iosSummary) {
@@ -218,13 +221,31 @@ async function loadCharts() {
   setStatus('Updated ' + new Date().toLocaleString())
 }
 
+function continueUrl(from) {
+  return window.location.origin + window.location.pathname + '?from=' + from
+}
+
+function isAnalyst(user) {
+  return Boolean(user && user.email === READER_EMAIL && user.emailVerified)
+}
+
+async function sendProjectLink(app, from) {
+  await app.auth().sendSignInLinkToEmail(READER_EMAIL, {
+    url: continueUrl(from),
+    handleCodeInApp: true,
+  })
+  window.localStorage.setItem(EMAIL_KEY, READER_EMAIL)
+}
+
 async function finishEmailLink() {
-  if (!research.auth().isSignInWithEmailLink(window.location.href)) return false
+  const href = window.location.href
+  const from = new URL(href).searchParams.get('from')
+  if (from !== 'research' && from !== 'android') return false
+  const app = from === 'android' ? android : research
+  if (!app.auth().isSignInWithEmailLink(href)) return false
   setStatus('Finishing sign-in…')
-  const email = window.localStorage.getItem(EMAIL_KEY) || READER_EMAIL
-  await research.auth().signInWithEmailLink(email, window.location.href)
-  const clean = window.location.origin + window.location.pathname
-  window.history.replaceState({}, document.title, clean)
+  await app.auth().signInWithEmailLink(READER_EMAIL, href)
+  window.history.replaceState({}, document.title, window.location.origin + window.location.pathname)
   return true
 }
 
@@ -232,13 +253,11 @@ async function sendLink() {
   $('signin-error').hidden = true
   $('send-link').disabled = true
   try {
-    const continueUrl = window.location.origin + window.location.pathname
-    await research.auth().sendSignInLinkToEmail(READER_EMAIL, {
-      url: continueUrl,
-      handleCodeInApp: true,
-    })
-    window.localStorage.setItem(EMAIL_KEY, READER_EMAIL)
-    setStatus('Check ' + READER_EMAIL + '. Open the message on this computer and tap the link.')
+    const jobs = []
+    if (!isAnalyst(research.auth().currentUser)) jobs.push(sendProjectLink(research, 'research'))
+    if (!isAnalyst(android.auth().currentUser)) jobs.push(sendProjectLink(android, 'android'))
+    await Promise.all(jobs)
+    setStatus('Check ' + READER_EMAIL + '. Open each message on this computer and tap its link.')
   } catch (error) {
     $('signin-error').hidden = false
     $('signin-error').textContent = error && error.message ? error.message : 'Could not send the email.'
@@ -247,39 +266,50 @@ async function sendLink() {
   }
 }
 
-function showSignedIn(user) {
-  const allowed = user && user.email === READER_EMAIL && user.emailVerified
-  show('gate', !allowed)
-  show('signed-in', Boolean(allowed))
-  if (!allowed && user) {
-    $('signin-error').hidden = false
-    $('signin-error').textContent = 'Signed in as ' + (user.email || 'another account') + '. This page only opens for ' + READER_EMAIL + '.'
-    research.auth().signOut()
+async function refreshScreen() {
+  const researchOk = isAnalyst(research.auth().currentUser)
+  const androidOk = isAnalyst(android.auth().currentUser)
+  show('gate', !researchOk)
+  show('signed-in', researchOk)
+  $('send-android').hidden = !researchOk || androidOk
+  if (!researchOk) {
+    show('charts', false)
+    return
   }
-  return allowed
+  await loadCharts()
+  if (!androidOk) {
+    setStatus('iPhone is ready. Tap Email the Android sign-in link, then open that message on this computer.')
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   $('send-link').addEventListener('click', sendLink)
-  $('refresh').addEventListener('click', loadCharts)
+  $('send-android').addEventListener('click', async function () {
+    $('signin-error').hidden = true
+    $('send-android').disabled = true
+    try {
+      await sendProjectLink(android, 'android')
+      setStatus('Android sign-in email sent. Open it on this computer.')
+    } catch (error) {
+      $('signin-error').hidden = false
+      $('signin-error').textContent = error && error.message ? error.message : 'Could not send the Android email.'
+    } finally {
+      $('send-android').disabled = false
+    }
+  })
+  $('refresh').addEventListener('click', refreshScreen)
   $('sign-out').addEventListener('click', function () {
     research.auth().signOut()
+    android.auth().signOut()
     show('charts', false)
     setStatus('')
   })
 
-  research.auth().onAuthStateChanged(async function (user) {
-    try {
-      if (!user && research.auth().isSignInWithEmailLink(window.location.href)) {
-        await finishEmailLink()
-        return
-      }
-    } catch (error) {
-      $('signin-error').hidden = false
-      $('signin-error').textContent = error && error.message ? error.message : 'The sign-in link did not work. Send a new one.'
-    }
-    if (showSignedIn(user)) {
-      loadCharts()
-    }
+  finishEmailLink().catch(function (error) {
+    $('signin-error').hidden = false
+    $('signin-error').textContent = error && error.message ? error.message : 'The sign-in link did not work. Send a new one.'
+  }).then(function () {
+    research.auth().onAuthStateChanged(refreshScreen)
+    android.auth().onAuthStateChanged(refreshScreen)
   })
 })
