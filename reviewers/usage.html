@@ -51,6 +51,11 @@
         .bar-track { background: #e5e7eb; border-radius: 6px; height: 14px; }
         .bar-fill { background: #2563eb; height: 14px; border-radius: 6px; }
         .bar-value { text-align: right; font-variant-numeric: tabular-nums; }
+        table.weeks { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.92rem; }
+        table.weeks th { text-align: left; font-weight: 600; padding: 6px 8px 6px 0; color: #4b5563; }
+        table.weeks td { padding: 5px 8px 5px 0; border-top: 1px solid #e5e7eb; vertical-align: middle; }
+        table.weeks td.num { text-align: right; font-variant-numeric: tabular-nums; width: 72px; }
+        .cell-bar { display: inline-block; height: 10px; border-radius: 5px; margin-right: 6px; vertical-align: middle; }
         @media (max-width: 640px) {
             .bar-row { grid-template-columns: 1fr 40px; }
             .bar-track { grid-column: 1 / -1; }
@@ -83,6 +88,9 @@
                 <p id="ios-caption" class="note"></p>
                 <p id="ios-error" class="error" hidden></p>
                 <div id="ios-bars"></div>
+                <h2>iPhone by week</h2>
+                <p id="ios-week-caption" class="note"></p>
+                <div id="ios-weeks"></div>
             </div>
             <div class="panel">
                 <h2>Android trips</h2>
@@ -92,12 +100,15 @@
                 <div id="android-end-bars"></div>
                 <h2>Points marked</h2>
                 <div id="android-point-bars"></div>
+                <h2>Android by week</h2>
+                <p id="android-week-caption" class="note"></p>
+                <div id="android-weeks"></div>
             </div>
         </section>
     </main>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="assets/js/usage.js?v=20261119063000"></script>
+    <script src="assets/js/usage.js?v=20261119064000"></script>
 </body>
 </html>

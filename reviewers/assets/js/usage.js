@@ -110,12 +110,112 @@ function renderBars(targetId, rows) {
   })
 }
 
+function asDate(value) {
+  if (!value) return null
+  if (value.toDate) {
+    const d = value.toDate()
+    return isNaN(d.getTime()) ? null : d
+  }
+  const d = new Date(value)
+  return isNaN(d.getTime()) ? null : d
+}
+
+function weekStartKey(value) {
+  const d = asDate(value)
+  if (!d) return ''
+  const utc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))
+  const day = utc.getUTCDay() || 7
+  utc.setUTCDate(utc.getUTCDate() - day + 1)
+  return utc.toISOString().slice(0, 10)
+}
+
+function weekLabel(key) {
+  const d = new Date(key + 'T00:00:00Z')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+}
+
+function weeksThroughToday(keys) {
+  const real = keys.filter(Boolean).sort()
+  if (!real.length) return []
+  const end = weekStartKey(new Date())
+  const start = new Date(real[0] + 'T00:00:00Z')
+  const last = new Date((end || real[real.length - 1]) + 'T00:00:00Z')
+  const out = []
+  for (let cursor = start; cursor <= last; cursor.setUTCDate(cursor.getUTCDate() + 7)) {
+    out.push(cursor.toISOString().slice(0, 10))
+  }
+  return out
+}
+
+function sessionOpenedAt(data, id) {
+  if (data.openedAt) return data.openedAt
+  const parts = String(id || '').split('-')
+  if (parts[1] && /^\d{6}$/.test(parts[1])) {
+    return '20' + parts[1].slice(0, 2) + '-' + parts[1].slice(2, 4) + '-' + parts[1].slice(4, 6) + 'T00:00:00Z'
+  }
+  return ''
+}
+
+function renderWeekTable(targetId, columns, rows) {
+  const host = $(targetId)
+  host.replaceChildren()
+  if (!rows.length) {
+    const empty = document.createElement('p')
+    empty.className = 'note'
+    empty.textContent = 'No dated records yet.'
+    host.appendChild(empty)
+    return
+  }
+  const maxByKey = {}
+  columns.forEach(function (column) {
+    maxByKey[column.key] = rows.reduce(function (best, row) {
+      return Math.max(best, row[column.key] || 0)
+    }, 0)
+  })
+  const table = document.createElement('table')
+  table.className = 'weeks'
+  const head = document.createElement('tr')
+  const weekTh = document.createElement('th')
+  weekTh.textContent = 'Week of'
+  head.appendChild(weekTh)
+  columns.forEach(function (column) {
+    const th = document.createElement('th')
+    th.textContent = column.label
+    head.appendChild(th)
+  })
+  table.appendChild(head)
+  rows.forEach(function (row) {
+    const tr = document.createElement('tr')
+    const week = document.createElement('td')
+    week.textContent = weekLabel(row.week)
+    tr.appendChild(week)
+    columns.forEach(function (column) {
+      const td = document.createElement('td')
+      td.className = 'num'
+      const count = row[column.key] || 0
+      const bar = document.createElement('span')
+      bar.className = 'cell-bar'
+      bar.style.background = column.color
+      const max = maxByKey[column.key]
+      bar.style.width = max > 0 ? Math.max(count ? 4 : 0, Math.round((count / max) * 48)) + 'px' : '0px'
+      const text = document.createElement('span')
+      text.textContent = String(count)
+      td.append(bar, text)
+      tr.appendChild(td)
+    })
+    table.appendChild(tr)
+  })
+  host.appendChild(table)
+}
+
 function summarizeIos(docs) {
   const devices = new Set()
   const byEvent = {}
   FUNNEL.forEach(function (pair) {
     byEvent[pair[0]] = new Set()
   })
+  const weekDevices = {}
+  const IOS_WEEK_EVENTS = ['app_open', 'start_look_around', 'start_trip', 'destination_picked']
   docs.forEach(function (docSnap) {
     const data = docSnap.data() || {}
     const device = String(data.deviceId || docSnap.id.split('-')[0] || '').toUpperCase()
@@ -124,12 +224,41 @@ function summarizeIos(docs) {
     eventNames(data.events).forEach(function (name) {
       if (byEvent[name]) byEvent[name].add(device)
     })
+    const events = Array.isArray(data.events) ? data.events : []
+    IOS_WEEK_EVENTS.forEach(function (name) {
+      const times = []
+      events.forEach(function (item) {
+        if (item && item.eventName === name && item.at) times.push(item.at)
+      })
+      if (name === 'app_open' && !times.length) {
+        const opened = sessionOpenedAt(data, docSnap.id)
+        if (opened) times.push(opened)
+      }
+      times.forEach(function (time) {
+        const week = weekStartKey(time)
+        if (!week) return
+        if (!weekDevices[week]) weekDevices[week] = {}
+        if (!weekDevices[week][name]) weekDevices[week][name] = new Set()
+        weekDevices[week][name].add(device)
+      })
+    })
   })
+  const weeks = weeksThroughToday(Object.keys(weekDevices))
   return {
     phones: devices.size,
     opens: docs.length,
     rows: FUNNEL.map(function (pair) {
       return { label: pair[1], value: byEvent[pair[0]].size }
+    }),
+    weeks: weeks.map(function (week) {
+      const bucket = weekDevices[week] || {}
+      return {
+        week: week,
+        opened: bucket.app_open ? bucket.app_open.size : 0,
+        look: bucket.start_look_around ? bucket.start_look_around.size : 0,
+        start: bucket.start_trip ? bucket.start_trip.size : 0,
+        destination: bucket.destination_picked ? bucket.destination_picked.size : 0,
+      }
     }),
   }
 }
@@ -140,6 +269,7 @@ function summarizeAndroid(docs) {
   const points = { '0': 0, '1': 0, '2-5': 0, '6-11': 0, '12': 0 }
   let trips = 0
   let hiddenTests = 0
+  const tripsByWeek = {}
   docs.forEach(function (docSnap) {
     const data = docSnap.data() || {}
     const device = docSnap.ref.parent.parent ? docSnap.ref.parent.parent.id.toUpperCase() : ''
@@ -154,6 +284,8 @@ function summarizeAndroid(docs) {
     ends[method] = (ends[method] || 0) + 1
     const bucket = pointsBucket(data.pointsMarkedCount)
     points[bucket] = (points[bucket] || 0) + 1
+    const week = weekStartKey(data.startDate || data.completionDate)
+    if (week) tripsByWeek[week] = (tripsByWeek[week] || 0) + 1
   })
   const endRows = Object.keys(ends)
     .sort(function (a, b) {
@@ -165,7 +297,17 @@ function summarizeAndroid(docs) {
   const pointRows = ['1', '2-5', '6-11', '12'].map(function (key) {
     return { label: key + ' points marked', value: points[key] || 0 }
   })
-  return { trips: trips, phones: phones.size, hiddenTests: hiddenTests, endRows: endRows, pointRows: pointRows }
+  const weeks = weeksThroughToday(Object.keys(tripsByWeek))
+  return {
+    trips: trips,
+    phones: phones.size,
+    hiddenTests: hiddenTests,
+    endRows: endRows,
+    pointRows: pointRows,
+    weeks: weeks.map(function (week) {
+      return { week: week, trips: tripsByWeek[week] || 0 }
+    }),
+  }
 }
 
 async function loadCharts() {
@@ -204,6 +346,13 @@ async function loadCharts() {
     $('ios-caption').textContent =
       iosSummary.phones + ' phones. ' + iosSummary.opens + ' opens counted, including ones with no later step. Test phones are left out.'
     renderBars('ios-bars', iosSummary.rows)
+    $('ios-week-caption').textContent = 'Phones that week, counted once. Look around and Start my trip stay at 0 until the new app is in use.'
+    renderWeekTable('ios-weeks', [
+      { key: 'opened', label: 'Opened', color: '#94a3b8' },
+      { key: 'look', label: 'Look around', color: '#0f766e' },
+      { key: 'start', label: 'Start my trip', color: '#1d4ed8' },
+      { key: 'destination', label: 'Picked a destination', color: '#b45309' },
+    ], iosSummary.weeks)
   }
   if (androidSummary) {
     $('android-caption').textContent =
@@ -215,6 +364,10 @@ async function loadCharts() {
       '). Welcome choices are not in these trip records yet.'
     renderBars('android-end-bars', androidSummary.endRows.length ? androidSummary.endRows : [{ label: 'No trips', value: 0 }])
     renderBars('android-point-bars', androidSummary.pointRows)
+    $('android-week-caption').textContent = 'Trips started that week. The new welcome choices are not in these records yet.'
+    renderWeekTable('android-weeks', [
+      { key: 'trips', label: 'Trips', color: '#1d4ed8' },
+    ], androidSummary.weeks)
   }
 
   show('charts', true)
