@@ -14,6 +14,9 @@ const {
   setDoc,
   updateDoc,
   deleteDoc,
+  getDoc,
+  getDocs,
+  collection,
   Timestamp,
   setLogLevel,
 } = require('firebase/firestore')
@@ -227,6 +230,26 @@ async function main() {
 
   console.log('[Rules] iosUsageEvents client delete → expect fail')
   await assertFails(deleteDoc(doc(db, 'iosUsageEvents', usageId)))
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents unsigned read → expect fail')
+  await assertFails(getDoc(doc(db, 'iosUsageEvents', usageId)))
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents other email read → expect fail')
+  const stranger = testEnv.authenticatedContext('stranger', {
+    email: 'other@example.com',
+    email_verified: true,
+  }).firestore()
+  await assertFails(getDocs(collection(stranger, 'iosUsageEvents')))
+  console.log('  ok\n')
+
+  console.log('[Rules] iosUsageEvents owner email read')
+  const owner = testEnv.authenticatedContext('owner', {
+    email: 'sbschram@gmail.com',
+    email_verified: true,
+  }).firestore()
+  await assertSucceeds(getDoc(doc(owner, 'iosUsageEvents', usageId)))
   console.log('  ok\n')
 
   await testEnv.cleanup()

@@ -161,10 +161,19 @@ service cloud.firestore {
         && request.resource.data.appVersion is string;
     }
 
+    // Private usage charts. Browser reads are limited to one verified email.
+    // The apps keep writing sessions without this sign-in.
+    function isUsageAnalyst() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'sbschram@gmail.com';
+    }
+
     match /iosUsageEvents/{sessionId} {
       allow create: if iosUsageSessionCreateOk(sessionId);
       allow update: if iosUsageSessionUpdateOk(sessionId);
-      allow read, delete: if false;
+      allow read: if isUsageAnalyst();
+      allow delete: if false;
     }
   }
 }
