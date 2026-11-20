@@ -1,14 +1,14 @@
 {
   "ios": {
-    "version": "1.3.0",
+    "version": "1.3.1",
     "build": "1",
     "minimum_version": "1.2.8",
     "minimum_version_reason": null,
     "testflight_url": "https://testflight.apple.com/join/YZc7jzJT",
     "app_store_url": "https://apps.apple.com/us/app/jetlagpro/id6748569048",
     "play_store_url": "https://play.google.com/store/apps/details?id=com.jetlagpro.android",
-    "release_notes": "Clearer flow from airport pick through your 24-hour, 12-point schedule. Two-hour reminders, short how-to videos, and Apple Watch. Eight languages.",
-    "last_updated": "2026-09-24"
+    "release_notes": "Look around before a trip, or start when you are ready. Destination 12-point schedule, two-hour reminders, how-to videos, Apple Watch. Eight languages.",
+    "last_updated": "2026-11-20"
   },
   "android": {
     "version": "1.0.3",
