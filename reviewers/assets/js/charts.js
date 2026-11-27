@@ -20,10 +20,66 @@ function calculateAveragePostTravelSeverity(surveys, symptom) {
     return totalSeverity / validSurveys.length;
 }
 
+// X-axis buckets shared by the dose-response chart and row highlighting.
+const DOSE_RESPONSE_TIME_ZONES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, '12+'];
 
+let doseResponseChart = null;
 
+/** Index on DOSE_RESPONSE_TIME_ZONES, or -1 when the trip is left of the chart (under 2 time zones). */
+function doseResponseBucketIndex(effectiveTz) {
+    const tz = Number(effectiveTz);
+    if (!Number.isFinite(tz) || tz < 2) return -1;
+    if (tz >= 12) return DOSE_RESPONSE_TIME_ZONES.length - 1;
+    return tz - 2;
+}
 
+/** Place or clear the single-trip marker. Returns true when a point was drawn. */
+function applyDoseResponseHighlight(dataset, pointCount, highlight) {
+    const data = new Array(pointCount).fill(null);
+    const radii = new Array(pointCount).fill(0);
+    const hover = new Array(pointCount).fill(0);
+    let plotted = false;
+    const bucketIndex = highlight ? highlight.bucketIndex : -1;
+    const rawSeverity = highlight ? highlight.severity : null;
+    const severity = rawSeverity === null || rawSeverity === undefined || rawSeverity === ''
+        ? NaN
+        : Number(rawSeverity);
+    if (bucketIndex >= 0 && bucketIndex < pointCount && Number.isFinite(severity)) {
+        data[bucketIndex] = severity;
+        radii[bucketIndex] = 12;
+        hover[bucketIndex] = 14;
+        plotted = true;
+    }
+    dataset.data = data;
+    dataset.pointRadius = radii;
+    dataset.pointHoverRadius = hover;
+    dataset.pointBorderWidth = 2;
+    dataset.label = plotted && highlight.label ? highlight.label : 'Selected trip';
+    if (plotted && highlight.color) {
+        dataset.pointBackgroundColor = highlight.color;
+        dataset.pointBorderColor = '#111827';
+        dataset.borderColor = highlight.color;
+        dataset.backgroundColor = highlight.color;
+    }
+    return plotted;
+}
 
+function clearDoseResponseHighlight() {
+    if (!doseResponseChart) return;
+    const dataset = doseResponseChart.data.datasets.find(d => d.highlightTrip);
+    if (!dataset) return;
+    applyDoseResponseHighlight(dataset, doseResponseChart.data.labels.length, null);
+    doseResponseChart.update();
+}
+
+function showDoseResponseHighlight(highlight) {
+    if (!doseResponseChart) return false;
+    const dataset = doseResponseChart.data.datasets.find(d => d.highlightTrip);
+    if (!dataset) return false;
+    const plotted = applyDoseResponseHighlight(dataset, doseResponseChart.data.labels.length, highlight);
+    doseResponseChart.update();
+    return plotted;
+}
 
 // Render dose-response analysis chart (multiple lines for different app usage levels)
 function renderDoseResponseAnalysisChart(surveys) {
@@ -34,7 +90,11 @@ function renderDoseResponseAnalysisChart(surveys) {
             return;
         }
         const ctx = chartElement.getContext('2d');
-    
+        if (doseResponseChart) {
+            doseResponseChart.destroy();
+            doseResponseChart = null;
+        }
+
     // Primary dose–response lines: trips with ≥2 points stimulated (0–1 are non-use / survey-not-offered in app policy).
     const eligible = surveys.filter(s => (s.pointsCompleted ?? 0) >= 2);
     const usageGroups = {
@@ -44,7 +104,7 @@ function renderDoseResponseAnalysisChart(surveys) {
     };
     
     // Time zone ranges (X-axis) - starting at 2 time zones, ending at 12+ for all flights with 12 or more timezone crossings
-    const timeZoneRanges = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, '12+'];
+    const timeZoneRanges = DOSE_RESPONSE_TIME_ZONES;
     
     // Baseline data from Waterhouse study (mapped to 1-5 scale) - starting at 2 time zones
     // Note: Waterhouse et al. (2007) data extends to 12 timezones; 12+ aggregates all flights ≥12 timezones
@@ -155,8 +215,28 @@ function renderDoseResponseAnalysisChart(surveys) {
         pointBorderWidth: 2,
         errorBars: new Array(timeZoneRanges.length).fill(null) // No error bars for baseline
     });
+
+    // One trip from the table below. Empty until a row is clicked. Diamond, drawn on top of the averages.
+    datasets.push({
+        label: 'Selected trip',
+        highlightTrip: true,
+        data: new Array(timeZoneRanges.length).fill(null),
+        borderColor: '#111827',
+        backgroundColor: '#111827',
+        borderWidth: 0,
+        fill: false,
+        showLine: false,
+        pointRadius: new Array(timeZoneRanges.length).fill(0),
+        pointHoverRadius: new Array(timeZoneRanges.length).fill(0),
+        pointStyle: 'rectRot',
+        pointBackgroundColor: '#111827',
+        pointBorderColor: '#111827',
+        pointBorderWidth: 2,
+        errorBars: new Array(timeZoneRanges.length).fill(null),
+        order: -1
+    });
     
-    new Chart(ctx, {
+    doseResponseChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: timeZoneRanges.map(tz => `${tz} TZ`),
@@ -179,7 +259,17 @@ function renderDoseResponseAnalysisChart(surveys) {
                     position: 'top',
                     labels: {
                         usePointStyle: true,
-                        padding: 20
+                        padding: 20,
+                        filter: function(item, dataOrChart) {
+                            const datasets = (dataOrChart && dataOrChart.data && dataOrChart.data.datasets)
+                                || (dataOrChart && dataOrChart.datasets)
+                                || [];
+                            const dataset = datasets[item.datasetIndex];
+                            if (dataset && dataset.highlightTrip) {
+                                return dataset.data.some(value => value !== null);
+                            }
+                            return true;
+                        }
                     }
                 },
                 tooltip: {
@@ -192,6 +282,10 @@ function renderDoseResponseAnalysisChart(surveys) {
                         label: function(context) {
                             const value = context.parsed.y;
                             const dataset = context.dataset;
+                            if (dataset.highlightTrip) {
+                                if (value === null || Number.isNaN(value)) return null;
+                                return dataset.label;
+                            }
                             const errorBar = dataset.errorBars[context.dataIndex];
                             
                             if (value !== null && errorBar !== null) {

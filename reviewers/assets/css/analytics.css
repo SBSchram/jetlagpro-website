@@ -150,6 +150,42 @@ body {
     max-width: 100px;
 }
 
+.dose-response-click-hint,
+.dose-response-selection-note {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 1.45;
+}
+
+.dose-response-selection-note {
+    margin: 12px 0 0 0;
+    text-align: center;
+    color: #1f2937;
+}
+
+#doseResponseChartCard {
+    scroll-margin-top: 70px;
+}
+
+.dose-response-table tbody tr.dose-response-row {
+    cursor: pointer;
+}
+
+.dose-response-table tbody tr.dose-response-row:hover td {
+    background: #f3f4f6;
+}
+
+.dose-response-table tbody tr.dose-response-row:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.dose-response-table tbody tr.dose-response-row.is-selected td,
+.dose-response-table tbody tr.dose-response-row.is-selected:hover td {
+    background: #e0e7ff;
+}
+
 .data-section {
     padding: 12px 0;
     margin-bottom: 30px;

@@ -5,6 +5,8 @@
 let surveyData = [];
 let isLoading = true;
 let airportCodeToCity = null; // Cache for airport code to city mapping
+let doseResponseRowMeta = [];
+let selectedDoseResponseRow = null;
 
 
 // Firebase service instance (new integration)
@@ -866,19 +868,24 @@ function renderAdvancedAnalytics() {
         headingElement.innerHTML = `Dose-Response Analysis (${completedSurveys.length})`;
     }
     
+    selectedDoseResponseRow = null;
     let html = '<div style="margin-bottom: 30px;">';
     
     // Dose-Response Analysis Section
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
     html += '<p>Multiple lines show how different levels of app usage affect symptom severity across time zones crossed.<br>Error bars show ±1 standard error.</p>';
-    html += '<div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; height: 500px;">';
+    html += '<div id="doseResponseChartCard" style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px;">';
+    html += '<div style="height: 500px;">';
     html += '<canvas id="doseResponseAnalysisChart" width="800" height="400"></canvas>';
+    html += '</div>';
+    html += '<p id="doseResponseSelectionNote" class="dose-response-selection-note">Click a row in the list below to mark that trip on this chart.</p>';
     html += '</div>';
     html += '</div>';
     
     // Dose-Response Data Table - all surveys used in the chart
     html += '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">';
     html += `<h3 style="margin-top: 0; margin-bottom: 15px;">Dose-Response Raw Data (${completedSurveys.length})</h3>`;
+    html += '<p class="dose-response-click-hint">Click a row to mark that trip on the chart above. Click it again to clear the marker.</p>';
     html += renderDoseResponseDataTable(completedSurveys);
     html += '</div>';
     
@@ -891,6 +898,97 @@ function renderAdvancedAnalytics() {
         isPostLandingTrip(s) ? { ...s, timezonesCount: 5 } : s
     );
     renderDoseResponseAnalysisChart(surveysForChart);
+    bindDoseResponseRowSelection();
+}
+
+// Plain-language note for the chart when a raw-data row is selected.
+function describeDoseResponseSelection(row) {
+    const severityNumber = Number(row.severity);
+    const hasSeverity = row.severity !== null && row.severity !== undefined && Number.isFinite(severityNumber);
+    const severityText = hasSeverity ? severityNumber.toFixed(1) : null;
+    const pointWord = row.points === 1 ? 'point' : 'points';
+    const identity = `${row.dateStr}, device ${row.device} (${row.points} ${pointWord})`;
+    const tzPhrase = row.effectiveTz >= 12 ? '12 or more time zones' : `${row.effectiveTz} time zones`;
+    const plottable = row.bucketIndex >= 0 && hasSeverity;
+    let note;
+    if (!plottable && !hasSeverity && row.bucketIndex < 0) {
+        note = `Not on the chart: ${identity} has no actual severity and fewer than 2 time zones. The chart starts at 2 time zones.`;
+    } else if (!plottable && !hasSeverity) {
+        note = `Not on the chart: ${identity} has no actual severity, so it has no height on the chart.`;
+    } else if (!plottable) {
+        note = `Not on the chart: ${identity} has ${row.effectiveTz} time zone${row.effectiveTz === 1 ? '' : 's'}. The chart starts at 2.`;
+    } else if (row.postLanding) {
+        note = `Marked at 5 time zones (post-landing trips are grouped there), actual severity ${severityText}. ${identity}.`;
+    } else if (row.points < 2) {
+        note = `Marked at ${tzPhrase}, actual severity ${severityText}. ${identity}. This trip is not included in the average lines (those start at 2 points).`;
+    } else {
+        note = `Marked at ${tzPhrase}, actual severity ${severityText}. ${identity}. The lines are group averages. This marker is this one trip.`;
+    }
+    return {
+        note,
+        summary: plottable ? `Selected: ${row.dateStr}, ${row.device}, severity ${severityText}` : 'Selected trip',
+        plottable,
+        bucketIndex: row.bucketIndex,
+        severity: hasSeverity ? severityNumber : null
+    };
+}
+
+function bindDoseResponseRowSelection() {
+    const table = document.querySelector('#advancedAnalytics .dose-response-table');
+    if (!table) return;
+    const activate = (row) => {
+        const index = Number(row.getAttribute('data-row-index'));
+        if (!Number.isInteger(index)) return;
+        selectDoseResponseRow(index);
+    };
+    table.addEventListener('click', (event) => {
+        const row = event.target.closest('tr.dose-response-row');
+        if (!row || !table.contains(row)) return;
+        activate(row);
+    });
+    table.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const row = event.target.closest('tr.dose-response-row');
+        if (!row || !table.contains(row)) return;
+        event.preventDefault();
+        activate(row);
+    });
+}
+
+function selectDoseResponseRow(index) {
+    const note = document.getElementById('doseResponseSelectionNote');
+    const rows = document.querySelectorAll('#advancedAnalytics tr.dose-response-row');
+    if (selectedDoseResponseRow === index) {
+        selectedDoseResponseRow = null;
+        rows.forEach((row) => {
+            row.classList.remove('is-selected');
+            row.setAttribute('aria-pressed', 'false');
+        });
+        if (typeof clearDoseResponseHighlight === 'function') clearDoseResponseHighlight();
+        if (note) note.textContent = 'Click a row in the list below to mark that trip on this chart.';
+        return;
+    }
+    selectedDoseResponseRow = index;
+    rows.forEach((row) => {
+        const selected = Number(row.getAttribute('data-row-index')) === index;
+        row.classList.toggle('is-selected', selected);
+        row.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+    const meta = doseResponseRowMeta[index];
+    if (!meta) return;
+    if (meta.plottable && typeof showDoseResponseHighlight === 'function') {
+        showDoseResponseHighlight({
+            bucketIndex: meta.bucketIndex,
+            severity: meta.severity,
+            color: meta.color,
+            label: meta.summary
+        });
+    } else if (typeof clearDoseResponseHighlight === 'function') {
+        clearDoseResponseHighlight();
+    }
+    if (note) note.textContent = meta.note;
+    const card = document.getElementById('doseResponseChartCard');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Load airport code to city mapping from airports.json (DRY - single source of truth)
@@ -989,7 +1087,10 @@ function getPointsColor(points) {
 
 // Render dose-response data table
 function renderDoseResponseDataTable(surveys) {
-    if (surveys.length === 0) return '<p><em>No survey data available</em></p>';
+    if (surveys.length === 0) {
+        doseResponseRowMeta = [];
+        return '<p><em>No survey data available</em></p>';
+    }
     
     // Sort by date (most recent first) - use trip start date
     const sortedSurveys = surveys.sort((a, b) => {
@@ -1004,8 +1105,9 @@ function renderDoseResponseDataTable(surveys) {
     tableHtml += '<th class="wrap-header">Baseline Severity Expected</th><th class="wrap-header">Anticipated Severity</th><th class="wrap-header">Actual Severity</th>';
     tableHtml += '<th class="wrap-header">Improvement over Expected</th><th class="wrap-header">Improvement over Anticipated</th>';
     tableHtml += '</tr></thead><tbody>';
-    
-    sortedSurveys.forEach(survey => {
+
+    doseResponseRowMeta = [];
+    sortedSurveys.forEach((survey, rowIndex) => {
         // Use trip start date (when the trip started) as the significant date
         // CONSISTENCY: Extract UTC date component to match Python script output
         // This ensures the same date is displayed regardless of browser timezone
@@ -1138,7 +1240,24 @@ function renderDoseResponseDataTable(surveys) {
             }
         }
         
-        tableHtml += `<tr>
+        const bucketIndex = typeof doseResponseBucketIndex === 'function'
+            ? doseResponseBucketIndex(effectiveTz)
+            : -1;
+        const selection = describeDoseResponseSelection({
+            dateStr,
+            device: displayCode,
+            points: pointsStimulated,
+            effectiveTz,
+            postLanding: isPostLandingTrip(survey),
+            bucketIndex,
+            severity: actual
+        });
+        doseResponseRowMeta.push({
+            ...selection,
+            color: pointsColor
+        });
+
+        tableHtml += `<tr class="dose-response-row" data-row-index="${rowIndex}" tabindex="0" aria-pressed="false">
             <td>${dateStr}</td>
             <td><code>${displayCode}</code></td>
             <td>${origin}</td>
